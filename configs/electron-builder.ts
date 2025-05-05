@@ -1,5 +1,6 @@
 import type { Configuration } from 'electron-builder'
 import PublishConfig from './publish'
+import * as packageJson from '../package.json';
 
 /**
  * one environment
@@ -14,7 +15,7 @@ import PublishConfig from './publish'
 const conf: Configuration = {
   productName: 'FlyEnv',
   executableName: 'FlyEnv',
-  buildVersion: '4.9.6',
+  buildVersion: packageJson.version,
   electronVersion: '31.7.7',
   appId: 'phpstudy.xpfme.com',
   asar: true,
