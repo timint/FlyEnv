@@ -116,15 +116,15 @@ export const makeNginxConf = async (host: AppHost) => {
   const nvhost = join(nginxvpath, `${hostname}.conf`)
   const hostalias = hostAlias(host).join(' ')
   ntmpl = ntmpl
-    .replace(/#Server_Alias#/g, hostalias)
-    .replace(/#Server_Root#/g, host.root)
-    .replace(/#Rewrite_Path#/g, rewritepath)
-    .replace(/#Server_Name#/g, hostname)
-    .replace(/#Log_Path#/g, logpath)
-    .replace(/#Server_Cert#/g, host.ssl.cert)
-    .replace(/#Server_CertKey#/g, host.ssl.key)
-    .replace(/#Port_Nginx#/g, `${host.port.nginx}`)
-    .replace(/#Port_Nginx_SSL#/g, `${host.port.nginx_ssl}`)
+    .replace('{Server_Alias}', hostalias)
+    .replace('{Server_Root}', host.root)
+    .replace('{Rewrite_Path}', rewritepath)
+    .replace('{Server_Name}', hostname)
+    .replace('{Log_Path}', logpath)
+    .replace('{Server_Cert}', host.ssl.cert)
+    .replace('{Server_CertKey', host.ssl.key)
+    .replace('{Port_Nginx}', `${host.port.nginx}`)
+    .replace('{Port_Nginx_SSL}', `${host.port.nginx_ssl}`)
 
   if (host.phpVersion) {
     ntmpl = ntmpl.replace(
