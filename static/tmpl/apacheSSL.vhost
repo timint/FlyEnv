@@ -44,9 +44,8 @@
 
     #PHP
     <FilesMatch \.php$>
-            SetHandler "proxy:fcgi://127.0.0.1:9000"
+        SetHandler "proxy:fcgi://127.0.0.1:9000"
     </FilesMatch>
-
 
     #DENY FILES
     <Files ~ (\.user.ini|\.htaccess|\.git|\.svn|\.project|LICENSE|README.md)$>
