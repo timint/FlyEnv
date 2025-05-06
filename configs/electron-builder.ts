@@ -13,8 +13,8 @@ import * as packageJson from '../package.json';
  * One Environ
  */
 const conf: Configuration = {
-  productName: 'FlyEnv',
-  executableName: 'FlyEnv',
+  productName: packageJson.name,
+  executableName: packageJson.name,
   buildVersion: packageJson.version,
   electronVersion: '31.7.7',
   appId: 'phpstudy.xpfme.com',
