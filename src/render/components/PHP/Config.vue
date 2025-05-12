@@ -44,6 +44,7 @@
   import { uuid } from '@shared/utils'
 
   const { existsSync } = require('fs')
+  const { join } = require('path')
 
   const props = defineProps<{
     version: SoftInstalled
@@ -66,7 +67,7 @@
     }
     return `${file.value}.default`
   })
-
+  const cacert = join(global.Server.BaseDir!, 'CA/cacert.pem')
   const names: CommonSetItem[] = [
     {
       name: 'display_errors',
@@ -211,6 +212,30 @@
       tips() {
         return I18nT('php.timezone')
       }
+    },
+    {
+      name: 'curl.cainfo',
+      value: `"${cacert}"`,
+      enable: true,
+      isFile: true,
+      tips() {
+        return `curl.cainfo. can found in ${cacert}`
+      },
+      pathHandler(dir) {
+        return `"${dir}"`
+      }
+    },
+    {
+      name: 'openssl.cafile',
+      value: `"${cacert}"`,
+      enable: true,
+      isFile: true,
+      tips() {
+        return `openssl.cafile. can found in ${cacert}`
+      },
+      pathHandler(dir) {
+        return `"${dir}"`
+      }
     }
   ]
   let editConfig = ''
@@ -220,7 +245,7 @@
     let config = editConfig.replace(/\r\n/gm, '\n')
     const list = ['#PhpWebStudy-Conf-Common-Begin#']
     commonSetting.value.forEach((item) => {
-      const regex = new RegExp(`^[\\s\\n#]?([\\s#;]*?)${item.name}\\s+(.*?)([^\\n])(\\n|$)`, 'gm')
+      const regex = new RegExp(`^[\\s\\n#]?([\\s#;]*?)${item.name}(.*?)([^\\n])(\\n|$)`, 'gm')
       config = config.replace(regex, `\n\n`)
       if (item.enable) {
         list.push(`${item.name} = ${item.value}`)
@@ -246,7 +271,7 @@
     let config = editConfig.replace(/\r\n/gm, '\n')
     const arr = [...names].map((item) => {
       const regex = new RegExp(
-        `^[\\s\\n]?((?![#;])([\\s]*?))${item.name}\\s+(.*?)([^\\n])(\\n|$)`,
+        `^[\\s\\n]?((?![#;])([\\s]*?))${item.name}(.*?)([^\\n])(\\n|$)`,
         'gm'
       )
       const matchs =
@@ -297,6 +322,10 @@
       }
     )
   }
+
+  IPC.send('app-fork:php', 'initCACertPEM').then((key: string) => {
+    IPC.off(key)
+  })
 
   defineExpose({ show, onClosed, onSubmit, closedFn })
 </script>

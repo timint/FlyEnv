@@ -7,18 +7,26 @@ import { Service } from '@/components/ServiceManager/service'
 import installedVersions from '@/util/InstalledVersions'
 import type { AllAppModule } from '@/core/type'
 
+type ServiceActionExtParamFN = (
+  typeFlag: AllAppModule,
+  fn: string,
+  version: SoftInstalled
+) => Promise<any[]>
+
+export const ServiceActionExtParam: Partial<Record<AllAppModule, ServiceActionExtParamFN>> = {}
+
 const exec = (
   typeFlag: AllAppModule,
   fn: string,
   version: SoftInstalled
 ): Promise<string | boolean> => {
-  return new Promise((resolve) => {
+  return new Promise(async (resolve) => {
     if (version.running) {
       resolve(true)
       return
     }
     if (!version?.version) {
-      resolve(I18nT('fork.phpiniNoFound'))
+      resolve(I18nT('fork.versionNoFound'))
       return
     }
     version.running = true
@@ -122,7 +130,18 @@ const exec = (
       }
     }
 
-    IPC.send(`app-fork:${typeFlag}`, fn, args).then((key: string, res: any) => {
+    let params: any[] = []
+
+    if (ServiceActionExtParam?.[typeFlag]) {
+      try {
+        params = await ServiceActionExtParam[typeFlag](typeFlag, fn, version)
+      } catch (e) {
+        handleTaskFailed()
+        return resolve(true)
+      }
+    }
+
+    IPC.send(`app-fork:${typeFlag}`, fn, args, ...params).then((key: string, res: any) => {
       if (res.code === 0) {
         IPC.off(key)
         const pid = res?.data?.['APP-Service-Start-PID'] ?? ''

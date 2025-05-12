@@ -11,7 +11,6 @@ export const ProcessPidsByPid = (pid: string, arr: PItem[]): string[] => {
   const find = (ppid: string) => {
     for (const item of arr) {
       if (item.PPID === ppid) {
-        console.log('find: ', ppid, item)
         all.add(item.PID!)
         find(item.PID!)
       }
@@ -36,7 +35,6 @@ export const ProcessListByPid = (pid: string, arr: PItem[]): PItem[] => {
   const find = (ppid: string) => {
     for (const item of arr) {
       if (item.PPID === ppid) {
-        console.log('find: ', ppid, item)
         all.add(item.PID!)
         find(item.PID!)
       }
@@ -83,19 +81,21 @@ export const ProcessSearch = (search: string, aA = true, arr: PItem[]) => {
     }
   }
   for (const item of arr) {
-    if (!item?.COMMAND) {
-      console.log('!item?.COMMAND: ', item)
-    }
+    const b = `${item.PID}` === `${search}`
+    const c = `${item.PPID}` === `${search}`
+
     if (!aA) {
       search = search.toLowerCase()
-      if (item?.COMMAND && item.COMMAND.toLowerCase().includes(search)) {
+      const a = item?.COMMAND && item.COMMAND.toLowerCase().includes(search)
+      if (a || b || c) {
         if (!all.find((f) => f.PID === item.PID)) {
           all.push(item)
           find(item.PID!)
         }
       }
     } else {
-      if (item?.COMMAND && item.COMMAND.includes(search)) {
+      const a = item?.COMMAND && item.COMMAND.includes(search)
+      if (a || b || c) {
         if (!all.find((f) => f.PID === item.PID)) {
           all.push(item)
           find(item.PID!)

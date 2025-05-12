@@ -73,7 +73,7 @@
 
 <script lang="tsx" setup>
   import { computed, ref } from 'vue'
-  import type { Column } from 'element-plus'
+  import { type Column } from 'element-plus'
   import { FtpStore } from './ftp'
   import { AppStore } from '@/store/app'
   import { BrewStore } from '@/store/brew'
@@ -171,8 +171,6 @@
     action.then((res: any) => {
       if (typeof res === 'string') {
         MessageError(res)
-      } else {
-        MessageSuccess(I18nT('base.success'))
       }
     })
   }
