@@ -52,7 +52,11 @@ img {
 }
 
 .clearfix {
-  @include clearfix();
+  &:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
 }
 
 /* Common settings - start */
