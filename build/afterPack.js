@@ -1,11 +1,12 @@
-const { join } = require('path')
-const { execSync } = require('child_process')
+import { join } from 'path'
+import { execSync } from 'child_process'
+import fs from 'fs'
 /**
- * 处理appstore node-pty python链接库问题
+ * Handle the node-pty Python library issue for the App Store
  * @param pack
  * @returns {Promise<boolean>}
  */
-exports.default = async function after(pack) {
+export default async function after(pack) {
   const dir = join(pack.appOutDir, 'PhpWebStudy.app/Contents/Resources')
   const optdefault = { env: process.env, cwd: dir }
   if (!optdefault.env['PATH']) {
@@ -33,10 +34,9 @@ exports.default = async function after(pack) {
     ].join(':')
   }
   execSync('asar e app.asar app', optdefault)
-  execSync('rm -rf app/node_modules/node-pty/build/node_gyp_bins', optdefault)
-  execSync('rm -rf app.asar', optdefault)
+  fs.rmSync(join(dir, 'app.asar'), { force: true })
   execSync('asar pack app app.asar', optdefault)
-  execSync('rm -rf app', optdefault)
+  fs.rmSync(join(dir, 'app'), { recursive: true, force: true })
   console.log('afterPack handle end !!!!!!')
   return true
 }
