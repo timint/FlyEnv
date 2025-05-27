@@ -9,12 +9,28 @@ exports.default = async function after(pack) {
   const dir = join(pack.appOutDir, 'PhpWebStudy.app/Contents/Resources')
   const optdefault = { env: process.env, cwd: dir }
   if (!optdefault.env['PATH']) {
-    optdefault.env['PATH'] =
-      '/opt:/opt/homebrew/bin:/opt/homebrew/sbin:/opt/local/bin:/opt/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin'
+    optdefault.env['PATH'] = [
+      '/opt',
+      '/opt/homebrew/bin',
+      '/opt/homebrew/sbin',
+      '/opt/local/bin',
+      '/opt/local/sbin',
+      '/usr/local/bin',
+      '/usr/bin',
+      '/bin',
+      '/usr/sbin',
+      '/sbin'
+    ].join(':')
   } else {
-    optdefault.env[
-      'PATH'
-    ] = `/opt:/opt/homebrew/bin:/opt/homebrew/sbin:/opt/local/bin:/opt/local/sbin:/usr/local/bin:${optdefault.env['PATH']}`
+    optdefault.env['PATH'] = [
+      '/opt',
+      '/opt/homebrew/bin',
+      '/opt/homebrew/sbin',
+      '/opt/local/bin',
+      '/opt/local/sbin',
+      '/usr/local/bin',
+      optdefault.env['PATH']
+    ].join(':')
   }
   execSync('asar e app.asar app', optdefault)
   execSync('rm -rf app/node_modules/node-pty/build/node_gyp_bins', optdefault)
