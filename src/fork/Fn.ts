@@ -88,11 +88,11 @@ export function fixEnv(): { [k: string]: any } {
   return env
 }
 
-export function execSyncFix(cammand: string, opt?: { [k: string]: any }): string | undefined {
+export function execSyncFix(command: string, opt?: { [k: string]: any }): string | undefined {
   let res: any = undefined
   try {
     res = execSync(
-      cammand,
+      command,
       merge(
         {
           env: fixEnv()
@@ -106,14 +106,14 @@ export function execSyncFix(cammand: string, opt?: { [k: string]: any }): string
   return res
 }
 
-export function execPromiseRoot(cammand: string): ForkPromise<{
+export function execPromiseRoot(command: string): ForkPromise<{
   stdout: string
   stderr: string
 }> {
   return new ForkPromise((resolve, reject) => {
     try {
       sudoPrompt(
-        cammand,
+        command,
         {
           name: 'PhpWebStudy',
           dir: global.Server.Cache!,
@@ -138,7 +138,7 @@ export function execPromiseRoot(cammand: string): ForkPromise<{
 }
 
 export function execPromise(
-  cammand: string,
+  command: string,
   opt?: { [k: string]: any }
 ): ForkPromise<{
   stdout: string
@@ -147,7 +147,7 @@ export function execPromise(
   return new ForkPromise((resolve, reject) => {
     try {
       exec(
-        cammand,
+        command,
         merge(
           {
             encoding: 'utf-8',
@@ -173,7 +173,7 @@ export function execPromise(
 }
 
 export function spawnPromise(
-  cammand: string,
+  command: string,
   params: Array<any>,
   opt?: { [k: string]: any }
 ): ForkPromise<string> {
@@ -181,7 +181,7 @@ export function spawnPromise(
     const stdout: Array<Buffer> = []
     const stderr: Array<Buffer> = []
     const child = spawn(
-      cammand,
+      command,
       params,
       merge(
         {
@@ -219,7 +219,7 @@ export function spawnPromise(
 }
 
 export function spawnPromiseMore(
-  cammand: string,
+  command: string,
   params: Array<any>,
   opt?: { [k: string]: any }
 ): {
@@ -231,7 +231,7 @@ export function spawnPromiseMore(
   let child: ChildProcess
   try {
     child = spawn(
-      cammand,
+      command,
       params,
       merge(
         {

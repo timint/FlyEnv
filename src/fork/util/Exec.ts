@@ -7,7 +7,7 @@ import { ForkPromise } from '@shared/ForkPromise'
 import { spawn } from 'child_process'
 
 function spawnAsyncPromise(
-  cammand: string,
+  command: string,
   params: Array<any>,
   opt?: { [k: string]: any }
 ): ForkPromise<{
@@ -17,7 +17,7 @@ function spawnAsyncPromise(
   return new ForkPromise((resolve) => {
     const stdout: Array<Buffer> = []
     const stderr: Array<Buffer> = []
-    const child = spawn(cammand, params, opt)
+    const child = spawn(command, params, opt)
     let exit = false
     const onEnd = () => {
       if (exit) return

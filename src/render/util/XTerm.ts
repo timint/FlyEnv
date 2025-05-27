@@ -70,9 +70,7 @@ class XTerm implements XTermType {
         IPC.send('NodePty:init').then((key: string, res: any) => {
           IPC.off(key)
           this.ptyKey = res?.data ?? ''
-          /**
-           * 接收node-pty数据
-           */
+          // Receive node-pty data
           IPC.on(`NodePty:data:${this.ptyKey}`).then((key: string, data: string) => {
             this.write(data)
           })
@@ -105,7 +103,7 @@ class XTerm implements XTermType {
       })
     })
     /**
-     * 重置界面大小
+     * Reset the interface size
      */
     this.onWindowResit = this.onWindowResit.bind(this)
     window.addEventListener('resize', this.onWindowResit)
@@ -191,18 +189,18 @@ class XTerm implements XTermType {
     })
   }
 
-  send(cammand: string[]) {
-    console.log('XTerm send:', cammand)
+  send(command: string[]) {
+    console.log('XTerm send:', command)
     if (this.end) {
       return
     }
     return new Promise((resolve) => {
       this.resolve = resolve
-      const param = [...cammand]
+      const param = [...command]
       param.push(`echo "Task-${this.ptyKey}-End"`)
       param.push(`exit 0`)
       IPC.send('NodePty:exec', this.ptyKey, param).then((key: string) => {
-        console.log('static cammand finished: ', cammand)
+        console.log('static command finished: ', command)
         IPC.off(key)
         this.end = true
         this.resolve = undefined
