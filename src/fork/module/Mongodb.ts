@@ -2,6 +2,8 @@ import { join, basename, dirname } from 'path'
 import { createWriteStream, existsSync } from 'fs'
 import { Base } from './Base'
 import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
+import { promisify } from 'node:util'
+import { spawn } from 'node:child_process'
 import {
   AppLog,
   moveChildDirToParent,
@@ -19,6 +21,8 @@ import { I18nT } from '@lang/index'
 import { zipUnPack } from '@shared/file'
 import axios from 'axios'
 import { spawn } from 'child-process-promise'
+
+const spawnAsync = promisify(spawn)
 
 class Manager extends Base {
   mongoshVersion = '2.5.0'
@@ -39,7 +43,7 @@ class Manager extends Base {
       const mongosh = join(global.Server.AppDir!, 'mongosh', this.mongoshVersion, 'bin/mongosh.exe')
       if (existsSync(mongosh)) {
         try {
-          await spawn('mongosh.exe', ['--eval', `"db.shutdownServer()"`], {
+          await spawnAsync('mongosh.exe', ['--eval', `"db.shutdownServer()"`], {
             cwd: dirname(mongosh),
             shell: false
           })

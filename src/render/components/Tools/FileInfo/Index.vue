@@ -62,7 +62,6 @@
   import dayjs from 'dayjs'
   import { getFileHashes } from '@shared/file.ts'
 
-  const { exec } = require('child-process-promise')
   const { stat } = require('fs')
   const { dialog } = require('@electron/remote')
 

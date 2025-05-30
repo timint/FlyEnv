@@ -1,17 +1,18 @@
 import { createServer } from 'vite'
-import { spawn, ChildProcess } from 'child_process'
+import { spawn, exec, ChildProcess } from 'child_process'
 import { build } from 'esbuild'
 import _fs, { copySync } from 'fs-extra'
 import _path from 'path'
 // @ts-ignore
 import _md5 from 'md5'
-import { exec } from 'child-process-promise'
 
 import viteConfig from '../configs/vite.config'
 import esbuildConfig from '../configs/esbuild.config'
 
 let restart = false
 let electronProcess: ChildProcess | null
+
+const execAsync = promisify(exec);
 
 async function killAllElectron() {
   const sh = _path.resolve(__dirname, '../scripts/electron-kill.ps1')
@@ -20,7 +21,7 @@ async function killAllElectron() {
   const command = `powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Unblock-File -LiteralPath './electron-kill.ps1'; & './electron-kill.ps1'"`
   let res: any = null
   try {
-    res = await exec(command, {
+    res = await execAsync(command, {
       cwd: scriptDir
     })
   } catch (e) {
@@ -41,7 +42,7 @@ async function killAllElectron() {
   console.log('_stopServer arr: ', arr)
   if (arr.length > 0) {
     const str = arr.map((s) => `/pid ${s}`).join(' ')
-    await exec(`taskkill /f /t ${str}`)
+    await execAsync(`taskkill /f /t ${str}`)
   }
 }
 
@@ -105,13 +106,16 @@ function runElectronApp() {
 
 if (process.env.TEST === 'electron') {
   console.log('process.env.TEST electron !!!!!!')
-  Promise.all([launchViteDevServer(), buildMainProcess()])
-    .then(() => {
-      runElectronApp()
-    })
-    .catch((err) => {
-      console.error(err)
-    })
+  Promise.all([
+    launchViteDevServer(),
+    buildMainProcess()
+  ])
+  .then(() => {
+    runElectronApp()
+  })
+  .catch((err) => {
+    console.error(err)
+  })
 }
 
 if (process.env.TEST === 'browser') {
@@ -122,23 +126,23 @@ if (process.env.TEST === 'browser') {
 
 process.on('SIGINT', async () => {
   console.log('Catch SIGINT，Cleaning Electron Process...')
-  await killAllElectron()
+  //await killAllElectron()
   process.exit(0)
 })
 
-// 监听main 文件改变
+// Watch for changes in main files
 let preveMd5 = ''
 let fsWait = false
 const next = (base: string, file?: string | null) => {
   if (file) {
     if (fsWait) return
-    const currentMd5 = _md5(_fs.readFileSync(_path.join(base, file))) as string
+    const currentMd5 = md5(readFileSync(path.join(base, file))) as string
     if (currentMd5 == preveMd5) {
       return
     }
     fsWait = true
     preveMd5 = currentMd5
-    console.log(`${file}文件发生更新`)
+    console.log(`${file} file updated`)
     restart = true
     buildMainProcess()
       .then()
@@ -150,51 +154,35 @@ const next = (base: string, file?: string | null) => {
     }, 500)
   }
 }
-const mainPath = _path.resolve(__dirname, '../src/main/')
-_fs.watch(
-  mainPath,
-  {
-    recursive: true
-  },
-  (event, filename) => {
-    next(mainPath, filename)
-  }
-)
 
-const forkPath = _path.resolve(__dirname, '../src/fork/')
-_fs.watch(
-  forkPath,
-  {
-    recursive: true
-  },
-  (event, filename) => {
-    next(forkPath, filename)
-  }
-)
+const mainPath = 'src/main'
+const forkPath = 'src/fork'
+const staticPath = 'static'
 
-const staticPath = _path.resolve(__dirname, '../static/')
-_fs.watch(
-  staticPath,
-  {
-    recursive: true
-  },
-  (event, filename) => {
-    if (filename) {
-      if (fsWait) return
-      const from = _path.join(staticPath, filename)
-      const currentMd5 = _md5(_fs.readFileSync(from)) as string
-      if (currentMd5 == preveMd5) {
-        return
-      }
-      fsWait = true
-      preveMd5 = currentMd5
-      const to = _path.resolve(__dirname, '../dist/electron/static/', filename)
-      console.log(`${filename}文件发生更新`)
-      console.log('Copy文件: ', from, to)
-      copySync(from, to)
-      setTimeout(() => {
-        fsWait = false
-      }, 500)
+watch(mainPath, { recursive: true }, (event, filename) => {
+  next(mainPath, filename)
+})
+
+watch(forkPath, { recursive: true }, (event, filename) => {
+  next(forkPath, filename)
+})
+
+watch(staticPath, { recursive: true }, (event, filename) => {
+  if (filename) {
+    if (fsWait) return
+    const from = path.join(staticPath, filename)
+    const currentMd5 = md5(readFileSync(from)) as string
+    if (currentMd5 == preveMd5) {
+      return
     }
+    fsWait = true
+    preveMd5 = currentMd5
+    const to = path.resolve(__dirname, '../dist/electron/static/', filename)
+    console.log(`${filename} file updated`)
+    console.log('Copy file: ', from, to)
+    cpSync(from, to)
+    setTimeout(() => {
+      fsWait = false
+    }, 500)
   }
-)
+})

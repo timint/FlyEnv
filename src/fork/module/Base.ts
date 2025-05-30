@@ -9,7 +9,6 @@ import { zipUnPack } from '@shared/file'
 import axios from 'axios'
 import { ProcessListSearch, ProcessPidList, ProcessPidListByPid } from '../Process'
 import TaskQueue from '../TaskQueue'
-import { spawn } from 'child-process-promise'
 
 export class Base {
   type: string

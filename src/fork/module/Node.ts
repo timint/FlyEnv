@@ -1,4 +1,6 @@
 import { Base } from './Base'
+import { promisify } from 'node:util'
+import { exec } from 'node:child_process'
 import {
   execPromise,
   fetchPathByBin,
@@ -13,7 +15,6 @@ import {
   waitTime,
   writePath
 } from '../Fn'
-import { exec } from 'child-process-promise'
 import { ForkPromise } from '@shared/ForkPromise'
 import { dirname, join, isAbsolute, basename } from 'path'
 import { compareVersions } from 'compare-versions'
@@ -24,6 +25,8 @@ import axios from 'axios'
 import { SoftInstalled } from '@shared/app'
 import TaskQueue from '../TaskQueue'
 import ncu from 'npm-check-updates'
+
+const execAsync = promisify(exec)
 
 class Manager extends Base {
   constructor() {
@@ -566,7 +569,7 @@ class Manager extends Base {
       let fnmDir = ''
       try {
         fnmDir = (
-          await exec(`echo %FNM_DIR%`, {
+          await execAsync(`echo %FNM_DIR%`, {
             shell: 'cmd.exe'
           })
         ).stdout.trim()
@@ -577,7 +580,7 @@ class Manager extends Base {
       if (!fnmDir) {
         try {
           fnmDir = (
-            await exec(`$env:FNM_DIR`, {
+            await execAsync(`$env:FNM_DIR`, {
               shell: 'powershell.exe'
             })
           ).stdout.trim()
@@ -609,7 +612,7 @@ class Manager extends Base {
       let nvmDir = ''
       try {
         nvmDir = (
-          await exec(`nvm root`, {
+          await execAsync(`nvm root`, {
             shell: 'cmd.exe'
           })
         ).stdout
@@ -619,7 +622,7 @@ class Manager extends Base {
       if (!nvmDir) {
         try {
           nvmDir = (
-            await exec(`nvm root`, {
+            await execAsync(`nvm root`, {
               shell: 'powershell.exe'
             })
           ).stdout

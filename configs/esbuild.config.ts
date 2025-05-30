@@ -7,7 +7,6 @@ const external = [
   '@vue',
   'aws-sdk',
   'axios',
-  'child-process-promise',
   'child_process',
   'compressing',
   'dns2',

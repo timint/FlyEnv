@@ -52,7 +52,6 @@
 
   const { existsSync } = require('fs')
   const fsWatch = require('fs').watch
-  const { exec } = require('child-process-promise')
   const { join } = require('path')
   const { shell } = require('@electron/remote')
 

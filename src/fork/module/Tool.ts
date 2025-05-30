@@ -1,5 +1,7 @@
 import { createReadStream, readFileSync, statSync } from 'fs'
 import { Base } from './Base'
+import { promisify } from 'node:util'
+import { exec } from 'node:child-process'
 import {
   addPath,
   execPromise,
@@ -32,6 +34,8 @@ import { PItem, ProcessListSearch, ProcessPidList } from '../Process'
 import { AppServiceAliasItem } from '@shared/app'
 import { exec } from 'child-process-promise'
 import RequestTimer from '@shared/requestTimer'
+
+const execAsync = promisify(exec)
 
 class BomCleanTask implements TaskItem {
   path = ''
@@ -747,14 +751,14 @@ chcp 65001>nul
       let cmdRes = ''
       let psRes = ''
       try {
-        cmdRes = (await exec(`set PATH`))?.stdout?.trim() ?? ''
+        cmdRes = (await execAsync(`set PATH`))?.stdout?.trim() ?? ''
       } catch (e) {
         cmdRes = `${e}`
       }
       try {
         psRes =
           (
-            await exec(`$env:PATH`, {
+            await execAsync(`$env:PATH`, {
               shell: 'powershell.exe'
             })
           )?.stdout?.trim() ?? ''
@@ -805,7 +809,7 @@ chcp 65001>nul
       command = JSON.stringify(command).slice(1, -1)
       console.log('command: ', command)
       try {
-        await exec(`start powershell -NoExit -Command "${command}"`)
+        await execAsync(`start powershell -NoExit -Command "${command}"`)
       } catch (e) {
         return reject(e)
       }
@@ -850,8 +854,8 @@ chcp 65001>nul
 
             for (const regPath of registryPaths) {
               try {
-                // 使用 /s 参数查询所有子项和值
-                const { stdout } = await exec(`reg query "${regPath}" /s`)
+                // Use the /s parameter to query all subkeys and values
+                const { stdout } = await execAsync(`reg query "${regPath}" /s`)
                 const lines = stdout.split('\n').map((line: string) => line.trim())
 
                 let basePath = null
@@ -883,8 +887,8 @@ chcp 65001>nul
 
         const findToolboxIdePath = async (ideName: string) => {
           try {
-            // 尝试获取 Toolbox 安装目录
-            const { stdout } = await exec(
+            // Attempt to get the Toolbox installation directory
+            const { stdout } = await execAsync(
               `reg query "HKCU\\SOFTWARE\\JetBrains\\Toolbox" /v "InstallDir"`
             )
             const match = stdout.match(/InstallDir\s+REG_SZ\s+(.+)/i)
@@ -893,8 +897,8 @@ chcp 65001>nul
             const toolboxPath = match[1].trim()
             const appsPath = `${toolboxPath}\\apps\\${ideName}\\ch-0`
 
-            // 获取最新版本目录（按修改时间倒序）
-            const { stdout: dirs } = await exec(`dir "${appsPath}" /AD /B /O-N`)
+            // Get the latest version directory (sorted by modification time in descending order)
+            const { stdout: dirs } = await execAsync(`dir "${appsPath}" /AD /B /O-N`)
             const latestVersionDir = dirs.split('\r\n')[0].trim()
             if (!latestVersionDir) return null
 
@@ -942,7 +946,7 @@ chcp 65001>nul
               return false
             }
 
-            await exec(`"${idePath}" "${folderPath}"`)
+            await execAsync(`"${idePath}" "${folderPath}"`)
             console.log(`Opened ${folderPath} with ${ideName}`)
             return true
           } catch (error) {
@@ -961,7 +965,7 @@ chcp 65001>nul
         const getHBuilderXPath = async (): Promise<string | null> => {
           try {
             // 查询注册表
-            const { stdout } = await exec(`reg query "HKCR\\hbuilderx\\shell\\open\\command" /ve`)
+            const { stdout } = await execAsync(`reg query "HKCR\\hbuilderx\\shell\\open\\command" /ve`)
 
             // 提取路径（示例输出: "(Default) REG_SZ "D:\Program Files\HBuilderX\HBuilderX.exe" "%1""）
             const match = stdout.match(/"(.*?HBuilderX\.exe)"/i)
@@ -979,7 +983,7 @@ chcp 65001>nul
             if (!hbuilderxPath) {
               return false
             }
-            await exec(`"${hbuilderxPath}" "${targetPath}"`)
+            await execAsync(`"${hbuilderxPath}" "${targetPath}"`)
             return true
           } catch (error) {
             return false
@@ -992,17 +996,18 @@ chcp 65001>nul
         }
         return reject(new Error(`HBuilderX Not Found`))
       }
+      let cmd = ''
       if (app === 'PowerShell') {
-        command = `cd "${dir}"`
-        command = JSON.stringify(command).slice(1, -1)
-        command = `start powershell -NoExit -Command "${command}"`
+        cmd = `cd "${dir}"`
+        cmd = JSON.stringify(cmd).slice(1, -1)
+        cmd = `start powershell -NoExit -Command "${cmd}"`
       } else if (app === 'PowerShell7') {
-        command = `cd "${dir}"`
-        command = JSON.stringify(command).slice(1, -1)
-        command = `start pwsh.exe -NoExit -Command "${command}"`
+        cmd = `cd "${dir}"`
+        cmd = JSON.stringify(cmd).slice(1, -1)
+        cmd = `start pwsh.exe -NoExit -Command "${cmd}"`
       }
       try {
-        await exec(command)
+        await execAsync(cmd)
       } catch (e) {
         return reject(e)
       }

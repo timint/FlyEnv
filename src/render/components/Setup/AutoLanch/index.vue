@@ -20,11 +20,13 @@
   import { AppStore } from '@/store/app'
   import { MessageError } from '@/util/Element'
   import { I18nT } from '@lang/index'
+  import { promisify } from 'node:util'
+  import { exec } from 'node:child-process'
 
   const { app } = require('@electron/remote')
-  const { exec } = require('child-process-promise')
   const { writeFile, mkdirp, remove, readFile } = require('fs-extra')
   const { join } = require('path')
+  const execAsync = promisify(exec)
 
   const store = AppStore()
 
@@ -52,7 +54,7 @@
       }
     } else {
       try {
-        await exec(`schtasks /delete /tn "${taskName}" /f`)
+        await execAsync(`schtasks /delete /tn "${taskName}" /f`)
       } catch (e: any) {}
       return true
     }

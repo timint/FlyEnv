@@ -33,7 +33,10 @@
 
   const { existsSync, realpathSync } = require('fs')
   const { isAbsolute } = require('path')
-  const { exec } = require('child-process-promise')
+  import { exec } from 'node:child-process'
+  import { promisify } from 'node:util'
+
+  const execAsync = promisify(exec)
 
   const { show, onClosed, onSubmit, closedFn, callback } = AsyncComponentSetup()
 
@@ -65,7 +68,7 @@
       show.value = false
       return
     }
-    exec(`echo ${path.value}`)
+    execAsync(`echo ${path.value}`)
       .then((res) => {
         const p = res?.stdout?.trim() ?? ''
         if (isAbsolute(p) && existsSync(p)) {

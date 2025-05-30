@@ -1,8 +1,10 @@
 import { computed, onMounted, onUnmounted, reactive, ref } from 'vue'
 import { type SoftInstalled } from '@/store/brew'
+import { join } from 'path'
+import { promisify } from 'node:util'
+import { exec } from 'node:child-process'
 
-const { join } = require('path')
-const { exec } = require('child-process-promise')
+const execAsync = promisify(exec)
 
 export const LoadedSetup = reactive<{
   list: { [k: string]: any }
@@ -28,7 +30,7 @@ export const Setup = (version: SoftInstalled) => {
     LoadedSetup.fetching[version.bin] = true
     const bin = join(version?.path, 'php.exe')
     console.log('macport bin: ', bin)
-    exec('php.exe -m', {
+    execAsync('php.exe -m', {
       cwd: version?.path
     })
       .then((res: any) => {
