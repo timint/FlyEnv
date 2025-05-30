@@ -182,7 +182,7 @@
   import { FolderAdd, Lock, Refresh } from '@element-plus/icons-vue'
   import { BrewStore } from '@/store/brew'
   import { AsyncComponentShow } from '@/util/AsyncComponent'
-  import { isEqual } from 'lodash'
+  import { isDeepStrictEqual } from 'node:util'
   import { Project } from '@/util/Project'
   import type { AllAppModule } from '@/core/type'
   import { SetupStore } from '@/components/Setup/store'
@@ -297,7 +297,7 @@
   const docClick = (e?: MouseEvent) => {
     const dom: HTMLElement = e?.target as any
     if (quickEdit?.value && !quickEditTr?.value?.contains(dom)) {
-      if (!isEqual(quickEdit.value, quickEditBack)) {
+      if (!isDeepStrictEqual(quickEdit.value, quickEditBack)) {
         const item = JSON.parse(JSON.stringify(quickEdit.value))
         quickEdit.value = undefined
         quickEditTr.value = undefined

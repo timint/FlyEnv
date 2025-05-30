@@ -10,7 +10,7 @@ import { AllAppModule } from '@/core/type'
 import { staticVersionDel } from '@/util/Version'
 import { AppServiceAliasItem } from '@shared/app'
 import { AsyncComponentShow } from '@/util/AsyncComponent'
-import { isEqual } from 'lodash'
+import { isDeepStrictEqual } from 'node:util'
 import localForage from 'localforage'
 
 type ServiceActionType = {
@@ -85,7 +85,7 @@ export const ServiceActionStore: ServiceActionType = reactive({
     ).then((key: string, res: any) => {
       IPC.off(key)
       if (res?.code === 0) {
-        if (!isEqual(res.data, store.config.setup?.alias)) {
+        if (!isDeepStrictEqual(res.data, store.config.setup?.alias)) {
           const setup = JSON.parse(JSON.stringify(store.config.setup))
           setup.alias = res.data
           store.config.setup = reactive(setup)

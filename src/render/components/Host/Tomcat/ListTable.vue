@@ -137,7 +137,7 @@
   import { I18nT } from '@lang/index'
   import { AsyncComponentShow } from '@/util/AsyncComponent'
   import type { AppHost } from '@shared/app'
-  import { isEqual } from 'lodash'
+  import { isDeepStrictEqual } from 'node:util'
   import { HostStore } from '@/components/Host/store'
   import { shell } from '@electron/remote'
   import { join } from 'path'

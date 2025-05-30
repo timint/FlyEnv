@@ -3,7 +3,7 @@ import { join } from 'path'
 import { copyFileSync, existsSync, readFileSync, rmSync, writeFileSync, mkdirSync } from 'fs'
 import { hostAlias } from '../../Fn'
 import { vhostTmpl } from './Host'
-import { isEqual } from 'lodash'
+import { isDeepStrictEqual } from 'node:util'
 import { pathFixedToUnix } from '@shared/utils'
 
 const handleReverseProxy = (host: AppHost, content: string) => {
@@ -140,7 +140,7 @@ export const updateCaddyConf = async (host: AppHost, old: AppHost) => {
   const newAliasArr = hostAlias(host)
 
   if (
-    !isEqual(oldAliasArr, newAliasArr) ||
+    !isDeepStrictEqual(oldAliasArr, newAliasArr) ||
     old.port.caddy !== host.port.caddy ||
     old.port.caddy_ssl !== host.port.caddy_ssl
   ) {
@@ -223,7 +223,7 @@ export const updateCaddyConf = async (host: AppHost, old: AppHost) => {
       }
     }
   }
-  if (!isEqual(host?.reverseProxy, old?.reverseProxy)) {
+  if (!isDeepStrictEqual(host?.reverseProxy, old?.reverseProxy)) {
     hasChanged = true
   }
   if (hasChanged) {

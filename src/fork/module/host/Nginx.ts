@@ -3,7 +3,7 @@ import { basename, dirname, join } from 'path'
 import { copyFileSync, existsSync, readFileSync, rmSync, writeFileSync, mkdirSync } from 'fs'
 import { hostAlias } from '../../Fn'
 import { vhostTmpl } from './Host'
-import { isEqual } from 'lodash'
+import { isDeepStrictEqual } from 'node:util'
 import { pathFixedToUnix } from '@shared/utils'
 
 const handleReverseProxy = (host: AppHost, content: string) => {
@@ -229,7 +229,7 @@ export const updateNginxConf = async (host: AppHost, old: AppHost) => {
   }
   const oldAliasArr = hostAlias(old)
   const newAliasArr = hostAlias(host)
-  if (!isEqual(oldAliasArr, newAliasArr)) {
+  if (!isDeepStrictEqual(oldAliasArr, newAliasArr)) {
     hasChanged = true
     const newAlias = newAliasArr.join(' ')
     find.push(`server_name (.*?)\\r\\n`)
@@ -287,7 +287,7 @@ export const updateNginxConf = async (host: AppHost, old: AppHost) => {
       replace.push(...['##Static Site Nginx##'])
     }
   }
-  if (!isEqual(host?.reverseProxy, old?.reverseProxy)) {
+  if (!isDeepStrictEqual(host?.reverseProxy, old?.reverseProxy)) {
     hasChanged = true
   }
   if (hasChanged) {

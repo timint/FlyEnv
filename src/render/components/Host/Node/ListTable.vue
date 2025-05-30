@@ -178,7 +178,7 @@
   import { I18nT } from '@lang/index'
   import { AsyncComponentShow } from '@/util/AsyncComponent'
   import type { AppHost } from '@shared/app'
-  import { isEqual } from 'lodash'
+  import { isDeepStrictEqual } from 'node:util'
   import { HostStore } from '@/components/Host/store'
   import { MessageError, MessageSuccess } from '@/util/Element'
   import { shell } from '@electron/remote'
@@ -413,7 +413,7 @@
       if (!quickEdit?.value?.projectName?.trim() || quickEditProjectNameError?.value) {
         quickEdit.value.projectName = quickEditBack?.projectName ?? ''
       }
-      if (!isEqual(quickEdit.value, quickEditBack)) {
+      if (!isDeepStrictEqual(quickEdit.value, quickEditBack)) {
         handleHost(
           JSON.parse(JSON.stringify(quickEdit.value)),
           'edit',

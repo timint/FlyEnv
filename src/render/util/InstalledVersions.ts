@@ -2,7 +2,7 @@ import IPC from '@/util/IPC.js'
 import { BrewStore, SoftInstalled } from '@/store/brew'
 import { AppStore } from '@/store/app'
 import { reactive } from 'vue'
-import { isEqual } from 'lodash'
+import { isDeepStrictEqual } from 'node:util'
 import { AllAppModule, AppModuleEnum } from '@/core/type'
 import { ServiceActionStore } from '@/components/ServiceManager/EXT/store'
 
@@ -25,7 +25,7 @@ class InstalledVersions {
   }
   allInstalledVersions(flags: Array<AllAppModule>) {
     console.trace('allInstalledVersions: !!!')
-    if (this.taskRunning && this.runningFlags.find((f) => isEqual(f, flags))) {
+    if (this.taskRunning && this.runningFlags.find((f) => isDeepStrictEqual(f, flags))) {
       return new Promise((resolve) => {
         this._cb.push(resolve)
       })

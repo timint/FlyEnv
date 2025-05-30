@@ -1,7 +1,7 @@
 import { join } from 'path'
-import { isEqual } from 'lodash'
 import type { AppHost } from '@shared/app'
 import { chmod, existsSync, readFileSync } from 'fs'
+import { isDeepStrictEqual } from 'node:util'
 import { hostAlias } from '../../Fn'
 import { makeAutoSSL } from './SSL'
 
@@ -77,7 +77,7 @@ export const updateAutoSSL = async (host: AppHost, old: AppHost) => {
   const oldAliasArr = hostAlias(old)
   const newAliasArr = hostAlias(host)
   if (host?.useSSL && host?.autoSSL) {
-    if (host?.autoSSL !== old?.autoSSL || !isEqual(oldAliasArr, newAliasArr)) {
+    if (host?.autoSSL !== old?.autoSSL || !isDeepStrictEqual(oldAliasArr, newAliasArr)) {
       const ssl = await makeAutoSSL(host)
       if (ssl) {
         host.ssl.cert = ssl.crt
