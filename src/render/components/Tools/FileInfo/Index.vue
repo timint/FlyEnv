@@ -59,7 +59,7 @@
 
 <script>
   import { formatBytes } from '@shared/utils.ts'
-  import moment from 'moment'
+  import dayjs from 'dayjs'
   import { getFileHashes } from '@shared/file.ts'
 
   const { exec } = require('child-process-promise')
@@ -139,13 +139,13 @@
             this.info.size = stats.size
             this.info.size_str = formatBytes(stats.size)
             this.info.atime = stats.atimeMs
-            this.info.atime_str = moment(stats.atimeMs).format()
+            this.info.atime_str = dayjs(stats.atimeMs).format()
             this.info.btime = stats.birthtimeMs
-            this.info.btime_str = moment(stats.birthtimeMs).format()
+            this.info.btime_str = dayjs(stats.birthtimeMs).format()
             this.info.ctime = stats.ctimeMs
-            this.info.ctime_str = moment(stats.ctimeMs).format()
+            this.info.ctime_str = dayjs(stats.ctimeMs).format()
             this.info.mtime = stats.mtimeMs
-            this.info.mtime_str = moment(stats.mtimeMs).format()
+            this.info.mtime_str = dayjs(stats.mtimeMs).format()
 
             if (stats.isFile()) {
               getFileHashes(this.path, 'md5')
