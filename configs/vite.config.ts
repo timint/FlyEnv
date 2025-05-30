@@ -21,8 +21,15 @@ console.log('sharePath: ', sharePath)
 
 const config: UserConfig = {
   base: './',
-  plugins: [monacoEditorPlugin({}), wasm(), vue(), vueJsx()],
-  assetsInclude: ['**/*.node'],
+  plugins: [
+    monacoEditorPlugin({}),
+    wasm([]),
+    vue(),
+    vueJsx()
+  ],
+  assetsInclude: [
+    '**/*.node'
+  ],
   optimizeDeps: {
     esbuildOptions: {
       target: 'esnext',
