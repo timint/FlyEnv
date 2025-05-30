@@ -1,8 +1,10 @@
 import { join, basename, dirname } from 'path'
-import { existsSync } from 'fs'
+import { existsSync, readFileSync, writeFileSync } from 'fs'
 import { Base } from './Base'
 import { I18nT } from '@lang/index'
-import type { AppHost, OnlineVersionItem, SoftInstalled } from '@shared/app'
+import { ForkPromise } from '@shared/ForkPromise'
+import TaskQueue from '../TaskQueue'
+import { fetchHostList } from './host/HostFile'
 import {
   AppLog,
   execPromise,
@@ -16,7 +18,6 @@ import {
   serviceStartExecCMD
 } from '../Fn'
 import { ForkPromise } from '@shared/ForkPromise'
-import { mkdirp, readFile, writeFile } from 'fs-extra'
 import TaskQueue from '../TaskQueue'
 import { fetchHostList } from './host/HostFile'
 
@@ -36,7 +37,7 @@ class Apache extends Base {
       const defaultFileBack = join(global.Server.ApacheDir!, `${version.version}.default.conf`)
       const bin = version.bin
       if (existsSync(defaultFile)) {
-        let content = await readFile(defaultFile, 'utf-8')
+        let content = readFileSync(defaultFile, 'utf-8')
         let srvroot = ''
         const reg = new RegExp('(Define SRVROOT ")([\\s\\S]*?)(")', 'g')
         try {
@@ -50,8 +51,8 @@ class Apache extends Base {
               `Define SRVROOT "${srvrootReplace}"`
             )
           }
-          await writeFile(defaultFile, content)
-          await writeFile(defaultFileBack, content)
+          writeFileSync(defaultFile, content)
+          writeFileSync(defaultFileBack, content)
         }
         resolve(true)
         return
@@ -95,7 +96,7 @@ class Apache extends Base {
         reject(new Error(I18nT('fork.confNoFound')))
         return
       }
-      let content = await readFile(file, 'utf-8')
+      let content = readFileSync(file, 'utf-8')
 
       reg = new RegExp('(CustomLog ")([\\s\\S]*?)(")', 'g')
       let logPath = ''
@@ -159,13 +160,13 @@ class Apache extends Base {
 
       const pidPath = join(global.Server.ApacheDir!, 'httpd.pid').split('\\').join('/')
       let vhost = join(global.Server.BaseDir!, 'vhost/apache/')
-      await mkdirp(vhost)
+      rmSync(vhost, { recursive: true })
       vhost = vhost.split('\\').join('/')
 
       content += `\nPidFile "${pidPath}"
 IncludeOptional "${vhost}*.conf"`
-      await writeFile(defaultFile, content)
-      await writeFile(defaultFileBack, content)
+      writeFileSync(defaultFile, content)
+      writeFileSync(defaultFileBack, content)
       on({
         'APP-On-Log': AppLog('info', I18nT('appLog.confInitSuccess', { file: defaultFile }))
       })
@@ -198,11 +199,11 @@ IncludeOptional "${vhost}*.conf"`
     for (const file of allVhostFile) {
       portRegex.lastIndex = 0
       regex.lastIndex = 0
-      let content = await readFile(file, 'utf-8')
+      let content = readFileSync(file, 'utf-8')
       if (regex.test(content)) {
         regex.lastIndex = 0
         content = content.replace(regex, '\n').replace(/\n+/g, '\n').trim()
-        await writeFile(file, content)
+        writeFileSync(file, content)
       }
       let m
       while ((m = portRegex.exec(content)) !== null) {
@@ -216,7 +217,7 @@ IncludeOptional "${vhost}*.conf"`
     }
     console.log('allNeedPort: ', allNeedPort)
     const configpath = join(global.Server.ApacheDir!, `${version.version}.conf`)
-    let confContent = await readFile(configpath, 'utf-8')
+    let confContent = readFileSync(configpath, 'utf-8')
     regex.lastIndex = 0
     if (regex.test(confContent)) {
       regex.lastIndex = 0
@@ -230,7 +231,7 @@ IncludeOptional "${vhost}*.conf"`
     txts.unshift('#PhpWebStudy-Apache-Listen-Begin#')
     txts.push('#PhpWebStudy-Apache-Listen-End#')
     confContent = txts.join('\n') + '\n' + confContent
-    await writeFile(configpath, confContent)
+    writeFileSync(configpath, confContent)
   }
 
   _startServer(version: SoftInstalled) {

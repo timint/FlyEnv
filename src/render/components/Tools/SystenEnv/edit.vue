@@ -31,8 +31,8 @@
   import { chooseFolder } from '@/util'
   import { MessageError } from '@/util/Element'
 
-  const { existsSync, realpathSync } = require('fs')
   const { isAbsolute } = require('path')
+  import { existsSync, realpathSync } from 'fs'
   import { exec } from 'node:child-process'
   import { promisify } from 'node:util'
 

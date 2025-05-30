@@ -1,11 +1,10 @@
 import { join } from 'path'
-import { existsSync } from 'fs'
+import { existsSync, readFileSync } from 'fs'
 import { Base } from './Base'
 import { ForkPromise } from '@shared/ForkPromise'
 import { OnlineVersionItem, SoftInstalled } from '@shared/app'
 import { versionFilterSame, versionFixed, versionLocalFetch, versionSort } from '../Fn'
 import TaskQueue from '../TaskQueue'
-import { readFile } from 'fs-extra'
 
 class Composer extends Base {
   constructor() {
@@ -57,7 +56,7 @@ class Composer extends Base {
             })
           }
           try {
-            const res = await readFile(bin, 'utf-8')
+            const res = readFileSync(bin, 'utf-8')
             handleThen({
               stdout: res,
               stderr: ''

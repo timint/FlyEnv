@@ -20,7 +20,6 @@ import NodePTY from './core/NodePTY'
 import ScreenManager from './core/ScreenManager'
 import * as IP from 'neoip'
 
-const { createFolder } = require('../shared/file')
 const ServeHandler = require('serve-handler')
 const Http = require('http')
 const IP = require('ip')
@@ -119,32 +118,46 @@ export default class Application extends EventEmitter {
     }
     console.log('userData: ', runpath)
     this.setProxy()
+
     global.Server.UserHome = app.getPath('home')
     console.log('global.Server.UserHome: ', global.Server.UserHome)
+
     global.Server.BaseDir = join(runpath, 'server')
+    mkdirSync(global.Server.BaseDir)
+
     global.Server.AppDir = join(runpath, 'app')
-    createFolder(global.Server.BaseDir)
-    createFolder(global.Server.AppDir)
+    mkdirSync(global.Server.AppDir)
+
     global.Server.NginxDir = join(runpath, 'server/nginx')
+    mkdirSync(global.Server.NginxDir)
+
     global.Server.PhpDir = join(runpath, 'server/php')
+    mkdirSync(global.Server.PhpDir)
+
     global.Server.MysqlDir = join(runpath, 'server/mysql')
+    mkdirSync(global.Server.MysqlDir)
+
     global.Server.MariaDBDir = join(runpath, 'server/mariadb')
+    mkdirSync(global.Server.MariaDBDir)
+
     global.Server.ApacheDir = join(runpath, 'server/apache')
+    mkdirSync(global.Server.ApacheDir)
+
     global.Server.MemcachedDir = join(runpath, 'server/memcached')
+    mkdirSync(global.Server.MemcachedDir)
+
     global.Server.RedisDir = join(runpath, 'server/redis')
+    mkdirSync(global.Server.RedisDir)
+
     global.Server.MongoDBDir = join(runpath, 'server/mongodb')
+    mkdirSync(global.Server.MongoDBDir)
+
     global.Server.FTPDir = join(runpath, 'server/ftp')
     global.Server.PostgreSqlDir = join(runpath, 'server/postgresql')
-    createFolder(global.Server.NginxDir)
-    createFolder(global.Server.PhpDir)
-    createFolder(global.Server.MysqlDir)
-    createFolder(global.Server.MariaDBDir)
-    createFolder(global.Server.ApacheDir)
-    createFolder(global.Server.MemcachedDir)
-    createFolder(global.Server.RedisDir)
-    createFolder(global.Server.MongoDBDir)
+
     global.Server.Cache = join(runpath, 'server/cache')
-    createFolder(global.Server.Cache)
+    mkdirSync(global.Server.Cache)
+
     global.Server.Static = __static
   }
 

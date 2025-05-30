@@ -1,5 +1,5 @@
 import { join, dirname, basename, isAbsolute } from 'path'
-import { createWriteStream, existsSync } from 'fs'
+import { copyFileSync, createWriteStream, existsSync, writeFileSync, mkdirSync, readFileSync, rmSync, readdir } from 'fs'
 import { Base } from './Base'
 import { I18nT } from '@lang/index'
 import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
@@ -15,7 +15,6 @@ import {
   versionSort
 } from '../Fn'
 import { ForkPromise } from '@shared/ForkPromise'
-import { writeFile, readFile, remove, mkdirp, copyFile, readdir } from 'fs-extra'
 import { zipUnPack } from '@shared/file'
 import TaskQueue from '../TaskQueue'
 import { ProcessListSearch } from '../Process'
@@ -36,8 +35,8 @@ class Php extends Base {
       const capem = join(global.Server.BaseDir!, 'CA/cacert.pem')
       if (!existsSync(capem)) {
         try {
-          await mkdirp(dirname(capem))
-          await copyFile(join(global.Server.Static!, 'tmpl/cacert.pem'), capem)
+          mkdirSync(dirname(capem), { recursive: true })
+          copyFileSync(join(global.Server.Static!, 'tmpl/cacert.pem'), capem)
         } catch (e) {}
       }
       resolve(true)
@@ -52,7 +51,7 @@ class Php extends Base {
         return
       }
       const initIniFile = async (file: string) => {
-        let content = await readFile(file, 'utf-8');
+        let content = readFileSync(file, 'utf-8')
 
         const phpExtensions = [
           'curl',
@@ -88,16 +87,16 @@ class Php extends Base {
 
         // Set CA certificate path
         const cacertpem = join(global.Server.BaseDir!, 'CA/cacert.pem').split('\\').join('/')
-        await mkdirp(dirname(cacertpem))
+        mkdirSync(dirname(cacertpem), { recursive: true })
         if (!existsSync(cacertpem)) {
-          await copyFile(join(global.Server.Static!, 'tmpl/cacert.pem'), cacertpem)
+          copyFileSync(join(global.Server.Static!, 'tmpl/cacert.pem'), cacertpem)
         }
         content = content.replace(';curl.cainfo =', `curl.cainfo = "${cacertpem}"`)
         content = content.replace(';openssl.cafile=', `openssl.cafile="${cacertpem}"`)
 
-        await writeFile(ini, content)
+        writeFileSync(ini, content)
         const iniDefault = join(version.path, 'php.ini.default')
-        await writeFile(iniDefault, content)
+        writeFileSync(iniDefault, content)
       }
 
       const devIni = join(version.path, 'php.ini-development')
@@ -193,12 +192,12 @@ class Php extends Base {
     return new ForkPromise(async (resolve) => {
       const v = version?.version?.split('.')?.slice(0, 2)?.join('') ?? ''
       const confPath = join(global.Server.NginxDir!, 'conf/enable-php.conf')
-      await mkdirp(join(global.Server.NginxDir!, 'conf'))
+      mkdirSync(join(global.Server.NginxDir!, 'conf'), { recursive: true })
       const tmplPath = join(global.Server.Static!, 'tmpl/enable-php.conf')
       if (existsSync(tmplPath)) {
-        let content = await readFile(tmplPath, 'utf-8')
+        let content = readFileSync(tmplPath, 'utf-8')
         content = content.replace('##VERSION##', v)
-        await writeFile(confPath, content)
+        writeFileSync(confPath, content)
       }
       resolve(true)
     })
@@ -215,7 +214,7 @@ class Php extends Base {
       await this.#initFPM()
       await this.getIniPath(version)
       if (!existsSync(join(version.path, 'php-cgi-spawner.exe'))) {
-        await copyFile(
+        copyFileSync(
           join(global.Server.PhpDir!, 'php-cgi-spawner.exe'),
           join(version.path, 'php-cgi-spawner.exe')
         )
@@ -224,9 +223,9 @@ class Php extends Base {
       const ini = join(version.path, 'php.ini')
       const runIni = join(version.path, `php.phpwebstudy.90${version.num}.ini`)
       if (existsSync(runIni)) {
-        await remove(runIni)
+        rmSync(runIni)
       }
-      await copyFile(ini, runIni)
+      copyFileSync(ini, runIni)
 
       const bin = join(version.path, 'php-cgi-spawner.exe')
       const pidPath = join(global.Server.PhpDir!, `php${version.num}.pid`)
@@ -259,14 +258,14 @@ class Php extends Base {
       try {
         const cacheDir = global.Server.Cache!
         const obfuscatorDir = join(cacheDir, 'php-obfuscator')
-        await remove(obfuscatorDir)
+        rmSync(obfuscatorDir)
         const zipFile = join(global.Server.Static!, 'zip/php-obfuscator.zip')
         await zipUnPack(zipFile, obfuscatorDir)
         const bin = join(obfuscatorDir, 'yakpro-po.php')
         let command = ''
         if (params.config) {
           const configFile = join(cacheDir, 'php-obfuscator.cnf')
-          await writeFile(configFile, params.config)
+          writeFileSync(configFile, params.config)
           command = `${basename(params.bin)} "${bin}" --config-file "${configFile}" "${params.src}" -o "${params.desc}"`
         } else {
           command = `${basename(params.bin)} "${bin}" "${params.src}" -o "${params.desc}"`
@@ -341,7 +340,7 @@ class Php extends Base {
   fetchExtensionDir(version: SoftInstalled): ForkPromise<string> {
     return new ForkPromise(async (resolve) => {
       const ini = await this.getIniPath(version)
-      let content: string = await readFile(ini, 'utf-8')
+      let content: string = readFileSync(ini, 'utf-8')
 
       let dir: string = ''
       const regex: RegExp = /^(?!\s*;)\s*extension_dir\s*=\s*"?([^"\s]+)"?/gm
@@ -354,7 +353,7 @@ class Php extends Base {
 
       if (!dir) {
         content = content.trim() + `\nextension_dir = "ext"`
-        await writeFile(ini, content)
+        writeFileSync(ini, content)
         dir = join(dirname(version.bin), 'ext')
       } else if (!isAbsolute(dir)) {
         dir = join(dirname(version.bin), dir)
@@ -369,7 +368,7 @@ class Php extends Base {
   localExec(item: any, version: SoftInstalled) {
     return new ForkPromise(async (resolve, reject) => {
       const ini = await this.getIniPath(version)
-      let content: string = await readFile(ini, 'utf-8')
+      let content: string = readFileSync(ini, 'utf-8')
       content = content.trim()
 
       if (item.installed) {
@@ -385,7 +384,7 @@ class Php extends Base {
         content += `\n${item.iniStr}`
         if (item.name === 'php_xdebug') {
           const output_dir = join(global.Server.PhpDir!, 'xdebug')
-          await mkdirp(output_dir)
+          mkdirSync(output_dir, { recursive: true })
           content += `\n;[FlyEnv-xdebug-ini-begin]
 xdebug.idekey = "PHPSTORM"
 xdebug.client_host = localhost
@@ -401,7 +400,7 @@ xdebug.output_dir = "${output_dir}"
       }
 
       content = content.trim()
-      await writeFile(ini, content)
+      writeFileSync(ini, content)
       this.fetchLocalExtend(version).then(resolve).catch(reject)
     })
   }
@@ -409,7 +408,7 @@ xdebug.output_dir = "${output_dir}"
   fetchLocalExtend(version: SoftInstalled) {
     return new ForkPromise(async (resolve) => {
       const ini = await this.getIniPath(version)
-      let content: string = await readFile(ini, 'utf-8')
+      let content: string = readFileSync(ini, 'utf-8')
 
       let dir: string = ''
       let regex: RegExp = /^(?!\s*;)\s*extension_dir\s*=\s*"?([^"\s]+)"?/gm
@@ -422,7 +421,7 @@ xdebug.output_dir = "${output_dir}"
 
       if (!dir) {
         content = content.trim() + `\nextension_dir = "ext"`
-        await writeFile(ini, content)
+        writeFileSync(ini, content)
         dir = join(dirname(version.bin), 'ext')
       } else if (!isAbsolute(dir)) {
         dir = join(dirname(version.bin), dir)
@@ -499,7 +498,7 @@ xdebug.output_dir = "${output_dir}"
   libExec(item: any, version: SoftInstalled) {
     return new ForkPromise(async (resolve, reject, on) => {
       const ini = await this.getIniPath(version)
-      let content: string = await readFile(ini, 'utf-8')
+      let content: string = readFileSync(ini, 'utf-8')
       content = content.trim()
 
       const name = `php_${item.name.toLowerCase()}`
@@ -524,7 +523,7 @@ xdebug.output_dir = "${output_dir}"
             const allFile = await readdir(cacheDir)
             const allDLL = allFile.filter((a) => a.toLowerCase().endsWith('.dll'))
             const destDir = version.path
-            await Promise.all(allDLL.map((a) => copyFile(join(cacheDir, a), join(destDir, a))))
+            await Promise.all(allDLL.map((a) => copyFileSync(join(cacheDir, a), join(destDir, a))))
           }
           const install = () => {
             return new Promise(async (resolve, reject) => {
@@ -538,9 +537,9 @@ xdebug.output_dir = "${output_dir}"
                   await zipUnPack(zipFile, cacheDir)
                 } catch (e) {}
                 if (existsSync(dll)) {
-                  await copyFile(dll, file)
+                  copyFileSync(dll, file)
                   await handleImagick(cacheDir)
-                  await remove(cacheDir)
+                  rmSync(cacheDir)
                   if (existsSync(file)) {
                     resolve(true)
                     return
@@ -549,8 +548,8 @@ xdebug.output_dir = "${output_dir}"
                     return
                   }
                 }
-                await remove(cacheDir)
-                await remove(zipFile)
+                rmSync(cacheDir)
+                rmSync(zipFile)
               }
               const url = item.versions[phpVersion][0].url
               axios({
@@ -574,7 +573,7 @@ xdebug.output_dir = "${output_dir}"
                   stream.on('error', async (e: any) => {
                     try {
                       if (existsSync(zipFile)) {
-                        await remove(zipFile)
+                        rmSync(zipFile)
                       }
                     } catch (e) {}
                     reject(e)
@@ -593,9 +592,9 @@ xdebug.output_dir = "${output_dir}"
                       return
                     }
                     if (existsSync(dll)) {
-                      await copyFile(dll, file)
+                      copyFileSync(dll, file)
                       await handleImagick(cacheDir)
-                      await remove(cacheDir)
+                      rmSync(cacheDir)
                       if (existsSync(file)) {
                         resolve(true)
                         return
@@ -617,7 +616,7 @@ xdebug.output_dir = "${output_dir}"
         content += `\n${type}=${name}`
         if (name === 'php_xdebug') {
           const output_dir = join(global.Server.PhpDir!, 'xdebug')
-          await mkdirp(output_dir)
+          mkdirSync(output_dir, { recursive: true })
           content += `\n;[FlyEnv-xdebug-ini-begin]
 xdebug.idekey = "PHPSTORM"
 xdebug.client_host = localhost
@@ -633,7 +632,7 @@ xdebug.output_dir = "${output_dir}"
       }
 
       content = content.trim()
-      await writeFile(ini, content)
+      writeFileSync(ini, content)
       this.fetchLocalExtend(version).then(resolve).catch(reject)
     })
   }

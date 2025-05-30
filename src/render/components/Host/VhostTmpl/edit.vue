@@ -33,8 +33,8 @@
   import { AsyncComponentSetup } from '@/util/AsyncComponent'
   import Conf from '@/components/Conf/drawer.vue'
 
-  const { existsSync, copyFile, mkdirp } = require('fs-extra')
   const { join, dirname } = require('path')
+  import { existsSync, copyFileSync, mkdirSync } from 'fs'
 
   const props = defineProps<{
     flag: 'apache' | 'apacheSSL' | 'nginx' | 'nginxSSL' | 'caddy' | 'caddySSL'
@@ -71,11 +71,9 @@
   const defaultFile = ref(files[props.flag])
 
   if (!existsSync(file.value)) {
-    mkdirp(dirname(file.value))
-      .then(() => copyFile(defaultFile.value, file.value))
-      .then(() => {
-        conf?.value?.update()
-      })
+    mkdirSync(dirname(file.value), { recursive: true })
+    copyFileSync(defaultFile.value, file.value)
+    conf?.value?.update()
   }
 
   defineExpose({

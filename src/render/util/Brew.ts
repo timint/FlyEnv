@@ -4,8 +4,8 @@ import { MessageError } from '@/util/Element'
 import { reactive } from 'vue'
 import { AllAppModule } from '@/core/type'
 
-const { existsSync } = require('fs')
 const { join } = require('path')
+import { existsSync } from 'fs'
 
 export const fetchVerion = (typeFlag: AllAppModule): Promise<boolean> => {
   return new Promise((resolve) => {

@@ -17,7 +17,7 @@
   import { BrewStore } from '@/store/brew'
 
   const { join } = require('path')
-  const { existsSync, readFile } = require('fs-extra')
+  import { existsSync, readFileSync } from 'fs'
 
   const appStore = AppStore()
   const brewStore = BrewStore()
@@ -46,7 +46,7 @@
       return
     }
     const logDir = join(global.Server.BaseDir, 'rabbitmq', `log-${v}`)
-    const content = await readFile(confFile, 'utf-8')
+    const content = readFileSync(confFile, 'utf-8')
     const name =
       content
         .split('\n')

@@ -1,5 +1,5 @@
 import type { AppHost } from '@shared/app'
-import { watch, existsSync, FSWatcher, readFile } from 'fs-extra'
+import { existsSync, FSWatcher, readFileSync, watch } from 'fs'
 import { ForkPromise } from '@shared/ForkPromise'
 import { waitTime, execPromiseRoot } from '../../Fn'
 
@@ -32,7 +32,7 @@ export const getHostItemEnv = async (item: AppHost) => {
   } else if (item?.envVarType === 'file') {
     const file = item?.envFile ?? ''
     if (file && existsSync(file)) {
-      const content = await readFile(file, 'utf-8')
+      const content = readFileSync(file, 'utf-8')
       arr = getEnv(content)
     }
   }
@@ -124,7 +124,7 @@ export class ServiceItem {
     return new Promise((resolve, reject) => {
       const doCheck = async (time: number) => {
         if (this.pidFile && existsSync(this.pidFile)) {
-          const pid = (await readFile(this.pidFile, 'utf-8')).trim()
+          const pid = (readFileSync(this.pidFile, 'utf-8')).trim()
           resolve(pid)
         } else {
           if (time < 20) {

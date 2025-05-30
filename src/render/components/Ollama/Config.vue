@@ -22,7 +22,7 @@
   import { uuid } from '@shared/utils'
 
   const { join } = require('path')
-  const { existsSync } = require('fs-extra')
+  import { existsSync } from 'fs'
 
   const commonSetting: Ref<CommonSetItem[]> = ref([])
   const conf = ref()

@@ -3,7 +3,7 @@ import type { AppHost } from '@/store/app'
 import { AppStore } from '@/store/app'
 
 const { join } = require('path')
-const { writeFile } = require('fs-extra')
+import { writeFileSync } from 'fs'
 
 export const RewriteAll: { [key: string]: any } = {}
 
@@ -57,7 +57,7 @@ export const HostStore: HostStoreType = reactive({
     const list = Object.values(this._list).flat()
     const arr = store.hosts.filter((h) => !list.find((f) => f.id === h.id))
     arr.push(...list)
-    writeFile(hostfile, JSON.stringify(arr)).then()
+    writeFileSync(hostfile, JSON.stringify(arr))
     store.hosts = reactive(arr)
   }
 } as HostStoreType)

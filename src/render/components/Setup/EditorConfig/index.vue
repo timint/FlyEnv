@@ -29,10 +29,9 @@
   import { editor } from 'monaco-editor/esm/vs/editor/editor.api.js'
   import { EditorConfigMap } from '@/components/Setup/EditorConfig/store'
   import { EditorCreate } from '@/util/Editor'
-
-  const { readFile } = require('fs-extra')
   const { join } = require('path')
   const { nativeTheme } = require('@electron/remote')
+  import { readFileSync } from 'fs'
 
   const wapper = ref()
   const appStore = AppStore()

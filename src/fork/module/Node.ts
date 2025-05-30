@@ -1,6 +1,7 @@
 import { Base } from './Base'
 import { promisify } from 'node:util'
 import { exec } from 'node:child_process'
+import { copyFileSync, createWriteStream, existsSync, mkdirSync, readFileSync, writeFileSync, readdirSync, realpathSync, rmSync, unlinkSync } from 'fs'
 import {
   execPromise,
   fetchPathByBin,
@@ -18,8 +19,6 @@ import {
 import { ForkPromise } from '@shared/ForkPromise'
 import { dirname, join, isAbsolute, basename } from 'path'
 import { compareVersions } from 'compare-versions'
-import { createWriteStream, existsSync } from 'fs'
-import { mkdirp, readFile, writeFile, readdir, copyFile, remove, realpath } from 'fs-extra'
 import { zipUnPack } from '@shared/file'
 import axios from 'axios'
 import { SoftInstalled } from '@shared/app'
@@ -63,15 +62,15 @@ class Manager extends Base {
       const local = join(global.Server.AppDir!, 'nvm/nvm.exe')
       await zipUnPack(join(global.Server.Static!, `zip/nvm.7z`), global.Server.AppDir!)
       const installcmd = join(global.Server.AppDir!, 'nvm/install.cmd')
-      await remove(installcmd)
-      await copyFile(join(global.Server.Static!, 'sh/install-nvm.cmd'), installcmd)
+      unlinkSync(installcmd)
+      copyFileSync(join(global.Server.Static!, 'sh/install-nvm.cmd'), installcmd)
       const nvmDir = join(global.Server.AppDir!, 'nvm')
       const linkDir = join(global.Server.AppDir!, 'nvm/nodejs-link')
-      let content = await readFile(installcmd, 'utf-8')
+      let content = readFileSync(installcmd, 'utf-8')
       content = content
         .replace(new RegExp('##NVM_PATH##', 'g'), nvmDir)
         .replace(new RegExp('##NVM_SYMLINK##', 'g'), linkDir)
-      await writeFile(installcmd, content)
+      writeFileSync(installcmd, content)
       process.chdir(nvmDir)
       try {
         const res = await execPromise('install.cmd')
@@ -119,22 +118,22 @@ class Manager extends Base {
       const local = join(global.Server.AppDir!, 'fnm/fnm.exe')
       await zipUnPack(join(global.Server.Static!, `zip/fnm.7z`), global.Server.AppDir!)
       const installcmd = join(global.Server.AppDir!, 'fnm/install.cmd')
-      await remove(installcmd)
-      await copyFile(join(global.Server.Static!, 'sh/install-fnm.cmd'), installcmd)
+      unlinkSync(installcmd)
+      copyFileSync(join(global.Server.Static!, 'sh/install-fnm.cmd'), installcmd)
       const nvmDir = join(global.Server.AppDir!, 'fnm')
       const linkDir = join(global.Server.AppDir!, 'fnm/nodejs-link')
-      let content = await readFile(installcmd, 'utf-8')
+      let content = readFileSync(installcmd, 'utf-8')
       content = content
         .replace(new RegExp('##FNM_PATH##', 'g'), nvmDir)
         .replace(new RegExp('##FNM_SYMLINK##', 'g'), linkDir)
-      let profile: any = await exec('$profile', { shell: 'powershell.exe' })
+      let profile: any = await execAsync('$profile', { shell: 'powershell.exe' })
       profile = profile.stdout.trim()
       const profile_root = profile.replace('WindowsPowerShell', 'PowerShell')
-      await mkdirp(dirname(profile))
-      await mkdirp(dirname(profile_root))
+      mkdirSync(dirname(profile), { recursive: true })
+      mkdirSync(dirname(profile_root), { recursive: true })
       content = content.replace(new RegExp('##PROFILE_ROOT##', 'g'), profile_root.trim())
       content = content.replace(new RegExp('##PROFILE##', 'g'), profile.trim())
-      await writeFile(installcmd, content)
+      writeFileSync(installcmd, content)
       process.chdir(nvmDir)
       try {
         const res = await execPromise('install.cmd')
@@ -215,7 +214,7 @@ class Manager extends Base {
             tool
           })
         }
-        const dirs = await readdir(dir)
+        const dirs = readdirSync(dir)
         const versions = dirs
           .filter((s: string) => s.startsWith('v') && existsSync(join(dir, s, 'node.exe')))
           .map((s: string) => s.replace('v', '').trim())
@@ -223,7 +222,7 @@ class Manager extends Base {
         const currentDir = join(envDir, 'node')
         let current = ''
         if (existsSync(currentDir) && existsSync(join(currentDir, 'node.exe'))) {
-          const realDir = await realpath(currentDir)
+          const realDir = realpathSync(currentDir)
           process.chdir(realDir)
           const res = await execPromise(`node.exe -v`)
           current = res?.stdout?.trim()?.replace('v', '') ?? ''
@@ -322,7 +321,7 @@ class Manager extends Base {
       ?.trim()
     if (find) {
       const linkDir = join(global.Server.AppDir!, 'fnm/nodejs-link')
-      await remove(linkDir)
+      rmSync(linkDir, { recursive: true, force: true })
       await execPromise(`mklink /J "${linkDir}" "${find}"`)
     }
   }
@@ -351,7 +350,7 @@ class Manager extends Base {
     }
     const savePath = handleWinPathArr(allPath)
     if (pathStr !== JSON.stringify(savePath)) {
-      await writePath(savePath)
+      await writePath(savePath.join(';'))
     }
   }
 
@@ -410,7 +409,7 @@ class Manager extends Base {
           const dir = join(global.Server.AppDir!, `nodejs/v${version}`)
           if (existsSync(dir)) {
             try {
-              await remove(dir)
+              rmSync(dir, { recursive: true, force: true })
             } catch (e) {
               return reject(e)
             }
@@ -426,10 +425,10 @@ class Manager extends Base {
           const destDir = join(global.Server.AppDir!, `nodejs/v${version}`)
           if (existsSync(destDir)) {
             try {
-              await remove(destDir)
+              rmSync(destDir)
             } catch (e) {}
           }
-          await mkdirp(destDir)
+          mkdirSync(destDir)
 
           const zip = join(global.Server.Cache!, `node-v${version}.7z`)
 
@@ -464,13 +463,13 @@ class Manager extends Base {
             if ((await end()) === true) {
               return
             }
-            await remove(zip)
+            unlinkSync(zip)
           }
 
           const fail = async () => {
             try {
-              await remove(zip)
-              await remove(destDir)
+              unlinkSync(zip)
+              rmSync(destDir, { recursive: true, force: true })
             } catch (e) {}
           }
 
@@ -591,7 +590,7 @@ class Manager extends Base {
         if (existsSync(fnmDir)) {
           let allFnm: any[] = []
           try {
-            allFnm = await readdir(fnmDir)
+            allFnm = readdirSync(fnmDir)
           } catch (e) {}
           allFnm = allFnm
             .filter(
@@ -634,7 +633,7 @@ class Manager extends Base {
         if (existsSync(nvmDir)) {
           let allNVM: any[] = []
           try {
-            allNVM = await readdir(nvmDir)
+            allNVM = readdirSync(nvmDir)
           } catch (e) {}
           allNVM = allNVM
             .filter((f) => f.startsWith('v') && existsSync(join(nvmDir, f, 'node.exe')))

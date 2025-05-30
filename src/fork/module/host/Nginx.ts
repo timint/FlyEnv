@@ -1,9 +1,8 @@
 import type { AppHost } from '@shared/app'
 import { basename, dirname, join } from 'path'
-import { copyFile, mkdirp, readFile, remove, writeFile } from 'fs-extra'
+import { copyFileSync, existsSync, readFileSync, rmSync, writeFileSync, mkdirSync } from 'fs'
 import { hostAlias } from '../../Fn'
 import { vhostTmpl } from './Host'
-import { existsSync } from 'fs'
 import { isEqual } from 'lodash'
 import { pathFixedToUnix } from '@shared/utils'
 
@@ -101,9 +100,9 @@ export const makeNginxConf = async (host: AppHost) => {
   const rewritepath = join(global.Server.BaseDir!, 'vhost/rewrite')
   const logpath = join(global.Server.BaseDir!, 'vhost/logs')
 
-  await mkdirp(nginxvpath)
-  await mkdirp(rewritepath)
-  await mkdirp(logpath)
+  mkdirSync(nginxvpath, { recursive: true })
+  mkdirSync(rewritepath, { recursive: true })
+  mkdirSync(logpath, { recursive: true })
 
   const tmpl = await vhostTmpl()
 
@@ -136,10 +135,10 @@ export const makeNginxConf = async (host: AppHost) => {
     ntmpl = ntmpl.replace(/include enable-php\.conf;/g, '##Static Site Nginx##')
   }
 
-  await writeFile(nvhost, handleReverseProxy(host, ntmpl))
+  writeFileSync(nvhost, handleReverseProxy(host, ntmpl))
 
   const rewrite = host?.nginx?.rewrite?.trim() ?? ''
-  await writeFile(join(rewritepath, `${hostname}.conf`), rewrite)
+  writeFileSync(join(rewritepath, `${hostname}.conf`), rewrite)
 }
 
 const handlePhpEnableConf = async (v: number) => {
@@ -147,11 +146,11 @@ const handlePhpEnableConf = async (v: number) => {
     const name = `enable-php-${v}.conf`
     const confFile = join(global.Server.NginxDir!, 'common/conf/', name)
     if (!existsSync(confFile)) {
-      await mkdirp(dirname(confFile))
+      mkdirSync(dirname(confFile), { recursive: true })
       const tmplFile = join(global.Server.Static!, 'tmpl/enable-php.conf')
-      const tmplContent = await readFile(tmplFile, 'utf-8')
+      const tmplContent = readFileSync(tmplFile, 'utf-8')
       const content = tmplContent.replace('##VERSION##', `${v}`)
-      await writeFile(confFile, content)
+      writeFileSync(confFile, content)
     }
   } catch (e) {}
 }
@@ -164,9 +163,9 @@ export const updateNginxConf = async (host: AppHost, old: AppHost) => {
   const rewritepath = join(global.Server.BaseDir!, 'vhost/rewrite').split('\\').join('/')
   const logpath = join(global.Server.BaseDir!, 'vhost/logs').split('\\').join('/')
 
-  await mkdirp(nginxvpath)
-  await mkdirp(rewritepath)
-  await mkdirp(logpath)
+  mkdirSync(nginxvpath, { recursive: true })
+  mkdirSync(rewritepath, { recursive: true })
+  mkdirSync(logpath, { recursive: true })
 
   if (host.name !== old.name) {
     const nvhost = {
@@ -188,8 +187,8 @@ export const updateNginxConf = async (host: AppHost, old: AppHost) => {
     const arr = [nvhost, rewritep, accesslogng, errorlogng]
     for (const f of arr) {
       if (existsSync(f.oldFile)) {
-        await copyFile(f.oldFile, f.newFile)
-        await remove(f.oldFile)
+        copyFileSync(f.oldFile, f.newFile)
+        rmSync(f.oldFile)
       }
     }
   }
@@ -201,7 +200,7 @@ export const updateNginxConf = async (host: AppHost, old: AppHost) => {
     return
   }
 
-  let contentNginxConf = await readFile(nginxConfPath, 'utf-8')
+  let contentNginxConf = readFileSync(nginxConfPath, 'utf-8')
 
   const find: Array<string> = []
   const replace: Array<string> = []
@@ -297,8 +296,8 @@ export const updateNginxConf = async (host: AppHost, old: AppHost) => {
       contentNginxConf = contentNginxConf.replace(s, replace[i])
     })
     contentNginxConf = handleReverseProxy(host, contentNginxConf)
-    await writeFile(nginxConfPath, contentNginxConf)
+    writeFileSync(nginxConfPath, contentNginxConf)
   }
   const nginxRewriteConfPath = join(rewritepath, `${host.name}.conf`)
-  await writeFile(nginxRewriteConfPath, host.nginx.rewrite.trim())
+  writeFileSync(nginxRewriteConfPath, host.nginx.rewrite.trim())
 }

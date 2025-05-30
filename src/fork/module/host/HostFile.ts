@@ -1,7 +1,7 @@
 import { join } from 'path'
 import type { AppHost } from '@shared/app'
 import { existsSync } from 'fs'
-import { readFile, writeFile } from 'fs-extra'
+import { readFileSync, writeFileSync } from 'fs'
 import NodeRSA from 'node-rsa'
 
 const RSAPublickKey = `-----BEGIN PUBLIC KEY-----
@@ -32,7 +32,7 @@ export const fetchHostList = async () => {
   const hostfile = join(global.Server.BaseDir!, 'host.json')
   let hostList: Array<AppHost> = []
   if (existsSync(hostfile)) {
-    let content = (await readFile(hostfile, 'utf-8')).trim()
+    let content = (readFileSync(hostfile, 'utf-8')).trim()
     if (content.length === 0) {
       return hostList
     }
@@ -41,7 +41,7 @@ export const fetchHostList = async () => {
       const key = new NodeRSA(RSAPrivateKey)
       const c = key.encryptPrivate(content, 'base64')
       console.log('fetchHostList ccc: ', c)
-      await writeFile(hostfile, c)
+      writeFileSync(hostfile, c)
     } else {
       const key = new NodeRSA(RSAPublickKey)
       try {
@@ -54,7 +54,7 @@ export const fetchHostList = async () => {
       console.log(e)
       if (content.length > 0) {
         const hostBackFile = join(global.Server.BaseDir!, 'host.back.json')
-        await writeFile(hostBackFile, content)
+        writeFileSync(hostBackFile, content)
       }
       throw e
     }
@@ -72,5 +72,5 @@ export const saveHostList = async (list: any) => {
   let content = JSON.stringify(list)
   const key = new NodeRSA(RSAPrivateKey)
   content = key.encryptPrivate(content, 'base64')
-  await writeFile(hostfile, content)
+  writeFileSync(hostfile, content)
 }

@@ -79,8 +79,7 @@
 
   const { shell } = require('@electron/remote')
   const { join } = require('path')
-  const { readFile } = require('fs-extra')
-  const { existsSync } = require('fs')
+  import { readFile, existsSync } from 'fs'
 
   const props = defineProps<{
     modelValue: string

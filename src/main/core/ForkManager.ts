@@ -1,7 +1,7 @@
 import { ChildProcess, fork } from 'child_process'
 import { uuid } from '../utils'
 import { ForkPromise } from '@shared/ForkPromise'
-import { appendFile } from 'fs-extra'
+import { appendFileSync } from 'fs'
 import { join } from 'path'
 import { cpus } from 'os'
 
@@ -45,7 +45,7 @@ class ForkItem {
     }
   }
   onError(err: Error) {
-    appendFile(join(global.Server.BaseDir!, 'fork.error.txt'), `\n${err?.message}`).then()
+    appendFileSync(join(global.Server.BaseDir!, 'fork.error.txt'), `\n${err?.message}`).then()
     for (const k in this.callback) {
       const fn = this.callback?.[k]
       if (fn) {

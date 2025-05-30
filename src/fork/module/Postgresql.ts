@@ -1,5 +1,5 @@
 import { join, dirname, basename } from 'path'
-import { existsSync, readdirSync } from 'fs'
+import { copyFileSync, existsSync, readFileSync, writeFileSync } from 'fs'
 import { Base } from './Base'
 import { I18nT } from '@lang/index'
 import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
@@ -16,7 +16,6 @@ import {
   waitTime
 } from '../Fn'
 import { ForkPromise } from '@shared/ForkPromise'
-import { copyFile, mkdirp, readFile, writeFile } from 'fs-extra'
 import TaskQueue from '../TaskQueue'
 
 class Manager extends Base {
@@ -43,7 +42,7 @@ class Manager extends Base {
       const logFile = join(dbPath, 'pg.log')
       let sendUserPass = false
 
-      await mkdirp(global.Server.PostgreSqlDir!)
+      await mkdirSync(global.Server.PostgreSqlDir!, { recursive: true })
 
       const doRun = async () => {
         const execArgs = `-D "${dbPath}" -l "${logFile}" start`
@@ -87,7 +86,7 @@ class Manager extends Base {
         process.env.LANG = global.Server.Local!
 
         console.log('global.Server.Local: ', global.Server.Local)
-        await mkdirp(dbPath)
+        mkdirSync(dbPath, { recursive: true })
         try {
           await setDir777ToCurrentUser(dbPath)
         } catch (e) {}
@@ -119,7 +118,7 @@ class Manager extends Base {
         on({
           'APP-On-Log': AppLog('info', I18nT('appLog.initDBDataDirSuccess', { dir: dbPath }))
         })
-        let conf = await readFile(confFile, 'utf-8')
+        let conf = readFileSync(confFile, 'utf-8')
         let find = conf.match(/lc_messages = '(.*?)'/g)
         conf = conf.replace(find?.[0] ?? '###@@@&&&', `lc_messages = '${global.Server.Local}'`)
         find = conf.match(/lc_monetary = '(.*?)'/g)
@@ -129,10 +128,10 @@ class Manager extends Base {
         find = conf.match(/lc_time = '(.*?)'/g)
         conf = conf.replace(find?.[0] ?? '###@@@&&&', `lc_time = '${global.Server.Local}'`)
 
-        await writeFile(confFile, conf)
+        writeFileSync(confFile, conf)
 
         const defaultConfFile = join(dbPath, 'postgresql.conf.default')
-        await copyFile(confFile, defaultConfFile)
+        copyFileSync(confFile, defaultConfFile)
         sendUserPass = true
         await doRun()
       } else {

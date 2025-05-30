@@ -212,7 +212,7 @@
   import { AppStore } from '@/store/app'
 
   const { dialog } = require('@electron/remote')
-  const { readFile } = require('fs-extra')
+  import { readFile } from 'fs'
 
   const { show, onClosed, onSubmit, closedFn, callback } = AsyncComponentSetup()
 

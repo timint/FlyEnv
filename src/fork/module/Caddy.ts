@@ -1,5 +1,5 @@
 import { join, basename } from 'path'
-import { existsSync } from 'fs'
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs'
 import { Base } from './Base'
 import type { AppHost, OnlineVersionItem, SoftInstalled } from '@shared/app'
 import {
@@ -14,7 +14,6 @@ import {
   versionSort
 } from '../Fn'
 import { ForkPromise } from '@shared/ForkPromise'
-import { readFile, writeFile, mkdirp } from 'fs-extra'
 import TaskQueue from '../TaskQueue'
 import { fetchHostList } from './host/HostFile'
 import { I18nT } from '@lang/index'
@@ -38,19 +37,19 @@ class Caddy extends Base {
           'APP-On-Log': AppLog('info', I18nT('appLog.confInit'))
         })
         const tmplFile = join(global.Server.Static!, 'tmpl/Caddyfile')
-        let content = await readFile(tmplFile, 'utf-8')
+        let content = readFileSync(tmplFile, 'utf-8')
         const sslDir = join(baseDir, 'ssl')
-        await mkdirp(sslDir)
+        mkdirSync(sslDir, { recursive: true })
         const logFile = join(baseDir, 'caddy.log')
         const vhostDir = join(global.Server.BaseDir!, 'vhost/caddy')
-        await mkdirp(sslDir)
+        mkdirSync(sslDir, { recursive: true })
         content = content
           .replace('##SSL_ROOT##', sslDir.split('\\').join('/'))
           .replace('##LOG_FILE##', logFile.split('\\').join('/'))
           .replace('##VHOST-DIR##', vhostDir.split('\\').join('/'))
-        await writeFile(iniFile, content)
+        writeFileSync(iniFile, content)
         const defaultIniFile = join(baseDir, 'Caddyfile.default')
-        await writeFile(defaultIniFile, content)
+        writeFileSync(defaultIniFile, content)
         on({
           'APP-On-Log': AppLog('info', I18nT('appLog.confInitSuccess', { file: iniFile }))
         })
@@ -65,7 +64,7 @@ class Caddy extends Base {
     try {
       hostAll = await fetchHostList()
     } catch (e) {}
-    await mkdirp(vhostDir)
+    mkdirSync(vhostDir, { recursive: true })
     let tmplContent = ''
     let tmplSSLContent = ''
     for (const host of hostAll) {
@@ -82,11 +81,11 @@ class Caddy extends Base {
       }
       if (!tmplContent) {
         const tmplFile = join(global.Server.Static!, 'tmpl/CaddyfileVhost')
-        tmplContent = await readFile(tmplFile, 'utf-8')
+        tmplContent = readFileSync(tmplFile, 'utf-8')
       }
       if (!tmplSSLContent) {
         const tmplFile = join(global.Server.Static!, 'tmpl/CaddyfileVhostSSL')
-        tmplSSLContent = await readFile(tmplFile, 'utf-8')
+        tmplSSLContent = readFileSync(tmplFile, 'utf-8')
       }
       const httpNames: string[] = []
       const httpsNames: string[] = []
@@ -130,7 +129,7 @@ class Caddy extends Base {
           .replace('##PHP-VERSION##', `${phpv}`)
         contentList.push(content)
       }
-      await writeFile(confFile, contentList.join('\n'))
+      writeFileSync(confFile, contentList.join('\n'))
     }
   }
 
@@ -148,7 +147,7 @@ class Caddy extends Base {
       const iniFile = await this.initConfig().on(on)
 
       const baseDir = join(global.Server.BaseDir!, `caddy`)
-      await mkdirp(baseDir)
+      mkdirSync(baseDir, { recursive: true })
       const execArgs = `start --config "${iniFile}" --pidfile "${this.pidPath}" --watch`
 
       try {

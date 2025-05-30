@@ -23,7 +23,7 @@
   import { uuid } from '@shared/utils'
 
   const { join } = require('path')
-  const { existsSync } = require('fs-extra')
+  import { existsSync } from 'fs'
 
   const appStore = AppStore()
   const conf = ref()

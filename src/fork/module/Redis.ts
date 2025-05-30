@@ -1,5 +1,5 @@
 import { join, dirname, basename } from 'path'
-import { existsSync } from 'fs'
+import { existsSync, readFileSync, writeFileSync, chmod, copyFileSync, mkdirSync } from 'fs'
 import { Base } from './Base'
 import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
 import {
@@ -14,7 +14,6 @@ import {
   versionSort
 } from '../Fn'
 import { ForkPromise } from '@shared/ForkPromise'
-import { readFile, writeFile, mkdirp, chmod, copyFile } from 'fs-extra'
 import TaskQueue from '../TaskQueue'
 import { ProcessListSearch } from '../Process'
 import { I18nT } from '@lang/index'
@@ -44,9 +43,9 @@ class Redis extends Base {
         })
         const tmplFile = join(global.Server.Static!, 'tmpl/redis.conf')
         const dbDir = join(global.Server.RedisDir!, `db-${v}`)
-        await mkdirp(dbDir)
+        mkdirSync(dbDir, { recursive: true })
         chmod(dbDir, '0755')
-        let content = await readFile(tmplFile, 'utf-8')
+        let content = readFileSync(tmplFile, 'utf-8')
         content = content
           .replace(/#PID_PATH#/g, join(global.Server.RedisDir!, 'redis.pid').split('\\').join('/'))
           .replace(
@@ -54,9 +53,9 @@ class Redis extends Base {
             join(global.Server.RedisDir!, `redis-${v}.log`).split('\\').join('/')
           )
           .replace(/#DB_PATH#/g, dbDir.split('\\').join('/'))
-        await writeFile(confFile, content)
+        writeFileSync(confFile, content)
         const defaultFile = join(global.Server.RedisDir!, `redis-${v}-default.conf`)
-        await writeFile(defaultFile, content)
+        writeFileSync(defaultFile, content)
         on({
           'APP-On-Log': AppLog('info', I18nT('appLog.confInitSuccess', { file: confFile }))
         })
@@ -111,7 +110,7 @@ class Redis extends Base {
       const conf = join(global.Server.RedisDir!, confName)
       const appConfName = `pws-app-redis-${v}.conf`
       const runConf = join(dirname(bin), appConfName)
-      await copyFile(conf, runConf)
+      copyFileSync(conf, runConf)
 
       const execArgs = `"${appConfName}"`
 

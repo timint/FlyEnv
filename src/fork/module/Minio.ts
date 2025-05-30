@@ -1,5 +1,5 @@
 import { basename, dirname, join } from 'path'
-import { createWriteStream, existsSync, unlinkSync } from 'fs'
+import { createWriteStream, existsSync, unlinkSync, mkdirSync, copyFileSync } from 'fs'
 import { Base } from './Base'
 import { ForkPromise } from '@shared/ForkPromise'
 import type { SoftInstalled } from '@shared/app'
@@ -12,7 +12,6 @@ import {
   versionLocalFetch,
   versionSort
 } from '../Fn'
-import { copyFile, mkdirp, remove, writeFile, readFile } from 'fs-extra'
 import TaskQueue from '../TaskQueue'
 import { I18nT } from '@lang/index'
 import axios from 'axios'
@@ -31,11 +30,11 @@ class Minio extends Base {
     return new ForkPromise(async (resolve) => {
       const baseDir = join(global.Server.BaseDir!, 'minio')
       if (!existsSync(baseDir)) {
-        await mkdirp(baseDir)
+        mkdirSync(baseDir, { recursive: true })
       }
       const iniFile = join(baseDir, 'minio.conf')
       if (!existsSync(iniFile)) {
-        await writeFile(iniFile, '')
+        writeFileSync(iniFile, '')
       }
       resolve(iniFile)
     })
@@ -116,7 +115,7 @@ class Minio extends Base {
       const bin = version.bin
       const baseDir = join(global.Server.BaseDir!, 'minio')
       const dataDir = DATA_DIR ?? join(baseDir, 'data')
-      await mkdirp(dataDir)
+      mkdirSync(dataDir, { recursive: true })
       let execArgs = `server \`"${dataDir}\`"`
       const execEnv = envs.join('\n')
       if (address) {
@@ -195,8 +194,8 @@ class Minio extends Base {
       }
 
       const doHandleZip = async () => {
-        await mkdirp(dirname(row.bin))
-        await copyFile(row.zip, row.bin)
+        mkdirSync(dirname(row.bin))
+        copyFileSync(row.zip, row.bin)
       }
 
       if (existsSync(row.zip)) {
@@ -252,7 +251,9 @@ class Minio extends Base {
             return
           }
         }
-        await remove(row.zip)
+        try {
+          unlinkSync(row.zip)
+        } catch (e) {}
       }
 
       on({

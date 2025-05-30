@@ -5,8 +5,8 @@ import { AppStore } from '@/store/app'
 import { AppAllLang, AppI18n } from '@lang/index'
 import IPC from '@/util/IPC'
 
-const { readdir, readFile, existsSync, mkdirp, writeFile } = require('fs-extra')
 const { join, resolve } = require('path')
+import { readdirSync, readFileSync, writeFileSync } from 'fs';
 
 type CustomerLangItem = {
   label: string
@@ -27,15 +27,15 @@ export const CustomerLangs = reactive<
  */
 export const initCustomerLang = async () => {
   const langDir = resolve(global.Server.BaseDir!, '../lang')
-  await mkdirp(langDir)
+  mkdirSync(langDir, { recursive: true })
   const currentLang = AppStore().config.setup.lang
-  await mkdirp(join(langDir, currentLang))
+  mkdirSync(join(langDir, currentLang), { recursive: true })
   const lang: any = currentLang === 'zh' ? ZH.zh : EN.en
   for (const k in lang) {
     const v: any = lang[k]
     const f = join(langDir, currentLang, `${k}.json`)
     if (!existsSync(f)) {
-      await writeFile(f, JSON.stringify(v, null, 2))
+      writeFileSync(f, JSON.stringify(v, null, 2), 'utf-8')
     }
   }
   const indexJson =
@@ -49,7 +49,7 @@ export const initCustomerLang = async () => {
           label: 'English'
         }
   const file = join(langDir, currentLang, `index.json`)
-  await writeFile(file, JSON.stringify(indexJson, null, 2))
+  writeFileSync(file, JSON.stringify(indexJson, null, 2), 'utf-8')
 }
 
 /**
@@ -60,7 +60,7 @@ export const loadCustomerLang = async () => {
   if (!existsSync(langDir)) {
     return
   }
-  const dir = await readdir(langDir)
+  const dir = readdirSync(langDir)
   if (!dir.length) {
     return
   }
@@ -70,7 +70,7 @@ export const loadCustomerLang = async () => {
     if (!existsSync(f)) {
       continue
     }
-    const content = await readFile(f, 'utf-8')
+    const content = readFileSync(f, 'utf-8')
     let json: any
     try {
       json = JSON.parse(content)
@@ -84,7 +84,7 @@ export const loadCustomerLang = async () => {
     if (Object.keys(AppAllLang).includes(json.lang)) {
       continue
     }
-    const files = await readdir(join(langDir, d))
+    const files = readdirSync(join(langDir, d))
     const langFiles = files.filter((f: string) => f.endsWith('.json') && f !== 'index.json')
     if (!langFiles.length) {
       continue
@@ -96,7 +96,7 @@ export const loadCustomerLang = async () => {
     }
     const lang = item.lang
     for (const f of langFiles) {
-      const content = await readFile(join(langDir, d, f), 'utf-8')
+      const content = readFileSync(join(langDir, d, f), 'utf-8')
       let json: any
       try {
         json = JSON.parse(content)

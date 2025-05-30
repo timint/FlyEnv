@@ -121,8 +121,8 @@
   import XTerm from '@/util/XTerm'
   import IPC from '@/util/IPC'
   import { MessageError } from '@/util/Element'
+  import { writeFileSync } from 'fs'
 
-  const { writeFile } = require('fs-extra')
   const { join, dirname } = require('path')
   const { dialog } = require('@electron/remote')
   const { show, onClosed, onSubmit, closedFn, callback } = AsyncComponentSetup()
@@ -234,7 +234,7 @@
   }
 }
 `
-      await writeFile(join(form.dir, 'composer.json'), tmpl)
+      writeFileSync(join(form.dir, 'composer.json'), tmpl)
 
       if (form.php && form.composer) {
         command.push(`$Env:PATH = "${dirname(form.php)};" + $Env:PATH`)

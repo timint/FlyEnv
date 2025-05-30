@@ -299,7 +299,7 @@
   import { ServiceActionStore } from '@/components/ServiceManager/EXT/store'
 
   const { shell } = require('@electron/remote')
-  const { existsSync } = require('fs')
+  import { existsSync } from 'fs'
 
   const props = defineProps<{
     typeFlag: AllAppModule

@@ -2,8 +2,8 @@ import { defineStore } from 'pinia'
 import type { MysqlGroupItem } from '@shared/app'
 import IPC from '@/util/IPC'
 
-const { existsSync, readFile, writeFile, mkdirp } = require('fs-extra')
 const { join } = require('path')
+import { existsSync, readFileSync, writeFileSync, mkdirSync } from 'fs'
 
 interface State {
   inited: boolean
@@ -28,7 +28,7 @@ export const MysqlStore = defineStore('mysqlGroup', {
       if (existsSync(file)) {
         const arr: Array<any> = []
         try {
-          const json = await readFile(file, 'utf-8')
+          const json = readFileSync(file, 'utf-8')
           const jsonArr: any = JSON.parse(json)
           jsonArr.forEach((j: any) => {
             delete j?.version?.fetching
@@ -46,9 +46,9 @@ export const MysqlStore = defineStore('mysqlGroup', {
         delete j?.version?.running
       })
       const groupDir = join(global.Server.MysqlDir, 'group')
-      await mkdirp(groupDir)
+      mkdirSync(groupDir, { recursive: true })
       const file = join(groupDir, 'group.json')
-      await writeFile(file, JSON.stringify(json))
+      writeFileSync(file, JSON.stringify(json))
     },
     start(item: MysqlGroupItem): Promise<true | string> {
       return new Promise((resolve) => {

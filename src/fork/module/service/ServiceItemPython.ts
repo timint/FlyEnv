@@ -1,6 +1,6 @@
 import type { AppHost } from '@shared/app'
 import { dirname, join } from 'path'
-import { existsSync, mkdirp, readFile, writeFile } from 'fs-extra'
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs'
 import { getHostItemEnv, ServiceItem } from './ServiceItem'
 import { ForkPromise } from '@shared/ForkPromise'
 import { execPromiseRoot } from '../../Fn'
@@ -33,7 +33,7 @@ export class ServiceItemPython extends ServiceItem {
       }
 
       const javaDir = join(global.Server.BaseDir!, 'python')
-      await mkdirp(javaDir)
+      mkdirSync(javaDir, { recursive: true })
       const pid = join(javaDir, `${item.id}.pid`)
       const log = join(javaDir, `${item.id}.log`)
       if (existsSync(pid)) {
@@ -61,7 +61,7 @@ export class ServiceItemPython extends ServiceItem {
       this.command = commands.join(EOL)
       console.log('command: ', this.command)
       const sh = join(global.Server.Cache!, `service-${this.id}.cmd`)
-      await writeFile(sh, this.command)
+      writeFileSync(sh, this.command)
       process.chdir(global.Server.Cache!)
       try {
         await execPromiseRoot(
@@ -89,7 +89,7 @@ export class ServiceItemPython extends ServiceItem {
     if (!existsSync(pidFile)) {
       return []
     }
-    const pid = (await readFile(pidFile, 'utf-8')).trim()
+    const pid = (readFileSync(pidFile, 'utf-8')).trim()
     return await ProcessPidListByPid(pid)
   }
 }

@@ -27,10 +27,10 @@
   import { readFileAsync, writeFileAsync } from '@shared/file'
   import { EditorConfigMake, EditorCreate } from '@/util/Editor'
   import { MessageError, MessageSuccess } from '@/util/Element'
+  import { statSync, readFileSync } from 'fs'
 
   const { join } = require('path')
   const { dialog } = require('@electron/remote')
-  const { statSync, readFileSync } = require('fs')
   let config = ''
   export default defineComponent({
     components: {},

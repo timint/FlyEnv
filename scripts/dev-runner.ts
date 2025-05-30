@@ -1,10 +1,10 @@
 import { createServer } from 'vite'
 import { spawn, exec, ChildProcess } from 'child_process'
 import { build } from 'esbuild'
-import _fs, { copySync } from 'fs-extra'
 import _path from 'path'
 // @ts-ignore
 import _md5 from 'md5'
+import { cpSync, readFileSync, watch } from 'fs'
 
 import viteConfig from '../configs/vite.config'
 import esbuildConfig from '../configs/esbuild.config'

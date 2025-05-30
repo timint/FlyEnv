@@ -84,8 +84,8 @@
   import { MessageError, MessageSuccess } from '@/util/Element'
 
   const { dialog, shell } = require('@electron/remote')
-  const { statSync } = require('fs')
   const { join } = require('path')
+  import { statSync } from 'fs'
 
   let running = ref(false)
 

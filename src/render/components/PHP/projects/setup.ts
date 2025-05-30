@@ -10,7 +10,7 @@ import { SetupStore } from '@/components/Setup/store'
 
 const { dialog } = require('@electron/remote')
 const { join } = require('path')
-const { writeFile, existsSync, readFile } = require('fs-extra')
+import { writeFileSync, existsSync, readFileSync } from 'fs'
 
 export type ProjectItem = {
   id: string
@@ -151,20 +151,20 @@ class Project {
       const envFile = join(item.path, '.flyenv')
       if (!existsSync(envFile)) {
         if (!item.binVersion) {
-          await writeFile(envFile, '')
+          writeFileSync(envFile, '')
         } else {
           const arr = [item.binPath, join(item.binPath, 'bin'), join(item.binPath, 'sbin')].filter(
             (s) => existsSync(s)
           )
           if (arr.length) {
-            await writeFile(
+            writeFileSync(
               envFile,
               `[Console]::OutputEncoding = [System.Text.Encoding]::UTF8\n$env:PATH = "${arr.join(';')};" + $env:PATH #FlyEnv-ID-${item.id}`
             )
           }
         }
       } else {
-        const content = await readFile(envFile, 'utf-8')
+        const content = readFileSync(envFile, 'utf-8')
         const lines = content
           .trim()
           .split('\n')
@@ -180,7 +180,7 @@ class Project {
             lines.push(`$env:PATH = "${arr.join(';')};" + $env:PATH #FlyEnv-ID-${item.id}`)
           }
         }
-        await writeFile(envFile, lines.join('\n'))
+        writeFileSync(envFile, lines.join('\n'))
       }
     } catch (e: any) {
       MessageError(e.toString())

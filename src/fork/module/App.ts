@@ -7,7 +7,7 @@ import { execPromise, md5, uuid } from '../Fn'
 import axios from 'axios'
 import { publicDecrypt } from 'crypto'
 import { join, resolve as PathResolve } from 'path'
-import { appendFile, remove, writeFile } from 'fs-extra'
+import { appendFile, unlinkSync, writeFileSync } from 'fs'
 
 class App extends Base {
   constructor() {
@@ -49,7 +49,7 @@ class App extends Base {
     const allPath: string[] = []
     const command = `(Get-MpPreference).ExclusionPath`
     const shFile = join(global.Server.Cache!, `${uuid()}.ps1`)
-    await writeFile(shFile, command)
+    writeFileSync(shFile, command)
     process.chdir(global.Server.Cache!)
     try {
       const res = await execPromise(
@@ -68,7 +68,7 @@ class App extends Base {
       console.log(`${key}: `, e)
       await appendFile(join(global.Server.BaseDir!, 'debug.log'), `${key}: ${e}\n`)
     }
-    await remove(shFile)
+    unlinkSync(shFile)
     const needAdd: string[] = []
     for (const dir of dirs) {
       if (!allPath.includes(dir)) {
@@ -81,7 +81,7 @@ class App extends Base {
       const command = `Add-MpPreference -ExclusionPath ${str}`
       console.log('Add-MpPreference command: ', command)
       const shFile = join(global.Server.Cache!, `${uuid()}.ps1`)
-      await writeFile(shFile, command)
+      writeFileSync(shFile, command)
       process.chdir(global.Server.Cache!)
       try {
         const res = await execPromise(
@@ -93,7 +93,7 @@ class App extends Base {
         console.log(`${key}: `, e)
         await appendFile(join(global.Server.BaseDir!, 'debug.log'), `${key}: ${e}\n`)
       }
-      await remove(shFile)
+      unlinkSync(shFile)
     }
   }
 

@@ -54,8 +54,8 @@
   import { PHPSetup } from '@/components/PHP/store'
 
   const { shell } = require('@electron/remote')
-  const { existsSync } = require('fs-extra')
   const { join } = require('path')
+  import { existsSync } from 'fs'
 
   const props = defineProps<{
     version: SoftInstalled

@@ -5,7 +5,7 @@ import { I18nT } from '@lang/index'
 import type { AppHost, SoftInstalled } from '@shared/app'
 import { getSubDir, hostAlias, uuid, execPromise } from '../Fn'
 import { ForkPromise } from '@shared/ForkPromise'
-import { readFile, writeFile, remove, appendFile } from 'fs-extra'
+import { appendFileSync, readFileSync, unlinkSync, writeFileSync } from 'fs'
 import { TaskAddPhpMyAdminSite, TaskAddRandaSite } from './host/Task'
 import { setDirRole, updateAutoSSL, updateRootRule } from './host/Host'
 import { makeApacheConf, updateApacheConf } from './host/Apache'
@@ -240,7 +240,7 @@ class Host extends Base {
       for (const f of arr) {
         if (existsSync(f)) {
           try {
-            await remove(f)
+            unlinkSync(f)
           } catch (e) {}
         }
       }
@@ -300,7 +300,7 @@ class Host extends Base {
           }
         }
       })
-      await writeFile(join(global.Server.BaseDir!, 'app.hosts.txt'), host.join('\n'))
+      writeFileSync(join(global.Server.BaseDir!, 'app.hosts.txt'), host.join('\n'))
       if (!writeToSystem) {
         resolve(true)
         return
@@ -312,7 +312,7 @@ class Host extends Base {
       }
       let content = ''
       try {
-        content = await readFile(filePath, 'utf-8')
+        content = readFileSync(filePath, 'utf-8')
       } catch (e) {
         return reject(e)
       }
@@ -330,7 +330,7 @@ class Host extends Base {
       }
       content = content.trim()
       content += `\n${x}`
-      await writeFile(filePath, content.trim())
+      writeFileSync(filePath, content.trim())
       resolve(true)
     })
   }
@@ -359,11 +359,11 @@ class Host extends Base {
         let hasErr = false
         let hosts = ''
         try {
-          hosts = await readFile(this.hostsFile, 'utf-8')
+          hosts = readFileSync(this.hostsFile, 'utf-8')
         } catch (e) {
-          await appendFile(
+          appendFileSync(
             join(global.Server.BaseDir!, 'debug.log'),
-            `[Host][writeHosts][readFile]: ${e}\n`
+            `[Host][writeHosts][readFileSync]: ${e}\n`
           )
           hasErr = true
         }
@@ -371,7 +371,7 @@ class Host extends Base {
           const x = hosts.match(/(#X-HOSTS-BEGIN#)([\s\S]*?)(#X-HOSTS-END#)/g)
           if (x && x[0] && x[0].includes('#X-HOSTS-BEGIN#') && x[0].includes('#X-HOSTS-END#')) {
             hosts = hosts.replace(x[0], '')
-            await writeFile(this.hostsFile, hosts.trim())
+            writeFileSync(this.hostsFile, hosts.trim())
           }
         }
         try {

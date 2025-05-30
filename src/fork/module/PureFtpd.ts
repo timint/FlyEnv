@@ -1,9 +1,8 @@
 import { join } from 'path'
-import { existsSync } from 'fs'
+import { existsSync, readFileSync, writeFileSync, mkdirSync } from 'fs'
 import { Base } from './Base'
 import type { FtpItem } from '@shared/app'
 import { ForkPromise } from '@shared/ForkPromise'
-import { readFile, writeFile, mkdirp } from 'fs-extra'
 import FtpServer from 'ftp-srv'
 import * as ip from 'neoip'
 import { setDir777ToCurrentUser } from '../Fn'
@@ -62,7 +61,7 @@ class Manager extends Base {
         const all: Array<any> = []
         if (existsSync(json)) {
           try {
-            const txt = await readFile(json, 'utf-8')
+            const txt = readFileSync(json, 'utf-8')
             const arr = JSON.parse(txt.toString())
             all.push(...arr)
           } catch (e) {}
@@ -107,7 +106,7 @@ class Manager extends Base {
       const all = []
       if (existsSync(json)) {
         try {
-          const txt = await readFile(json, 'utf-8')
+          const txt = readFileSync(json, 'utf-8')
           const arr = JSON.parse(txt.toString())
           all.push(...arr)
         } catch (e) {}
@@ -127,7 +126,7 @@ class Manager extends Base {
       const all = []
       if (existsSync(json)) {
         try {
-          const txt = await readFile(json, 'utf-8')
+          const txt = readFileSync(json, 'utf-8')
           const arr = JSON.parse(txt.toString())
           all.push(...arr)
         } catch (e) {}
@@ -136,8 +135,8 @@ class Manager extends Base {
       if (findOld >= 0) {
         all.splice(findOld, 1)
       }
-      await mkdirp(global.Server.FTPDir!)
-      await writeFile(json, JSON.stringify(all))
+      mkdirSync(global.Server.FTPDir!, { recursive: true })
+      writeFileSync(json, JSON.stringify(all))
       resolve(true)
     })
   }
@@ -154,7 +153,7 @@ class Manager extends Base {
       const all = []
       if (existsSync(json)) {
         try {
-          const txt = await readFile(json, 'utf-8')
+          const txt = readFileSync(json, 'utf-8')
           const arr = JSON.parse(txt.toString())
           all.push(...arr)
         } catch (e) {}
@@ -165,8 +164,8 @@ class Manager extends Base {
       } else {
         all.unshift(item)
       }
-      await mkdirp(global.Server.FTPDir!)
-      await writeFile(json, JSON.stringify(all))
+      mkdirSync(global.Server.FTPDir!, { recursive: true })
+      writeFileSync(json, JSON.stringify(all))
       resolve(true)
     })
   }

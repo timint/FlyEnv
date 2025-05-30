@@ -16,7 +16,7 @@
   import { AppStore } from '@/store/app'
 
   const { join } = require('path')
-  const { readFile } = require('fs-extra')
+  import { readFileSync } from 'fs'
 
   const appStore = AppStore()
 
@@ -40,7 +40,7 @@
   const getDefault = () => {
     const tmpl = join(global.Server.Static, 'tmpl/mongodb.conf')
     const dataDir = join(global.Server.MongoDBDir, `data-${vm.value}`)
-    readFile(tmpl, 'utf-8').then((conf: string) => {
+    readFileSync(tmpl, 'utf-8').then((conf: string) => {
       defaultConf.value = conf.replace('##DB-PATH##', dataDir)
     })
   }

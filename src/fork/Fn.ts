@@ -13,16 +13,6 @@ import { merge } from 'lodash-es'
 import { ForkPromise } from '@shared/ForkPromise'
 import crypto from 'crypto'
 import axios from 'axios'
-import {
-  appendFile,
-  copyFile,
-  mkdirp,
-  readdir,
-  readFile,
-  remove,
-  rename,
-  writeFile
-} from 'fs-extra'
 import type { AppHost, SoftInstalled } from '@shared/app'
 import sudoPrompt from '@shared/sudo'
 import { compareVersions } from 'compare-versions'
@@ -297,22 +287,6 @@ export function chmod(fp: string, mode: string) {
   })
 }
 
-export function createFolder(fp: string) {
-  fp = fp.replace(/\\/g, '/')
-  if (existsSync(fp)) {
-    return true
-  }
-  const arr = fp.split('/')
-  let dir = '/'
-  for (const p of arr) {
-    dir = join(dir, p)
-    if (!existsSync(dir)) {
-      mkdirSync(dir)
-    }
-  }
-  return existsSync(fp)
-}
-
 export function md5(str: string) {
   const md5 = crypto.createHash('md5')
   return md5.update(str).digest('hex')
@@ -377,7 +351,7 @@ export function downFile(url: string, savepath: string) {
     })
       .then(function (response) {
         const base = dirname(savepath)
-        createFolder(base)
+        mkdirSync(base, { recursive: true })
         const stream = createWriteStream(savepath)
         response.data.pipe(stream)
         stream.on('error', (err) => {
@@ -425,7 +399,7 @@ export const getAllFileAsync = async (
     return []
   }
   const list: Array<string> = []
-  const files = await readdir(dirPath, { withFileTypes: true })
+  const files = readdirSync(dirPath, { withFileTypes: true })
   for (const file of files) {
     const arr = [...basePath]
     arr.push(file.name)
@@ -446,7 +420,7 @@ export const getSubDirAsync = async (dirPath: string, fullpath = true): Promise<
     return []
   }
   const list: Array<string> = []
-  const files = await readdir(dirPath, { withFileTypes: true })
+  const files = readdirSync(dirPath, { withFileTypes: true })
   for (const file of files) {
     const childPath = join(dirPath, file.name)
     if (file.isDirectory()) {
@@ -671,9 +645,9 @@ export const fetchRawPATH = (): ForkPromise<string[]> => {
     const sh = join(global.Server.Static!, 'sh/path-get.ps1')
     const copySh = join(global.Server.Cache!, 'path-get.ps1')
     if (existsSync(copySh)) {
-      await remove(copySh)
+      unlinkSync(copySh)
     }
-    await copyFile(sh, copySh)
+    copyFileSync(sh, copySh)
     process.chdir(global.Server.Cache!)
     let res: any
     try {
@@ -692,7 +666,7 @@ export const fetchRawPATH = (): ForkPromise<string[]> => {
         }
       )
     } catch (e) {
-      await appendFile(join(global.Server.BaseDir!, 'debug.log'), `[_fetchRawPATH][error]: ${e}\n`)
+      appendFileSync(join(global.Server.BaseDir!, 'debug.log'), `[_fetchRawPATH][error]: ${e}\n`)
       return reject(e)
     }
 
@@ -757,12 +731,12 @@ export const writePath = async (path: string[], other: string = '') => {
   const sh = join(global.Server.Static!, 'sh/path-set.ps1')
   const copySh = join(global.Server.Cache!, 'path-set.ps1')
   if (existsSync(copySh)) {
-    await remove(copySh)
+    unlinkSync(copySh)
   }
   const pathStr = path.join(';')
-  let content = await readFile(sh, 'utf-8')
+  let content = readFileSync(sh, 'utf-8')
   content = content.replace('##NEW_PATH##', pathStr).replace('##OTHER##', other)
-  await writeFile(copySh, content, 'utf-8')
+  writeFileSync(copySh, content, 'utf-8')
   process.chdir(global.Server.Cache!)
   try {
     await execPromise(
@@ -770,7 +744,7 @@ export const writePath = async (path: string[], other: string = '') => {
     )
   } catch (e) {
     console.log('writePath error: ', e)
-    await appendFile(join(global.Server.BaseDir!, 'debug.log'), `[writePath][error]: ${e}\n`)
+    appendFileSync(join(global.Server.BaseDir!, 'debug.log'), `[writePath][error]: ${e}\n`)
   }
 }
 
@@ -801,30 +775,30 @@ export const addPath = async (dir: string) => {
  * @param dest
  */
 export async function moveDirToDir(src: string, dest: string) {
-  // 读取源目录
-  const entries = await readdir(src, { withFileTypes: true })
+  // Read the source directory
+  const entries = readdirSync(src, { withFileTypes: true })
 
   for (const entry of entries) {
     const srcPath = join(src, entry.name)
     const destPath = join(dest, entry.name)
 
     if (entry.isDirectory()) {
-      await mkdirp(destPath)
-      // 递归移动子文件夹
+      mkdirSync(destPath, { recursive: true })
+      // Recursively move subdirectories
       await moveDirToDir(srcPath, destPath)
     } else {
-      // 移动文件
-      await rename(srcPath, destPath)
+      // Move file
+      renameSync(srcPath, destPath)
     }
   }
 }
 
 export async function moveChildDirToParent(dir: string) {
-  const sub = await readdir(dir)
+  const sub = readdirSync(dir)
   for (const s of sub) {
     const sdir = join(dir, s)
     await moveDirToDir(sdir, dir)
-    await remove(sdir)
+    unlinkSync(sdir)
   }
 }
 
@@ -869,7 +843,7 @@ export async function isNTFS(fileOrDirPath: string) {
 
 export async function readFileAsUTF8(filePath: string): Promise<string> {
   try {
-    const buffer: Buffer = await readFile(filePath)
+    const buffer: Buffer = readFileSync(filePath)
     if (buffer?.length === 0 || buffer?.byteLength === 0) {
       return ''
     }
@@ -961,7 +935,7 @@ export async function setDir777ToCurrentUser(folderPath: string) {
   ]
 
   console.log(`Executing: icacls ${args.join(' ')}`)
-  await appendFile(
+  appendFileSync(
     join(global.Server.BaseDir!, 'debug.log'),
     `[setDir777ToCurrentUser][args]: icacls ${args.join(' ')}\n`
   )
@@ -971,7 +945,7 @@ export async function setDir777ToCurrentUser(folderPath: string) {
       windowsHide: true
     })
   } catch (e) {
-    await appendFile(
+    appendFileSync(
       join(global.Server.BaseDir!, 'debug.log'),
       `[setDir777ToCurrentUser][error]: ${e}\n`
     )
@@ -997,7 +971,7 @@ export async function waitPidFile(
       }
     | false = false
   if (existsSync(pidFile)) {
-    const pid = (await readFile(pidFile, 'utf-8')).trim()
+    const pid = (readFileSync(pidFile, 'utf-8')).trim()
     return {
       pid
     }
@@ -1027,7 +1001,7 @@ export async function serviceStartExec(
 ): Promise<{ 'APP-Service-Start-PID': string }> {
   if (pidPath && existsSync(pidPath)) {
     try {
-      await remove(pidPath)
+      unlinkSync(pidPath)
     } catch (e) {}
   }
 
@@ -1037,7 +1011,7 @@ export async function serviceStartExec(
   const outFile = join(baseDir, `${typeFlag}-${versionStr}-start-out.log`.split(' ').join(''))
   const errFile = join(baseDir, `${typeFlag}-${versionStr}-start-error.log`.split(' ').join(''))
 
-  let psScript = await readFile(join(global.Server.Static!, 'sh/flyenv-async-exec.ps1'), 'utf8')
+  let psScript = readFileSync(join(global.Server.Static!, 'sh/flyenv-async-exec.ps1'), 'utf8')
 
   psScript = psScript
     .replace('#ENV#', execEnv)
@@ -1049,7 +1023,7 @@ export async function serviceStartExec(
 
   const psName = `${typeFlag}-${versionStr}-start.ps1`.split(' ').join('')
   const psPath = join(baseDir, psName)
-  await writeFile(psPath, psScript)
+  writeFileSync(psPath, psScript)
 
   on({
     'APP-On-Log': AppLog('info', I18nT('appLog.execStartCommand'))
@@ -1100,7 +1074,7 @@ export async function serviceStartExec(
     if (match) {
       pid = match[1] // 捕获组 (\d+) 的内容
     }
-    await writeFile(pidPath, pid)
+    writeFileSync(pidPath, pid)
     on({
       'APP-On-Log': AppLog('info', I18nT('appLog.startServiceSuccess', { pid: pid }))
     })
@@ -1112,7 +1086,7 @@ export async function serviceStartExec(
   res = await waitPidFile(pidPath, 0, maxTime, timeToWait)
   if (res) {
     if (res?.pid) {
-      await writeFile(pidPath, res.pid)
+      writeFileSync(pidPath, res.pid)
       on({
         'APP-On-Log': AppLog('info', I18nT('appLog.startServiceSuccess', { pid: res.pid }))
       })
@@ -1133,7 +1107,7 @@ export async function serviceStartExec(
   }
   let msg = 'Start Fail'
   if (existsSync(errFile)) {
-    msg = (await readFileAsUTF8(errFile)) || 'Start Fail'
+    msg = (readFileSyncAsUTF8(errFile)) || 'Start Fail'
   }
   on({
     'APP-On-Log': AppLog(
@@ -1161,7 +1135,7 @@ export async function serviceStartExecCMD(
 ): Promise<{ 'APP-Service-Start-PID': string }> {
   if (pidPath && existsSync(pidPath)) {
     try {
-      await remove(pidPath)
+      unlinkSync(pidPath)
     } catch (e) {}
   }
 
@@ -1171,7 +1145,7 @@ export async function serviceStartExecCMD(
   const outFile = join(baseDir, `${typeFlag}-${versionStr}-start-out.log`.split(' ').join(''))
   const errFile = join(baseDir, `${typeFlag}-${versionStr}-start-error.log`.split(' ').join(''))
 
-  let psScript = await readFile(join(global.Server.Static!, 'sh/flyenv-async-exec.cmd'), 'utf8')
+  let psScript = readFileSync(join(global.Server.Static!, 'sh/flyenv-async-exec.cmd'), 'utf8')
 
   let execBin = basename(bin)
   if (execBin.includes('.exe')) {
@@ -1188,7 +1162,7 @@ export async function serviceStartExecCMD(
 
   const psName = `${typeFlag}-${versionStr}-start.cmd`.split(' ').join('')
   const psPath = join(baseDir, psName)
-  await writeFile(psPath, psScript)
+  writeFileSync(psPath, psScript)
 
   on({
     'APP-On-Log': AppLog('info', I18nT('appLog.execStartCommand'))
@@ -1230,7 +1204,7 @@ export async function serviceStartExecCMD(
   res = await waitPidFile(pidPath, 0, maxTime, timeToWait)
   if (res) {
     if (res?.pid) {
-      await writeFile(pidPath, res.pid)
+      writeFileSync(pidPath, res.pid)
       on({
         'APP-On-Log': AppLog('info', I18nT('appLog.startServiceSuccess', { pid: res.pid }))
       })
@@ -1251,7 +1225,7 @@ export async function serviceStartExecCMD(
   }
   let msg = 'Start Fail'
   if (existsSync(errFile)) {
-    msg = (await readFileAsUTF8(errFile)) || 'Start Fail'
+    msg = (readFileAsUTF8(errFile)) || 'Start Fail'
   }
   on({
     'APP-On-Log': AppLog(
@@ -1277,7 +1251,7 @@ export async function serviceStartExecGetPID(
 ): Promise<{ 'APP-Service-Start-PID': string }> {
   if (pidPath && existsSync(pidPath)) {
     try {
-      await remove(pidPath)
+      rmDirSync(pidPath)
     } catch (e) {}
   }
 
@@ -1287,7 +1261,7 @@ export async function serviceStartExecGetPID(
   const outFile = join(baseDir, `${typeFlag}-${versionStr}-start-out.log`.split(' ').join(''))
   const errFile = join(baseDir, `${typeFlag}-${versionStr}-start-error.log`.split(' ').join(''))
 
-  let psScript = await readFile(join(global.Server.Static!, 'sh/flyenv-async-exec.ps1'), 'utf8')
+  let psScript = readFileSync(join(global.Server.Static!, 'sh/flyenv-async-exec.ps1'), 'utf8')
 
   psScript = psScript
     .replace('#ENV#', execEnv)
@@ -1349,7 +1323,7 @@ export async function serviceStartExecGetPID(
   if (match) {
     pid = match[1] // 捕获组 (\d+) 的内容
   }
-  await writeFile(pidPath, pid)
+  writeFile(pidPath, pid)
   on({
     'APP-On-Log': AppLog('info', I18nT('appLog.startServiceSuccess', { pid: pid }))
   })

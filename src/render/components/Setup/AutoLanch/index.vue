@@ -22,9 +22,9 @@
   import { I18nT } from '@lang/index'
   import { promisify } from 'node:util'
   import { exec } from 'node:child-process'
+  import { writeFileSync, rmSync, readFileSync, mkdirSync } from 'fs'
 
   const { app } = require('@electron/remote')
-  const { writeFile, mkdirp, remove, readFile } = require('fs-extra')
   const { join } = require('path')
   const execAsync = promisify(exec)
 
@@ -34,19 +34,19 @@
     const exePath = app.getPath('exe').replace(/"/g, '\\"')
     const taskName = 'FlyEnvStartup'
     if (enable) {
-      const tmpl = await readFile(join(global.Server.Static!, 'sh/flyenv-auto-start.ps1'), 'utf-8')
+      const tmpl = readFileSync(join(global.Server.Static!, 'sh/flyenv-auto-start.ps1'), 'utf-8')
       const content = tmpl.replace('#EXECPATH#', exePath)
       try {
-        await mkdirp(global.Server.Cache!)
+        mkdirSync(global.Server.Cache!, { recursive: true })
         const file = join(global.Server.Cache!, 'flyenv-auto-start.ps1')
-        await writeFile(file, content)
-        const res = await exec(
+        writeFileSync(file, content)
+        const res = await execAsync(
           `powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Unblock-File -LiteralPath '${file}'; & '${file}'"`,
           { shell: true }
         )
         console.log('file: ', file)
         console.log('res: ', res.stdout, res.stderr)
-        await remove(file)
+        rmSync(file)
         return true
       } catch (e: any) {
         MessageError(`${e.toString()}`)

@@ -2,10 +2,9 @@ import { join, dirname, basename } from 'path'
 import { Base } from './Base'
 import { AppLog, md5, moveDirToDir, spawnPromise, uuid } from '../Fn'
 import { ForkPromise } from '@shared/ForkPromise'
-import { remove, writeFile } from 'fs-extra'
+import { existsSync, rmSync, writeFileSync } from 'fs'
 import PHPManager from './Php'
 import { I18nT } from '@lang/index'
-import { existsSync } from 'fs'
 class Manager extends Base {
   constructor() {
     super()
@@ -29,7 +28,7 @@ class Manager extends Base {
   }
 }
 `
-        await writeFile(join(dir, 'composer.json'), tmpl)
+        writeFileSync(join(dir, 'composer.json'), tmpl)
 
         const command = ['@echo off', 'chcp 65001>nul', `cd /d "${dir}"`]
         if (php && composer) {
@@ -49,12 +48,12 @@ class Manager extends Base {
           )
         })
 
-        const copyfile = join(global.Server.Cache!, `${uuid()}.cmd`)
-        console.log('createProject copyfile: ', copyfile)
-        await writeFile(copyfile, command.join('\n'))
-        const params = [copyfile]
+        const copyFileSync = join(global.Server.Cache!, `${uuid()}.cmd`)
+        console.log('createProject copyFileSync: ', copyFileSync)
+        writeFileSync(copyFileSync, command.join('\n'))
+        const params = [copyFileSync]
         console.log('params: ', params.join(' '))
-        spawnPromise(`${basename(copyfile)}`, [], {
+        spawnPromise(`${basename(copyFileSync)}`, [], {
           cwd: global.Server.Cache!
         })
           .on(on)
@@ -71,7 +70,7 @@ class Manager extends Base {
             reject(e)
           })
           .finally(() => {
-            remove(copyfile).then().catch()
+            rmSync(copyFileSync).then().catch()
           })
       } else {
         const names: { [k: string]: string } = {
@@ -111,24 +110,24 @@ class Manager extends Base {
           )
         })
 
-        const copyfile = join(global.Server.Cache!, `${uuid()}.cmd`)
-        console.log('createProject copyfile: ', copyfile)
-        await writeFile(copyfile, command.join('\n'))
-        const params = [copyfile]
+        const copyFileSync = join(global.Server.Cache!, `${uuid()}.cmd`)
+        console.log('createProject copyFileSync: ', copyFileSync)
+        writeFileSync(copyFileSync, command.join('\n'))
+        const params = [copyFileSync]
         console.log('params: ', params.join(' '))
-        spawnPromise(`${basename(copyfile)}`, [], {
+        spawnPromise(`${basename(copyFileSync)}`, [], {
           cwd: global.Server.Cache!
         })
           .on(on)
           .then(async () => {
             const pdir = join(dir, 'flyenv-create-project')
             await moveDirToDir(pdir, dir)
-            await remove(pdir)
+            rmSync(pdir)
             if (framework === 'laravel') {
               const envFile = join(dir, '.env')
               if (!existsSync(envFile)) {
                 const key = md5(uuid())
-                await writeFile(
+                writeFileSync(
                   envFile,
                   `APP_DEBUG=true
 APP_KEY=${key}`
@@ -147,7 +146,7 @@ APP_KEY=${key}`
             reject(e)
           })
           .finally(() => {
-            remove(copyfile).then().catch()
+            rmSync(copyFileSync).then().catch()
           })
       }
     })
@@ -161,16 +160,15 @@ APP_KEY=${key}`
       }
       try {
         await moveDirToDir(pdir, dir)
-        await remove(pdir)
+        rmSync(pdir)
         if (framework === 'laravel') {
           const envFile = join(dir, '.env')
           if (!existsSync(envFile)) {
             const key = md5(uuid())
-            await writeFile(
-              envFile,
-              `APP_DEBUG=true
-APP_KEY=${key}`
-            )
+            writeFileSync(envFile, [
+                'APP_DEBUG=true',
+                `APP_KEY=${key}`,
+            ].join('\n'))
           }
         }
       } catch (e) {

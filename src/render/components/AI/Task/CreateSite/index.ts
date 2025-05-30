@@ -4,8 +4,7 @@ import { AIStore } from '@/components/AI/store'
 import { handleHost } from '@/util/Host'
 import { openSiteBaseService } from '@/components/AI/Fn/Host'
 import { I18nT } from '@lang/index'
-
-const { existsSync } = require('fs-extra')
+import { existsSync } from 'fs'
 
 export class CreateSite extends BaseTask {
   host: any = {

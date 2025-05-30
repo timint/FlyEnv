@@ -83,7 +83,7 @@
 
   const { join } = require('path')
   const { shell } = require('@electron/remote')
-  const { readFile, writeFile, existsSync, readFileSync } = require('fs-extra')
+  import { readFileSync, writeFileSync, existsSync } from 'fs'
 
   type Dependency = {
     name: string
@@ -170,7 +170,7 @@
     const selectRows: Dependency[] = table.value!.getSelectionRows()
     const file = join(props.item.path, 'package.json')
     try {
-      const content = await readFile(file, 'utf-8')
+      const content = readFileSync(file, 'utf-8')
       const json = JSON.parse(content)
       for (const p in json.dependencies) {
         if (updateDict?.value?.[p] && selectRows.some((s) => s.name === p)) {
@@ -184,7 +184,7 @@
           delete updateDict?.value?.[p]
         }
       }
-      await writeFile(file, JSON.stringify(json, null, 2))
+      writeFileSync(file, JSON.stringify(json, null, 2))
       index.value += 1
     } catch (e: any) {
       ElMessage.error(e.toString)

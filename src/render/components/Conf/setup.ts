@@ -7,7 +7,7 @@ import type { AllAppModule } from '@/core/type'
 
 const { dialog } = require('@electron/remote')
 const { shell } = require('@electron/remote')
-const { existsSync, writeFile, readFile, statSync } = require('fs-extra')
+import { existsSync, readFileSync, statSync, writeFile } from 'fs'
 
 type CommonSetItemOption = {
   label: string
@@ -192,7 +192,7 @@ export const ConfSetup = (props: ComputedRef<ConfSetupProps>) => {
       initEditor()
       return
     }
-    readFile(props.value.file, 'utf-8').then((conf: string) => {
+    readFileSync(props.value.file, 'utf-8').then((conf: string) => {
       config.value = conf
       initEditor()
     })
@@ -209,7 +209,7 @@ export const ConfSetup = (props: ComputedRef<ConfSetupProps>) => {
       initEditor()
       return
     }
-    readFile(props.value.defaultFile, 'utf-8').then((conf: string) => {
+    readFileSync(props.value.defaultFile, 'utf-8').then((conf: string) => {
       console.log('getDefault config.value === conf', config.value === conf)
       changed.value = conf !== config.value
       config.value = conf
@@ -233,7 +233,7 @@ export const ConfSetup = (props: ComputedRef<ConfSetupProps>) => {
           MessageError(I18nT('base.fileBigErr'))
           return
         }
-        readFile(file, 'utf-8').then((conf: string) => {
+        readFileSync(file, 'utf-8').then((conf: string) => {
           changed.value = conf !== config.value
           config.value = conf
           initEditor()

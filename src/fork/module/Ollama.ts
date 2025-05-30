@@ -1,7 +1,7 @@
 import { basename, dirname, join } from 'path'
-import { existsSync } from 'fs'
 import { Base } from './Base'
 import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
+import { existsSync, readFileSync, writeFileSync, mkdirSync } from 'fs'
 import {
   AppLog,
   execPromise,
@@ -13,7 +13,6 @@ import {
   versionSort
 } from '../Fn'
 import { ForkPromise } from '@shared/ForkPromise'
-import { readFile, writeFile, mkdirp } from 'fs-extra'
 import { I18nT } from '@lang/index'
 import TaskQueue from '../TaskQueue'
 import axios from 'axios'
@@ -37,16 +36,16 @@ class Ollama extends Base {
     return new ForkPromise(async (resolve, reject, on) => {
       const baseDir = join(global.Server.BaseDir!, 'ollama')
       if (!existsSync(baseDir)) {
-        await mkdirp(baseDir)
+        mkdirSync(baseDir, { recursive: true })
       }
       const iniFile = join(baseDir, 'ollama.conf')
       if (!existsSync(iniFile)) {
         on({
           'APP-On-Log': AppLog('info', I18nT('appLog.confInit'))
         })
-        await writeFile(iniFile, '')
+        writeFileSync(iniFile, '')
         const defaultIniFile = join(baseDir, 'ollama.conf.default')
-        await writeFile(defaultIniFile, '')
+        writeFileSync(defaultIniFile, '')
         on({
           'APP-On-Log': AppLog('info', I18nT('appLog.confInitSuccess', { file: iniFile }))
         })
@@ -67,7 +66,7 @@ class Ollama extends Base {
       const iniFile = await this.initConfig().on(on)
 
       const getConfEnv = async () => {
-        const content = await readFile(iniFile, 'utf-8')
+        const content = readFileSync(iniFile, 'utf-8')
         const arr = content
           .split('\n')
           .filter((s) => {
@@ -96,7 +95,9 @@ class Ollama extends Base {
       envs.push('')
 
       const baseDir = join(global.Server.BaseDir!, `ollama`)
-      await mkdirp(baseDir)
+      if (!existsSync(baseDir)) {
+        mkdirSync(baseDir, { recursive: true })
+      }
 
       const execEnv = envs.join(EOL)
       const execArgs = `serve`

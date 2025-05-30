@@ -1,8 +1,7 @@
-const fs = require('fs')
 const path = require('path')
 const compressing = require('7zip-min-electron')
 const crypto = require('crypto')
-const { copyFile, appendFile } = require('fs-extra')
+import fs from 'fs'
 
 export function getAllFile(fp: string, fullpath = true) {
   let arr: Array<string> = []
@@ -22,7 +21,7 @@ export function getAllFile(fp: string, fullpath = true) {
         const sub = getAllFile(fPath, fullpath)
         arr = arr.concat(sub)
       }
-      if (stat.isFile()) {-
+      if (stat.isFile()) {
         arr.push(fullpath ? fPath : item)
       }
     }
@@ -107,22 +106,6 @@ export function chmod(fp: string, mode: string) {
   })
 }
 
-export function createFolder(fp: string) {
-  if (fs.existsSync(fp)) {
-    return true
-  }
-  const arr = fp.split(path.sep)
-  let dir = arr.shift()
-  for (const p of arr) {
-    dir = path.join(dir, p)
-    if (!fs.existsSync(dir)) {
-      console.log('createFolder: ', dir)
-      fs.mkdirSync(dir)
-    }
-  }
-  return fs.existsSync(fp)
-}
-
 export function writeFileAsync(fp: string, content: string) {
   return new Promise((resolve, reject) => {
     fs.writeFile(fp, content, (err: Error) => {
@@ -138,7 +121,7 @@ export function writeFileAsync(fp: string, content: string) {
 export function readFileAsync(fp: string, encode = 'utf-8') {
   return new Promise<string>((resolve, reject) => {
     if (!fs.existsSync(fp)) {
-      reject(new Error(`文件不存在: ${fp}`))
+      reject(new Error(`File does not exist: ${fp}`))
     }
     fs.readFile(fp, encode, (err: Error, data: string) => {
       if (err) {
@@ -159,7 +142,7 @@ export function zipUnPack(fp: string, dist: string) {
       static: global.Server.Static,
       isIncludes: fp.includes(global.Server.Static!)
     }
-    await appendFile(
+    await fs.appendFile(
       path.join(global.Server.BaseDir!, 'debug.log'),
       `[zipUnPack][info]: ${JSON.stringify(info, undefined, 4)}\n`
     )
@@ -167,11 +150,11 @@ export function zipUnPack(fp: string, dist: string) {
       const cacheFP = path.join(global.Server.Cache!, path.basename(fp))
       if (!fs.existsSync(cacheFP)) {
         try {
-          await copyFile(fp, cacheFP)
+          fs.copyFileSync(fp, cacheFP)
         } catch (e) {
-          await appendFile(
+          await fs.appendFile(
             path.join(global.Server.BaseDir!, 'debug.log'),
-            `[zipUnPack][copyFile][error]: ${e}\n`
+            `[zipUnPack][fs.copyFileSync][error]: ${e}\n`
           )
         }
       }
@@ -181,7 +164,7 @@ export function zipUnPack(fp: string, dist: string) {
     compressing.unpack(fp, dist, async (err: any, res: any) => {
       console.log('zipUnPack end: ', err, res)
       if (err) {
-        await appendFile(
+        await fs.appendFile(
           path.join(global.Server.BaseDir!, 'debug.log'),
           `[zipUnPack][unpack][error]: ${err}\n`
         )

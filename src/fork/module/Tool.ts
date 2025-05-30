@@ -1,5 +1,5 @@
-import { createReadStream, readFileSync, statSync } from 'fs'
 import { Base } from './Base'
+import { copyFileSync, createReadStream, existsSync, mkdirSync, readdir, realpathSync, readFileSync, statSync, unlinkSync, writeFile, writeFileSync } from 'fs'
 import { promisify } from 'node:util'
 import { exec } from 'node:child-process'
 import {
@@ -14,17 +14,6 @@ import {
   writePath
 } from '../Fn'
 import { ForkPromise } from '@shared/ForkPromise'
-import {
-  copyFile,
-  existsSync,
-  mkdirp,
-  readdir,
-  readFile,
-  realpathSync,
-  remove,
-  writeFile,
-  stat
-} from 'fs-extra'
 import { TaskItem, TaskQueue, TaskQueueProgress } from '@shared/TaskQueue'
 import { basename, dirname, isAbsolute, join, resolve as PathResolve } from 'path'
 import { zipUnPack } from '@shared/file'
@@ -141,7 +130,7 @@ class Manager extends Base {
       }
       const opensslCnf = join(global.Server.AppDir!, 'openssl/openssl.cnf')
       if (!existsSync(opensslCnf)) {
-        await copyFile(join(global.Server.Static!, 'tmpl/openssl.cnf'), opensslCnf)
+        copyFileSync(join(global.Server.Static!, 'tmpl/openssl.cnf'), opensslCnf)
       }
       const domains = param.domains
         .split('\n')
@@ -196,7 +185,7 @@ subjectAltName=@alt_names
         ext += `DNS.${index + 1} = ${item}${EOL}`
       })
       ext += `IP.1 = 127.0.0.1${EOL}`
-      await writeFile(join(param.savePath, `${saveName}.ext`), ext)
+      writeFileSync(join(param.savePath, `${saveName}.ext`), ext)
 
       const saveKey = join(param.savePath, `${saveName}.key`)
       const saveCSR = join(param.savePath, `${saveName}.csr`)
@@ -365,8 +354,8 @@ subjectAltName=@alt_names
         let res = true
         if (isAbsolute(p)) {
           try {
-            const realPath = realpathSync(p)
-            if (realPath.includes(flagDir) || realPath.includes(item.path)) {
+            const realpathSync = realpathSync(p)
+            if (realpathSync.includes(flagDir) || realpathSync.includes(item.path)) {
               res = false
             }
           } catch (error) {}
@@ -434,13 +423,13 @@ subjectAltName=@alt_names
 
       const binDir = dirname(item.bin)
       /**
-       * 初始化env文件夾
-       * 删除标识文件夹
-       * 如果原来没有 重新创建链接文件夹
+       * Initialize the env directory
+       * Delete the marker folder
+       * If it didn't exist before, recreate the symbolic link folder
        */
       const envDir = join(dirname(global.Server.AppDir!), 'env')
       if (!existsSync(envDir)) {
-        await mkdirp(envDir)
+        mkdirSync(envDir, { recursive: true })
       }
       const flagDir = join(envDir, typeFlag)
       console.log('flagDir: ', flagDir)
@@ -463,7 +452,7 @@ subjectAltName=@alt_names
       })
 
       /**
-       * 获取env文件夹下所有子文件夹
+       * Retrieve all subfolders under the env directory
        */
       let allFile = await readdir(envDir)
       allFile = allFile
@@ -484,7 +473,7 @@ subjectAltName=@alt_names
       console.log('allFile: ', allFile)
 
       /**
-       * 从原有PATH删除全部env文件夹
+       * Remove all env folders from the original PATH
        */
       oldPath = oldPath.filter((o) => !o.includes(envDir))
 
@@ -503,8 +492,8 @@ subjectAltName=@alt_names
           let res = true
           if (isAbsolute(p)) {
             try {
-              const realPath = realpathSync(p)
-              if (realPath.includes(envPath) || realPath.includes(rawEnvPath)) {
+              const realpathSync = realpathSync(p)
+              if (realpathSync.includes(envPath) || realpathSync.includes(rawEnvPath)) {
                 res = false
               }
             } catch (error) {}
@@ -543,11 +532,10 @@ subjectAltName=@alt_names
       if (typeFlag === 'composer') {
         const bat = join(binDir, 'composer.bat')
         if (!existsSync(bat)) {
-          await writeFile(
-            bat,
-            `@echo off
-php "%~dp0composer.phar" %*`
-          )
+          writeFileSync(bat, [
+            '@echo off',
+            `php "%~dp0composer.phar" %*`
+          ].join('\n'))
         }
         let composer_bin_dir = ''
         try {
@@ -573,12 +561,12 @@ php "%~dp0composer.phar" %*`
 
       console.log('oldPath: ', oldPath)
 
-      const pathString = oldPath
-      let otherString = ''
+      const filePath = oldPath
+      let content = ''
       if (typeFlag === 'java') {
-        otherString = `"JAVA_HOME" = "${flagDir}"`
+        content = `"JAVA_HOME" = "${flagDir}"`
       } else if (typeFlag === 'erlang') {
-        otherString = `"ERLANG_HOME" = "${flagDir}"`
+        content = `"ERLANG_HOME" = "${flagDir}"`
         const f = join(global.Server.Cache!, `${uuid()}.ps1`)
         await writeFile(
           f,
@@ -590,11 +578,11 @@ php "%~dp0composer.phar" %*`
             `powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Unblock-File -LiteralPath '${f}'; & '${f}'"`
           )
         } catch (e) {}
-        await remove(f)
+        unlinkSync(f)
       }
 
       try {
-        await writePath(pathString, otherString)
+        writeFileSync(filePath, content)
       } catch (e) {
         return reject(e)
       }
@@ -619,12 +607,12 @@ php "%~dp0composer.phar" %*`
   ) {
     return new ForkPromise(async (resolve) => {
       await this.initLocalApp(service, service.typeFlag)
-      const aliasDir = PathResolve(global.Server.BaseDir!, '../alias')
-      await mkdirp(aliasDir)
+      const aliasDir = pathResolve(global.Server.BaseDir!, '../alias')
+      mkdirSync(aliasDir, { recursive: true })
       if (old?.id) {
         const oldFile = join(aliasDir, `${old.name}.bat`)
         if (existsSync(oldFile)) {
-          await remove(oldFile)
+          unlinkSync(oldFile)
         }
         const index = alias?.[service.bin]?.findIndex((a) => a.id === old.id)
         if (index >= 0) {
@@ -639,13 +627,13 @@ php "%~dp0composer.phar" %*`
           const content = `@echo off
 chcp 65001>nul
 "${bin}" "${service.bin}" %*`
-          await writeFile(file, content)
+          writeFileSync(file, content)
         } else {
           const bin = service.bin.replace('php-cgi.exe', 'php.exe')
           const content = `@echo off
 chcp 65001>nul
 "${bin}" %*`
-          await writeFile(file, content)
+          writeFileSync(file, content)
         }
         if (!item.id) {
           item.id = uuid(8)
@@ -677,14 +665,14 @@ chcp 65001>nul
 
   cleanAlias(alias: Record<string, AppServiceAliasItem[]>) {
     return new ForkPromise(async (resolve) => {
-      const aliasDir = PathResolve(global.Server.BaseDir!, '../alias')
+      const aliasDir = pathResolve(global.Server.BaseDir!, '../alias')
       for (const bin in alias) {
         const item = alias[bin]
         if (!existsSync(bin)) {
           for (const i of item) {
             const file = join(aliasDir, `${i.name}.bat`)
             if (existsSync(file)) {
-              await remove(file)
+              unlinkSync(file)
             }
           }
           delete alias[bin]
@@ -694,7 +682,7 @@ chcp 65001>nul
             if (i?.php?.bin && !existsSync(i?.php?.bin)) {
               const file = join(aliasDir, `${i.name}.bat`)
               if (existsSync(file)) {
-                await remove(file)
+                unlinkSync(file)
               }
               continue
             }
@@ -775,7 +763,7 @@ chcp 65001>nul
   envPathUpdate(arr: string[]) {
     return new ForkPromise(async (resolve, reject) => {
       try {
-        await writePath(arr)
+        await writePath(arr.join(';'))
       } catch (e) {
         console.log('envPathUpdate err: ', e)
         return reject(e)
@@ -845,7 +833,7 @@ chcp 65001>nul
       if (JetBrains.includes(app)) {
         const findIdePath = async (ideName: string) => {
           try {
-            // 定义所有可能的注册表路径
+            // Define all possible registry paths
             const registryPaths = [
               `HKLM\\SOFTWARE\\JetBrains\\${ideName}`,
               `HKLM\\SOFTWARE\\WOW6432Node\\JetBrains\\${ideName}`,
@@ -865,7 +853,7 @@ chcp 65001>nul
                     const pathMatch = line.match(/(InstallPath|\(Default\))\s+REG_SZ\s+(.+)/i)
                     if (pathMatch) {
                       basePath = pathMatch[2].trim()
-                      break // 找到路径后退出循环
+                      break // Exit the loop once the path is found
                     }
                   }
                 }
@@ -909,7 +897,7 @@ chcp 65001>nul
           }
         }
 
-        // 统一格式化可执行文件路径
+        // Unified formatting of executable file paths
         const formatExePath = (basePath: string, ideName: string) => {
           const exeMap: Record<string, string> = {
             phpstorm: 'phpstorm64.exe',
@@ -985,13 +973,13 @@ chcp 65001>nul
             }
             await execAsync(`"${hbuilderxPath}" "${targetPath}"`)
             return true
-          } catch (error) {
+          } catch (error: any) {
             return false
           }
         }
 
-        const res = await openWithHBuilderX(dir)
-        if (res) {
+        const resHBuilderX = await openWithHBuilderX(dir)
+        if (resHBuilderX) {
           return resolve(true)
         }
         return reject(new Error(`HBuilderX Not Found`))
@@ -1018,8 +1006,8 @@ chcp 65001>nul
   initAllowDir(json: string) {
     return new ForkPromise(async (resolve) => {
       const jsonFile = join(dirname(global.Server.AppDir!), 'bin/.flyenv.dir')
-      await mkdirp(dirname(jsonFile))
-      await writeFile(jsonFile, json)
+      mkdirSync(dirname(jsonFile), { recursive: true })
+      writeFileSync(jsonFile, json)
       resolve(true)
     })
   }
@@ -1030,7 +1018,7 @@ chcp 65001>nul
       let json: string[] = []
       if (existsSync(jsonFile)) {
         try {
-          const content = await readFile(jsonFile, 'utf-8')
+          const content = readFileSync(jsonFile, 'utf-8')
           json = JSON.parse(content)
         } catch (e) {}
       }
@@ -1044,7 +1032,7 @@ chcp 65001>nul
           json.splice(index, 1)
         }
       }
-      await writeFile(jsonFile, JSON.stringify(json))
+      writeFileSync(jsonFile, JSON.stringify(json))
       resolve(true)
     })
   }
@@ -1057,27 +1045,26 @@ chcp 65001>nul
       ]
 
       const flyenvScriptPath = join(dirname(global.Server.AppDir!), 'bin/flyenv.ps1')
-      await mkdirp(dirname(flyenvScriptPath))
-      await copyFile(join(global.Server.Static!, 'sh/fly-env.ps1'), flyenvScriptPath)
+      mkdirSync(dirname(flyenvScriptPath), { recursive: true });
+      copyFileSync(join(global.Server.Static!, 'sh/fly-env.ps1'), flyenvScriptPath)
 
       for (const version of psVersions) {
         try {
-          const profilePath = (
-            await exec(`$PROFILE.${version.profileType}`, { shell: version.exe })
-          ).stdout.trim()
+          const { stdout } = await execAsync(`Write-Output $PROFILE.${version.profileType}`, { shell: version.exe })
+          const profilePath = stdout.trim();
 
           if (!profilePath || profilePath === '') continue
 
-          // 写入配置（如果不存在）
-          await mkdirp(dirname(profilePath))
+          // Write configuration (if it does not exist)
+          mkdirSync(dirname(profilePath), { recursive: true })
           const loadCommand = `. "${flyenvScriptPath.replace(/\\/g, '/')}"\n`
 
           if (!existsSync(profilePath)) {
-            await writeFile(profilePath, `# FlyEnv Auto-Load\n${loadCommand}`)
+            writeFileSync(profilePath, `# FlyEnv Auto-Load\n${loadCommand}`)
           } else {
-            const content = await readFile(profilePath, 'utf-8')
+            const content = readFileSync(profilePath, 'utf-8')
             if (!content.includes(loadCommand.trim())) {
-              await writeFile(
+              writeFileSync(
                 profilePath,
                 `${content.trim()}\n\n# FlyEnv Auto-Load\n${loadCommand}`
               )

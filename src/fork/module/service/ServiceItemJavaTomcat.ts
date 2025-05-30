@@ -1,6 +1,6 @@
 import type { AppHost, SoftInstalled } from '@shared/app'
 import { basename, dirname, join, resolve as pathResolve } from 'path'
-import { copyFile, existsSync, mkdirp, readFile, writeFile, realpathSync } from 'fs-extra'
+import { existsSync, readFileSync, writeFileSync, copyFileSync, realpathSync, mkdirSync } from 'fs'
 import { hostAlias, waitTime } from '../../Fn'
 import { XMLBuilder, XMLParser } from 'fast-xml-parser'
 import { ServiceItem } from './ServiceItem'
@@ -264,18 +264,18 @@ export const makeGlobalTomcatServerXML = async (version: SoftInstalled) => {
   hostAll = hostAll.filter((h) => h.type === 'tomcat')
 
   const vhostDir = join(global.Server.BaseDir!, 'vhost/tomcat')
-  await mkdirp(vhostDir)
+  mkdirSync(vhostDir, { recursive: true })
 
   const configFile = join(version.path, 'conf/server.xml')
-  const serverContent = await readFile(configFile, 'utf-8')
+  const serverContent = readFileSync(configFile, 'utf-8')
 
   const defaultFile = join(version.path, 'conf/server.xml.default')
   if (!existsSync(defaultFile)) {
-    await writeFile(defaultFile, serverContent)
+    writeFileSync(defaultFile, serverContent)
   }
 
   const content = makeTomcatServerXML(join(version.path, 'conf'), serverContent, hostAll)
-  await writeFile(configFile, content)
+  writeFileSync(configFile, content)
 }
 
 export const makeCustomTomcatServerXML = async (host: AppHost) => {
@@ -287,7 +287,11 @@ export const makeCustomTomcatServerXML = async (host: AppHost) => {
   }
 
   const logDir = join(global.Server.BaseDir!, `tomcat/${host.id}/logs`)
-  await mkdirp(logDir)
+  const vhostPath = join(global.Server.BaseDir!, `tomcat/${host.id}/conf`)
+  const versionPath = pathResolve(tomcatDir, '../../conf')
+
+  mkdirSync(logDir, { recursive: true })
+  mkdirSync(vhostPath, { recursive: true })
 
   const files = [
     'catalina.properties',
@@ -299,32 +303,30 @@ export const makeCustomTomcatServerXML = async (host: AppHost) => {
     'logging.properties',
     'web.xml'
   ]
-  const versionPath = pathResolve(tomcatDir, '../../conf')
-  const vhostPath = join(global.Server.BaseDir!, `tomcat/${host.id}/conf`)
-  await mkdirp(vhostPath)
+
   for (const file of files) {
     const of = join(versionPath, file)
     const nf = join(vhostPath, file)
     if (!existsSync(nf) && existsSync(of)) {
-      await copyFile(of, nf)
+      copyFileSync(of, nf)
     }
   }
 
   const configFile = join(global.Server.BaseDir!, `tomcat/${host.id}/conf/server.xml`)
   let serverContent = ''
   if (existsSync(configFile)) {
-    serverContent = await readFile(configFile, 'utf-8')
+    serverContent = readFileSync(configFile, 'utf-8')
   } else {
     const configFile = pathResolve(tomcatDir, '../../conf/server.xml')
-    serverContent = await readFile(configFile, 'utf-8')
+    serverContent = readFileSync(configFile, 'utf-8')
     const defaultFile = pathResolve(tomcatDir, '../../conf/server.xml.default')
     if (!existsSync(defaultFile)) {
-      await writeFile(defaultFile, serverContent)
+      writeFileSync(defaultFile, serverContent)
     }
   }
 
   const content = makeTomcatServerXML(pathResolve(tomcatDir, '../../conf'), serverContent, hostAll)
-  await writeFile(configFile, content)
+  writeFileSync(configFile, content)
 }
 
 export class ServiceItemJavaTomcat extends ServiceItem {
@@ -351,7 +353,7 @@ export class ServiceItemJavaTomcat extends ServiceItem {
       }
 
       const javaDir = join(global.Server.BaseDir!, 'tomcat')
-      await mkdirp(javaDir)
+      mkdirSync(javaDir, { recursive: true })
       const pid = join(javaDir, `${item.id}.pid`)
       if (existsSync(pid)) {
         try {
@@ -377,7 +379,7 @@ export class ServiceItemJavaTomcat extends ServiceItem {
       this.command = commands.join(EOL)
       console.log('command: ', this.command)
       const sh = join(global.Server.Cache!, `service-${this.id}.cmd`)
-      await writeFile(sh, this.command)
+      writeFileSync(sh, this.command)
       process.chdir(global.Server.Cache!)
       try {
         await execPromiseRoot(

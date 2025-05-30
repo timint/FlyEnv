@@ -117,8 +117,8 @@
   import { ArrayMoveItem } from '@shared/utils'
 
   const { shell, clipboard } = require('@electron/remote')
-  const { existsSync } = require('fs-extra')
   const { isAbsolute } = require('path')
+  import { existsSync } from 'fs'
 
   Setup.fetchList()
 

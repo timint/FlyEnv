@@ -17,7 +17,7 @@
   import { TomcatSetup } from '@/components/Tomcat/setup'
 
   const { join } = require('path')
-  const { existsSync } = require('fs')
+  import { existsSync } from 'fs'
 
   const brewStore = BrewStore()
 

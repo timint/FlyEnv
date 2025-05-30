@@ -54,7 +54,7 @@
 
   const { shell } = require('@electron/remote')
   const { join } = require('path')
-  const { existsSync, readFile } = require('fs-extra')
+  import { existsSync, readFileSync } from 'fs'
 
   const { tab, checkVersion } = AppModuleSetup('meilisearch')
   const tabs = [I18nT('base.service'), I18nT('base.versionManager'), I18nT('base.configFile')]
@@ -98,7 +98,7 @@
   const openURL = async () => {
     const iniFile = join(global.Server.BaseDir!, 'meilisearch/meilisearch.toml')
     if (existsSync(iniFile)) {
-      const content = await readFile(iniFile, 'utf-8')
+      const content = readFileSync(iniFile, 'utf-8')
       const logStr = content.split('\n').find((s: string) => s.includes('http_addr'))
       const port = logStr?.trim()?.split('=')?.pop()?.split(':')?.pop()?.replace('"', '') ?? '7700'
       shell.openExternal(`http://127.0.0.1:${port}/`).then().catch()

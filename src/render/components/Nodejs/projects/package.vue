@@ -33,7 +33,7 @@
   import DependencieVM from './dependencies/index.vue'
 
   const { join } = require('path')
-  const { existsSync, readFileSync } = require('fs')
+  import { existsSync, readFileSync } from 'fs'
 
   const props = defineProps<{
     item: ProjectItem

@@ -37,7 +37,6 @@ const config: UserConfig = {
       'tangerine',
       'os',
       'child_process',
-      'fs-extra',
       'node-forge'
     ]
   },

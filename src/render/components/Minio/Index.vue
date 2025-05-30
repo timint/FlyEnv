@@ -53,8 +53,8 @@
   import Config from './Config.vue'
 
   const { join } = require('path')
-  const { existsSync, readFile } = require('fs-extra')
   const { shell } = require('@electron/remote')
+  import { existsSync, readFileSync } from 'fs'
 
   const { tab, checkVersion } = AppModuleSetup('minio')
   const tabs = [I18nT('base.service'), I18nT('base.versionManager'), I18nT('base.configFile')]
@@ -101,7 +101,7 @@
     const iniFile = join(global.Server.BaseDir!, 'minio/minio.conf')
     let port = '9000'
     if (existsSync(iniFile)) {
-      const content = await readFile(iniFile, 'utf-8')
+      const content = readFileSync(iniFile, 'utf-8')
       const logStr = content.split('\n').find((s: string) => s.includes('MINIO_ADDRESS'))
       port =
         logStr?.trim()?.split('=')?.pop()?.split(':')?.pop()?.replace(`"`, '')?.replace(`'`, '') ??

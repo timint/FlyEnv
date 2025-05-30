@@ -1,9 +1,8 @@
 import type { AppHost } from '@shared/app'
 import { join } from 'path'
-import { copyFile, mkdirp, readFile, remove, writeFile } from 'fs-extra'
+import { existsSync, copyFileSync, readFileSync, rmSync, mkdirSync, writeFileSync } from 'fs'
 import { hostAlias } from '../../Fn'
 import { vhostTmpl } from './Host'
-import { existsSync } from 'fs'
 import { isEqual } from 'lodash'
 import { pathFixedToUnix } from '@shared/utils'
 
@@ -41,8 +40,8 @@ export const makeApacheConf = async (host: AppHost) => {
   const apachevpath = join(global.Server.BaseDir!, 'vhost/apache')
   const logpath = join(global.Server.BaseDir!, 'vhost/logs')
 
-  await mkdirp(apachevpath)
-  await mkdirp(logpath)
+  mkdirSync(apachevpath, { recursive: true })
+  mkdirSync(logpath, { recursive: true })
 
   const tmpl = await vhostTmpl()
 
@@ -80,15 +79,15 @@ export const makeApacheConf = async (host: AppHost) => {
 
   atmpl = handleReverseProxy(host, atmpl)
 
-  await writeFile(avhost, atmpl)
+  writeFileSync(avhost, atmpl)
 }
 
 export const updateApacheConf = async (host: AppHost, old: AppHost) => {
   const apachevpath = join(global.Server.BaseDir!, 'vhost/apache').split('\\').join('/')
   const logpath = join(global.Server.BaseDir!, 'vhost/logs').split('\\').join('/')
 
-  await mkdirp(apachevpath)
-  await mkdirp(logpath)
+  mkdirSync(apachevpath, { recursive: true })
+  mkdirSync(logpath, { recursive: true })
 
   if (host.name !== old.name) {
     const avhost = {
@@ -106,8 +105,8 @@ export const updateApacheConf = async (host: AppHost, old: AppHost) => {
     const arr = [avhost, accesslogap, errorlogap]
     for (const f of arr) {
       if (existsSync(f.oldFile)) {
-        await copyFile(f.oldFile, f.newFile)
-        await remove(f.oldFile)
+        copyFileSync(f.oldFile, f.newFile)
+        rmSync(f.oldFile)
       }
     }
   }
@@ -119,7 +118,7 @@ export const updateApacheConf = async (host: AppHost, old: AppHost) => {
     return
   }
 
-  let contentApacheConf = await readFile(apacheConfPath, 'utf-8')
+  let contentApacheConf = readFileSync(apacheConfPath, 'utf-8')
 
   const find: Array<string> = []
   const replace: Array<string> = []
@@ -226,6 +225,6 @@ export const updateApacheConf = async (host: AppHost, old: AppHost) => {
       contentApacheConf = contentApacheConf.replace(s, replace[i])
     })
     contentApacheConf = handleReverseProxy(host, contentApacheConf)
-    await writeFile(apacheConfPath, contentApacheConf)
+    writeFileSync(apacheConfPath, contentApacheConf)
   }
 }

@@ -1,6 +1,5 @@
 import type { ModuleExecItem } from '@shared/app'
-import { existsSync } from 'fs'
-import { mkdirp, readFile, remove, writeFile } from 'fs-extra'
+import { existsSync, mkdirSync, readFileSync, rmdirSync, writeFileSync } from 'fs'
 import { dirname, join } from 'path'
 import { waitPidFile } from '../Fn'
 import { ForkPromise } from '@shared/ForkPromise'
@@ -45,24 +44,24 @@ export async function customerServiceStartExec(
   const pidPath = version?.pidPath ?? ''
   if (pidPath && existsSync(pidPath)) {
     try {
-      await remove(pidPath)
+      rmdirSync(pidPath)
     } catch (e) {}
   }
 
   const baseDir = join(global.Server.BaseDir!, 'module-customer')
-  await mkdirp(baseDir)
+  mkdirSync(baseDir, { recursive: true })
 
   const outFile = join(baseDir, `${version.id}.out.log`)
   const errFile = join(baseDir, `${version.id}.error.log`)
 
-  let psScript = await readFile(join(global.Server.Static!, 'sh/flyenv-customer-exec.ps1'), 'utf8')
+  let psScript = readFileSync(join(global.Server.Static!, 'sh/flyenv-customer-exec.ps1'), 'utf8')
 
   let bin = ''
   if (version.commandType === 'file') {
     bin = version.commandFile
   } else {
     bin = join(baseDir, `${version.id}.start.ps1`)
-    await writeFile(bin, version.command)
+    writeFileSync(bin, version.command)
   }
 
   psScript = psScript
@@ -73,7 +72,7 @@ export async function customerServiceStartExec(
 
   const psName = `start-${version.id.trim()}.ps1`.split(' ').join('')
   const psPath = join(baseDir, psName)
-  await writeFile(psPath, psScript)
+  writeFileSync(psPath, psScript)
 
   process.chdir(baseDir)
   let res: any
@@ -124,7 +123,7 @@ export async function customerServiceStartExec(
     msg += '\n' + (error?.toString() ?? '')
   }
   if (existsSync(errFile)) {
-    msg += '\n' + (await readFile(errFile, 'utf-8'))
+    msg += '\n' + (readFileSync(errFile, 'utf-8'))
   }
   throw new Error(msg)
 }

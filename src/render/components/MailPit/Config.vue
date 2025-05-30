@@ -22,8 +22,8 @@
   import { uuid } from '@shared/utils'
 
   const { join } = require('path')
-  const { existsSync } = require('fs-extra')
   import { debounce } from 'lodash-es'
+  import { existsSync } from 'fs'
 
   const commonSetting: Ref<CommonSetItem[]> = ref([])
   const conf = ref()

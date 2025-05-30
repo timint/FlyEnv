@@ -42,7 +42,7 @@
 
   const { shell } = require('@electron/remote')
   const { join } = require('path')
-  const { existsSync } = require('fs-extra')
+  import { existsSync } from 'fs'
 
   const { show, onClosed, onSubmit, closedFn } = AsyncComponentSetup()
   const props = defineProps<{

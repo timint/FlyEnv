@@ -1,10 +1,9 @@
 import { I18nT } from '@lang/index'
-import { createWriteStream, existsSync, unlinkSync } from 'fs'
 import path, { basename, dirname, join } from 'path'
 import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
 import { AppLog, execPromise, getAllFileAsync, moveChildDirToParent, uuid, waitTime } from '../Fn'
+import { appendFile, copyFileSync, createWriteStream, existsSync, mkdirSync, readFileSync, rmSync, unlinkSync, writeFileSync } from 'fs'
 import { ForkPromise } from '@shared/ForkPromise'
-import { appendFile, copyFile, mkdirp, readdir, readFile, remove, writeFile } from 'fs-extra'
 import { zipUnPack } from '@shared/file'
 import axios from 'axios'
 import { ProcessListSearch, ProcessPidList, ProcessPidListByPid } from '../Process'
@@ -89,8 +88,8 @@ export class Base {
         if (res?.['APP-Service-Start-PID']) {
           const pid = res['APP-Service-Start-PID']
           const appPidFile = join(global.Server.BaseDir!, `pid/${this.type}.pid`)
-          await mkdirp(dirname(appPidFile))
-          await writeFile(appPidFile, `${pid}`.trim())
+          mkdirSync(dirname(appPidFile), { recursive: true })
+          writeFileSync(appPidFile, `${pid}`.trim())
         }
         resolve(res)
       } catch (e) {
@@ -107,7 +106,7 @@ export class Base {
       })
       const appPidFile = join(global.Server.BaseDir!, `pid/${this.type}.pid`)
       if (existsSync(appPidFile)) {
-        const pid = (await readFile(appPidFile, 'utf-8')).trim()
+        const pid = (readFileSync(appPidFile, 'utf-8')).trim()
         const pids = await ProcessPidListByPid(pid)
         console.log('_stopServer 0 pid: ', pid, pids)
         if (pids.length > 0) {
@@ -119,7 +118,7 @@ export class Base {
         on({
           'APP-Service-Stop-Success': true
         })
-        TaskQueue.run(remove, appPidFile).then().catch()
+        TaskQueue.run(unlinkSync, appPidFile).then().catch()
         on({
           'APP-On-Log': AppLog('info', I18nT('appLog.stopServiceEnd', { service: this.type }))
         })
@@ -200,7 +199,7 @@ export class Base {
         }
       | false = false
     if (errLog && existsSync(errLog)) {
-      const error = await readFile(errLog, 'utf-8')
+      const error = readFileSync(errLog, 'utf-8')
       if (error.length > 0) {
         return {
           error
@@ -208,7 +207,7 @@ export class Base {
       }
     }
     if (existsSync(pidFile)) {
-      const pid = (await readFile(pidFile, 'utf-8')).trim()
+      const pid = (readFileSync(pidFile, 'utf-8')).trim()
       return {
         pid
       }
@@ -284,7 +283,7 @@ export class Base {
           await zipUnPack(darkZip, dirname(dark))
         }
         const pythonSH = join(global.Server.Static!, 'sh/python.ps1')
-        let content = await readFile(pythonSH, 'utf-8')
+        let content = readFileSync(pythonSH, 'utf-8')
         const TMPL = tmpDir
         const EXE = row.zip
         const APPDIR = row.appDir
@@ -296,7 +295,7 @@ export class Base {
           .replace(new RegExp(`#APPDIR#`, 'g'), APPDIR)
 
         let sh = join(global.Server.Cache!, `python-install-${uuid()}.ps1`)
-        await writeFile(sh, content)
+        writeFileSync(sh, content)
 
         process.chdir(global.Server.Cache!)
         try {
@@ -310,7 +309,7 @@ export class Base {
             `[python][python-install][error]: ${e}\n`
           )
         }
-        // await remove(sh)
+        // unlinkSync(sh)
 
         const checkState = async (time = 0): Promise<boolean> => {
           let res = false
@@ -334,9 +333,9 @@ export class Base {
         if (res) {
           await waitTime(1000)
           sh = join(global.Server.Cache!, `pip-install-${uuid()}.ps1`)
-          let content = await readFile(join(global.Server.Static!, 'sh/pip.ps1'), 'utf-8')
+          let content = readFileSync(join(global.Server.Static!, 'sh/pip.ps1'), 'utf-8')
           content = content.replace('#APPDIR#', APPDIR)
-          await writeFile(sh, content)
+          writeFileSync(sh, content)
           process.chdir(global.Server.Cache!)
           try {
             await execPromise(
@@ -348,15 +347,15 @@ export class Base {
               `[python][pip-install][error]: ${e}\n`
             )
           }
-          // await remove(sh)
+          // unlinkSync(sh)
           await waitTime(1000)
-          await remove(tmpDir)
+          unlinkSync(tmpDir)
           return
         } else {
           try {
             await waitTime(500)
-            await remove(APPDIR)
-            await remove(tmpDir)
+            rmSync(APPDIR, { recursive: true })
+            rmSync(tmpDir, { recursive: true })
           } catch (e) {}
         }
         throw new Error('Python Install Fail')
@@ -365,7 +364,7 @@ export class Base {
       const handleMemcached = async () => {
         const tmpDir = join(global.Server.Cache!, `memcached-${row.version}-tmp`)
         if (existsSync(tmpDir)) {
-          await remove(tmpDir)
+          rmSync(tmpDir, { recursive: true, force: true })
         }
         await zipUnPack(row.zip, tmpDir)
         let dir = join(tmpDir, `memcached-${row.version}`, 'libevent-2.1', 'x64')
@@ -375,30 +374,30 @@ export class Base {
         if (existsSync(dir)) {
           const allFile = await getAllFileAsync(dir, false)
           if (!existsSync(row.appDir)) {
-            await mkdirp(row.appDir)
+            mkdirSync(row.appDir, { recursive: true })
           }
           for (const f of allFile) {
-            await copyFile(join(dir, f), join(row.appDir, f))
+            copyFileSync(join(dir, f), join(row.appDir, f))
           }
         }
         if (existsSync(tmpDir)) {
-          await remove(tmpDir)
+          rmSync(tmpDir, { recursive: true, force: true })
         }
       }
 
       const handleTwoLevDir = async () => {
-        await remove(row.appDir)
-        await mkdirp(row.appDir)
+        rmSync(row.appDir, { recursive: true, force: true })
+        mkdirSync(row.appDir, { recursive: true })
         await zipUnPack(row.zip, row.appDir)
         await moveChildDirToParent(row.appDir)
       }
 
       const handleComposer = async () => {
         if (!existsSync(row.appDir)) {
-          await mkdirp(row.appDir)
+          mkdirSync(row.appDir, { recursive: true })
         }
-        await copyFile(row.zip, join(row.appDir, 'composer.phar'))
-        await writeFile(
+        copyFileSync(row.zip, join(row.appDir, 'composer.phar'))
+        writeFileSync(
           join(row.appDir, 'composer.bat'),
           `@echo off
 php "%~dp0composer.phar" %*`
@@ -414,7 +413,7 @@ php "%~dp0composer.phar" %*`
 
       const handleMeilisearch = async () => {
         await waitTime(500)
-        await mkdirp(dirname(row.bin))
+        mkdirSync(dirname(row.bin), { recursive: true })
         try {
           await copyFile(row.zip, row.bin)
           await waitTime(500)
@@ -424,7 +423,7 @@ php "%~dp0composer.phar" %*`
           })
         } catch (e: any) {
           if (existsSync(row.bin)) {
-            await remove(row.bin)
+            unlinkSync(row.bin)
           }
           await appendFile(
             path.join(global.Server.BaseDir!, 'debug.log'),
@@ -435,10 +434,10 @@ php "%~dp0composer.phar" %*`
       }
 
       const handleRust = async () => {
-        await remove(row.appDir)
-        await mkdirp(row.appDir)
+        rmdirSync(row.appDir, { recursive: true, force: true })
+        mkdirSync(row.appDir, { recursive: true })
         const cacheDir = join(global.Server.Cache!, uuid())
-        await mkdirp(cacheDir)
+        mkdirSync(cacheDir, { recursive: true })
         await zipUnPack(row.zip, cacheDir)
         const files = await readdir(cacheDir)
         const find = files.find((f) => f.includes('.tar'))
@@ -447,7 +446,7 @@ php "%~dp0composer.phar" %*`
         }
         await zipUnPack(join(cacheDir, find), row.appDir)
         await moveChildDirToParent(row.appDir)
-        await remove(cacheDir)
+        rmdirSync(cacheDir, { recursive: true, force: true })
       }
 
       const doHandleZip = async () => {

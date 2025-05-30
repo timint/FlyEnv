@@ -1,5 +1,5 @@
 import { join, dirname, basename } from 'path'
-import { existsSync, readdirSync } from 'fs'
+import { existsSync, chmodSync, readdirSync, writeFileSync, mkdirSync, rmSync } from 'fs'
 import { Base } from './Base'
 import { I18nT } from '@lang/index'
 import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
@@ -15,7 +15,6 @@ import {
   serviceStartExecCMD
 } from '../Fn'
 import { ForkPromise } from '@shared/ForkPromise'
-import { writeFile, mkdirp, chmod, remove } from 'fs-extra'
 import TaskQueue from '../TaskQueue'
 
 class Manager extends Base {
@@ -82,7 +81,7 @@ bind-address = 127.0.0.1
 sql-mode=NO_ENGINE_SUBSTITUTION
 port = 3306
 datadir="${dataDir}"`
-        await writeFile(m, conf)
+        writeFileSync(m, conf)
         on({
           'APP-On-Log': AppLog('info', I18nT('appLog.confInitSuccess', { file: m }))
         })
@@ -95,17 +94,17 @@ datadir="${dataDir}"`
 
       const unlinkDirOnFail = async () => {
         if (existsSync(dataDir)) {
-          await remove(dataDir)
+          rmSync(dataDir, { recursive: true, force: true })
         }
         if (existsSync(m)) {
-          await remove(m)
+          rmSync(m, { force: true })
         }
       }
 
       const doStart = () => {
         return new Promise(async (resolve, reject) => {
           const baseDir = global.Server.MariaDBDir!
-          await mkdirp(baseDir)
+          mkdirSync(baseDir, { recursive: true })
           const params = [
             `--defaults-file="${m}"`,
             `--pid-file="${p}"`,
@@ -143,8 +142,8 @@ datadir="${dataDir}"`
         on({
           'APP-On-Log': AppLog('info', I18nT('appLog.initDBDataDir'))
         })
-        await mkdirp(dataDir)
-        await chmod(dataDir, '0777')
+        mkdirSync(dataDir, { recursive: true })
+        chmodSync(dataDir, 0o777)
 
         const binInstallDB = join(version.path, 'bin/mariadb-install-db.exe')
 

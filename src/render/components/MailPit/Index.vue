@@ -40,7 +40,7 @@
 
   const { shell } = require('@electron/remote')
   const { join } = require('path')
-  const { existsSync, readFile } = require('fs-extra')
+  import { existsSync, readFileSync } from 'fs'
 
   const { tab, checkVersion } = AppModuleSetup('mailpit')
   const tabs = [
@@ -57,7 +57,7 @@
   const openURL = async () => {
     const iniFile = join(global.Server.BaseDir!, 'mailpit/mailpit.conf')
     if (existsSync(iniFile)) {
-      const content = await readFile(iniFile, 'utf-8')
+      const content = readFileSync(iniFile, 'utf-8')
       const logStr = content.split('\n').find((s: string) => s.includes('MP_UI_BIND_ADDR'))
       const port = logStr?.trim()?.split('=')?.pop()?.split(':')?.pop() ?? '8025'
       shell.openExternal(`http://127.0.0.1:${port}/`).then().catch()

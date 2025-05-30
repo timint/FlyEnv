@@ -19,7 +19,6 @@ const external = [
   'estree-walker',
   'fast-xml-parser',
   'fs',
-  'fs-extra',
   'fsevents',
   'iconv-lite',
   'ip',

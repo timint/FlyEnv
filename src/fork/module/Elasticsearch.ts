@@ -1,5 +1,5 @@
 import { basename, join } from 'path'
-import { existsSync } from 'fs'
+import { existsSync, mkdirSync } from 'fs'
 import { Base } from './Base'
 import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
 import {
@@ -12,7 +12,6 @@ import {
   versionSort
 } from '../Fn'
 import { ForkPromise } from '@shared/ForkPromise'
-import { mkdirp } from 'fs-extra'
 import { I18nT } from '@lang/index'
 import TaskQueue from '../TaskQueue'
 
@@ -37,10 +36,11 @@ class Elasticsearch extends Base {
       const bin = version.bin
 
       const baseDir = join(global.Server.BaseDir!, `elasticsearch`)
-      await mkdirp(baseDir)
-      const execEnv = `set "ES_HOME=${version.path}"
-set "ES_PATH_CONF=${join(version.path, 'config')}"
-`
+      mkdirSync(baseDir, { recursive: true })
+      const execEnv = [
+      	`set "ES_HOME=${version.path}"`,
+      	`set "ES_PATH_CONF=${join(version.path, 'config')}"`,
+      ].join('\n')
       const execArgs = `-d -p "${this.pidPath}"`
 
       try {

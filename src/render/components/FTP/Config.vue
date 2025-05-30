@@ -16,7 +16,7 @@
   import IPC from '@/util/IPC'
 
   const { join } = require('path')
-  const { existsSync } = require('fs-extra')
+  import { existsSync } from 'fs'
 
   const conf = ref()
   const file = computed(() => {

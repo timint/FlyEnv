@@ -4,7 +4,7 @@ import { checkIsExcludeUrl } from './Fn'
 import { Store } from './Store'
 import { wait } from '../../utils'
 import { dirname } from 'path'
-import { createWriteStream, existsSync, mkdirp, removeSync, stat } from 'fs-extra'
+import { createWriteStream, existsSync, mkdirSync, removeSync, statSync } from 'fs'
 import type { LinkItem } from './LinkItem'
 
 class LinkTaskItem {
@@ -61,7 +61,7 @@ class LinkTaskItem {
       const saveFile = link.saveFile
       let size = 0
       if (existsSync(saveFile)) {
-        const info = await stat(saveFile)
+        const info = statSync(saveFile)
         size = info.size
       }
       if (size > 0) {
@@ -69,7 +69,7 @@ class LinkTaskItem {
       } else {
         const dir = dirname(saveFile)
         try {
-          await mkdirp(dir)
+          mkdirSync(dir, { recursive: true })
         } catch (e) {}
         const stream = createWriteStream(saveFile)
         const onError = () => {

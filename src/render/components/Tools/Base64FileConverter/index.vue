@@ -7,8 +7,8 @@
   import { fileSelect } from '@/util/Index'
 
   const { dialog, shell } = require('@electron/remote')
-  const { writeFile } = require('fs')
   const { clipboard } = require('@electron/remote')
+  import { writeFile } from 'fs'
 
   const textError = ref(false)
   const base64Text = ref('')

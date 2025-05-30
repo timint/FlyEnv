@@ -1,9 +1,8 @@
 import type { AppHost } from '@shared/app'
 import { join } from 'path'
-import { copyFile, mkdirp, readFile, remove, writeFile } from 'fs-extra'
+import { copyFileSync, existsSync, readFileSync, rmSync, writeFileSync, mkdirSync } from 'fs'
 import { hostAlias } from '../../Fn'
 import { vhostTmpl } from './Host'
-import { existsSync } from 'fs'
 import { isEqual } from 'lodash'
 import { pathFixedToUnix } from '@shared/utils'
 
@@ -35,7 +34,7 @@ const handleReverseProxy = (host: AppHost, content: string) => {
 
 export const makeCaddyConf = async (host: AppHost) => {
   const caddyvpath = join(global.Server.BaseDir!, 'vhost/caddy')
-  await mkdirp(caddyvpath)
+  mkdirSync(caddyvpath, { recursive: true })
   const httpNames: string[] = []
   const httpsNames: string[] = []
   hostAlias(host).forEach((h) => {
@@ -93,14 +92,14 @@ export const makeCaddyConf = async (host: AppHost) => {
   }
 
   const confFile = join(caddyvpath, `${host.name}.conf`)
-  await writeFile(confFile, contentList.join('\n'))
+  writeFileSync(confFile, contentList.join('\n'))
 }
 
 export const updateCaddyConf = async (host: AppHost, old: AppHost) => {
   const logpath = join(global.Server.BaseDir!, 'vhost/logs').split('\\').join('/')
   const caddyvpath = join(global.Server.BaseDir!, 'vhost/caddy').split('\\').join('/')
-  await mkdirp(caddyvpath)
-  await mkdirp(logpath)
+  mkdirSync(caddyvpath, { recursive: true })
+  mkdirSync(logpath, { recursive: true })
 
   if (host.name !== old.name) {
     const cvhost = {
@@ -110,8 +109,8 @@ export const updateCaddyConf = async (host: AppHost, old: AppHost) => {
     const arr = [cvhost]
     for (const f of arr) {
       if (existsSync(f.oldFile)) {
-        await copyFile(f.oldFile, f.newFile)
-        await remove(f.oldFile)
+        copyFileSync(f.oldFile, f.newFile)
+        rmSync(f.oldFile)
       }
     }
   }
@@ -123,7 +122,7 @@ export const updateCaddyConf = async (host: AppHost, old: AppHost) => {
     return
   }
 
-  let contentCaddyConf = await readFile(caddyConfPath, 'utf-8')
+  let contentCaddyConf = readFileSync(caddyConfPath, 'utf-8')
 
   const find: Array<string> = []
   const replace: Array<string> = []
@@ -233,6 +232,6 @@ export const updateCaddyConf = async (host: AppHost, old: AppHost) => {
       contentCaddyConf = contentCaddyConf.replace(s, replace[i])
     })
     contentCaddyConf = handleReverseProxy(host, contentCaddyConf)
-    await writeFile(caddyConfPath, contentCaddyConf)
+    writeFileSync(caddyConfPath, contentCaddyConf)
   }
 }

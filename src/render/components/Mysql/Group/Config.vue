@@ -38,9 +38,9 @@
   import type { CommonSetItem } from '@/components/Conf/setup'
   import { uuid } from '@shared/utils'
 
-  const { existsSync, writeFile } = require('fs-extra')
   const { join } = require('path')
   import { debounce } from 'lodash-es'
+  import { existsSync, writeFile } from 'fs'
 
   const props = defineProps<{
     item: MysqlGroupItem

@@ -2,6 +2,7 @@ import { basename, join } from 'path'
 import { existsSync } from 'fs'
 import { Base } from './Base'
 import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
+import { mkdirSync, readFileSync, writeFileSync } from 'fs'
 import {
   AppLog,
   serviceStartExecGetPID,
@@ -12,7 +13,6 @@ import {
   versionSort
 } from '../Fn'
 import { ForkPromise } from '@shared/ForkPromise'
-import { mkdirp, readFile, writeFile } from 'fs-extra'
 import { I18nT } from '@lang/index'
 import TaskQueue from '../TaskQueue'
 
@@ -29,17 +29,17 @@ class MeiliSearch extends Base {
   initConfig(): ForkPromise<string> {
     return new ForkPromise(async (resolve, reject, on) => {
       const baseDir = join(global.Server.BaseDir!, 'meilisearch')
-      await mkdirp(baseDir)
+      mkdirSync(baseDir, { recursive: true })
       const iniFile = join(baseDir, 'meilisearch.toml')
       if (!existsSync(iniFile)) {
         on({
           'APP-On-Log': AppLog('info', I18nT('appLog.confInit'))
         })
         const tmplFile = join(global.Server.Static!, 'tmpl/meilisearch.toml')
-        const content = await readFile(tmplFile, 'utf-8')
-        await writeFile(iniFile, content)
+        const content = readFileSync(tmplFile, 'utf-8')
+        writeFileSync(iniFile, content)
         const defaultIniFile = join(baseDir, 'meilisearch.default.toml')
-        await writeFile(defaultIniFile, content)
+        writeFileSync(defaultIniFile, content)
         on({
           'APP-On-Log': AppLog('info', I18nT('appLog.confInitSuccess', { file: iniFile }))
         })

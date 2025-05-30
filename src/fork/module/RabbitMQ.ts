@@ -1,5 +1,5 @@
 import { dirname, join } from 'path'
-import { existsSync, readdirSync } from 'fs'
+import { existsSync, mkdirSync, readdir, readdirSync, readFileSync, rmSync, writeFileSync } from 'fs'
 import { Base } from './Base'
 import { I18nT } from '@lang/index'
 import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
@@ -15,7 +15,6 @@ import {
   waitTime
 } from '../Fn'
 import { ForkPromise } from '@shared/ForkPromise'
-import { mkdirp, readdir, readFile, remove, writeFile } from 'fs-extra'
 import TaskQueue from '../TaskQueue'
 import { ProcessListSearch } from '../Process'
 
@@ -29,6 +28,7 @@ class RabbitMQ extends Base {
 
   init() {
     this.baseDir = join(global.Server.BaseDir!, 'rabbitmq')
+    mkdirSync(this.baseDir, { recursive: true })
     this.pidPath = join(this.baseDir, 'rabbitmq.pid')
   }
 
@@ -75,7 +75,7 @@ class RabbitMQ extends Base {
       const v = version?.version?.split('.')?.[0] ?? ''
       const confFile = join(this.baseDir, `rabbitmq-${v}.bat`)
       const logDir = join(this.baseDir, `log-${v}`)
-      await mkdirp(logDir)
+      mkdirSync(logDir, { recursive: true })
       if (!existsSync(confFile)) {
         on({
           'APP-On-Log': AppLog('info', I18nT('appLog.confInit'))
@@ -88,9 +88,9 @@ set "NODENAME=rabbit@localhost"
 set "RABBITMQ_LOG_BASE=${logDir}"
 set "MNESIA_BASE=${mnesiaBaseDir}"
 set "PLUGINS_DIR=${pluginsDir}"`
-        await writeFile(confFile, content)
+        writeFileSync(confFile, content)
         const defaultFile = join(this.baseDir, `rabbitmq-${v}-default.conf`)
-        await writeFile(defaultFile, content)
+        writeFileSync(defaultFile, content)
         on({
           'APP-On-Log': AppLog('info', I18nT('appLog.confInitSuccess', { file: confFile }))
         })
@@ -117,13 +117,13 @@ set "PLUGINS_DIR=${pluginsDir}"`
       const confFile = await this._initConf(version).on(on)
       const v = version?.version?.split('.')?.[0] ?? ''
       const mnesiaBaseDir = join(this.baseDir, `mnesia-${v}`)
-      await mkdirp(mnesiaBaseDir)
+      mkdirSync(mnesiaBaseDir, { recursive: true })
 
       try {
         const all = readdirSync(mnesiaBaseDir)
         const pid = all.find((p) => p.endsWith('.pid'))
         if (pid) {
-          await remove(join(mnesiaBaseDir, pid))
+          rmSync(join(mnesiaBaseDir, pid))
         }
       } catch (e) {}
 
@@ -131,8 +131,8 @@ set "PLUGINS_DIR=${pluginsDir}"`
         const all = readdirSync(mnesiaBaseDir)
         const pidFile = all.find((p) => p.endsWith('.pid'))
         if (pidFile) {
-          const pid = (await readFile(join(mnesiaBaseDir, pidFile), 'utf-8')).trim()
-          await writeFile(this.pidPath, `${pid}`)
+          const pid = (readFileSync(join(mnesiaBaseDir, pidFile), 'utf-8')).trim()
+          writeFileSync(this.pidPath, `${pid}`)
           on({
             'APP-On-Log': AppLog('info', I18nT('appLog.startServiceSuccess', { pid: pid }))
           })
@@ -161,7 +161,7 @@ set "PLUGINS_DIR=${pluginsDir}"`
 
       const bin = version.bin
       const baseDir = this.baseDir
-      await mkdirp(baseDir)
+      mkdirSync(baseDir, { recursive: true })
       const execEnv = `set "RABBITMQ_CONF_ENV_FILE=${confFile}"`
       const execArgs = `-detached`
 

@@ -79,7 +79,7 @@
 
   const { dialog, shell } = require('@electron/remote')
   const { nativeTheme } = require('@electron/remote')
-  const { readFile, writeFile } = require('fs-extra')
+  import { readFileSync, writeFileSync } from 'fs'
 
   // 注册自定义语言
   languages.register({ id: 'toml' })
@@ -304,7 +304,7 @@
           return
         }
         const [path] = filePaths
-        currentValue.value = await readFile(path, 'utf-8')
+        currentValue.value = readFileSync(path, 'utf-8')
         fromEditor?.setValue(currentValue.value)
       })
   }
@@ -320,7 +320,7 @@
           return
         }
         const content = toEditor?.getValue() ?? ''
-        await writeFile(filePath, content)
+        writeFileSync(filePath, content)
         MessageSuccess(I18nT('base.success'))
         shell.showItemInFolder(filePath)
       })

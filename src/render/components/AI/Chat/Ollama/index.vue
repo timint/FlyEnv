@@ -142,7 +142,7 @@
   import { AppStore } from '@/store/app'
 
   const { dialog, clipboard } = require('@electron/remote')
-  const { statSync, readFile } = require('fs-extra')
+  import { statSync, readFileSync } from 'fs'
 
   const appStore = AppStore()
 
@@ -253,7 +253,7 @@
         }
         for (const file of arr) {
           try {
-            const content = await readFile(file, 'utf-8')
+            const content = readFileSync(file, 'utf-8')
             currentChat.value!.content += `\n\`\`\`\n${content}\n\`\`\`\n`
           } catch (e) {}
         }

@@ -1,5 +1,5 @@
 import { dirname, join } from 'path'
-import { existsSync } from 'fs'
+import { existsSync, copyFileSync, readFileSync, writeFileSync, mkdirSync } from 'fs'
 import { Base } from './Base'
 import { ForkPromise } from '@shared/ForkPromise'
 import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
@@ -13,7 +13,6 @@ import {
   versionSort,
   waitTime
 } from '../Fn'
-import { copyFile, mkdirp, readFile, writeFile } from 'fs-extra'
 import TaskQueue from '../TaskQueue'
 import { makeGlobalTomcatServerXML } from './service/ServiceItemJavaTomcat'
 import { ProcessListSearch } from '../Process'
@@ -54,12 +53,12 @@ class Tomcat extends Base {
   async _fixStartBat(version: SoftInstalled) {
     const file = join(dirname(version.bin), 'setclasspath.bat')
     if (existsSync(file)) {
-      let content = await readFile(file, 'utf-8')
+      let content = readFileSync(file, 'utf-8')
       content = content.replace(
         `set "_RUNJAVA=%JRE_HOME%\\bin\\java.exe"`,
         `set "_RUNJAVA=%JRE_HOME%\\bin\\javaw.exe"`
       )
-      await writeFile(file, content)
+      writeFileSync(file, content)
     }
   }
 
@@ -92,11 +91,11 @@ class Tomcat extends Base {
       ]
       const fromConfDir = join(dirname(dirname(version.bin)), 'conf')
       const toConfDir = join(dir, 'conf')
-      await mkdirp(toConfDir)
+      mkdirSync(toConfDir, { recursive: true })
       for (const file of files) {
         const src = join(fromConfDir, file)
         if (existsSync(src)) {
-          await copyFile(src, join(toConfDir, file))
+          copyFileSync(src, join(toConfDir, file))
         }
       }
       on({
@@ -124,7 +123,7 @@ class Tomcat extends Base {
         path: baseDir
       } as any)
 
-      await mkdirp(join(baseDir, 'logs'))
+      mkdirSync(join(baseDir, 'logs'), { recursive: true })
 
       const tomcatDir = join(global.Server.BaseDir!, 'tomcat')
       const execEnv = `set "CATALINA_BASE=${baseDir}"`
@@ -191,7 +190,7 @@ class Tomcat extends Base {
       await waitTime(3000)
       const res = await checkPid()
       if (res && res?.pid) {
-        await writeFile(this.pidPath, `${res.pid}`)
+        writeFileSync(this.pidPath, `${res.pid}`)
         on({
           'APP-On-Log': AppLog('info', I18nT('appLog.startServiceSuccess', { pid: res.pid }))
         })

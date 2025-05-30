@@ -2,6 +2,7 @@ import { basename, join } from 'path'
 import { Base } from './Base'
 import { ForkPromise } from '@shared/ForkPromise'
 import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
+import { existsSync } from 'fs'
 import {
   versionBinVersion,
   versionFilterSame,
@@ -10,7 +11,6 @@ import {
   versionSort
 } from '../Fn'
 import TaskQueue from '../TaskQueue'
-import { existsSync } from 'fs'
 
 class Ruby extends Base {
   constructor() {

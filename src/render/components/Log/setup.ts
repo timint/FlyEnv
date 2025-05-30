@@ -4,10 +4,8 @@ import { I18nT } from '@lang/index'
 import type { FSWatcher } from 'fs'
 import { editor } from 'monaco-editor/esm/vs/editor/editor.api.js'
 import { EditorConfigMake, EditorCreate } from '@/util/Editor'
-
-const fsWatch = require('fs').watch
 const { shell } = require('@electron/remote')
-const { existsSync, writeFile, readFile } = require('fs-extra')
+import { existsSync, writeFileSync, readFileSync, watch as fsWatch } from 'fs'
 
 export const LogSetup = (file: Ref<string>) => {
   const logRef = ref()
@@ -34,7 +32,7 @@ export const LogSetup = (file: Ref<string>) => {
       }
       const read = () => {
         return new Promise((resolve) => {
-          readFile(file.value, 'utf-8')
+          readFileSync(file.value, 'utf-8')
             .then((str: string) => {
               log.value = str
               resolve(true)
@@ -65,7 +63,7 @@ export const LogSetup = (file: Ref<string>) => {
         getLog()
         break
       case 'clean':
-        writeFile(file.value, '')
+        writeFileSync(file.value, '')
           .then(() => {
             log.value = ''
             MessageSuccess(I18nT('base.success'))

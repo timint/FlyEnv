@@ -1,10 +1,9 @@
 import { join } from 'path'
-import { chmod, readFile } from 'fs-extra'
 import { isEqual } from 'lodash'
 import type { AppHost } from '@shared/app'
+import { chmod, existsSync, readFileSync } from 'fs'
 import { hostAlias } from '../../Fn'
 import { makeAutoSSL } from './SSL'
-import { existsSync } from 'fs'
 
 type VhostTmplType = {
   nginx: string
@@ -56,12 +55,12 @@ export const vhostTmpl = async () => {
     caddySSLtmpl = custom
   }
 
-  const nginx = await readFile(nginxtmpl, 'utf-8')
-  const apache = await readFile(apachetmpl, 'utf-8')
-  const nginxSSL = await readFile(nginxSSLtmpl, 'utf-8')
-  const apacheSSL = await readFile(apacheSSLtmpl, 'utf-8')
-  const caddy = await readFile(caddytmpl, 'utf-8')
-  const caddySSL = await readFile(caddySSLtmpl, 'utf-8')
+  const nginx = readFileSync(nginxtmpl, 'utf-8')
+  const apache = readFileSync(apachetmpl, 'utf-8')
+  const nginxSSL = readFileSync(nginxSSLtmpl, 'utf-8')
+  const apacheSSL = readFileSync(apacheSSLtmpl, 'utf-8')
+  const caddy = readFileSync(caddytmpl, 'utf-8')
+  const caddySSL = readFileSync(caddySSLtmpl, 'utf-8')
 
   _tmpl = {
     nginx,

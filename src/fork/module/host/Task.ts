@@ -1,8 +1,7 @@
 import type { AppHost, SoftInstalled } from '@shared/app'
 import { ForkPromise } from '@shared/ForkPromise'
 import { join } from 'path'
-import { existsSync, readdirSync } from 'fs'
-import { copy, mkdirp, readdir, readFile, remove, writeFile } from 'fs-extra'
+import { existsSync, copy, readdirSync, readdir, readFileSync, rmSync, writeFileSync, mkdirSync } from 'fs'
 import { setDirRole } from './Host'
 import { I18nT } from '@lang/index'
 import { downFile, moveDirToDir, waitTime } from '../../Fn'
@@ -20,7 +19,7 @@ export function TaskAddRandaSite(this: any, version?: SoftInstalled, write = tru
       host = `www.test${i}.com`
       dir = `${baseName}/${host}`
     }
-    await mkdirp(dir)
+    mkdirSync(dir, { recursive: true })
     const hostItem: any = {
       id: new Date().getTime(),
       name: host,
@@ -54,7 +53,7 @@ export function TaskAddRandaSite(this: any, version?: SoftInstalled, write = tru
       await this.writeHosts(write, ipv6)
       if (version?.num) {
         const file = join(dir, 'index.php')
-        await writeFile(
+        writeFileSync(
           file,
           `<?php
         phpinfo();
@@ -62,7 +61,7 @@ export function TaskAddRandaSite(this: any, version?: SoftInstalled, write = tru
         )
       } else {
         const file = join(dir, 'index.html')
-        await writeFile(
+        writeFileSync(
           file,
           `<!DOCTYPE html>
 <html>
@@ -112,9 +111,9 @@ export function TaskAddPhpMyAdminSite(this: any, phpVersion?: number, write = tr
           return
         }
         if (existsSync(siteDir)) {
-          await remove(siteDir)
+          rmSync(siteDir)
         }
-        await mkdirp(siteDir)
+        mkdirSync(siteDir, { recursive: true })
         const tmplDir = join(global.Server.Cache!, 'phpMyAdmin-tmpl')
         try {
           await zipUnPack(zipFile, tmplDir)
@@ -123,7 +122,7 @@ export function TaskAddPhpMyAdminSite(this: any, phpVersion?: number, write = tr
           if (subDir) {
             await moveDirToDir(join(tmplDir, subDir), siteDir)
             await waitTime(300)
-            await remove(tmplDir)
+            rmSync(tmplDir)
           }
         } catch (e) {
           reject(e)
@@ -136,13 +135,13 @@ export function TaskAddPhpMyAdminSite(this: any, phpVersion?: number, write = tr
 
         const ini = join(siteDir, 'config.sample.inc.php')
         if (existsSync(ini)) {
-          let content = await readFile(ini, 'utf-8')
+          let content = readFileSync(ini, 'utf-8')
           content = content.replace(
             `$cfg['Servers'][$i]['host'] = 'localhost';`,
             `$cfg['Servers'][$i]['host'] = '127.0.0.1';`
           )
           const cpFile = join(siteDir, 'config.inc.php')
-          await writeFile(cpFile, content)
+          writeFileSync(cpFile, content)
         }
       }
 
@@ -199,7 +198,7 @@ export function TaskAddPhpMyAdminSite(this: any, phpVersion?: number, write = tr
 
     const zipTmpFile = join(global.Server.Cache!, 'phpMyAdmin-Cache')
     if (existsSync(zipTmpFile)) {
-      await remove(zipTmpFile)
+      rmSync(zipTmpFile)
     }
     const url = 'https://www.phpmyadmin.net/downloads/phpMyAdmin-latest-all-languages.zip'
     downFile(url, zipTmpFile)

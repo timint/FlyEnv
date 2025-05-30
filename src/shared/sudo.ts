@@ -1,5 +1,6 @@
 import { uuid } from '@shared/utils'
 import TaskQueue from '../fork/TaskQueue'
+import fs from 'fs'
 
 export interface SudoConfig {
   name?: string
@@ -22,15 +23,13 @@ export interface Sudo {
   pathStatus?: string
 }
 
-const { remove } = require('fs-extra')
-
 const Node = {
   child: require('child_process'),
-  fs: require('fs'),
   os: require('os'),
   path: require('path'),
   process: process,
   util: require('util')
+  fs,
 }
 
 function Attempt(instance: Sudo, end: Function) {
@@ -167,7 +166,7 @@ function Windows(instance: Sudo, callback: Function) {
       }
       if (error) return callback(error)
       callback(undefined, stdout, stderr)
-      TaskQueue.run(remove, instance.path!).then().catch()
+      TaskQueue.run(Node.fs.rm, instance.path!, { recursive: true }).then().catch()
     }
     WindowsWriteExecuteScript(instance, function (error: any) {
       if (error) return end(error)
@@ -319,7 +318,7 @@ function WindowsWriteExecuteScript(instance: Sudo, end: Function) {
   )
   script.push('(echo %ERRORLEVEL%) > "' + instance.pathStatus + '"')
   script = script.join('\r\n')
-  Node.fs.writeFile(instance.pathExecute, script, 'utf-8', end)
+  Node.fs.writeFileSync(instance.pathExecute, script, 'utf-8', end)
 }
 
 const PERMISSION_DENIED = 'User did not grant permission.'

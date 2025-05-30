@@ -1,8 +1,7 @@
 import { ForkPromise } from '@shared/ForkPromise'
 import { hostAlias, execPromiseRoot } from '../../Fn'
 import { dirname, join } from 'path'
-import { existsSync } from 'fs'
-import { copyFile, mkdirp, remove, writeFile } from 'fs-extra'
+import { copyFileSync, existsSync, rmSync, writeFileSync, mkdirSync } from 'fs'
 import { EOL } from 'os'
 import type { AppHost } from '@shared/app'
 import { zipUnPack } from '@shared/file'
@@ -26,7 +25,7 @@ export const makeAutoSSL = (host: AppHost): ForkPromise<{ crt: string; key: stri
       const CARoot = join(global.Server.BaseDir!, 'CA/PhpWebStudy-Root-CA.crt')
       const CADir = dirname(CARoot)
       if (!existsSync(CARoot)) {
-        await mkdirp(CADir)
+        await mkdirSync(CADir, { recursive: true })
         await zipUnPack(join(global.Server.Static!, `zip/CA.7z`), CADir)
         await initCARoot()
       }
@@ -39,9 +38,9 @@ export const makeAutoSSL = (host: AppHost): ForkPromise<{ crt: string; key: stri
       const hostCAName = `CA-${host.id}`
       const hostCADir = join(CADir, `${host.id}`)
       if (existsSync(hostCADir)) {
-        await remove(hostCADir)
+        rmSync(hostCADir)
       }
-      await mkdirp(hostCADir)
+      mkdirSync(hostCADir, { recursive: true })
       let ext = `authorityKeyIdentifier=keyid,issuer
 basicConstraints=CA:FALSE
 keyUsage=digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
@@ -52,13 +51,13 @@ subjectAltName=@alt_names
         ext += `DNS.${index + 1} = ${item}${EOL}`
       })
       ext += `IP.1 = 127.0.0.1${EOL}`
-      await writeFile(join(hostCADir, `${hostCAName}.ext`), ext)
+      writeFileSync(join(hostCADir, `${hostCAName}.ext`), ext)
 
       const rootCA = join(CADir, 'PhpWebStudy-Root-CA')
 
       const opensslCnf = join(global.Server.AppDir!, 'openssl/openssl.cnf')
       if (!existsSync(opensslCnf)) {
-        await copyFile(join(global.Server.Static!, 'tmpl/openssl.cnf'), opensslCnf)
+        copyFileSync(join(global.Server.Static!, 'tmpl/openssl.cnf'), opensslCnf)
       }
 
       process.chdir(dirname(openssl))

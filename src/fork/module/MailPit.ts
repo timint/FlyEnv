@@ -1,5 +1,5 @@
 import { basename, join } from 'path'
-import { existsSync } from 'fs'
+import { existsSync, readFileSync, writeFileSync, mkdirSync } from 'fs'
 import { Base } from './Base'
 import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
 import {
@@ -12,7 +12,6 @@ import {
   versionSort
 } from '../Fn'
 import { ForkPromise } from '@shared/ForkPromise'
-import { readFile, writeFile, mkdirp } from 'fs-extra'
 import TaskQueue from '../TaskQueue'
 import { EOL } from 'os'
 import { I18nT } from '@lang/index'
@@ -31,7 +30,7 @@ class MailPit extends Base {
     return new ForkPromise(async (resolve, reject, on) => {
       const baseDir = join(global.Server.BaseDir!, 'mailpit')
       if (!existsSync(baseDir)) {
-        await mkdirp(baseDir)
+        mkdirSync(baseDir, { recursive: true })
       }
       const iniFile = join(baseDir, 'mailpit.conf')
       if (!existsSync(iniFile)) {
@@ -39,12 +38,12 @@ class MailPit extends Base {
           'APP-On-Log': AppLog('info', I18nT('appLog.confInit'))
         })
         const tmplFile = join(global.Server.Static!, 'tmpl/mailpit.conf')
-        let content = await readFile(tmplFile, 'utf-8')
+        let content = readFileSync(tmplFile, 'utf-8')
         const logFile = join(baseDir, 'mailpit.log')
         content = content.replace('##LOG_FILE##', logFile)
-        await writeFile(iniFile, content)
+        writeFileSync(iniFile, content)
         const defaultIniFile = join(baseDir, 'mailpit.conf.default')
-        await writeFile(defaultIniFile, content)
+        writeFileSync(defaultIniFile, content)
         on({
           'APP-On-Log': AppLog('info', I18nT('appLog.confInitSuccess', { file: iniFile }))
         })
@@ -61,7 +60,7 @@ class MailPit extends Base {
         resolve('')
         return
       }
-      const content = await readFile(iniFile, 'utf-8')
+      const content = readFileSync(iniFile, 'utf-8')
       const logStr = content.split('\n').find((s) => s.includes('MP_LOG_FILE'))
       if (!logStr) {
         resolve('')
@@ -83,7 +82,7 @@ class MailPit extends Base {
       const bin = version.bin
       const iniFile = await this.initConfig().on(on)
       const getConfEnv = async () => {
-        const content = await readFile(iniFile, 'utf-8')
+        const content = readFileSync(iniFile, 'utf-8')
         const arr = content
           .split('\n')
           .filter((s) => {
@@ -113,7 +112,7 @@ class MailPit extends Base {
       envs.push('')
 
       const baseDir = join(global.Server.BaseDir!, `mailpit`)
-      await mkdirp(baseDir)
+      mkdirSync(baseDir, { recursive: true })
 
       const execEnv = envs.join(EOL)
       const execArgs = ` `

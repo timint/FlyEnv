@@ -1,5 +1,5 @@
 import { join, dirname, basename } from 'path'
-import { existsSync } from 'fs'
+import { existsSync, readFileSync, writeFileSync, mkdirSync } from 'fs'
 import { Base } from './Base'
 import type { AppHost, OnlineVersionItem, SoftInstalled } from '@shared/app'
 import {
@@ -13,7 +13,6 @@ import {
   versionSort
 } from '../Fn'
 import { ForkPromise } from '@shared/ForkPromise'
-import { readFile, writeFile, mkdirp } from 'fs-extra'
 import { zipUnPack } from '@shared/file'
 import TaskQueue from '../TaskQueue'
 import { fetchHostList } from './host/HostFile'
@@ -41,12 +40,12 @@ class Nginx extends Base {
       const name = `enable-php-${v}.conf`
       const confFile = join(global.Server.NginxDir!, 'conf', name)
       if (!existsSync(confFile)) {
-        await mkdirp(dirname(confFile))
+        mkdirSync(dirname(confFile), { recursive: true })
         if (!tmplContent) {
-          tmplContent = await readFile(tmplFile, 'utf-8')
+          tmplContent = readFileSync(tmplFile, 'utf-8')
         }
         const content = tmplContent.replace('##VERSION##', `${v}`)
-        await writeFile(confFile, content)
+        writeFileSync(confFile, content)
       }
     }
   }
@@ -60,17 +59,18 @@ class Nginx extends Base {
         })
         zipUnPack(join(global.Server.Static!, 'zip/nginx.zip'), global.Server.NginxDir!)
           .then(() => {
-            return readFile(conf, 'utf-8')
-          })
-          .then((content: string) => {
-            content = content
+
+            const content = readFileSync(conf, 'utf-8')
+            let replacedContent = content
               .replace(/#PREFIX#/g, global.Server.NginxDir!.split('\\').join('/'))
               .replace(
                 '#VHostPath#',
                 join(global.Server.BaseDir!, 'vhost/nginx').split('\\').join('/')
               )
             const defaultConf = join(global.Server.NginxDir!, 'conf/nginx.conf.default')
-            return Promise.all([writeFile(conf, content), writeFile(defaultConf, content)])
+
+            writeFileSync(conf, replacedContent)
+            writeFileSync(defaultConf, replacedContent)
           })
           .then(() => {
             on({

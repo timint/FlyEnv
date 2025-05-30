@@ -17,8 +17,7 @@
   import { I18nT } from '@lang/index'
   import IPC from '@/util/IPC'
   import { MessageError, MessageSuccess } from '@/util/Element'
-
-  const { readFile, existsSync } = require('fs-extra')
+  import { readFileSync, existsSync } from 'fs'
 
   const srcs = computed(() => {
     return [

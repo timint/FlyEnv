@@ -86,7 +86,7 @@
   import { LoadedSetup } from '@/components/PHP/Extension/Loaded/setup'
 
   const { shell } = require('@electron/remote')
-  const { existsSync } = require('fs-extra')
+  import { existsSync } from 'fs'
 
   const props = defineProps<{
     version: SoftInstalled

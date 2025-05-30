@@ -1,5 +1,5 @@
 import { join, dirname, basename } from 'path'
-import { existsSync, readdirSync } from 'fs'
+import { existsSync, chmodSync, readdirSync, readFileSync, rmSync, writeFileSync, mkdirSync } from 'fs'
 import { Base } from './Base'
 import { I18nT } from '@lang/index'
 import type { MysqlGroupItem, OnlineVersionItem, SoftInstalled } from '@shared/app'
@@ -17,7 +17,6 @@ import {
   spawnPromise
 } from '../Fn'
 import { ForkPromise } from '@shared/ForkPromise'
-import { mkdirp, writeFile, chmod, remove, readFile } from 'fs-extra'
 import TaskQueue from '../TaskQueue'
 import { EOL } from 'os'
 import { PItem, ProcessListSearch } from '../Process'
@@ -90,7 +89,7 @@ class Mysql extends Base {
 bind-address = 127.0.0.1
 sql-mode=NO_ENGINE_SUBSTITUTION
 datadir="${dataDir}"`
-        await writeFile(m, conf)
+        writeFileSync(m, conf)
         on({
           'APP-On-Log': AppLog('info', I18nT('appLog.confInitSuccess', { file: m }))
         })
@@ -103,17 +102,17 @@ datadir="${dataDir}"`
 
       const unlinkDirOnFail = async () => {
         if (existsSync(dataDir)) {
-          await remove(dataDir)
+          rmSync(dataDir, { recursive: true, force: true });
         }
         if (existsSync(m)) {
-          await remove(m)
+          rmSync(m, { force: true });
         }
       }
 
       const doStart = () => {
         return new Promise(async (resolve, reject) => {
           const baseDir = global.Server.MysqlDir!
-          await mkdirp(baseDir)
+          mkdirSync(baseDir, { recursive: true })
           const params = [
             `--defaults-file="${m}"`,
             `--pid-file="${p}"`,
@@ -147,14 +146,13 @@ datadir="${dataDir}"`
           }
         })
       }
-
       if (!existsSync(dataDir) || readdirSync(dataDir).length === 0) {
         on({
           'APP-On-Log': AppLog('info', I18nT('appLog.initDBDataDir'))
-        })
-        await mkdirp(dataDir)
+        });
+        mkdirSync(dataDir, { recursive: true });
         try {
-          await chmod(dataDir, '0777')
+          chmodSync(dataDir, 0o777);
         } catch (e) {}
 
         const params = [
@@ -234,14 +232,14 @@ datadir="${dataDir}"`
       const bin = version.version.bin
       const id = version?.id ?? ''
       const m = join(global.Server.MysqlDir!, `group/my-group-${id}.cnf`)
-      await mkdirp(dirname(m))
+      mkdirSync(dirname(m), { recursive: true })
       const dataDir = version.dataDir
       if (!existsSync(m)) {
         const conf = `[mysqld]
 # Only allow connections from localhost
 bind-address = 127.0.0.1
 sql-mode=NO_ENGINE_SUBSTITUTION`
-        await writeFile(m, conf)
+        writeFileSync(m, conf)
       }
 
       const p = join(global.Server.MysqlDir!, `group/my-group-${id}.pid`)
@@ -251,10 +249,10 @@ sql-mode=NO_ENGINE_SUBSTITUTION`
 
       const unlinkDirOnFail = async () => {
         if (existsSync(dataDir)) {
-          await remove(dataDir)
+          rmSync(dataDir)
         }
         if (existsSync(m)) {
-          await remove(m)
+          rmSync(m)
         }
       }
 
@@ -262,7 +260,7 @@ sql-mode=NO_ENGINE_SUBSTITUTION`
         return new Promise(async (resolve, reject) => {
           if (existsSync(p)) {
             try {
-              await remove(p)
+              rmSync(p)
             } catch (e) {}
           }
 
@@ -270,7 +268,7 @@ sql-mode=NO_ENGINE_SUBSTITUTION`
           const startErrLogFile = join(global.Server.MysqlDir!, `start.error.${id}.log`)
           if (existsSync(startErrLogFile)) {
             try {
-              await remove(startErrLogFile)
+              rmSync(startErrLogFile)
             } catch (e) {}
           }
           const params = [
@@ -298,7 +296,7 @@ sql-mode=NO_ENGINE_SUBSTITUTION`
 
           const cmdName = `start-${id}.cmd`
           const sh = join(global.Server.MysqlDir!, cmdName)
-          await writeFile(sh, command)
+          writeFileSync(sh, command)
 
           process.chdir(global.Server.MysqlDir!)
           try {
@@ -322,7 +320,7 @@ sql-mode=NO_ENGINE_SUBSTITUTION`
           }
           let msg = 'Start Fail'
           if (existsSync(startLogFile)) {
-            msg = await readFile(startLogFile, 'utf-8')
+            msg = readFileSync(startLogFile, 'utf-8')
           }
           reject(new Error(msg))
         })
@@ -349,8 +347,8 @@ sql-mode=NO_ENGINE_SUBSTITUTION`
 
       let command = ''
       if (!existsSync(dataDir) || readdirSync(dataDir).length === 0) {
-        await mkdirp(dataDir)
-        await chmod(dataDir, '0777')
+        mkdirSync(dataDir, { recursive: true })
+        chmodSync(dataDir, '0777')
         const params = [
           `--defaults-file="${m}"`,
           `--datadir="${dataDir}"`,

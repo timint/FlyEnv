@@ -8,7 +8,7 @@ import { checkIsExcludeUrl, urlToDir } from './Fn'
 import { Store } from './Store'
 import { wait } from '../../utils'
 import { dirname } from 'path'
-import { mkdirp, writeFile } from 'fs-extra'
+import { mkdirSync, writeFileSync } from 'fs'
 
 class PageTaskItem {
   private window?: BrowserWindow
@@ -408,10 +408,10 @@ class PageTaskItem {
               const saveFile = page.saveFile
               const dir = dirname(saveFile)
               try {
-                await mkdirp(dir)
+                mkdirSync(dir, { recursive: true })
               } catch (e) {}
               html = this.handlePageHtml(html, page)
-              await writeFile(saveFile, html)
+              writeFileSync(saveFile, html)
               page.state = 'success'
             }
             resolve(true)

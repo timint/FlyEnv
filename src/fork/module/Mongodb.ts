@@ -1,5 +1,5 @@
 import { join, basename, dirname } from 'path'
-import { createWriteStream, existsSync } from 'fs'
+import { createWriteStream, chmod, existsSync, mkdirSync, readFileSync, rmSync, unlinkSync, writeFileSync } from 'fs'
 import { Base } from './Base'
 import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
 import { promisify } from 'node:util'
@@ -15,7 +15,6 @@ import {
   versionSort
 } from '../Fn'
 import { ForkPromise } from '@shared/ForkPromise'
-import { readFile, writeFile, mkdirp, chmod, remove } from 'fs-extra'
 import TaskQueue from '../TaskQueue'
 import { I18nT } from '@lang/index'
 import { zipUnPack } from '@shared/file'
@@ -53,9 +52,9 @@ class Manager extends Base {
         const pids = new Set<string>()
         const appPidFile = join(global.Server.BaseDir!, `pid/${this.type}.pid`)
         if (existsSync(appPidFile)) {
-          const pid = (await readFile(appPidFile, 'utf-8')).trim()
+          const pid = (readFileSync(appPidFile, 'utf-8')).trim()
           pids.add(pid)
-          TaskQueue.run(remove, appPidFile).then().catch()
+          TaskQueue.run(unlinkSync, appPidFile).then().catch()
         }
         if (version?.pid) {
           pids.add(`${version.pid}`)
@@ -87,7 +86,7 @@ class Manager extends Base {
       const m = join(global.Server.MongoDBDir!, `mongodb-${v}.conf`)
       const dataDir = join(global.Server.MongoDBDir!, `data-${v}`)
       if (!existsSync(dataDir)) {
-        await mkdirp(dataDir)
+        mkdirSync(dataDir, { recursive: true })
         await chmod(dataDir, '0777')
       }
       if (!existsSync(m)) {
@@ -95,9 +94,9 @@ class Manager extends Base {
           'APP-On-Log': AppLog('info', I18nT('appLog.confInit'))
         })
         const tmpl = join(global.Server.Static!, 'tmpl/mongodb.conf')
-        let conf = await readFile(tmpl, 'utf-8')
+        let conf = readFileSync(tmpl, 'utf-8')
         conf = conf.replace('##DB-PATH##', `"${dataDir.split('\\').join('/')}"`)
-        await writeFile(m, conf)
+        writeFileSync(m, conf)
         on({
           'APP-On-Log': AppLog('info', I18nT('appLog.confInitSuccess', { file: m }))
         })
@@ -138,13 +137,13 @@ class Manager extends Base {
       const doInstall = async () => {
         if (existsSync(zip)) {
           try {
-            await remove(appDir)
-            await mkdirp(appDir)
+            rmSync(appDir, { recursive: true, force: true })
+            mkdirSync(appDir, { recursive: true })
             await zipUnPack(zip, appDir)
             await moveChildDirToParent(appDir)
             return existsSync(mongosh)
           } catch (e) {
-            await remove(zip)
+            unlinkSync(zip)
           }
         }
         return false

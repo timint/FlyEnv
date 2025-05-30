@@ -1,10 +1,9 @@
 import { reactive } from 'vue'
 import IPC from '@/util/IPC'
 
-const { writeFile, readFile, existsSync } = require('fs-extra')
-const { writeFileSync } = require('fs')
 const { join } = require('path')
 const { shell } = require('@electron/remote')
+import { existsSync, readFileSync, writeFileSync, writeFileSync } from 'fs'
 
 type AppLogType = {
   log: string[]
@@ -42,12 +41,12 @@ export const AppLogStore = reactive({
   },
   async save() {
     const file = join(global.Server.BaseDir!, 'app.log')
-    await writeFile(file, this.log.join('\n'))
+    writeFileSync(file, this.log.join('\n'))
   },
   async init() {
     const file = join(global.Server.BaseDir!, 'app.log')
     if (existsSync(file)) {
-      const content = await readFile(file, 'utf-8')
+      const content = readFileSync(file, 'utf-8')
       this.log = reactive(content.split('\n'))
     }
     IPC.on('APP-On-Log').then((key: string, info: string) => {

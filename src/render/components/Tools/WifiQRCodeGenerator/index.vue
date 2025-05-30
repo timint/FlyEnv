@@ -5,7 +5,7 @@
   import { MessageError } from '@/util/Element'
 
   const { dialog, shell } = require('@electron/remote')
-  const { writeFile } = require('fs')
+  import { writeFile } from 'fs'
 
   const foreground = ref('#000000ff')
   const background = ref('#ffffffff')

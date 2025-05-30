@@ -3,8 +3,7 @@ import { getAllFileAsync } from '@shared/file'
 import type { FSWatcher, WatchEventType } from 'fs'
 
 const { join } = require('path')
-const { existsSync, mkdirp } = require('fs-extra')
-const fsWatch = require('fs').watch
+import { existsSync, watch as fsWatch } from 'fs'
 
 type NginxRewriteItem = {
   name: string
@@ -76,7 +75,7 @@ export const HostNginxRewriteSetup: {
 
     if (Object.keys(HostNginxRewriteSetup.nginxRewriteCustom).length === 0) {
       const dir = join(global.Server.BaseDir!, 'NginxRewriteTemplate')
-      mkdirp(dir).then().catch()
+      mkdirSync(dir, { recursive: true })
       getAllFileAsync(dir, false).then((files) => {
         files = files.sort()
         for (const file of files) {
