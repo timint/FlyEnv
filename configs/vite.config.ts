@@ -3,8 +3,8 @@ import vue from '@vitejs/plugin-vue'
 import * as path from 'path'
 import { ViteDevPort } from './vite.port'
 import vueJsx from '@vitejs/plugin-vue-jsx'
-import wasm from 'vite-plugin-wasm'
-import monacoEditorPlugin from 'vite-plugin-monaco-editor'
+import wasm from 'vite-plugin-wasm-esm'
+import monacoEditorPlugin from 'vite-plugin-monaco-editor-esm'
 
 const __dirname = path.dirname(
   process.platform === 'win32'
