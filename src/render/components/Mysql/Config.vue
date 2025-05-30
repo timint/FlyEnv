@@ -20,8 +20,7 @@
   import { debounce } from 'lodash-es'
   import { AppStore } from '@/store/app'
   import { uuid } from '@shared/utils'
-
-  const { join } = require('path')
+  import { join } from 'path'
 
   const appStore = AppStore()
   const conf = ref()

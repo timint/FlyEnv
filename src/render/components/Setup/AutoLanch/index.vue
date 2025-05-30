@@ -20,12 +20,12 @@
   import { AppStore } from '@/store/app'
   import { MessageError } from '@/util/Element'
   import { I18nT } from '@lang/index'
+  import { app } from '@electron/remote'
   import { promisify } from 'node:util'
   import { exec } from 'node:child-process'
   import { writeFileSync, rmSync, readFileSync, mkdirSync } from 'fs'
+  import { join } from 'path'
 
-  const { app } = require('@electron/remote')
-  const { join } = require('path')
   const execAsync = promisify(exec)
 
   const store = AppStore()

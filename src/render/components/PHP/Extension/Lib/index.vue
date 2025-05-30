@@ -52,8 +52,7 @@
   import { SoftInstalled } from '@/store/brew'
   import { I18nT } from '@lang/index'
   import { PHPSetup } from '@/components/PHP/store'
-
-  const { shell } = require('@electron/remote')
+  import { shell } from '@electron/remote'
 
   const props = defineProps<{
     version: SoftInstalled

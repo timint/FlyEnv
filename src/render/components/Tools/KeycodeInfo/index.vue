@@ -4,8 +4,7 @@
   import { useEventListener } from '@vueuse/core'
   import { I18nT } from '@lang/index'
   import { MessageSuccess } from '@/util/Element'
-
-  const { clipboard } = require('@electron/remote')
+  import { clipboard } from '@electron/remote'
 
   const event = ref<KeyboardEvent>()
 

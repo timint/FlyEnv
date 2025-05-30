@@ -85,7 +85,7 @@
   import LibVM from './Extension/Lib/index.vue'
   import { LoadedSetup } from '@/components/PHP/Extension/Loaded/setup'
 
-  const { shell } = require('@electron/remote')
+  import { shell } from '@electron/remote'
   import { existsSync } from 'fs'
 
   const props = defineProps<{

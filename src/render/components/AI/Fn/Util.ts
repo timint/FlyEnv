@@ -3,8 +3,7 @@ import type BaseTask from '@/components/AI/Task/BaseTask'
 import installedVersions from '@/util/InstalledVersions'
 import IPC from '@/util/IPC'
 import { AllAppModule } from '@/core/type'
-
-const { exec } = require('child_process')
+import { exec } from 'child_process'
 
 export function fixEnv(): { [k: string]: any } {
   const env = { ...process.env }

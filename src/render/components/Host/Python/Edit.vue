@@ -160,9 +160,8 @@
   import { merge } from 'lodash-es'
   import { BrewStore } from '@/store/brew'
   import installedVersions from '@/util/InstalledVersions'
-
-  const { dialog } = require('@electron/remote')
-  const { dirname, basename } = require('path')
+  import { dialog } from '@electron/remote'
+  import { dirname, basename } from 'path'
 
   const { show, onClosed, onSubmit, closedFn } = AsyncComponentSetup()
 

@@ -1,6 +1,10 @@
 import { uuid } from '@shared/utils'
 import TaskQueue from '../fork/TaskQueue'
+import child from 'child_process'
 import fs from 'fs'
+import os from 'os'
+import path from 'path'
+import util from 'util'
 
 export interface SudoConfig {
   name?: string
@@ -24,12 +28,12 @@ export interface Sudo {
 }
 
 const Node = {
-  child: require('child_process'),
-  os: require('os'),
-  path: require('path'),
-  process: process,
-  util: require('util')
+  child,
   fs,
+  os,
+  path,
+  process,
+  util
 }
 
 function Attempt(instance: Sudo, end: Function) {

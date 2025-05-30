@@ -51,7 +51,7 @@
   import { defineComponent, reactive } from 'vue'
   import { AppSofts, AppStore } from '@/store/app'
   import { BrewStore } from '@/store/brew'
-  const { dialog } = require('@electron/remote')
+  import { dialog } from '@electron/remote'
   export default defineComponent({
     components: {},
     props: {},

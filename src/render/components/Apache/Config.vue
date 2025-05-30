@@ -18,10 +18,9 @@
   import Conf from '@/components/Conf/index.vue'
   import type { CommonSetItem } from '@/components/Conf/setup'
   import { I18nT } from '@lang/index'
-  import { uuid } from '@shared/utils'
-
-  const { join } = require('path')
   import { debounce } from 'lodash-es'
+  import { uuid } from "@shared/utils"
+  import { join } from 'path'
 
   const conf = ref()
   const commonSetting: Ref<CommonSetItem[]> = ref([])

@@ -30,9 +30,8 @@
   import { FolderOpened } from '@element-plus/icons-vue'
   import { chooseFolder } from '@/util'
   import { MessageError } from '@/util/Element'
-
-  const { isAbsolute } = require('path')
   import { existsSync, realpathSync } from 'fs'
+  import { isAbsolute } from 'path'
   import { exec } from 'node:child-process'
   import { promisify } from 'node:util'
 

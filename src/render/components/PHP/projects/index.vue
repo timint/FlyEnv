@@ -188,9 +188,8 @@
   import { SetupStore } from '@/components/Setup/store'
   import Router from '@/router'
   import { AppStore } from '@/store/app'
-
-  const { shell } = require('@electron/remote')
-  const { join } = require('path')
+  import { shell } from '@electron/remote'
+  import { join } from 'path'
 
   const props = defineProps<{
     typeFlag: AllAppModule

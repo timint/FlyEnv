@@ -1,7 +1,7 @@
-const path = require('path')
-const compressing = require('7zip-min-electron')
-const crypto = require('crypto')
 import fs from 'fs'
+import path from 'path'
+import compressing from '7zip-min-electron'
+import crypto from 'crypto'
 
 export function getAllFile(fp: string, fullpath = true) {
   let arr: Array<string> = []

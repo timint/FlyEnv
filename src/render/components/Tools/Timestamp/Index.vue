@@ -68,8 +68,8 @@
 <script>
   import { MessageSuccess } from '@/util/Element.ts'
   import { I18nT } from '@lang/index'
+  import { clipboard } from '@electron/remote'
 
-  const { clipboard } = require('@electron/remote')
   export default {
     name: 'MoUnixTimestamp',
     components: {},

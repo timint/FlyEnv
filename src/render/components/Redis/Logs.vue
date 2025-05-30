@@ -14,8 +14,7 @@
   import LogVM from '@/components/Log/index.vue'
   import ToolVM from '@/components/Log/tool.vue'
   import { AppStore } from '@/store/app'
-
-  const { join } = require('path')
+  import { join } from 'path'
 
   const appStore = AppStore()
 

@@ -71,9 +71,9 @@
   import { MessageSuccess } from '@/util/Element'
   import type { MysqlGroupItem } from '@shared/app'
   import { MysqlStore } from '@/components/Mysql/mysql'
+  import { join } from 'path'
+  import { dialog } from '@electron/remote'
 
-  const { join } = require('path')
-  const { dialog } = require('@electron/remote')
   const { show, onClosed, onSubmit, closedFn } = AsyncComponentSetup()
 
   const props = defineProps<{

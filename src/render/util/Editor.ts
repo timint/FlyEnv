@@ -15,8 +15,7 @@ import 'monaco-editor/esm/vs/basic-languages/rust/rust.contribution.js'
 import 'monaco-editor/esm/vs/basic-languages/mysql/mysql.contribution.js'
 import 'monaco-editor/esm/vs/editor/contrib/find/browser/findController.js'
 import 'monaco-editor/esm/vs/editor/contrib/folding/browser/folding.js'
-
-const { nativeTheme } = require('@electron/remote')
+import { nativeTheme } from '@electron/remote'
 
 export const EditorConfigMake = (value: string, readOnly: boolean, wordWrap: 'off' | 'on') => {
   const appStore = AppStore()

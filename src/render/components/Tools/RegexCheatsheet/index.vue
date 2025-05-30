@@ -1,9 +1,9 @@
 <script setup lang="ts">
   import { I18nT } from '@lang/index'
   import Memo from './regex-memo.content.md?raw'
+  import { shell } from '@electron/remote'
   import markdownit from 'markdown-it'
 
-  const { shell } = require('@electron/remote')
   const md = markdownit()
   const result = md.render(Memo)
 

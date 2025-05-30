@@ -211,7 +211,7 @@
   import Router from '@/router'
   import { AppStore } from '@/store/app'
 
-  const { dialog } = require('@electron/remote')
+  import { dialog } from '@electron/remote'
   import { readFile } from 'fs'
 
   const { show, onClosed, onSubmit, closedFn, callback } = AsyncComponentSetup()

@@ -15,8 +15,7 @@
   import ToolVM from '@/components/Log/tool.vue'
   import { AppStore } from '@/store/app'
   import { BrewStore } from '@/store/brew'
-
-  const { join } = require('path')
+  import { join } from 'path'
   import { existsSync, readFileSync } from 'fs'
 
   const appStore = AppStore()

@@ -20,9 +20,8 @@
   import { ElInput, ElButton, ElTooltip, ElProgress } from 'element-plus'
   import type { Column } from 'element-plus'
   import { MessageSuccess } from '@/util/Element'
-
-  const { clipboard } = require('@electron/remote')
-  const { join } = require('path')
+  import { clipboard } from '@electron/remote'
+  import { join } from 'path'
 
   const { versionChange, installOrUninstall, tableData } = Setup()
 

@@ -64,8 +64,7 @@
   import type { SoftInstalled } from '@/store/brew'
   import StaticVM from '@/components/VersionManager/static/index.vue'
   import LocalVM from '@/components/VersionManager/local/index.vue'
-
-  const { dirname } = require('path')
+  import { dirname } from 'path'
 
   const props = defineProps<{
     typeFlag: AllAppModule

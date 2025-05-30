@@ -1,8 +1,7 @@
 import { reactive } from 'vue'
 import { initCustomerLang, loadCustomerLang } from '@lang/loader'
-
-const { shell } = require('@electron/remote')
-const { resolve } = require('path')
+import { shell } from '@electron/remote'
+import { resolve } from 'path'
 
 export const LangSetup = reactive({
   loading: false,

@@ -310,8 +310,8 @@
   import { FolderAdd } from '@element-plus/icons-vue'
   import { ServiceActionStore } from '../ServiceManager/EXT/store'
 
-  const { shell } = require('@electron/remote')
-  const { dirname } = require('path')
+  import { shell } from '@electron/remote'
+  import path from 'path'
 
   if (!Service.php) {
     Service.php = {

@@ -1,9 +1,8 @@
 import { reactive } from 'vue'
+import { clipboard } from '@electron/remote'
 import { shuffleString } from '@shared/random'
 import { MessageSuccess } from '@/util/Element'
 import { I18nT } from '@lang/index'
-
-const { clipboard } = require('@electron/remote')
 
 type StoreType = {
   withUppercase?: boolean

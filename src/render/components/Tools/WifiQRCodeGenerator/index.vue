@@ -3,8 +3,7 @@
   import { EAPMethods, EAPPhase2Methods, useWifiQRCode } from './useQRCode'
   import { I18nT } from '@lang/index'
   import { MessageError } from '@/util/Element'
-
-  const { dialog, shell } = require('@electron/remote')
+  import { dialog, shell } from '@electron/remote'
   import { writeFile } from 'fs'
 
   const foreground = ref('#000000ff')

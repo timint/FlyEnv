@@ -2,8 +2,7 @@ import { reactive } from 'vue'
 import { MessageSuccess } from '@/util/Element'
 import { I18nT } from '@lang/index'
 import { textToBase64, base64ToText } from '@shared/base64'
-
-const { clipboard } = require('@electron/remote')
+import { clipboard } from '@electron/remote'
 
 const store = reactive({
   encodeUrlSafe: false,

@@ -1,5 +1,5 @@
-/* 配置webpack出口文件路径 */
-const path = require('path')
+// Configure webpack output file path
+import path from 'path';
 const resolve = (dir) => {
   return path.join(__dirname, dir)
 }

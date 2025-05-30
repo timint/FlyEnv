@@ -4,9 +4,8 @@ import { EditorConfigMake, EditorCreate } from '@/util/Editor'
 import { MessageError, MessageSuccess } from '@/util/Element'
 import { I18nT } from '@lang/index'
 import type { AllAppModule } from '@/core/type'
-
-const { dialog } = require('@electron/remote')
-const { shell } = require('@electron/remote')
+import { dialog } from '@electron/remote'
+import { shell } from '@electron/remote'
 import { existsSync, readFileSync, statSync, writeFile } from 'fs'
 
 type CommonSetItemOption = {

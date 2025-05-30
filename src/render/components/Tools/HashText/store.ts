@@ -3,8 +3,7 @@ import { MessageSuccess } from '@/util/Element'
 import { I18nT } from '@lang/index'
 import type { lib } from 'crypto-js'
 import { MD5, RIPEMD160, SHA1, SHA224, SHA256, SHA3, SHA384, SHA512, enc } from 'crypto-js'
-
-const { clipboard } = require('@electron/remote')
+import { clipboard } from '@electron/remote'
 
 const convertHexToBin = (hex: string) => {
   return hex

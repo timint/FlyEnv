@@ -34,8 +34,7 @@
   import { VueExtend } from '@/core/VueExtend.ts'
   import { EditorConfigMake, EditorCreate } from '@/util/Editor.ts'
   import { MessageError, MessageSuccess } from '@/util/Element.ts'
-
-  const { shell } = require('@electron/remote')
+  import { shell } from '@electron/remote'
 
   export default {
     show(data) {

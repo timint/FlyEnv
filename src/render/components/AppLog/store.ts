@@ -1,9 +1,8 @@
 import { reactive } from 'vue'
 import IPC from '@/util/IPC'
-
-const { join } = require('path')
-const { shell } = require('@electron/remote')
 import { existsSync, readFileSync, writeFileSync, writeFileSync } from 'fs'
+import { join } from 'path'
+import { shell } from '@electron/remote'
 
 type AppLogType = {
   log: string[]

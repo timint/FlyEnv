@@ -213,8 +213,7 @@
   import { uuid } from '@/util/Index'
   import type { CustomerModuleExecItem } from '@/core/Module'
   import { Delete, Plus } from '@element-plus/icons-vue'
-
-  const { dialog } = require('@electron/remote')
+  import { dialog } from '@electron/remote'
 
   const { show, onClosed, onSubmit, closedFn, callback } = AsyncComponentSetup()
 

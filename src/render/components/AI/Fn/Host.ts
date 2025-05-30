@@ -11,8 +11,7 @@ import type { SoftInstalled } from '@shared/app'
 import { fetchInstalled } from '@/components/AI/Fn/Util'
 import { I18nT } from '@lang/index'
 import { handleWriteHosts } from '@/util/Host'
-
-const { shell } = require('@electron/remote')
+import { shell } from '@electron/remote'
 
 export function addRandaSite(this: BaseTask) {
   return new Promise(async (resolve, reject) => {

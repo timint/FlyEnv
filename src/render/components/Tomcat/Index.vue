@@ -50,9 +50,8 @@
   import { chooseFolder } from '@/util/File'
   import { TomcatSetup } from '@/components/Tomcat/setup'
   import { Edit } from '@element-plus/icons-vue'
-
-  const { join } = require('path')
-  const { shell } = require('@electron/remote')
+  import { join } from 'path'
+  import { shell } from '@electron/remote'
 
   const { tab, checkVersion } = AppModuleSetup('tomcat')
   const tabs = [

@@ -13,8 +13,7 @@
   import { computed } from 'vue'
   import { AppStore } from '@/store/app'
   import { I18nT } from '@lang/index'
-
-  const { nativeTheme } = require('@electron/remote')
+  import { nativeTheme } from '@electron/remote'
 
   const store = AppStore()
   const themes = computed(() => {

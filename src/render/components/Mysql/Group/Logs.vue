@@ -28,8 +28,7 @@
   import type { MysqlGroupItem } from '@shared/app'
   import LogVM from '@/components/Log/index.vue'
   import ToolVM from '@/components/Log/tool.vue'
-
-  const { join } = require('path')
+  import { join } from 'path'
 
   const { show, onClosed, onSubmit, closedFn } = AsyncComponentSetup()
 

@@ -4,8 +4,8 @@ import { I18nT } from '@lang/index'
 import type { FSWatcher } from 'fs'
 import { editor } from 'monaco-editor/esm/vs/editor/editor.api.js'
 import { EditorConfigMake, EditorCreate } from '@/util/Editor'
-const { shell } = require('@electron/remote')
 import { existsSync, writeFileSync, readFileSync, watch as fsWatch } from 'fs'
+import { shell } from '@electron/remote'
 
 export const LogSetup = (file: Ref<string>) => {
   const logRef = ref()

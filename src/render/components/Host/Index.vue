@@ -126,9 +126,9 @@
   import { SetupStore } from '@/components/Setup/store'
   import Router from '@/router'
 
-  const { dialog, clipboard, shell } = require('@electron/remote')
-  const { join, dirname } = require('path')
   import { statSync, existsSync, copyFileSync } from 'fs'
+  import { dialog, clipboard, shell } from '@electron/remote'
+  import { join, dirname } from 'path'
 
   const appStore = AppStore()
   const setupStore = SetupStore()

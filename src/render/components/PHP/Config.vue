@@ -39,8 +39,7 @@
   import IPC from '@/util/IPC'
   import { AsyncComponentSetup } from '@/util/AsyncComponent'
   import { uuid } from '@shared/utils'
-
-  const { join } = require('path')
+  import { join } from 'path'
 
   const props = defineProps<{
     version: SoftInstalled

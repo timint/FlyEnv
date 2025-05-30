@@ -16,7 +16,7 @@
   import { BrewStore } from '@/store/brew'
   import { TomcatSetup } from '@/components/Tomcat/setup'
 
-  const { join } = require('path')
+  import { join } from 'path'
 
   const props = defineProps<{
     fileName: string

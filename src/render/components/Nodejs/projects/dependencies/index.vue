@@ -80,9 +80,8 @@
   import { ElMessage } from 'element-plus'
   import type { TableInstance } from 'element-plus'
   import { I18nT } from '@lang/index'
-
-  const { join } = require('path')
-  const { shell } = require('@electron/remote')
+  import { join } from 'path'
+  import { shell } from '@electron/remote'
   import { readFileSync, writeFileSync, existsSync } from 'fs'
 
   type Dependency = {

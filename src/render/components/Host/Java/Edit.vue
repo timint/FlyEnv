@@ -287,8 +287,7 @@
   import { AsyncComponentSetup } from '@/util/AsyncComponent'
   import { merge } from 'lodash-es'
   import installedVersions from '@/util/InstalledVersions'
-
-  const { dialog } = require('@electron/remote')
+  import { dialog } from '@electron/remote'
 
   const { show, onClosed, onSubmit, closedFn } = AsyncComponentSetup()
 

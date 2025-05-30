@@ -51,8 +51,8 @@
   import { AppStore } from '@/store/app'
   import { BrewStore } from '@/store/brew'
   import type { AllAppModule } from '@/core/type'
+  import { dialog } from '@electron/remote'
 
-  const { dialog } = require('@electron/remote')
   const { show, onClosed, onSubmit, closedFn, callback } = AsyncComponentSetup()
 
   const props = defineProps<{

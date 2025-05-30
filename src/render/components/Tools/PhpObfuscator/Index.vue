@@ -82,10 +82,9 @@
   import Config from './Config.vue'
   import IPC from '@/util/IPC'
   import { MessageError, MessageSuccess } from '@/util/Element'
-
-  const { dialog, shell } = require('@electron/remote')
-  const { join } = require('path')
+  import { dialog, shell } from '@electron/remote'
   import { statSync } from 'fs'
+  import { join } from 'path'
 
   let running = ref(false)
 

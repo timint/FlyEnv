@@ -17,7 +17,7 @@
   import { BrewStore } from '@/store/brew'
   import { PostgreSqlSetup } from '@/components/PostgreSql/setup'
 
-  const { join } = require('path')
+  import { join } from 'path'
 
   const appStore = AppStore()
   const brewStore = BrewStore()

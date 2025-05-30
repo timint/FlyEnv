@@ -115,10 +115,9 @@
   import { Setup } from './setup'
   import { reactive } from 'vue'
   import { ArrayMoveItem } from '@shared/utils'
-
-  const { shell, clipboard } = require('@electron/remote')
-  const { isAbsolute } = require('path')
+  import { shell, clipboard } from '@electron/remote'
   import { existsSync } from 'fs'
+  import { isAbsolute } from 'path'
 
   Setup.fetchList()
 

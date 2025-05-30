@@ -1,5 +1,5 @@
-const { dialog } = require('@electron/remote')
-const crypto = require('crypto')
+import { dialog } from '@electron/remote'
+import crypto from 'crypto'
 
 export function md5(str: string) {
   const md5 = crypto.createHash('md5')

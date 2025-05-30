@@ -42,6 +42,7 @@
 
 <script lang="ts" setup>
   import { computed } from 'vue'
+  import { join } from 'path'
   import Service from '../ServiceManager/index.vue'
   import Manager from '../VersionManager/index.vue'
   import { AppModuleSetup } from '@/core/Module'
@@ -51,10 +52,8 @@
   import { MinioSetup } from './setup'
   import { Edit } from '@element-plus/icons-vue'
   import Config from './Config.vue'
-
-  const { join } = require('path')
-  const { shell } = require('@electron/remote')
   import { existsSync, readFileSync } from 'fs'
+  import { shell } from '@electron/remote'
 
   const { tab, checkVersion } = AppModuleSetup('minio')
   const tabs = [I18nT('base.service'), I18nT('base.versionManager'), I18nT('base.configFile')]

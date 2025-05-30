@@ -3,10 +3,9 @@ import ZH from './zh/index'
 import EN from './en/index'
 import { AppStore } from '@/store/app'
 import { AppAllLang, AppI18n } from '@lang/index'
-import IPC from '@/util/IPC'
-
-const { join, resolve } = require('path')
+import IPC from '@render/util/IPC'
 import { readdirSync, readFileSync, writeFileSync } from 'fs';
+import { join, resolve } from 'path'
 
 type CustomerLangItem = {
   label: string

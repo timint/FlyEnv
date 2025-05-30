@@ -61,9 +61,8 @@
   import { formatBytes } from '@shared/utils.ts'
   import dayjs from 'dayjs'
   import { getFileHashes } from '@shared/file.ts'
-
-  const { dialog } = require('@electron/remote')
   import { stat } from 'fs'
+  import { dialog } from '@electron/remote'
 
   export default {
     name: 'MoToolsFileInfo',

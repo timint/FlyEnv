@@ -32,9 +32,8 @@
   import { I18nT } from '@lang/index'
   import { AsyncComponentSetup } from '@/util/AsyncComponent'
   import Conf from '@/components/Conf/drawer.vue'
-
-  const { join, dirname } = require('path')
   import { existsSync, copyFileSync, mkdirSync } from 'fs'
+  import { join, dirname } from 'path'
 
   const props = defineProps<{
     flag: 'apache' | 'apacheSSL' | 'nginx' | 'nginxSSL' | 'caddy' | 'caddySSL'

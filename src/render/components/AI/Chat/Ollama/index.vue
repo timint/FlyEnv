@@ -140,8 +140,7 @@
   import { MessageSuccess, MessageWarning } from '@/util/Element'
   import { I18nT } from '@lang/index'
   import { AppStore } from '@/store/app'
-
-  const { dialog, clipboard } = require('@electron/remote')
+  import { dialog, clipboard } from '@electron/remote'
   import { statSync, readFileSync } from 'fs'
 
   const appStore = AppStore()

@@ -7,9 +7,9 @@ import { MessageError } from '@/util/Element'
 import { AllAppModule } from '@/core/type'
 import { HostStore } from '@/components/Host/store'
 import { AppServiceAliasItem } from '@shared/app'
+import { shell } from '@electron/remote'
+import { getGlobal } from '@electron/remote'
 
-const { shell } = require('@electron/remote')
-const { getGlobal } = require('@electron/remote')
 const application = getGlobal('application')
 
 export interface AppHost {

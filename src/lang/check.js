@@ -1,11 +1,10 @@
 /**
- * Detect differences between language packs and not used key
+ * Detect differences between language packs and unused keys
  */
 
-// src/lang/check-unused.js
-const fs = require('fs')
-const path = require('path')
-const glob = require('glob') // 需要安装：npm install glob
+import fs from 'fs'
+import path from 'path'
+import glob from 'glob'
 
 // 配置
 const PROJECT_ROOT = path.join(__dirname, '..')
@@ -65,7 +64,7 @@ function diffKey() {
 
       // 收集所有语言包的键
       fileMap[file].forEach((pack) => {
-        const content = require(path.join(LANG_DIR, pack, file))
+        const content = JSON.parse(fs.readFileSync(path.join(LANG_DIR, pack, file), 'utf-8'))
         const keys = getFlattenedKeys(content)
         fileResults.packKeys[pack] = new Set(keys)
         keys.forEach((key) => fileResults.allKeys.add(key))
@@ -189,7 +188,7 @@ function checkNoUseKey() {
         const fileName = path.basename(file, '.json')
         allLangFile.add(fileName)
 
-        const content = require(file)
+        const content = JSON.parse(fs.readFileSync(file, 'utf-8'))
         const keys = getFlattenedKeys(content)
 
         keys.forEach((key) => {

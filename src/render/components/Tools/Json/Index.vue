@@ -77,8 +77,7 @@
   import { Document } from '@element-plus/icons-vue'
   import { EditorCreate } from '@/util/Editor'
 
-  const { dialog, shell } = require('@electron/remote')
-  const { nativeTheme } = require('@electron/remote')
+  import { dialog, shell, nativeTheme } from '@electron/remote'
   import { readFileSync, writeFileSync } from 'fs'
 
   // 注册自定义语言

@@ -56,7 +56,7 @@
   import { defineComponent } from 'vue'
   import { AppStore } from '@/store/app'
   import { MessageSuccess } from '@/util/Element'
-  const { clipboard } = require('@electron/remote')
+  import { clipboard } from '@electron/remote'
   export default defineComponent({
     components: {},
     props: {},

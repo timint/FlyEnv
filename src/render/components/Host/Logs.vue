@@ -50,10 +50,10 @@
   import { EditorConfigMake, EditorCreate } from '@/util/Editor'
   import { MessageError, MessageSuccess } from '@/util/Element'
 
-  const { join } = require('path')
-  const { shell } = require('@electron/remote')
   import { existsSync } from 'fs'
   import { watch as fsWatch } from 'fs'
+  import { join } from 'path'
+  import { shell } from '@electron/remote'
 
   const { show, onClosed, onSubmit, closedFn } = AsyncComponentSetup()
 

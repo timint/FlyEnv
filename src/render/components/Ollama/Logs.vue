@@ -13,8 +13,7 @@
   import { ref } from 'vue'
   import LogVM from '@/components/Log/index.vue'
   import ToolVM from '@/components/Log/tool.vue'
-
-  const { join } = require('path')
+  import { join } from 'path'
 
   const log = ref()
   const filepath = ref(join(global.Server.BaseDir, `ollama/ollama.log`))

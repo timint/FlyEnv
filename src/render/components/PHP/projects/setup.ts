@@ -7,9 +7,8 @@ import IPC from '@/util/IPC'
 import { MessageError } from '@/util/Element'
 import { AllAppModule } from '@/core/type'
 import { SetupStore } from '@/components/Setup/store'
-
-const { dialog } = require('@electron/remote')
-const { join } = require('path')
+import { dialog } from '@electron/remote'
+import { join } from 'path'
 import { writeFileSync, existsSync, readFileSync } from 'fs'
 
 export type ProjectItem = {

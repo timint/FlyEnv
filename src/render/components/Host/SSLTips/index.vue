@@ -24,9 +24,8 @@
 <script lang="ts" setup>
   import { I18nT } from '@lang/index'
   import { MessageSuccess } from '@/util/Element'
-
-  const { shell, clipboard } = require('@electron/remote')
-  const { join } = require('path')
+  import { shell, clipboard } from '@electron/remote'
+  import { join } from 'path'
 
   const copyCommand = () => {
     const CARoot = join(global.Server.BaseDir!, 'CA/PhpWebStudy-Root-CA.crt')

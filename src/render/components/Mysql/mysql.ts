@@ -1,9 +1,8 @@
 import { defineStore } from 'pinia'
 import type { MysqlGroupItem } from '@shared/app'
 import IPC from '@/util/IPC'
-
-const { join } = require('path')
 import { existsSync, readFileSync, writeFileSync, mkdirSync } from 'fs'
+import { join } from 'path'
 
 interface State {
   inited: boolean

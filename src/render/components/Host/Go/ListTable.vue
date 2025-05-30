@@ -181,9 +181,8 @@
   import { isEqual } from 'lodash'
   import { HostStore } from '@/components/Host/store'
   import { MessageError, MessageSuccess } from '@/util/Element'
-
-  const { shell } = require('@electron/remote')
-  const { join } = require('path')
+  import { shell } from '@electron/remote'
+  import { join } from 'path'
 
   //nohup {project_cmd}{nohup_log} & echo $! > {pid_file}
 

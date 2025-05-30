@@ -32,7 +32,7 @@
   import ScriptVM from './scripts/index.vue'
   import DependencieVM from './dependencies/index.vue'
 
-  const { join } = require('path')
+  import { join } from 'path'
   import { existsSync, readFileSync } from 'fs'
 
   const props = defineProps<{

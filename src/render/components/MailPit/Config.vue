@@ -19,10 +19,9 @@
   import IPC from '@/util/IPC'
   import type { CommonSetItem } from '@/components/Conf/setup'
   import { I18nT } from '@lang/index'
-  import { uuid } from '@shared/utils'
-
-  const { join } = require('path')
   import { debounce } from 'lodash-es'
+  import { uuid } from "@shared/utils"
+  import { join } from 'path'
   import { existsSync } from 'fs'
 
   const commonSetting: Ref<CommonSetItem[]> = ref([])

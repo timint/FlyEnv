@@ -122,9 +122,9 @@
   import IPC from '@/util/IPC'
   import { MessageError } from '@/util/Element'
   import { writeFileSync } from 'fs'
+  import { join, dirname } from 'path'
+  import { dialog } from '@electron/remote'
 
-  const { join, dirname } = require('path')
-  const { dialog } = require('@electron/remote')
   const { show, onClosed, onSubmit, closedFn, callback } = AsyncComponentSetup()
 
   const props = defineProps<{

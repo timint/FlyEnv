@@ -7,8 +7,7 @@ import {MessageError, MessageSuccess} from '@/util/Element'
 import { I18nT } from '@lang/index'
 import IPC from '@/util/IPC'
 import { staticVersionDel } from '@/util/Version'
-
-const { clipboard } = require('@electron/remote')
+import { clipboard } from '@electron/remote'
 
 export const StaticSetup = reactive<{
   fetching: Partial<Record<AllAppModule, boolean>>

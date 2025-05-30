@@ -3,9 +3,8 @@ import { BrewStore, OnlineVersionItem } from '@/store/brew'
 import { MessageError } from '@/util/Element'
 import { reactive } from 'vue'
 import { AllAppModule } from '@/core/type'
-
-const { join } = require('path')
 import { existsSync } from 'fs'
+import { join } from 'path'
 
 export const fetchVerion = (typeFlag: AllAppModule): Promise<boolean> => {
   return new Promise((resolve) => {

@@ -70,9 +70,8 @@
   import { AppStore } from '@/store/app'
   import { Edit, Delete, Plus } from '@element-plus/icons-vue'
   import { ServiceActionStore } from '@/components/ServiceManager/EXT/store'
-
-  const { shell, clipboard } = require('@electron/remote')
-  const { join, resolve } = require('path')
+  import { shell, clipboard } from '@electron/remote'
+  import { join, resolve } from 'path'
 
   const props = defineProps<{
     item: SoftInstalled

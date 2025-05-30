@@ -18,11 +18,11 @@ import UpdateManager from './core/UpdateManager'
 import { PItem, ProcessPidList, ProcessPidListByPids } from '../fork/Process'
 import NodePTY from './core/NodePTY'
 import ScreenManager from './core/ScreenManager'
+import ServeHandler from 'serve-handler'
+import Http from 'http'
 import * as IP from 'neoip'
+import path from 'path';
 
-const ServeHandler = require('serve-handler')
-const Http = require('http')
-const IP = require('ip')
 
 export default class Application extends EventEmitter {
   isReady: boolean

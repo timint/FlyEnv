@@ -2,8 +2,8 @@ import { reactive } from 'vue'
 import { MessageError, MessageSuccess } from '@/util/Element'
 import { I18nT } from '@lang/index'
 import IPC from '@/util/IPC'
+import { app } from '@electron/remote'
 
-const { app } = require('@electron/remote')
 const version = app.getVersion()
 
 export const FeedbackStore = reactive({

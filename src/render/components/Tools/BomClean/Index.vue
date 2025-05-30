@@ -125,8 +125,8 @@
   import IPC from '@/util/IPC'
   import { MessageError } from '@/util/Element'
   import { I18nT } from '@lang/index'
-  const { extname } = require('path')
-  const { dialog } = require('@electron/remote')
+  import path from 'path'
+  import { dialog } from '@electron/remote'
 
   const data = computed(() => {
     return store.value
@@ -138,7 +138,7 @@
     })
     const exts: { [key: string]: number } = {}
     allFile.forEach((f) => {
-      const name = extname(f)
+      const name = path.extname(f)
       if (name) {
         if (!exts[name]) {
           exts[name] = 1
@@ -162,7 +162,7 @@
     return store.value.files.filter((f) => {
       return (
         (exclude.length === 0 || exclude.every((e) => !f.includes(e))) &&
-        allowExt.includes(extname(f))
+        allowExt.includes(path.extname(f))
       )
     })
   })

@@ -1,6 +1,6 @@
 import { uuid } from './Index'
+import { ipcRenderer } from 'electron'
 
-const { ipcRenderer } = require('electron')
 class IPC {
   listens: { [key: string]: Function }
 

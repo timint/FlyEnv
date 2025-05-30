@@ -1,24 +1,24 @@
-const dns = require('node:dns')
-const http = require('node:http')
-const os = require('node:os')
-const process = require('node:process')
-const { Buffer } = require('node:buffer')
-const { debuglog } = require('node:util')
-const { getEventListeners, setMaxListeners } = require('node:events')
-const { isIP, isIPv4, isIPv6 } = require('node:net')
-const { toASCII } = require('punycode/')
-const autoBind = require('auto-bind')
-const getStream = require('get-stream')
-const hostile = require('hostile')
-const ipaddr = require('ipaddr.js')
-const mergeOptions = require('merge-options')
-const pMap = require('p-map')
-const pTimeout = require('p-timeout')
-const pWaitFor = require('p-wait-for')
-const packet = require('dns-packet')
-const semver = require('semver')
-const structuredClone = require('@ungap/structured-clone').default
-const { getService } = require('port-numbers')
+import dns from 'dns'
+import http from 'http'
+import os from 'os'
+import process from 'process'
+import { Buffer } from 'buffer'
+import { debuglog } from 'util'
+import { getEventListeners, setMaxListeners } from 'events'
+import { isIP, isIPv4, isIPv6 } from 'net'
+import { toASCII } from 'punycode/'
+import autoBind from 'auto-bind'
+import getStream from 'get-stream'
+import hostile from 'hostile'
+import ipaddr from 'ipaddr.js'
+import mergeOptions from 'merge-options'
+import pMap from 'p-map'
+import pTimeout from 'p-timeout'
+import pWaitFor from 'p-wait-for'
+import packet from 'dns-packet'
+import semver from 'semver'
+import structuredClone from '@ungap/structured-clone'
+import { getService } from 'port-numbers'
 const pkg = {
   name: 'tangerine',
   version: '1.5.4'

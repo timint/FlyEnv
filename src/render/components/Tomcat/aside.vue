@@ -32,8 +32,7 @@
   import { ServiceActionExtParam } from '@/util/Service'
   import { type AllAppModule } from '@/core/type'
   import { type SoftInstalled } from '@/store/brew'
-
-  const { join } = require('path')
+  import { join } from 'path'
 
   const {
     showItem,

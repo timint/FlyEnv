@@ -52,8 +52,7 @@
   import { Search } from '@element-plus/icons-vue'
   import { MessageError, MessageSuccess, MessageWarning } from '@/util/Element'
   import IPC from '@/util/IPC'
-
-  const { execSync } = require('child_process')
+  import { execSync } from 'child_process'
 
   const SearchIcon = markRaw(Search)
   export default defineComponent({

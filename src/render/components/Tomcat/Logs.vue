@@ -15,8 +15,7 @@
   import ToolVM from '@/components/Log/tool.vue'
   import { BrewStore } from '@/store/brew'
   import { TomcatSetup } from '@/components/Tomcat/setup'
-
-  const { join } = require('path')
+  import { join } from 'path'
   import { existsSync } from 'fs'
 
   const brewStore = BrewStore()

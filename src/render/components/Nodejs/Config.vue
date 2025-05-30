@@ -19,8 +19,7 @@
   import { I18nT } from '@lang/index'
   import { debounce } from 'lodash-es'
   import { uuid } from '@/util/Index'
-
-  const { join } = require('path')
+  import { join } from 'path'
 
   const commonSetting: Ref<CommonSetItem[]> = ref([])
   const conf = ref()
@@ -208,7 +207,7 @@
           config = config.trim() + `\n${item.name}=${item.value}`
         }
       } else {
-        config = config.replace(regex, ``)
+        config = config.replace(regex, '')
         config = config.replace(/^\s*[\r\n]+|[\r\n]+\s*$/gm, '\n').replace(/\n\s*\n/g, '\n')
       }
       if (item.name === 'registry') {

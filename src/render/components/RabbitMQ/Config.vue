@@ -16,8 +16,7 @@
   import { AppStore } from '@/store/app'
   import IPC from '@/util/IPC'
   import { BrewStore } from '@/store/brew'
-
-  const { join } = require('path')
+  import { join } from 'path'
 
   const appStore = AppStore()
   const brewStore = BrewStore()

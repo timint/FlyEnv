@@ -33,8 +33,7 @@
   import { I18nT } from '@lang/index'
   import { AppStore } from '@/store/app'
   import { BrewStore } from '@/store/brew'
-
-  const { shell } = require('@electron/remote')
+  import { shell } from '@electron/remote'
 
   const appStore = AppStore()
   const brewStore = BrewStore()

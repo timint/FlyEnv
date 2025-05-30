@@ -19,8 +19,7 @@
   import { I18nT } from '@lang/index'
   import { debounce } from 'lodash-es'
   import { uuid } from '@shared/utils'
-
-  const { join } = require('path')
+  import { join } from 'path'
 
   const conf = ref()
   const commonSetting: Ref<CommonSetItem[]> = ref([])

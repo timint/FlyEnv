@@ -11,11 +11,10 @@
 
 <script lang="ts" setup>
   import { ref } from 'vue'
+  import { join } from 'path'
 
   import LogVM from '@/components/Log/index.vue'
   import ToolVM from '@/components/Log/tool.vue'
-
-  const { join } = require('path')
 
   const log = ref()
   const filepath = ref(join(global.Server.MemcachedDir, 'start.out.log'))

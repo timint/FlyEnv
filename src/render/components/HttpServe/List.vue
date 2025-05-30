@@ -51,9 +51,9 @@
   import { AppStore } from '@/store/app'
   import { MessageError } from '@/util/Element'
   import QrcodePopper from '@/components/Host/Qrcode/Index.vue'
+  import { dialog, shell } from '@electron/remote'
   import { pathExistsSync, statSync } from 'fs'
 
-  const { dialog, shell } = require('@electron/remote')
   export default defineComponent({
     components: { QrcodePopper },
     props: {},

@@ -15,8 +15,8 @@ import { SetupStore } from '@/components/Setup/store'
 import { AppLogStore } from '@/components/AppLog/store'
 import { loadCustomerLang } from '@lang/loader'
 import { AppCustomerModule } from '@/core/Module'
+import { getGlobal } from '@electron/remote'
 
-const { getGlobal } = require('@electron/remote')
 global.Server = getGlobal('Server')
 
 const app = VueExtend(App)

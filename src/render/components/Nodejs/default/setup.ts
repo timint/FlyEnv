@@ -1,4 +1,5 @@
 import { computed, onMounted, onUnmounted, reactive } from 'vue'
+import { join } from 'path'
 import IPC from '@/util/IPC'
 import { MessageError, MessageSuccess } from '@/util/Element'
 import { I18nT } from '@lang/index'
@@ -6,8 +7,6 @@ import { NodejsStore } from '@/components/Nodejs/node'
 import installedVersions from '@/util/InstalledVersions'
 import { BrewStore } from '@/store/brew'
 import { ServiceActionStore } from '@/components/ServiceManager/EXT/store'
-
-const { join } = require('path')
 
 export const NodeDefaultSetup = reactive<{
   installing: Record<string, number>

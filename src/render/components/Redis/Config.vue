@@ -20,9 +20,8 @@
   import { debounce } from 'lodash-es'
   import { AppStore } from '@/store/app'
   import IPC from '@/util/IPC'
-  import { uuid } from '@shared/utils'
-
-  const { join } = require('path')
+  import {uuid} from "@shared/utils";
+  import { join } from 'path'
   import { existsSync } from 'fs'
 
   const appStore = AppStore()

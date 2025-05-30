@@ -11,7 +11,7 @@ import { AsyncComponentShow } from '@/util/AsyncComponent'
 import { handleWriteHosts } from '@/util/Host'
 import type { AllAppModule } from '@/core/type'
 
-const { shell } = require('@electron/remote')
+import { shell } from '@electron/remote'
 
 export const Setup = (typeFlag: AllAppModule) => {
   if (!Service[typeFlag]) {

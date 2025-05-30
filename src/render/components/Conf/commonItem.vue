@@ -43,8 +43,7 @@
   import { computed } from 'vue'
   import type { CommonSetItem } from '@/components/Conf/setup'
   import { Folder } from '@element-plus/icons-vue'
-
-  const { dialog } = require('@electron/remote')
+  import { dialog } from '@electron/remote'
 
   const props = defineProps<{
     item: CommonSetItem

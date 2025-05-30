@@ -1,7 +1,6 @@
 import { AppStore } from '@/store/app'
 import { computed, watch, ref } from 'vue'
-
-const { nativeTheme } = require('@electron/remote')
+import { nativeTheme } from '@electron/remote'
 
 export const ThemeInit = () => {
   const store = AppStore()

@@ -28,8 +28,7 @@
   import type { AppHost } from '@/store/app'
   import { I18nT } from '@lang/index'
   import { MessageSuccess } from '@/util/Element'
-
-  const { shell, clipboard } = require('@electron/remote')
+  import { shell, clipboard } from '@electron/remote'
 
   const props = defineProps<{
     host: AppHost

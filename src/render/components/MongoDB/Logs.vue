@@ -11,12 +11,11 @@
 
 <script lang="ts" setup>
   import { computed, ref } from 'vue'
+  import { join } from 'path'
 
   import LogVM from '@/components/Log/index.vue'
   import ToolVM from '@/components/Log/tool.vue'
   import { AppStore } from '@/store/app'
-
-  const { join } = require('path')
 
   const appStore = AppStore()
   const currentVersion = computed(() => {

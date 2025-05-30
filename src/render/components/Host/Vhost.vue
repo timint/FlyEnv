@@ -39,9 +39,8 @@
   import { MessageSuccess } from '@/util/Element'
   import { reloadWebServer } from '@/util/Service'
   import IPC from '@/util/IPC'
-
-  const { shell } = require('@electron/remote')
-  const { join } = require('path')
+  import { shell } from '@electron/remote'
+  import { join } from 'path'
   import { existsSync } from 'fs'
 
   const { show, onClosed, onSubmit, closedFn } = AsyncComponentSetup()

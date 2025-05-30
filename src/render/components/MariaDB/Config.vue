@@ -19,9 +19,8 @@
   import { I18nT } from '@lang/index'
   import { debounce } from 'lodash-es'
   import { AppStore } from '@/store/app'
-  import { uuid } from '@shared/utils'
-
-  const { join } = require('path')
+  import { uuid } from "@shared/utils"
+  import { join } from 'path'
 
   const appStore = AppStore()
   const conf = ref()

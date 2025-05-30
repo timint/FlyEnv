@@ -36,11 +36,10 @@
   import { AsyncComponentSetup } from '@/util/AsyncComponent'
   import Conf from '@/components/Conf/drawer.vue'
   import type { CommonSetItem } from '@/components/Conf/setup'
-  import { uuid } from '@shared/utils'
-
-  const { join } = require('path')
   import { debounce } from 'lodash-es'
+  import { uuid } from "@shared/utils"
   import { existsSync, writeFile } from 'fs'
+  import { join } from 'path'
 
   const props = defineProps<{
     item: MysqlGroupItem

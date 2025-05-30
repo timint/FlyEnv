@@ -53,10 +53,9 @@
   import { I18nT } from '@lang/index'
 
   const { execSync } = require('child_process')
-  const { join, basename } = require('path')
-  const { EOL } = require('os')
-  const { dialog, shell } = require('@electron/remote')
   import { existsSync, writeFileSync } from 'fs'
+  import { join, basename } from 'path'
+  import { dialog, shell } from '@electron/remote'
 
   export default {
     name: 'MoSslMake',

@@ -1,8 +1,7 @@
 import { reactive, watch } from 'vue'
 import type { AppHost } from '@/store/app'
 import { AppStore } from '@/store/app'
-
-const { join } = require('path')
+import { join } from 'path'
 import { writeFileSync } from 'fs'
 
 export const RewriteAll: { [key: string]: any } = {}

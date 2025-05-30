@@ -256,8 +256,7 @@
   import SSLTips from './SSLTips/index.vue'
   import { Plus, Delete } from '@element-plus/icons-vue'
   import NginxRewrite from './Edit/nginxRewrite.vue'
-
-  const { dialog } = require('@electron/remote')
+  import { dialog } from '@electron/remote'
 
   const { show, onClosed, onSubmit, closedFn } = AsyncComponentSetup()
 

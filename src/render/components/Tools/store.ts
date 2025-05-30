@@ -1,10 +1,9 @@
 import type { AppToolModuleItem } from '@/core/type'
 import { reactive } from 'vue'
 import { uuid } from '@/util/Index'
-
-const { join } = require('path')
-const { shell } = require('@electron/remote')
 import { existsSync, readFileSync, writeFileSync } from 'fs'
+import { join } from 'path'
+import { shell } from '@electron/remote'
 
 const getToolData = async () => {
   let obj = {

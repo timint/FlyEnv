@@ -93,12 +93,12 @@
   import AppVersions from './version_nodejs'
   import { ProjectSetup } from '@/components/Host/CreateProject/project'
   import XTerm from '@/util/XTerm'
+  import { dirname, join } from 'path'
+  import { dialog, shell } from '@electron/remote'
   import { Service } from '@/components/ServiceManager/service'
   import installedVersions from '@/util/InstalledVersions'
   import { BrewStore } from '@/store/brew'
 
-  const { dirname, join } = require('path')
-  const { dialog, shell } = require('@electron/remote')
   const { show, onClosed, onSubmit, closedFn } = AsyncComponentSetup()
 
   const props = defineProps<{

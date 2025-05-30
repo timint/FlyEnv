@@ -5,9 +5,7 @@
   import { isValidBase64 } from '@shared/base64'
   import { MessageError, MessageSuccess } from '@/util/Element'
   import { fileSelect } from '@/util/Index'
-
-  const { dialog, shell } = require('@electron/remote')
-  const { clipboard } = require('@electron/remote')
+  import { dialog, shell, clipboard } from '@electron/remote'
   import { writeFile } from 'fs'
 
   const textError = ref(false)

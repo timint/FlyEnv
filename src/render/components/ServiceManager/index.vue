@@ -297,8 +297,7 @@
   import IPC from '@/util/IPC'
   import type { AllAppModule } from '@/core/type'
   import { ServiceActionStore } from '@/components/ServiceManager/EXT/store'
-
-  const { shell } = require('@electron/remote')
+  import { shell } from '@electron/remote'
   import { existsSync } from 'fs'
 
   const props = defineProps<{

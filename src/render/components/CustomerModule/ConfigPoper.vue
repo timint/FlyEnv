@@ -31,7 +31,7 @@
   import Conf from '@/components/Conf/drawer.vue'
   import { AsyncComponentSetup } from '@/util/AsyncComponent'
 
-  const { extname } = require('path')
+  import { extname } from 'path'
 
   const props = defineProps<{
     file: string

@@ -139,9 +139,8 @@
   import type { AppHost } from '@shared/app'
   import { isEqual } from 'lodash'
   import { HostStore } from '@/components/Host/store'
-
-  const { shell } = require('@electron/remote')
-  const { join } = require('path')
+  import { shell } from '@electron/remote'
+  import { join } from 'path'
 
   const hostList = ref()
   const loading = ref(false)

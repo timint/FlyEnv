@@ -52,10 +52,9 @@
   import { SoftInstalled } from '@/store/brew'
   import { I18nT } from '@lang/index'
   import { PHPSetup } from '@/components/PHP/store'
-
-  const { shell } = require('@electron/remote')
-  const { join } = require('path')
+  import { shell } from '@electron/remote'
   import { existsSync } from 'fs'
+  import { join } from 'path'
 
   const props = defineProps<{
     version: SoftInstalled

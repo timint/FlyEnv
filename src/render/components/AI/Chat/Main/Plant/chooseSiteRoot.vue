@@ -12,8 +12,7 @@
 <script lang="ts" setup>
   import { AIStore } from '@/components/AI/store'
   import type { AIChatItem } from '@shared/app'
-
-  const { dialog } = require('@electron/remote')
+  import { dialog } from '@electron/remote'
 
   const props = defineProps<{
     item: AIChatItem

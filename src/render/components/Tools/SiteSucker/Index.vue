@@ -76,8 +76,7 @@
   import type { Column } from 'element-plus'
   import { AsyncComponentShow } from '@/util/AsyncComponent'
   import { ElInput } from 'element-plus'
-
-  const { shell } = require('@electron/remote')
+  import { shell } from '@electron/remote'
 
   const emit = defineEmits(['doClose'])
   const siteStore = SiteSuckerStore()

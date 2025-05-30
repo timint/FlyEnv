@@ -37,9 +37,8 @@
   import { I18nT } from '@lang/index'
   import { computed } from 'vue'
   import { BrewStore } from '@/store/brew'
-
-  const { shell } = require('@electron/remote')
-  const { join } = require('path')
+  import { join } from 'path'
+  import { shell } from '@electron/remote'
   import { existsSync, readFileSync } from 'fs'
 
   const { tab, checkVersion } = AppModuleSetup('mailpit')

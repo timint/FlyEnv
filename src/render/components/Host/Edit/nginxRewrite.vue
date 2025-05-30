@@ -75,10 +75,8 @@
   import { Project } from '@/util/Project'
   import { HostNginxRewriteSetup } from '@/components/Host/Edit/rewrite'
   import IPC from '@/util/IPC'
-  import { MessageSuccess } from '@/util/Element'
-
-  const { shell } = require('@electron/remote')
-  const { join } = require('path')
+  import { shell } from '@electron/remote'
+  import { join } from 'path'
   import { readFile, existsSync } from 'fs'
 
   const props = defineProps<{

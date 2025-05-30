@@ -8,8 +8,7 @@ import { fetchVerion } from '@/util/Brew'
 import { VersionManagerStore } from '@/components/VersionManager/store'
 import { MessageError } from '@/util/Element'
 import { I18nT } from '@lang/index'
-
-const { shell } = require('@electron/remote')
+import { shell } from '@electron/remote'
 
 export const Setup = (typeFlag: AllAppModule) => {
   const brewStore = BrewStore()

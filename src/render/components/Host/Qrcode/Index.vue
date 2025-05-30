@@ -27,8 +27,8 @@
   import QRCode from 'qrcode'
   import { ref } from 'vue'
   import { MessageError } from '@/util/Element'
-  const { dialog, shell } = require('@electron/remote')
-  const { writeFile } = require('fs')
+  import { dialog, shell } from '@electron/remote'
+  import { writeFile } from 'fs'
 
   const props = defineProps<{
     url: string

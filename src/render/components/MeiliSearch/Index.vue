@@ -52,8 +52,8 @@
   import { chooseFolder } from '@/util/File'
   import { Edit } from '@element-plus/icons-vue'
 
-  const { shell } = require('@electron/remote')
-  const { join } = require('path')
+  import { shell } from '@electron/remote'
+  import { join } from 'path'
   import { existsSync, readFileSync } from 'fs'
 
   const { tab, checkVersion } = AppModuleSetup('meilisearch')

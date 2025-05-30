@@ -54,8 +54,7 @@
   import Projects from './version'
   import { Search } from '@element-plus/icons-vue'
   import { AsyncComponentShow } from '@/util/AsyncComponent'
-
-  const { shell } = require('@electron/remote')
+  import { shell } from '@electron/remote'
 
   const emit = defineEmits(['onMakeHost'])
 

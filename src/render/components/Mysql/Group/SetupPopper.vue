@@ -41,9 +41,8 @@
   import type { MysqlGroupItem } from '@shared/app'
   import Base from '@/core/Base'
   import { MysqlStore } from '@/components/Mysql/mysql'
-
-  const { clipboard } = require('@electron/remote')
-  const { join } = require('path')
+  import { join } from 'path'
+  import { clipboard, shell } from '@electron/remote'
 
   const props = defineProps<{
     item: MysqlGroupItem

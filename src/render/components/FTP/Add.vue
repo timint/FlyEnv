@@ -80,9 +80,9 @@
   import { AppStore } from '@/store/app'
   import { BrewStore } from '@/store/brew'
   import { MessageError, MessageSuccess } from '@/util/Element'
+  import { existsSync } from 'fs'
+  import { dialog } from '@electron/remote'
 
-  const { existsSync } = require('fs')
-  const { dialog } = require('@electron/remote')
   const { show, onClosed, onSubmit, closedFn } = AsyncComponentSetup()
 
   const props = defineProps<{

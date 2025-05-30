@@ -5,8 +5,7 @@ import { join } from 'path'
 import { Store } from './Store'
 import { urlToDir } from './Fn'
 import { CallBack, LinkItem, type PageLink } from './LinkItem'
-
-const os = require('os')
+import os from 'os'
 
 const CPU_Count = os.cpus().length
 

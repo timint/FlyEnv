@@ -167,13 +167,12 @@
   import { I18nT } from '@lang/index'
   import { AsyncComponentSetup } from '@/util/AsyncComponent'
   import { merge } from 'lodash-es'
+  import { dialog } from '@electron/remote'
   import { existsSync, readFileSync } from 'fs'
+  import { dirname, join } from 'path'
   import { BrewStore } from '@/store/brew'
   import { Service } from '@/components/ServiceManager/service'
   import installedVersions from '@/util/InstalledVersions'
-
-  const { dialog } = require('@electron/remote')
-  const { dirname, join } = require('path')
 
   const { show, onClosed, onSubmit, closedFn } = AsyncComponentSetup()
 

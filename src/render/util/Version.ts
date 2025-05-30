@@ -1,7 +1,6 @@
 import Base from '@/core/Base'
 import { I18nT } from '@lang/index'
-
-const { shell } = require('@electron/remote')
+import { shell } from '@electron/remote'
 import { existsSync } from 'fs'
 
 export const staticVersionDel = (dir: string) => {

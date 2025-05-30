@@ -95,8 +95,8 @@
 <script>
   import { AppStore } from '@/store/app.ts'
   import { AsyncComponentShow } from '@/util/AsyncComponent.ts'
+  import { app, shell } from '@electron/remote'
 
-  const { app, shell } = require('@electron/remote')
   const version = app.getVersion()
   export default {
     name: 'MoTitleBar',

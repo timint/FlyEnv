@@ -1,3 +1,4 @@
+import type { SoftInstalled } from '@shared/app';
 import { readFileSync } from 'fs'
 import { Base } from './Base'
 import { ForkPromise } from '@shared/ForkPromise'
@@ -5,10 +6,7 @@ import dns2 from 'dns2'
 import { Packet } from 'dns2'
 import * as ip from 'neoip'
 import { join } from 'path'
-
-const Tangerine = require('@shared/Tangerine.js')
-
-const tangerine = new Tangerine()
+import Tangerine from 'tangerine';
 
 class Manager extends Base {
   server: any

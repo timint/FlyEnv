@@ -5,9 +5,8 @@ import { MessageError, MessageSuccess } from '@/util/Element'
 import { I18nT } from '@lang/index'
 import { BrewStore } from '@/store/brew'
 import { OllamaLocalModelsSetup } from '@/components/Ollama/models/local/setup'
-
-const { clipboard } = require('@electron/remote')
-const { dirname } = require('path')
+import { clipboard } from '@electron/remote'
+import { dirname } from 'path'
 
 export type OllamaModelItem = {
   isRoot?: boolean

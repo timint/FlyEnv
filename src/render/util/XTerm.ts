@@ -3,8 +3,7 @@ import { Terminal } from '@xterm/xterm'
 import { FitAddon } from '@xterm/addon-fit'
 import IPC from './IPC'
 import { AppStore } from '@/store/app'
-
-const { nativeTheme, clipboard } = require('@electron/remote')
+import { nativeTheme, clipboard } from '@electron/remote'
 
 interface XTermType {
   xterm: Terminal | undefined

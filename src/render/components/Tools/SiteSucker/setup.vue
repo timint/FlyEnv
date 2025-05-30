@@ -121,10 +121,11 @@
   import { ref } from 'vue'
   import { AsyncComponentSetup } from '@/util/AsyncComponent'
   import { SiteSuckerStore } from '@/components/Tools/SiteSucker/store'
+  import { dialog } from '@electron/remote'
+  import os from 'os'
 
-  const { dialog } = require('@electron/remote')
   const { show, onClosed, onSubmit, closedFn } = AsyncComponentSetup()
-  const os = require('os')
+
   const CPU_Count = os.cpus().length
 
   const form = ref({

@@ -60,14 +60,13 @@
 </template>
 <script lang="ts" setup>
   import { computed, ref } from 'vue'
+  import { dirname } from 'path'
   import { BrewStore, SoftInstalled } from '@/store/brew'
   import { ServiceActionStore } from './store'
   import { AppStore } from '@/store/app'
   import { AllAppModule } from '@/core/type'
   import { stopService } from '@/util/Service'
   import { I18nT } from '@lang/index'
-
-  const { dirname } = require('path')
 
   const props = defineProps<{
     item: SoftInstalled

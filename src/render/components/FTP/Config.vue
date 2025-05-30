@@ -14,8 +14,7 @@
   import { computed, ref } from 'vue'
   import Conf from '@/components/Conf/index.vue'
   import IPC from '@/util/IPC'
-
-  const { join } = require('path')
+  import { join } from 'path'
   import { existsSync } from 'fs'
 
   const conf = ref()

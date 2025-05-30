@@ -1,9 +1,8 @@
 import { reactive } from 'vue'
 import { MessageSuccess } from '@/util/Element'
 import { I18nT } from '@lang/index'
-
-const { pki } = require('node-forge')
-const { clipboard } = require('@electron/remote')
+import { pki } from 'node-forge'
+import { clipboard } from '@electron/remote'
 
 function generateRawPairs({ bits = 2048 }) {
   return new Promise<{ privateKey: string; publicKey: string }>((resolve, reject) => {
