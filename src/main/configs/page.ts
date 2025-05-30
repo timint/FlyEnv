@@ -19,7 +19,7 @@ interface PageOptions {
 const options: PageOptions = {
   index: {
     attrs: {
-      title: 'PhpWebStudy',
+      title: 'FlyEnv',
       width: 1200,
       height: 800,
       minWidth: 800,
