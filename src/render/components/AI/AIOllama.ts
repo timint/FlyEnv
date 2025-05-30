@@ -1,5 +1,5 @@
 import { AIBase } from '@/components/AI/AIBase'
-import { merge } from 'lodash'
+import { merge } from 'lodash-es'
 import type { ChatItem } from '@/components/AI/setup'
 import { reactive } from 'vue'
 import { MessageError } from '@/util/Element'

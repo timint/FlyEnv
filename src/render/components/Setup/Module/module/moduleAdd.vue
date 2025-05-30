@@ -200,7 +200,7 @@
   import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue'
   import { I18nT } from '@lang/index'
   import { AsyncComponentSetup, AsyncComponentShow } from '@/util/AsyncComponent'
-  import { merge } from 'lodash'
+  import { merge } from 'lodash-es'
   import { Close, Delete, Edit, FolderOpened, Lock, Plus } from '@element-plus/icons-vue'
   import { uuid } from '@/util/Index'
   import { ModuleCustomerExecItem, ModuleDefaultIcon } from '@/core/ModuleCustomer'

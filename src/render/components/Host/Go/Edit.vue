@@ -148,10 +148,10 @@
   import { AppHost, AppStore } from '@/store/app'
   import { I18nT } from '@lang/index'
   import { AsyncComponentSetup } from '@/util/AsyncComponent'
-  import { merge } from 'lodash'
 
   const { dialog } = require('@electron/remote')
   const { dirname, basename } = require('path')
+  import { merge } from 'lodash-es'
 
   const { show, onClosed, onSubmit, closedFn } = AsyncComponentSetup()
 

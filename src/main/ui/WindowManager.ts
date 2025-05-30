@@ -1,11 +1,9 @@
+import { Event as ElectronEvent, BrowserWindowConstructorOptions } from 'electron'
 import { EventEmitter } from 'events'
 import { app, BrowserWindow, screen } from 'electron'
+import { initialize, enable } from '@electron/remote/main'
 import pageConfig from '../configs/page'
-import { debounce } from 'lodash'
-import Event = Electron.Main.Event
-import BrowserWindowConstructorOptions = Electron.BrowserWindowConstructorOptions
-
-const { initialize, enable } = require('@electron/remote/main')
+import { debounce } from 'lodash-es'
 
 initialize()
 

@@ -1,4 +1,4 @@
-import { merge } from 'lodash'
+import { merge } from 'lodash-es'
 import type BaseTask from '@/components/AI/Task/BaseTask'
 import installedVersions from '@/util/InstalledVersions'
 import IPC from '@/util/IPC'

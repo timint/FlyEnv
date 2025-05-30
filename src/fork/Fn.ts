@@ -1,5 +1,4 @@
 import { type ChildProcess, exec, execSync, spawn } from 'child_process'
-import { merge } from 'lodash'
 import {
   chmodSync,
   createWriteStream,
@@ -10,6 +9,7 @@ import {
   statSync
 } from 'fs'
 import { dirname, isAbsolute, join, parse, basename, normalize } from 'path'
+import { merge } from 'lodash-es'
 import { ForkPromise } from '@shared/ForkPromise'
 import crypto from 'crypto'
 import axios from 'axios'

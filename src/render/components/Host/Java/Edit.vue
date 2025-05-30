@@ -285,7 +285,7 @@
   import { BrewStore } from '@/store/brew'
   import { I18nT } from '@lang/index'
   import { AsyncComponentSetup } from '@/util/AsyncComponent'
-  import { merge } from 'lodash'
+  import { merge } from 'lodash-es'
   import installedVersions from '@/util/InstalledVersions'
 
   const { dialog } = require('@electron/remote')
