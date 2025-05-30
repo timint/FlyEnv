@@ -3,7 +3,7 @@ import IPC from '@/util/IPC'
 import { reactive } from 'vue'
 import { MessageError, MessageSuccess } from '@/util/Element'
 import { I18nT } from '@lang/index'
-const IP = require('ip')
+import * as IP from 'neoip'
 
 export interface DNSLogItem {
   host: string

@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import IPC from '@/util/IPC'
-const IP = require('ip')
+import * as IP from 'neoip'
 
 export interface FtpItem {
   user: string

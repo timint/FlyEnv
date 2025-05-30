@@ -3,7 +3,7 @@ import { Base } from './Base'
 import { ForkPromise } from '@shared/ForkPromise'
 import dns2 from 'dns2'
 import { Packet } from 'dns2'
-import * as ip from 'ip'
+import * as ip from 'neoip'
 import { join } from 'path'
 
 const Tangerine = require('@shared/Tangerine.js')

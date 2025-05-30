@@ -18,6 +18,7 @@ import UpdateManager from './core/UpdateManager'
 import { PItem, ProcessPidList, ProcessPidListByPids } from '../fork/Process'
 import NodePTY from './core/NodePTY'
 import ScreenManager from './core/ScreenManager'
+import * as IP from 'neoip'
 
 const { createFolder } = require('../shared/file')
 const ServeHandler = require('serve-handler')
