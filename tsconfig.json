@@ -20,18 +20,10 @@
     "noEmit": true,
     "baseUrl": "./",
     "paths": {
-      "@/*": [
-        "src/render/*"
-      ],
-      "@shared/*": [
-        "src/shared/*"
-      ],
-      "@lang/*": [
-        "src/lang/*"
-      ],
-      "@web/*": [
-        "web/*"
-      ]
+      "@/*": ["src/render/*" ],
+      "@shared/*": [ "src/shared/*" ],
+      "@lang/*": [ "src/lang/*" ],
+      "@web/*": [ "web/*" ]
     }
   },
   "include": [
