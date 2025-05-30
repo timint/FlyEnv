@@ -1,9 +1,14 @@
+import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
 import { basename, dirname, join } from 'path'
 import { existsSync } from 'fs'
 import { Base } from './Base'
 import { ForkPromise } from '@shared/ForkPromise'
-import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
-import { versionFilterSame, versionFixed, versionLocalFetch, versionSort } from '../Fn'
+import {
+  versionFilterSame,
+  versionFixed,
+  versionLocalFetch,
+  versionSort
+} from '../Fn'
 
 class ERLang extends Base {
   constructor() {

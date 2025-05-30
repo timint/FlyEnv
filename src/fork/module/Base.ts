@@ -1,13 +1,20 @@
-import { I18nT } from '@lang/index'
-import path, { basename, dirname, join } from 'path'
 import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
-import { AppLog, execPromise, getAllFileAsync, moveChildDirToParent, uuid, waitTime } from '../Fn'
+import { I18nT } from '@lang/index'
+import { basename, dirname, join } from 'path'
 import { appendFile, copyFileSync, createWriteStream, existsSync, mkdirSync, readFileSync, rmSync, unlinkSync, writeFileSync } from 'fs'
 import { ForkPromise } from '@shared/ForkPromise'
 import { zipUnPack } from '@shared/file'
 import axios from 'axios'
 import { ProcessListSearch, ProcessPidList, ProcessPidListByPid } from '../Process'
 import TaskQueue from '../TaskQueue'
+import {
+  AppLog,
+  execPromise,
+  getAllFileAsync,
+  moveChildDirToParent,
+  uuid,
+  waitTime
+} from '../Fn'
 
 export class Base {
   type: string

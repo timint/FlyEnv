@@ -51,8 +51,6 @@
   import { MessageError, MessageSuccess } from '@/util/Element.ts'
   import IPC from '@/util/IPC'
   import { I18nT } from '@lang/index'
-
-  const { execSync } = require('child_process')
   import { existsSync, writeFileSync } from 'fs'
   import { join, basename } from 'path'
   import { dialog, shell } from '@electron/remote'

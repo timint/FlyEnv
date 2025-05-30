@@ -1,7 +1,11 @@
+import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
 import { join, dirname, basename } from 'path'
 import { existsSync, readFileSync, writeFileSync, chmod, copyFileSync, mkdirSync } from 'fs'
 import { Base } from './Base'
-import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
+import { ForkPromise } from '@shared/ForkPromise'
+import TaskQueue from '../TaskQueue'
+import { ProcessListSearch } from '../Process'
+import { I18nT } from '@lang/index'
 import {
   AppLog,
   execPromise,
@@ -13,10 +17,6 @@ import {
   versionLocalFetch,
   versionSort
 } from '../Fn'
-import { ForkPromise } from '@shared/ForkPromise'
-import TaskQueue from '../TaskQueue'
-import { ProcessListSearch } from '../Process'
-import { I18nT } from '@lang/index'
 
 class Redis extends Base {
   constructor() {

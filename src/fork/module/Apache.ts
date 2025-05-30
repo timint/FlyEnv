@@ -1,3 +1,4 @@
+import type { AppHost, OnlineVersionItem, SoftInstalled } from '@shared/app'
 import { join, basename, dirname } from 'path'
 import { existsSync, readFileSync, writeFileSync } from 'fs'
 import { Base } from './Base'
@@ -17,9 +18,6 @@ import {
   versionSort,
   serviceStartExecCMD
 } from '../Fn'
-import { ForkPromise } from '@shared/ForkPromise'
-import TaskQueue from '../TaskQueue'
-import { fetchHostList } from './host/HostFile'
 
 class Apache extends Base {
   constructor() {

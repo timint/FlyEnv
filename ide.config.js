@@ -1,9 +1,9 @@
 // Configure webpack output file path
 import path from 'path';
 const resolve = (dir) => {
-  return path.join(__dirname, dir)
-}
-module.exports = {
+  return path.join(path.dirname(new URL(import.meta.url).pathname), dir);
+};
+export default {
   resolve: {
     alias: {
       '@': resolve('src/render'),
@@ -12,4 +12,4 @@ module.exports = {
       '@web': resolve('web')
     }
   }
-}
+};

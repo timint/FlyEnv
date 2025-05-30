@@ -1,13 +1,15 @@
 import { createServer } from 'vite'
+import { promisify } from 'util'
 import { spawn, exec, ChildProcess } from 'child_process'
 import { build } from 'esbuild'
-import _path from 'path'
-// @ts-ignore
-import _md5 from 'md5'
 import { cpSync, readFileSync, watch } from 'fs'
+import path from 'path'
+import md5 from 'md5'
 
-import viteConfig from '../configs/vite.config'
-import esbuildConfig from '../configs/esbuild.config'
+import viteConfig from 'configs/vite.config.js'
+import esbuildConfig from 'configs/esbuild.config.js'
+
+const __dirname = path.dirname(new URL(import.meta.url).pathname)
 
 let restart = false
 let electronProcess: ChildProcess | null
@@ -15,8 +17,8 @@ let electronProcess: ChildProcess | null
 const execAsync = promisify(exec);
 
 async function killAllElectron() {
-  const sh = _path.resolve(__dirname, '../scripts/electron-kill.ps1')
-  const scriptDir = _path.dirname(sh)
+  const sh = path.resolve(__dirname, '../scripts/electron-kill.ps1')
+  const scriptDir = path.dirname(sh)
   console.log('sh: ', sh, scriptDir)
   const command = `powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Unblock-File -LiteralPath './electron-kill.ps1'; & './electron-kill.ps1'"`
   let res: any = null
@@ -57,14 +59,18 @@ async function launchViteDevServer(openInBrowser = false) {
 
 function buildMainProcess() {
   return new Promise((resolve, reject) => {
-    Promise.all([killAllElectron(), build(esbuildConfig.dev), build(esbuildConfig.devFork)])
-      .then(() => {
-        resolve(true)
-      })
-      .catch((e) => {
-        console.log(e)
-        reject(e)
-      })
+    Promise.all([
+      //killAllElectron(),
+      build(esbuildConfig.dev),
+      build(esbuildConfig.devFork)
+    ])
+    .then(() => {
+      resolve(true)
+    })
+    .catch((e) => {
+      console.log(e)
+      reject(e)
+    })
   })
 }
 

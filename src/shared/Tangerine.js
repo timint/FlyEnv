@@ -1839,4 +1839,4 @@ class Tangerine extends dns.promises.Resolver {
   }
 }
 
-module.exports = Tangerine
+export default Tangerine;

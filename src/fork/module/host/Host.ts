@@ -1,5 +1,5 @@
-import { join } from 'path'
 import type { AppHost } from '@shared/app'
+import { join } from 'path'
 import { chmod, existsSync, readFileSync } from 'fs'
 import { isDeepStrictEqual } from 'node:util'
 import { hostAlias } from '../../Fn'

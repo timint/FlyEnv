@@ -2,8 +2,6 @@ import { join } from 'path'
 import { existsSync } from 'fs'
 import { Base } from './Base'
 import { I18nT } from '@lang/index'
-import type { AppHost, SoftInstalled } from '@shared/app'
-import { getSubDir, hostAlias, uuid, execPromise } from '../Fn'
 import { ForkPromise } from '@shared/ForkPromise'
 import { appendFileSync, readFileSync, unlinkSync, writeFileSync } from 'fs'
 import { TaskAddPhpMyAdminSite, TaskAddRandaSite } from './host/Task'
@@ -13,7 +11,13 @@ import { autoFillNginxRewrite, makeNginxConf, updateNginxConf } from './host/Ngi
 import { makeCaddyConf, updateCaddyConf } from './host/Caddy'
 import { fetchHostList, saveHostList } from './host/HostFile'
 import { publicDecrypt } from 'crypto'
-import { machineId } from 'node-machine-id'
+import { nodeMachineId } from 'node-machine-id'
+import {
+  getSubDir,
+  hostAlias,
+  uuid,
+  execPromise
+} from '../Fn'
 
 class Host extends Base {
   hostsFile = join('c:/windows/system32/drivers/etc', 'hosts')
@@ -68,7 +72,7 @@ class Host extends Base {
 
           return arr.join('\n')
         }
-        const uuid = await machineId()
+        const uuid = await nodeMachineId.machineId()
         const uid = publicDecrypt(
           getRSAKey(),
           Buffer.from(global.Server.Licenses!, 'base64') as any

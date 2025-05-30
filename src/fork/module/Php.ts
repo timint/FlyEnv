@@ -3,6 +3,11 @@ import { copyFileSync, createWriteStream, existsSync, writeFileSync, mkdirSync, 
 import { Base } from './Base'
 import { I18nT } from '@lang/index'
 import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
+import { ForkPromise } from '@shared/ForkPromise'
+import { zipUnPack } from '@shared/file'
+import TaskQueue from '../TaskQueue'
+import { ProcessListSearch } from '../Process'
+import axios from 'axios'
 import {
   AppLog,
   execPromise,
@@ -14,11 +19,6 @@ import {
   versionLocalFetch,
   versionSort
 } from '../Fn'
-import { ForkPromise } from '@shared/ForkPromise'
-import { zipUnPack } from '@shared/file'
-import TaskQueue from '../TaskQueue'
-import { ProcessListSearch } from '../Process'
-import axios from 'axios'
 
 class Php extends Base {
   constructor() {

@@ -1,7 +1,11 @@
+import type { AppHost, OnlineVersionItem, SoftInstalled } from '@shared/app'
 import { join, basename } from 'path'
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs'
 import { Base } from './Base'
-import type { AppHost, OnlineVersionItem, SoftInstalled } from '@shared/app'
+import { ForkPromise } from '@shared/ForkPromise'
+import TaskQueue from '../TaskQueue'
+import { fetchHostList } from './host/HostFile'
+import { I18nT } from '@lang/index'
 import {
   AppLog,
   hostAlias,
@@ -13,10 +17,6 @@ import {
   versionLocalFetch,
   versionSort
 } from '../Fn'
-import { ForkPromise } from '@shared/ForkPromise'
-import TaskQueue from '../TaskQueue'
-import { fetchHostList } from './host/HostFile'
-import { I18nT } from '@lang/index'
 
 class Caddy extends Base {
   constructor() {

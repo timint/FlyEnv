@@ -1,8 +1,9 @@
+import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
 import { basename, join } from 'path'
 import { existsSync } from 'fs'
 import { Base } from './Base'
 import { ForkPromise } from '@shared/ForkPromise'
-import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
+import TaskQueue from '../TaskQueue'
 import {
   versionBinVersion,
   versionFilterSame,
@@ -10,7 +11,6 @@ import {
   versionLocalFetch,
   versionSort
 } from '../Fn'
-import TaskQueue from '../TaskQueue'
 
 class Python extends Base {
   constructor() {

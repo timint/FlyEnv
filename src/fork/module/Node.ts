@@ -1,7 +1,15 @@
 import { Base } from './Base'
 import { promisify } from 'node:util'
 import { exec } from 'node:child_process'
+import { ForkPromise } from '@shared/ForkPromise'
+import { dirname, join, isAbsolute, basename } from 'path'
+import { compareVersions } from 'compare-versions'
 import { copyFileSync, createWriteStream, existsSync, mkdirSync, readFileSync, writeFileSync, readdirSync, realpathSync, rmSync, unlinkSync } from 'fs'
+import { zipUnPack } from '@shared/file'
+import axios from 'axios'
+import { SoftInstalled } from '@shared/app'
+import TaskQueue from '../TaskQueue'
+import ncu from 'npm-check-updates'
 import {
   execPromise,
   fetchPathByBin,
@@ -16,14 +24,6 @@ import {
   waitTime,
   writePath
 } from '../Fn'
-import { ForkPromise } from '@shared/ForkPromise'
-import { dirname, join, isAbsolute, basename } from 'path'
-import { compareVersions } from 'compare-versions'
-import { zipUnPack } from '@shared/file'
-import axios from 'axios'
-import { SoftInstalled } from '@shared/app'
-import TaskQueue from '../TaskQueue'
-import ncu from 'npm-check-updates'
 
 const execAsync = promisify(exec)
 

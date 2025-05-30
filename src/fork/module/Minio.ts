@@ -3,6 +3,9 @@ import { createWriteStream, existsSync, unlinkSync, mkdirSync, copyFileSync } fr
 import { Base } from './Base'
 import { ForkPromise } from '@shared/ForkPromise'
 import type { SoftInstalled } from '@shared/app'
+import axios from 'axios'
+import TaskQueue from '../TaskQueue'
+import { I18nT } from '@lang/index'
 import {
   AppLog,
   serviceStartExec,
@@ -12,9 +15,6 @@ import {
   versionLocalFetch,
   versionSort
 } from '../Fn'
-import TaskQueue from '../TaskQueue'
-import { I18nT } from '@lang/index'
-import axios from 'axios'
 
 class Minio extends Base {
   constructor() {

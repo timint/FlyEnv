@@ -1,7 +1,10 @@
+import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
 import { basename, join } from 'path'
 import { existsSync, mkdirSync } from 'fs'
 import { Base } from './Base'
-import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
+import { ForkPromise } from '@shared/ForkPromise'
+import { I18nT } from '@lang/index'
+import TaskQueue from '../TaskQueue'
 import {
   AppLog,
   serviceStartExecCMD,
@@ -11,9 +14,6 @@ import {
   versionLocalFetch,
   versionSort
 } from '../Fn'
-import { ForkPromise } from '@shared/ForkPromise'
-import { I18nT } from '@lang/index'
-import TaskQueue from '../TaskQueue'
 
 class Elasticsearch extends Base {
   constructor() {

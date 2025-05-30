@@ -1,9 +1,9 @@
+import type { AppHost } from '@shared/app'
 import { ForkPromise } from '@shared/ForkPromise'
 import { hostAlias, execPromiseRoot } from '../../Fn'
 import { dirname, join } from 'path'
 import { copyFileSync, existsSync, rmSync, writeFileSync, mkdirSync } from 'fs'
 import { EOL } from 'os'
-import type { AppHost } from '@shared/app'
 import { zipUnPack } from '@shared/file'
 
 const initCARoot = () => {

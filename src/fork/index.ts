@@ -1,6 +1,8 @@
 import { AppI18n } from '@lang/index'
 import BaseManager from './BaseManager'
+
 const manager = new BaseManager()
+
 process.on('message', function (args: any) {
   if (args.Server) {
     global.Server = args.Server
@@ -13,4 +15,5 @@ process.on('message', function (args: any) {
     manager.exec(args)
   }
 })
+
 export {}

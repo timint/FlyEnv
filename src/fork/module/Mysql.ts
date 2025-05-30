@@ -1,8 +1,12 @@
+import type { MysqlGroupItem, OnlineVersionItem, SoftInstalled } from '@shared/app'
 import { join, dirname, basename } from 'path'
 import { existsSync, chmodSync, readdirSync, readFileSync, rmSync, writeFileSync, mkdirSync } from 'fs'
 import { Base } from './Base'
 import { I18nT } from '@lang/index'
-import type { MysqlGroupItem, OnlineVersionItem, SoftInstalled } from '@shared/app'
+import { ForkPromise } from '@shared/ForkPromise'
+import TaskQueue from '../TaskQueue'
+import { EOL } from 'os'
+import { PItem, ProcessListSearch } from '../Process'
 import {
   waitTime,
   versionLocalFetch,
@@ -16,10 +20,6 @@ import {
   serviceStartExecCMD,
   spawnPromise
 } from '../Fn'
-import { ForkPromise } from '@shared/ForkPromise'
-import TaskQueue from '../TaskQueue'
-import { EOL } from 'os'
-import { PItem, ProcessListSearch } from '../Process'
 
 class Mysql extends Base {
   constructor() {

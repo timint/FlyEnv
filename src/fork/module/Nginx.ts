@@ -1,7 +1,12 @@
+import type { AppHost, OnlineVersionItem, SoftInstalled } from '@shared/app'
 import { join, dirname, basename } from 'path'
 import { existsSync, readFileSync, writeFileSync, mkdirSync } from 'fs'
 import { Base } from './Base'
-import type { AppHost, OnlineVersionItem, SoftInstalled } from '@shared/app'
+import { ForkPromise } from '@shared/ForkPromise'
+import { zipUnPack } from '@shared/file'
+import TaskQueue from '../TaskQueue'
+import { fetchHostList } from './host/HostFile'
+import { I18nT } from '@lang/index'
 import {
   AppLog,
   serviceStartExecCMD,
@@ -12,11 +17,6 @@ import {
   versionLocalFetch,
   versionSort
 } from '../Fn'
-import { ForkPromise } from '@shared/ForkPromise'
-import { zipUnPack } from '@shared/file'
-import TaskQueue from '../TaskQueue'
-import { fetchHostList } from './host/HostFile'
-import { I18nT } from '@lang/index'
 
 class Nginx extends Base {
   constructor() {

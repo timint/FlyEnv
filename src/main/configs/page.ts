@@ -2,8 +2,11 @@ import is from 'electron-is'
 import path from 'path'
 import { ViteDevPort } from '../../../configs/vite.port'
 import BrowserWindowConstructorOptions = Electron.BrowserWindowConstructorOptions
-const index = path.resolve(__dirname, '../render/index.html')
-const tray = path.resolve(__dirname, '../render/tray.html')
+
+const __dirname = path.dirname(new URL(import.meta.url).pathname)
+
+const index = path.resolve(__dirname, '../renderer/index.html')
+const tray = path.resolve(__dirname, '../renderer/tray.html')
 
 interface PageOptions {
   [key: string]: {

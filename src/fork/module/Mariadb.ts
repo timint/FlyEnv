@@ -3,6 +3,8 @@ import { existsSync, chmodSync, readdirSync, writeFileSync, mkdirSync, rmSync } 
 import { Base } from './Base'
 import { I18nT } from '@lang/index'
 import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
+import { ForkPromise } from '@shared/ForkPromise'
+import TaskQueue from '../TaskQueue'
 import {
   execPromise,
   waitTime,
@@ -14,8 +16,6 @@ import {
   AppLog,
   serviceStartExecCMD
 } from '../Fn'
-import { ForkPromise } from '@shared/ForkPromise'
-import TaskQueue from '../TaskQueue'
 
 class Manager extends Base {
   constructor() {

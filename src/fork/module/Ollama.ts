@@ -1,7 +1,16 @@
+import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
 import { basename, dirname, join } from 'path'
 import { Base } from './Base'
-import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
 import { existsSync, readFileSync, writeFileSync, mkdirSync } from 'fs'
+import { ForkPromise } from '@shared/ForkPromise'
+import { I18nT } from '@lang/index'
+import TaskQueue from '../TaskQueue'
+import axios from 'axios'
+import http from 'http'
+import https from 'https'
+import { nodeMachineId } from 'node-machine-id'
+import { publicDecrypt } from 'crypto'
+import { EOL } from 'os'
 import {
   AppLog,
   execPromise,
@@ -12,15 +21,6 @@ import {
   versionLocalFetch,
   versionSort
 } from '../Fn'
-import { ForkPromise } from '@shared/ForkPromise'
-import { I18nT } from '@lang/index'
-import TaskQueue from '../TaskQueue'
-import axios from 'axios'
-import http from 'http'
-import https from 'https'
-import { machineId } from 'node-machine-id'
-import { publicDecrypt } from 'crypto'
-import { EOL } from 'os'
 
 class Ollama extends Base {
   constructor() {
@@ -257,7 +257,7 @@ class Ollama extends Base {
 
           return arr.join('\n')
         }
-        const uuid = await machineId()
+        const uuid = await nodeMachineId.machineId()
         const uid = publicDecrypt(
           getRSAKey(),
           Buffer.from(global.Server.Licenses!, 'base64') as any

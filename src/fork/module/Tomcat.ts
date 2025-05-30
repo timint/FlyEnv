@@ -1,8 +1,12 @@
+import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
 import { dirname, join } from 'path'
 import { existsSync, copyFileSync, readFileSync, writeFileSync, mkdirSync } from 'fs'
 import { Base } from './Base'
 import { ForkPromise } from '@shared/ForkPromise'
-import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
+import TaskQueue from '../TaskQueue'
+import { makeGlobalTomcatServerXML } from './service/ServiceItemJavaTomcat'
+import { ProcessListSearch } from '../Process'
+import { I18nT } from '@lang/index'
 import {
   AppLog,
   serviceStartExecCMD,
@@ -13,10 +17,6 @@ import {
   versionSort,
   waitTime
 } from '../Fn'
-import TaskQueue from '../TaskQueue'
-import { makeGlobalTomcatServerXML } from './service/ServiceItemJavaTomcat'
-import { ProcessListSearch } from '../Process'
-import { I18nT } from '@lang/index'
 
 class Tomcat extends Base {
   constructor() {

@@ -2,7 +2,10 @@ import { basename, join } from 'path'
 import { existsSync } from 'fs'
 import { Base } from './Base'
 import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
+import { ForkPromise } from '@shared/ForkPromise'
 import { mkdirSync, readFileSync, writeFileSync } from 'fs'
+import { I18nT } from '@lang/index'
+import TaskQueue from '../TaskQueue'
 import {
   AppLog,
   serviceStartExecGetPID,
@@ -12,9 +15,6 @@ import {
   versionLocalFetch,
   versionSort
 } from '../Fn'
-import { ForkPromise } from '@shared/ForkPromise'
-import { I18nT } from '@lang/index'
-import TaskQueue from '../TaskQueue'
 
 class MeiliSearch extends Base {
   constructor() {

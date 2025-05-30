@@ -1,7 +1,16 @@
+import type { SoftInstalled } from '@shared/app'
 import { Base } from './Base'
+import { ForkPromise } from '@shared/ForkPromise'
 import { copyFileSync, createReadStream, existsSync, mkdirSync, readdir, realpathSync, readFileSync, statSync, unlinkSync, writeFile, writeFileSync } from 'fs'
+import { TaskItem, TaskQueue, TaskQueueProgress } from '@shared/TaskQueue'
+import { basename, dirname, isAbsolute, join, resolve as pathResolve } from 'path'
+import { zipUnPack } from '@shared/file'
+import { EOL } from 'os'
+import { PItem, ProcessListSearch, ProcessPidList } from '../Process'
+import { AppServiceAliasItem } from '@shared/app'
 import { promisify } from 'node:util'
 import { exec } from 'node:child-process'
+import RequestTimer from '@shared/requestTimer'
 import {
   addPath,
   execPromise,
@@ -13,16 +22,6 @@ import {
   uuid,
   writePath
 } from '../Fn'
-import { ForkPromise } from '@shared/ForkPromise'
-import { TaskItem, TaskQueue, TaskQueueProgress } from '@shared/TaskQueue'
-import { basename, dirname, isAbsolute, join, resolve as PathResolve } from 'path'
-import { zipUnPack } from '@shared/file'
-import { EOL } from 'os'
-import type { SoftInstalled } from '@shared/app'
-import { PItem, ProcessListSearch, ProcessPidList } from '../Process'
-import { AppServiceAliasItem } from '@shared/app'
-import { exec } from 'child-process-promise'
-import RequestTimer from '@shared/requestTimer'
 
 const execAsync = promisify(exec)
 
@@ -1067,23 +1066,22 @@ chcp 65001>nul
               writeFileSync(
                 profilePath,
                 `${content.trim()}\n\n# FlyEnv Auto-Load\n${loadCommand}`
-              )
+              );
             }
           }
-        } catch (err) {
+        } catch (err: any) {
           console.log('initFlyEnvSH err: ', err)
         }
       }
       try {
-        await exec(
-          `if ((Get-ExecutionPolicy -Scope CurrentUser) -eq 'Restricted') {
-  Set-ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
-}`,
-          { shell: 'powershell.exe' }
-        )
+        await execAsync([
+          "if ((Get-ExecutionPolicy -Scope CurrentUser) -eq 'Restricted') {",
+          '  Set-ExecutionPolicy RemoteSigned -Scope CurrentUser -Force',
+          '}',
+        ].join('\n'), { shell: 'powershell.exe' })
       } catch (e) {}
 
-      resolve(true)
+      resolve(true);
     })
   }
 
@@ -1093,7 +1091,7 @@ chcp 65001>nul
         await setDir777ToCurrentUser(dir)
       } catch (e) {}
       resolve(true)
-    })
+    });
   }
 }
 

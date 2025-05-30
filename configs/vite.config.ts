@@ -6,6 +6,12 @@ import vueJsx from '@vitejs/plugin-vue-jsx'
 import wasm from 'vite-plugin-wasm'
 import monacoEditorPlugin from 'vite-plugin-monaco-editor'
 
+const __dirname = path.dirname(
+  process.platform === 'win32'
+    ? new URL(import.meta.url).pathname.slice(1)
+    : new URL(import.meta.url).pathname
+)
+
 const renderPath = path.resolve(__dirname, '../src/render/')
 const sharePath = path.resolve(__dirname, '../src/shared/')
 const langPath = path.resolve(__dirname, '../src/lang/')

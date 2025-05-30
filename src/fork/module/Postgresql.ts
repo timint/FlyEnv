@@ -1,8 +1,10 @@
+import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
 import { join, dirname, basename } from 'path'
 import { copyFileSync, existsSync, readFileSync, writeFileSync } from 'fs'
 import { Base } from './Base'
 import { I18nT } from '@lang/index'
-import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
+import { ForkPromise } from '@shared/ForkPromise'
+import TaskQueue from '../TaskQueue'
 import {
   AppLog,
   execPromise,
@@ -15,8 +17,6 @@ import {
   versionSort,
   waitTime
 } from '../Fn'
-import { ForkPromise } from '@shared/ForkPromise'
-import TaskQueue from '../TaskQueue'
 
 class Manager extends Base {
   constructor() {

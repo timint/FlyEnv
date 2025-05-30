@@ -3,8 +3,13 @@ import { existsSync, readFileSync } from 'fs'
 import { Base } from './Base'
 import { ForkPromise } from '@shared/ForkPromise'
 import { OnlineVersionItem, SoftInstalled } from '@shared/app'
-import { versionFilterSame, versionFixed, versionLocalFetch, versionSort } from '../Fn'
 import TaskQueue from '../TaskQueue'
+import {
+  versionFilterSame,
+  versionFixed,
+  versionLocalFetch,
+  versionSort
+} from '../Fn'
 
 class Composer extends Base {
   constructor() {

@@ -1,7 +1,7 @@
-import { Base } from './Base'
 import type { SoftInstalled } from '@shared/app'
-import { versionDirCache } from '../Fn'
+import { Base } from './Base'
 import { ForkPromise } from '@shared/ForkPromise'
+import { versionDirCache } from '../Fn'
 
 class Manager extends Base {
   Apache: any

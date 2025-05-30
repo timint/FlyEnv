@@ -1,8 +1,11 @@
+import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
 import { dirname, join } from 'path'
 import { existsSync, mkdirSync, readdir, readdirSync, readFileSync, rmSync, writeFileSync } from 'fs'
 import { Base } from './Base'
 import { I18nT } from '@lang/index'
-import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
+import { ForkPromise } from '@shared/ForkPromise'
+import TaskQueue from '../TaskQueue'
+import { ProcessListSearch } from '../Process'
 import {
   AppLog,
   execPromise,
@@ -14,9 +17,6 @@ import {
   versionSort,
   waitTime
 } from '../Fn'
-import { ForkPromise } from '@shared/ForkPromise'
-import TaskQueue from '../TaskQueue'
-import { ProcessListSearch } from '../Process'
 
 class RabbitMQ extends Base {
   baseDir: string = ''

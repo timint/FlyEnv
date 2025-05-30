@@ -1,11 +1,14 @@
 import { EventEmitter } from 'events'
 import { dialog } from 'electron'
 import is from 'electron-is'
-import { autoUpdater } from 'electron-updater'
-import { resolve } from 'path'
+import { dirname, resolve } from 'path'
 import logger from './Logger'
 import { I18nT } from '@lang/index'
 import type { AppUpdater } from 'electron-updater/out/AppUpdater'
+import electronUpdaterPkg from 'electron-updater'
+const { autoUpdater } = electronUpdaterPkg
+
+const __dirname = dirname(new URL(import.meta.url).pathname)
 
 if (is.dev()) {
   autoUpdater.updateConfigPath = resolve(__dirname, '../../app-update.yml')

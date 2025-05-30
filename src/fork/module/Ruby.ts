@@ -1,7 +1,8 @@
+import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
 import { basename, join } from 'path'
 import { Base } from './Base'
 import { ForkPromise } from '@shared/ForkPromise'
-import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
+import TaskQueue from '../TaskQueue'
 import { existsSync } from 'fs'
 import {
   versionBinVersion,
@@ -10,7 +11,6 @@ import {
   versionLocalFetch,
   versionSort
 } from '../Fn'
-import TaskQueue from '../TaskQueue'
 
 class Ruby extends Base {
   constructor() {

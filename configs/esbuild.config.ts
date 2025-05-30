@@ -42,6 +42,8 @@ const external = [
 
 const dev: BuildOptions = {
   platform: 'node',
+  target: 'esnext',
+  format: 'esm',
   entryPoints: ['src/main/index.dev.ts'],
   outfile: 'dist/electron/main.js',
   minify: false,
@@ -52,6 +54,7 @@ const dev: BuildOptions = {
 
 const dist: BuildOptions = {
   platform: 'node',
+  target: 'esnext',
   entryPoints: ['src/main/index.ts'],
   outfile: 'dist/electron/main.js',
   minify: true,
@@ -63,6 +66,8 @@ const dist: BuildOptions = {
 
 const devFork: BuildOptions = {
   platform: 'node',
+  target: 'esnext',
+  format: 'esm',
   entryPoints: ['src/fork/index.ts'],
   outfile: 'dist/electron/fork.js',
   minify: false,
@@ -73,6 +78,8 @@ const devFork: BuildOptions = {
 
 const distFork: BuildOptions = {
   platform: 'node',
+  target: 'esnext',
+  format: 'esm',
   entryPoints: ['src/fork/index.ts'],
   outfile: 'dist/electron/fork.js',
   minify: true,

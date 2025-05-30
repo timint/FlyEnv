@@ -6,7 +6,9 @@ import fs from 'fs'
 import path from 'path'
 import glob from 'glob'
 
-// 配置
+const __dirname = path.dirname(new URL(import.meta.url).pathname)
+
+// Config
 const PROJECT_ROOT = path.join(__dirname, '..')
 const LANG_DIR = path.join(PROJECT_ROOT, 'lang')
 const FILE_EXTENSIONS = ['.vue', '.js', '.ts', '.mjs']

@@ -1,3 +1,4 @@
+import type { AppHost, SoftInstalled } from '@shared/app'
 import { type ChildProcess, exec, execSync, spawn } from 'child_process'
 import {
   chmodSync,

@@ -1,7 +1,11 @@
+import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
 import { basename, join } from 'path'
 import { existsSync, readFileSync, writeFileSync, mkdirSync } from 'fs'
 import { Base } from './Base'
-import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
+import { ForkPromise } from '@shared/ForkPromise'
+import TaskQueue from '../TaskQueue'
+import { EOL } from 'os'
+import { I18nT } from '@lang/index'
 import {
   AppLog,
   serviceStartExec,
@@ -11,10 +15,6 @@ import {
   versionLocalFetch,
   versionSort
 } from '../Fn'
-import { ForkPromise } from '@shared/ForkPromise'
-import TaskQueue from '../TaskQueue'
-import { EOL } from 'os'
-import { I18nT } from '@lang/index'
 
 class MailPit extends Base {
   constructor() {

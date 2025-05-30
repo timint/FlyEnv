@@ -27,7 +27,7 @@
 </template>
 
 <script>
-  import { readFileAsync, writeFileAsync } from '@shared/file.ts'
+  import { readFileAsync, writeFileAsync } from 'fs'
   import { KeyCode, KeyMod } from 'monaco-editor/esm/vs/editor/editor.api.js'
   import { nextTick } from 'vue'
   import IPC from '@/util/IPC.ts'
