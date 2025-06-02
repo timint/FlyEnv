@@ -1,9 +1,8 @@
+import type { FSWatcher, WatchEventType } from 'fs'
 import { reactive, markRaw } from 'vue'
 import { getAllFileAsync } from '@shared/file'
-import type { FSWatcher, WatchEventType } from 'fs'
-
 import { join } from 'path'
-import { existsSync, watch as fsWatch } from 'fs'
+import { existsSync, mkdirSync, watch as fsWatch } from 'fs'
 
 type NginxRewriteItem = {
   name: string

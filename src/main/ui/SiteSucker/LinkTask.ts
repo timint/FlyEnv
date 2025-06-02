@@ -4,7 +4,7 @@ import { checkIsExcludeUrl } from './Fn'
 import { Store } from './Store'
 import { wait } from '../../utils'
 import { dirname } from 'path'
-import { createWriteStream, existsSync, mkdirSync, removeSync, statSync } from 'fs'
+import { createWriteStream, existsSync, mkdirSync, rmSync, statSync } from 'fs'
 import type { LinkItem } from './LinkItem'
 
 class LinkTaskItem {
@@ -77,7 +77,7 @@ class LinkTaskItem {
           try {
             stream.close(() => {
               if (existsSync(saveFile)) {
-                removeSync(saveFile)
+                rmSync(saveFile)
               }
               this.run().then()
             })

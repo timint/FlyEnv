@@ -1,14 +1,6 @@
 import type { AppHost, SoftInstalled } from '@shared/app'
 import { type ChildProcess, exec, execSync, spawn } from 'child_process'
-import {
-  chmodSync,
-  createWriteStream,
-  existsSync,
-  mkdirSync,
-  readdirSync,
-  realpathSync,
-  statSync
-} from 'fs'
+import { chmodSync, createWriteStream, existsSync, mkdirSync, readdirSync, realpathSync, statSync } from 'fs'
 import { dirname, isAbsolute, join, parse, basename, normalize } from 'path'
 import { merge } from 'lodash-es'
 import { ForkPromise } from '@shared/ForkPromise'

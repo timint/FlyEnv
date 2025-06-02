@@ -131,7 +131,7 @@ if (process.env.TEST === 'browser') {
 }
 
 process.on('SIGINT', async () => {
-  console.log('Catch SIGINT，Cleaning Electron Process...')
+  console.log('Catch SIGINT, Cleaning Electron Process...')
   //await killAllElectron()
   process.exit(0)
 })

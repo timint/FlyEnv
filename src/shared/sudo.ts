@@ -27,14 +27,7 @@ export interface Sudo {
   pathStatus?: string
 }
 
-const Node = {
-  child,
-  fs,
-  os,
-  path,
-  process,
-  util
-}
+const Node = { child, fs, os, path, process, util }
 
 function Attempt(instance: Sudo, end: Function) {
   return Windows(instance, end)

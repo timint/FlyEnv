@@ -1,6 +1,6 @@
 import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
 import { join, dirname, basename } from 'path'
-import { copyFileSync, existsSync, readFileSync, writeFileSync } from 'fs'
+import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs'
 import { Base } from './Base'
 import { I18nT } from '@lang/index'
 import { ForkPromise } from '@shared/ForkPromise'
@@ -42,7 +42,7 @@ class Manager extends Base {
       const logFile = join(dbPath, 'pg.log')
       let sendUserPass = false
 
-      await mkdirSync(global.Server.PostgreSqlDir!, { recursive: true })
+      mkdirSync(global.Server.PostgreSqlDir!, { recursive: true })
 
       const doRun = async () => {
         const execArgs = `-D "${dbPath}" -l "${logFile}" start`

@@ -1,6 +1,7 @@
 import is from 'electron-is'
 import path from 'path'
 import { ViteDevPort } from '../../../configs/vite.port'
+
 import BrowserWindowConstructorOptions = Electron.BrowserWindowConstructorOptions
 
 const __dirname = path.dirname(new URL(import.meta.url).pathname)

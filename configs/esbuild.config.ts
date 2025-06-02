@@ -1,5 +1,6 @@
 import type { BuildOptions } from 'esbuild'
 import { BuildPlugin } from './plugs.build'
+
 const external = [
   '7zip-min-electron',
   '@electron/remote',
@@ -18,6 +19,7 @@ const external = [
   'estree-walker',
   'fast-xml-parser',
   'fs',
+  'hpagent',
   'iconv-lite',
   'ip',
   'js-yaml',
@@ -36,6 +38,12 @@ const external = [
   'tangerine',
   'vue',
   'vue-i18n',
+  'electron-is',
+  'electron-localshortcut',
+  'http',
+  'https',
+  'net',
+  'tls',
 ]
 
 const dev: BuildOptions = {

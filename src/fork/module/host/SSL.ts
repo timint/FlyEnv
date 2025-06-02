@@ -2,7 +2,7 @@ import type { AppHost } from '@shared/app'
 import { ForkPromise } from '@shared/ForkPromise'
 import { hostAlias, execPromiseRoot } from '../../Fn'
 import { dirname, join } from 'path'
-import { copyFileSync, existsSync, rmSync, writeFileSync, mkdirSync } from 'fs'
+import { copyFileSync, existsSync, mkdirSync, rmSync, writeFileSync } from 'fs'
 import { EOL } from 'os'
 import { zipUnPack } from '@shared/file'
 
@@ -25,7 +25,7 @@ export const makeAutoSSL = (host: AppHost): ForkPromise<{ crt: string; key: stri
       const CARoot = join(global.Server.BaseDir!, 'CA/PhpWebStudy-Root-CA.crt')
       const CADir = dirname(CARoot)
       if (!existsSync(CARoot)) {
-        await mkdirSync(CADir, { recursive: true })
+        mkdirSync(CADir, { recursive: true })
         await zipUnPack(join(global.Server.Static!, `zip/CA.7z`), CADir)
         await initCARoot()
       }

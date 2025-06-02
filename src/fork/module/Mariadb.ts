@@ -1,5 +1,5 @@
 import { join, dirname, basename } from 'path'
-import { existsSync, chmodSync, readdirSync, writeFileSync, mkdirSync, rmSync } from 'fs'
+import { existsSync, chmodSync, mkdirSync, rmSync, readdirSync, writeFileSync } from 'fs'
 import { Base } from './Base'
 import { I18nT } from '@lang/index'
 import type { OnlineVersionItem, SoftInstalled } from '@shared/app'

@@ -1,6 +1,6 @@
 import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
 import { join, dirname, basename } from 'path'
-import { existsSync, readFileSync, writeFileSync, chmod, copyFileSync, mkdirSync } from 'fs'
+import { chmod, copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs'
 import { Base } from './Base'
 import { ForkPromise } from '@shared/ForkPromise'
 import TaskQueue from '../TaskQueue'
