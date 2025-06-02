@@ -8,8 +8,6 @@
   },
   "copyright": "Copyright© pengfei xu",
   "scripts": {
-    "web": "vite -c web/vite.config.ts",
-    "web-build": "vite -c web/vite.config.ts build",
     "build-dev-runner": "npx esbuild --platform=node --target=esnext --format=esm --bundle --external:vite --external:esbuild --external:child_process --external:@babel/core --external:@babel/helper-module-imports --external:@vue/compiler-sfc --external:consolidate scripts/dev-runner.ts --outfile=electron/dev-runner.js",
     "dev": "npm run build-dev-runner && cross-env NODE_ENV=development TEST=electron node electron/dev-runner.js",
     "clean:dev": "rd /s /q dist",
