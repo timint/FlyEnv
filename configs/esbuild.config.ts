@@ -1,5 +1,4 @@
 import type { BuildOptions } from 'esbuild'
-import { BuildPlugin } from './plugs.build'
 
 const external = [
   '@electron/remote',
@@ -55,7 +54,6 @@ const dev: BuildOptions = {
   minify: false,
   bundle: true,
   external: external,
-  plugins: [BuildPlugin()]
 }
 
 const dist: BuildOptions = {
@@ -66,7 +64,6 @@ const dist: BuildOptions = {
   minify: true,
   bundle: true,
   external: external,
-  plugins: [BuildPlugin()],
   drop: ['debugger', 'console']
 }
 
@@ -79,7 +76,6 @@ const devFork: BuildOptions = {
   minify: false,
   bundle: true,
   external,
-  plugins: [BuildPlugin()]
 }
 
 const distFork: BuildOptions = {
@@ -91,7 +87,6 @@ const distFork: BuildOptions = {
   minify: true,
   bundle: true,
   external,
-  plugins: [BuildPlugin()],
   drop: ['debugger', 'console']
 }
 
