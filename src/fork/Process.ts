@@ -2,7 +2,7 @@ import { uuid } from './Fn'
 import { join } from 'path'
 import { readFileSync, unlinkSync } from 'fs'
 import { promisify } from 'node:util'
-import { exec } from 'node:child_process'
+import { exec } from 'child_process'
 import { existsSync } from 'fs'
 import JSON5 from 'json5'
 

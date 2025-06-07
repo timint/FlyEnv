@@ -1,7 +1,7 @@
 import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
 import { I18nT } from '@lang/index'
 import { basename, dirname, join } from 'path'
-import { appendFile, copyFileSync, createWriteStream, existsSync, mkdirSync, readFileSync, rmSync, unlinkSync, writeFileSync } from 'fs'
+import { appendFileSync, copyFileSync, createWriteStream, existsSync, mkdirSync, readFileSync, rmSync, unlinkSync, writeFileSync } from 'fs'
 import { ForkPromise } from '@shared/ForkPromise'
 import { zipUnPack } from '@shared/file'
 import axios from 'axios'
@@ -311,7 +311,7 @@ export class Base {
           )
         } catch (e) {
           console.log('[python-install][error]: ', e)
-          await appendFile(
+          appendFileSync(
             join(global.Server.BaseDir!, 'debug.log'),
             `[python][python-install][error]: ${e}\n`
           )
@@ -349,7 +349,7 @@ export class Base {
               `powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Unblock-File -LiteralPath '${sh}'; & '${sh}'"`
             )
           } catch (e) {
-            await appendFile(
+            appendFileSync(
               join(global.Server.BaseDir!, 'debug.log'),
               `[python][pip-install][error]: ${e}\n`
             )
@@ -432,7 +432,7 @@ php "%~dp0composer.phar" %*`
           if (existsSync(row.bin)) {
             unlinkSync(row.bin)
           }
-          await appendFile(
+          appendFileSync(
             path.join(global.Server.BaseDir!, 'debug.log'),
             `[handleMeilisearch][error]: ${e.toString()}\n`
           )

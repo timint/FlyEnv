@@ -1,6 +1,7 @@
 import { join } from 'path'
 import { execSync } from 'child_process'
-import fs from 'fs'
+import { rmSync } from 'fs'
+
 /**
  * Handle the node-pty Python library issue for the App Store
  * @param pack
@@ -34,9 +35,9 @@ export default async function after(pack) {
     ].join(':')
   }
   execSync('asar e app.asar app', optdefault)
-  fs.rmSync(join(dir, 'app.asar'), { force: true })
+  rmSync(join(dir, 'app.asar'), { force: true })
   execSync('asar pack app app.asar', optdefault)
-  fs.rmSync(join(dir, 'app'), { recursive: true, force: true })
+  rmSync(join(dir, 'app'), { recursive: true, force: true })
   console.log('afterPack handle end !!!!!!')
   return true
 }

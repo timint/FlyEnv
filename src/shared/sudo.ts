@@ -1,7 +1,6 @@
 import { uuid } from '@shared/utils'
 import TaskQueue from '../fork/TaskQueue'
-import child from 'child_process'
-import fs from 'fs'
+import { mkdir, rm, readFile, stat, writeFile, writeFileSync } from 'fs'
 import os from 'os'
 import path from 'path'
 import util from 'util'
@@ -27,8 +26,6 @@ export interface Sudo {
   pathStatus?: string
 }
 
-const Node = { child, fs, os, path, process, util }
-
 function Attempt(instance: Sudo, end: Function) {
   return Windows(instance, end)
 }
@@ -44,20 +41,20 @@ function Exec(...args: any) {
     throw new Error('Command should be a string.')
   }
   if (arguments.length === 2) {
-    if (Node.util.isObject(args[1])) {
+    if (util.isObject(args[1])) {
       options = args[1]
-    } else if (Node.util.isFunction(args[1])) {
+    } else if (util.isFunction(args[1])) {
       end = args[1]
     } else {
       throw new Error('Expected options or callback.')
     }
   } else if (arguments.length === 3) {
-    if (Node.util.isObject(args[1])) {
+    if (util.isObject(args[1])) {
       options = args[1]
     } else {
       throw new Error('Expected options to be an object.')
     }
-    if (Node.util.isFunction(args[2])) {
+    if (util.isFunction(args[2])) {
       end = args[2]
     } else {
       throw new Error('Expected callback to be a function.')
@@ -67,7 +64,7 @@ function Exec(...args: any) {
     return end(new Error('Command should not be prefixed with "sudo".'))
   }
   if (typeof options?.name === 'undefined') {
-    const title = Node.process.title
+    const title = process.title
     if (ValidName(title)) {
       options.name = title
     } else {
@@ -139,22 +136,22 @@ function ValidName(str: string) {
 }
 
 function Windows(instance: Sudo, callback: Function) {
-  const temp = instance?.options?.dir ?? Node.os.tmpdir()
+  const temp = instance?.options?.dir ?? os.tmpdir()
   if (!temp) return callback(new Error('os.tmpdir() not defined.'))
   instance.uuid = uuid()
-  instance.path = Node.path.join(temp, instance.uuid)
+  instance.path = path.join(temp, instance.uuid)
   if (/"/.test(instance.path!)) {
     // We expect double quotes to be reserved on Windows.
     // Even so, we test for this and abort if they are present.
     return callback(new Error('instance.path cannot contain double-quotes.'))
   }
-  instance.pathElevate = Node.path.join(instance.path, 'elevate.vbs')
-  instance.pathExecute = Node.path.join(instance.path, 'execute.bat')
-  instance.pathCommand = Node.path.join(instance.path, 'command.bat')
-  instance.pathStdout = Node.path.join(instance.path, 'stdout')
-  instance.pathStderr = Node.path.join(instance.path, 'stderr')
-  instance.pathStatus = Node.path.join(instance.path, 'status')
-  Node.fs.mkdir(instance.path, function (error: any) {
+  instance.pathElevate = path.join(instance.path, 'elevate.vbs')
+  instance.pathExecute = path.join(instance.path, 'execute.bat')
+  instance.pathCommand = path.join(instance.path, 'command.bat')
+  instance.pathStdout = path.join(instance.path, 'stdout')
+  instance.pathStderr = path.join(instance.path, 'stderr')
+  instance.pathStatus = path.join(instance.path, 'status')
+  mkdir(instance.path, function (error: any) {
     if (error) return callback(error)
     function end(error: any, stdout?: string, stderr?: string) {
       if (instance?.options?.debug === true) {
@@ -163,7 +160,7 @@ function Windows(instance: Sudo, callback: Function) {
       }
       if (error) return callback(error)
       callback(undefined, stdout, stderr)
-      TaskQueue.run(Node.fs.rm, instance.path!, { recursive: true }).then().catch()
+      TaskQueue.run(rm, instance.path!, { recursive: true }).then().catch()
     }
     WindowsWriteExecuteScript(instance, function (error: any) {
       if (error) return end(error)
@@ -197,7 +194,7 @@ function WindowsElevate(instance: Sudo, end: Function) {
   command.push('-Verb runAs')
   command = command.join(' ')
   const path = `C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\;%SYSTEMROOT%\\System32\\WindowsPowerShell\\v1.0\\;${process.env['PATH']}`
-  const child = Node.child.exec(
+  const child = child.exec(
     command,
     {
       encoding: 'utf-8',
@@ -220,11 +217,11 @@ function WindowsElevate(instance: Sudo, end: Function) {
 }
 
 function WindowsResult(instance: Sudo, end: Function) {
-  Node.fs.readFile(instance.pathStatus, 'utf-8', function (error: any, code: any) {
+  readFile(instance.pathStatus, 'utf-8', function (error: any, code: any) {
     if (error) return end(error)
-    Node.fs.readFile(instance.pathStdout, 'utf-8', function (error: any, stdout: string) {
+    readFile(instance.pathStdout, 'utf-8', function (error: any, stdout: string) {
       if (error) return end(error)
-      Node.fs.readFile(instance.pathStderr, 'utf-8', function (error: any, stderr: string) {
+      readFile(instance.pathStderr, 'utf-8', function (error: any, stderr: string) {
         if (error) return end(error)
         code = parseInt(code.trim(), 10)
         if (code === 0) {
@@ -245,7 +242,7 @@ function WindowsWaitForStatus(instance: Sudo, end: Function) {
   // PowerShell can be used to elevate and wait on Windows 10.
   // PowerShell can be used to elevate on Windows 7 but it cannot wait.
   // powershell.exe Start-Process cmd.exe -Verb runAs -Wait
-  Node.fs.stat(instance.pathStatus, function (error: any, stats: any) {
+  stat(instance.pathStatus, function (error: any, stats: any) {
     if ((error && error.code === 'ENOENT') || stats.size < 2) {
       // Retry if file does not exist or is not finished writing.
       // We expect a file size of 2. That should cover at least "0\r".
@@ -255,7 +252,7 @@ function WindowsWaitForStatus(instance: Sudo, end: Function) {
         // If administrator has no password and user clicks Yes, then
         // PowerShell returns no error and execute (and command) never runs.
         // We check that command output has been redirected to stdout file:
-        Node.fs.stat(instance.pathStdout, function (error: any) {
+        stat(instance.pathStdout, function (error: any) {
           if (error) return end(new Error(PERMISSION_DENIED))
           WindowsWaitForStatus(instance, end)
         })
@@ -269,7 +266,7 @@ function WindowsWaitForStatus(instance: Sudo, end: Function) {
 }
 
 function WindowsWriteCommandScript(instance: Sudo, end: Function) {
-  const cwd = Node.process.cwd()
+  const cwd = process.cwd()
   if (/"/.test(cwd)) {
     // We expect double quotes to be reserved on Windows.
     // Even so, we test for this and abort if they are present.
@@ -296,7 +293,7 @@ function WindowsWriteCommandScript(instance: Sudo, end: Function) {
   }
   script.push(instance.command)
   script = script.join('\r\n')
-  Node.fs.writeFile(instance.pathCommand, script, 'utf-8', end)
+  writeFile(instance.pathCommand, script, 'utf-8', end)
 }
 
 function WindowsWriteExecuteScript(instance: Sudo, end: Function) {
@@ -315,7 +312,7 @@ function WindowsWriteExecuteScript(instance: Sudo, end: Function) {
   )
   script.push('(echo %ERRORLEVEL%) > "' + instance.pathStatus + '"')
   script = script.join('\r\n')
-  Node.fs.writeFileSync(instance.pathExecute, script, 'utf-8', end)
+  writeFileSync(instance.pathExecute, script, 'utf-8', end)
 }
 
 const PERMISSION_DENIED = 'User did not grant permission.'

@@ -6,7 +6,7 @@ import { cpus, arch } from 'os'
 import axios from 'axios'
 import { publicDecrypt } from 'crypto'
 import { join, resolve as pathResolve } from 'path'
-import { appendFile, unlinkSync, writeFileSync } from 'fs'
+import { appendFileSync, unlinkSync, writeFileSync } from 'fs'
 import {
   execPromise,
   md5,
@@ -70,7 +70,7 @@ class App extends Base {
     } catch (e) {
       const key = '[handleWindowsDefenderExclusionPath][Get-MpPreference][error]'
       console.log(`${key}: `, e)
-      await appendFile(join(global.Server.BaseDir!, 'debug.log'), `${key}: ${e}
+      appendFileSync(join(global.Server.BaseDir!, 'debug.log'), `${key}: ${e}
 `, { encoding: 'utf8', flag: 'a' }, () => {})
     }
     unlinkSync(shFile)
@@ -96,7 +96,7 @@ class App extends Base {
       } catch (e) {
         const key = '[handleWindowsDefenderExclusionPath][Add-MpPreference][error]'
         console.log(`${key}: `, e)
-        await appendFile(join(global.Server.BaseDir!, 'debug.log'), `${key}: ${e}
+        appendFileSync(join(global.Server.BaseDir!, 'debug.log'), `${key}: ${e}
 `, { encoding: 'utf8', flag: 'a' }, () => {})
       }
       unlinkSync(shFile)

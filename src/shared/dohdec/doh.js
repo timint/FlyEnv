@@ -3,7 +3,6 @@ import * as tls from 'tls'
 import DNSutils from './dnsUtils.js'
 import { Writable } from 'stream'
 import cryptoRandomString from 'crypto-random-string'
-import fs from 'fs'
 import got from 'got'
 
 const pkg = {

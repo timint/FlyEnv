@@ -24,7 +24,6 @@ const defaultBrowserOptions: BrowserWindowConstructorOptions = {
     contextIsolation: true,
     webSecurity: false,
     webviewTag: true,
-    preload: path.join(__dirname, '../preload.js')
   }
 }
 const trayBrowserOptions: BrowserWindowConstructorOptions = {
@@ -42,7 +41,6 @@ const trayBrowserOptions: BrowserWindowConstructorOptions = {
     nodeIntegration: false,
     contextIsolation: true,
     webSecurity: false,
-    preload: path.join(__dirname, '../preload.js')
   }
 }
 export default class WindowManager extends EventEmitter {

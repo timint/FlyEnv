@@ -2,7 +2,7 @@
  * Detect differences between language packs and unused keys
  */
 
-import fs from 'fs'
+import { existsSync, readdirSync, readFileSync, statSync, writeFileSync } from 'fs'
 import path from 'path'
 import glob from 'glob'
 import { fileURLToPath } from 'url'
@@ -20,9 +20,8 @@ function diffKey() {
   const FILE_EXTENSION = '.json'
   function detectLanguageDifferences() {
     // 1. Get all language packs
-    const languagePacks = fs
-      .readdirSync(LANG_DIR)
-      .filter((file) => fs.statSync(path.join(LANG_DIR, file)).isDirectory())
+    const languagePacks = readdirSync(LANG_DIR)
+      .filter((file) => statSync(path.join(LANG_DIR, file)).isDirectory())
 
     if (languagePacks.length < 2) {
       console.log('At least 2 language packs are required for comparison')
@@ -68,7 +67,7 @@ function diffKey() {
 
       // Collect keys from all language packs
       fileMap[file].forEach((pack) => {
-        const content = JSON.parse(fs.readFileSync(path.join(LANG_DIR, pack, file), 'utf-8'))
+        const content = JSON.parse(readFileSync(path.join(LANG_DIR, pack, file), 'utf-8'))
         const keys = getFlattenedKeys(content)
         fileResults.packKeys[pack] = new Set(keys)
         keys.forEach((key) => fileResults.allKeys.add(key))
@@ -121,19 +120,19 @@ function diffKey() {
           console.log(`  Key "${key}" missing in: ${packs.join(', ')}`)
           const has = !packs.includes('zh') ? 'zh' : languagePacks.find((n) => !packs.includes(n))
           const filePath = path.join(LANG_DIR, has, file)
-          if (fs.existsSync(filePath)) {
+          if (existsSync(filePath)) {
             let content = contents[filePath]
             if (!content) {
-              content = JSON.parse(fs.readFileSync(filePath, 'utf-8'))
+              content = JSON.parse(readFileSync(filePath, 'utf-8'))
               contents[filePath] = content
             }
             const keyValue = content[key]
             for (const lang of packs) {
               const langFilePath = path.join(LANG_DIR, lang, file)
-              if (fs.existsSync(langFilePath)) {
+              if (existsSync(langFilePath)) {
                 let content = contents[langFilePath]
                 if (!content) {
-                  content = JSON.parse(fs.readFileSync(langFilePath, 'utf-8'))
+                  content = JSON.parse(readFileSync(langFilePath, 'utf-8'))
                   contents[langFilePath] = content
                 }
                 content[key] = keyValue
@@ -146,7 +145,7 @@ function diffKey() {
 
     for (const file in contents) {
       const content = contents[file]
-      fs.writeFileSync(file, JSON.stringify(content, null, 2))
+      writeFileSync(file, JSON.stringify(content, null, 2))
     }
 
     if (!hasKeyDifferences) {
@@ -182,7 +181,7 @@ function checkNoUseKey() {
   function collectAllLanguageKeys() {
     const languagePacks = fs
       .readdirSync(LANG_DIR)
-      .filter((file) => fs.statSync(path.join(LANG_DIR, file)).isDirectory())
+      .filter((file) => statSync(path.join(LANG_DIR, file)).isDirectory())
     languagePacks.forEach((pack) => {
       const jsonFiles = glob
         .sync(path.join(LANG_DIR, pack, '**/*.json'))
@@ -192,7 +191,7 @@ function checkNoUseKey() {
         const fileName = path.basename(file, '.json')
         allLangFile.add(fileName)
 
-        const content = JSON.parse(fs.readFileSync(file, 'utf-8'))
+        const content = JSON.parse(readFileSync(file, 'utf-8'))
         const keys = getFlattenedKeys(content)
 
         keys.forEach((key) => {
@@ -212,7 +211,7 @@ function checkNoUseKey() {
 
     filePatterns.forEach((pattern) => {
       glob.sync(pattern).forEach((file) => {
-        const content = fs.readFileSync(file, 'utf8')
+        const content = readFileSync(file, 'utf8')
         let match
 
         while ((match = STRICT_KEY_PATTERN.exec(content)) !== null) {
@@ -277,7 +276,7 @@ function checkNoUseKey() {
 
     const languagePacks = fs
       .readdirSync(LANG_DIR)
-      .filter((file) => fs.statSync(path.join(LANG_DIR, file)).isDirectory())
+      .filter((file) => statSync(path.join(LANG_DIR, file)).isDirectory())
 
     const contents = {}
 
@@ -290,10 +289,10 @@ function checkNoUseKey() {
         const langKey = arr.shift()
         for (const enDir of languagePacks) {
           const file = path.join(LANG_DIR, enDir, `${fileName}.json`)
-          if (fs.existsSync(file)) {
+          if (existsSync(file)) {
             let content = contents[file]
             if (!content) {
-              content = JSON.parse(fs.readFileSync(file, 'utf-8'))
+              content = JSON.parse(readFileSync(file, 'utf-8'))
               contents[file] = content
             }
             delete content?.[langKey]
@@ -305,7 +304,7 @@ function checkNoUseKey() {
 
     for (const file in contents) {
       const content = contents[file]
-      fs.writeFileSync(file, JSON.stringify(content, null, 2))
+      writeFileSync(file, JSON.stringify(content, null, 2))
     }
 
     console.log('\n💡 Suggestion:')
