@@ -2,11 +2,11 @@ import type { BuildOptions } from 'esbuild'
 import { BuildPlugin } from './plugs.build'
 
 const external = [
-  '7zip-min-electron',
   '@electron/remote',
   '@lzwme/get-physical-address',
   '@usebruno/node-machine-id',
   '@vue',
+  '7zip-min-electron',
   'axios',
   'child_process',
   'compressing',
@@ -28,7 +28,6 @@ const external = [
   'lodash',
   'nock',
   'node-pty',
-  "node:child_process",
   'nodejieba',
   'os',
   'pako',
