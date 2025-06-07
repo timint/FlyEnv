@@ -1,6 +1,6 @@
 import type { AppHost } from '@shared/app'
 import { join } from 'path'
-import { chmod, existsSync, readFileSync } from 'fs'
+import { chmodSync, existsSync, readFileSync } from 'fs'
 import { isDeepStrictEqual } from 'node:util'
 import { hostAlias } from '../../Fn'
 import { makeAutoSSL } from './SSL'
@@ -97,7 +97,7 @@ export const setDirRole = async (dir: string, depth = 0) => {
   if (existsSync(dir)) {
     try {
       if (existsSync(dir)) {
-        await chmod(dir, 0o755)
+        chmodSync(dir, 0o755)
       }
       console.log('#setDirRole success !!!')
     } catch (e) {

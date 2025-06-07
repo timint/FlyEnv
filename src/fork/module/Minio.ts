@@ -1,5 +1,5 @@
 import { basename, dirname, join } from 'path'
-import { createWriteStream, existsSync, unlinkSync, mkdirSync, copyFileSync } from 'fs'
+import { copyFileSync, createWriteStream, existsSync, mkdirSync, readFileSync, unlinkSync } from 'fs'
 import { Base } from './Base'
 import { ForkPromise } from '@shared/ForkPromise'
 import type { SoftInstalled } from '@shared/app'
@@ -76,7 +76,7 @@ class Minio extends Base {
       let certs_dir = ''
 
       const getConfEnv = async () => {
-        const content = await readFile(iniFile, 'utf-8')
+        const content = readFileSync(iniFile, 'utf-8')
         const arr = content
           .split('\n')
           .filter((s) => {

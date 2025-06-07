@@ -1,4 +1,4 @@
-import { appendFile, chmodSync, copyFileSync, createReadStream, existsSync, readdir, readdirSync, readFile, stat, statSync, writeFile } from 'fs'
+import { appendFileSync, chmodSync, copyFileSync, createReadStream, existsSync, readdir, readdirSync, readFile, stat, statSync, writeFile } from 'fs'
 import path from 'path'
 import compressing from '7zip-min-electron'
 import crypto from 'crypto'

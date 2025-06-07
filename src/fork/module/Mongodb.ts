@@ -1,6 +1,6 @@
 import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
 import { join, basename, dirname } from 'path'
-import { createWriteStream, chmod, existsSync, mkdirSync, readFileSync, rmSync, unlinkSync, writeFileSync } from 'fs'
+import { createWriteStream, chmodSync, existsSync, mkdirSync, readFileSync, rmSync, unlinkSync, writeFileSync } from 'fs'
 import { Base } from './Base'
 import { ForkPromise } from '@shared/ForkPromise'
 import TaskQueue from '../TaskQueue'
@@ -86,7 +86,7 @@ class Manager extends Base {
       const dataDir = join(global.Server.MongoDBDir!, `data-${v}`)
       if (!existsSync(dataDir)) {
         mkdirSync(dataDir, { recursive: true })
-        await chmod(dataDir, '0777')
+        chmodSync(dataDir, '0777')
       }
       if (!existsSync(m)) {
         on({

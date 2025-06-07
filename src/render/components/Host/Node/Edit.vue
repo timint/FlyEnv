@@ -245,7 +245,7 @@
       if (!existsSync(packageJson)) {
         return
       }
-      let json: any = await readFile(packageJson, 'utf-8')
+      let json: any = readFileSync(packageJson, 'utf-8')
       try {
         json = JSON.parse(json)
         scripts.value = json?.scripts ?? {}

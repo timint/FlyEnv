@@ -1,6 +1,6 @@
 import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
 import { dirname, join } from 'path'
-import { existsSync, mkdirSync, readdir, readdirSync, readFileSync, rmSync, writeFileSync } from 'fs'
+import { existsSync, mkdirSync, readdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'fs'
 import { Base } from './Base'
 import { I18nT } from '@lang/index'
 import { ForkPromise } from '@shared/ForkPromise'
@@ -238,7 +238,7 @@ set "PLUGINS_DIR=${pluginsDir}"`
     if (!str || !existsSync(str)) {
       return
     }
-    const dirs = await readdir(str)
+    const dirs = readdirSync(str)
     for (const dir of dirs) {
       const bin = join(str, dir, 'bin/epmd.exe')
       console.log('epmd.exe: ', bin)

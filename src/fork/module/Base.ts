@@ -1,7 +1,7 @@
 import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
 import { I18nT } from '@lang/index'
 import { basename, dirname, join } from 'path'
-import { appendFileSync, copyFileSync, createWriteStream, existsSync, mkdirSync, readFileSync, rmSync, unlinkSync, writeFileSync } from 'fs'
+import { appendFileSync, copyFileSync, createWriteStream, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, unlinkSync, writeFileSync } from 'fs'
 import { ForkPromise } from '@shared/ForkPromise'
 import { zipUnPack } from '@shared/file'
 import axios from 'axios'
@@ -446,7 +446,7 @@ php "%~dp0composer.phar" %*`
         const cacheDir = join(global.Server.Cache!, uuid())
         mkdirSync(cacheDir, { recursive: true })
         await zipUnPack(row.zip, cacheDir)
-        const files = await readdir(cacheDir)
+        const files = readdirSync(cacheDir)
         const find = files.find((f) => f.includes('.tar'))
         if (!find) {
           throw new Error('UnZIP failed')

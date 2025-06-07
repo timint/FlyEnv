@@ -1,7 +1,7 @@
 import type { SoftInstalled } from '@shared/app'
 import { Base } from './Base'
 import { ForkPromise } from '@shared/ForkPromise'
-import { copyFileSync, createReadStream, existsSync, mkdirSync, readdir, realpathSync, readFileSync, statSync, unlinkSync, writeFile, writeFileSync } from 'fs'
+import { copyFileSync, createReadStream, existsSync, mkdirSync, readdirSync, realpathSync, readFileSync, statSync, unlinkSync, writeFile, writeFileSync } from 'fs'
 import { TaskItem, TaskQueue, TaskQueueProgress } from '@shared/TaskQueue'
 import { basename, dirname, isAbsolute, join, resolve as pathResolve } from 'path'
 import { zipUnPack } from '@shared/file'
@@ -311,7 +311,7 @@ subjectAltName=@alt_names
 
       const dir = join(dirname(global.Server.AppDir!), 'env')
       if (existsSync(dir)) {
-        let allFile = await readdir(dir)
+        let allFile = readdirSync(dir)
         allFile = allFile
           .filter((f) => existsSync(join(dir, f)))
           .map((f) => realpathSync(join(dir, f)))
@@ -453,7 +453,7 @@ subjectAltName=@alt_names
       /**
        * Retrieve all subfolders under the env directory
        */
-      let allFile = await readdir(envDir)
+      let allFile = readdirSync(envDir)
       allFile = allFile
         .filter((f) => existsSync(join(envDir, f)))
         .map((f) => join(envDir, f))
@@ -515,11 +515,11 @@ subjectAltName=@alt_names
         }
         // Handle Rust
         if (existsSync(join(rawEnvPath, 'cargo/bin/cargo.exe'))) {
-          const dirs = await readdir(rawEnvPath)
+          const dirs = readdirSync(rawEnvPath)
           for (const f of dirs) {
             const binDir = join(rawEnvPath, f, 'bin')
             if (existsSync(binDir)) {
-              const state = await stat(binDir)
+              const state = statSync(binDir)
               if (state.isDirectory()) {
                 oldPath.unshift(binDir)
               }
@@ -567,7 +567,7 @@ subjectAltName=@alt_names
       } else if (typeFlag === 'erlang') {
         content = `"ERLANG_HOME" = "${flagDir}"`
         const f = join(global.Server.Cache!, `${uuid()}.ps1`)
-        await writeFile(
+        writeFileSync(
           f,
           `New-ItemProperty -Path "HKLM:\\SYSTEM\\CurrentControlSet\\Control\\FileSystem" -Name "LongPathsEnabled" -Value 1 -PropertyType DWORD -Force`
         )

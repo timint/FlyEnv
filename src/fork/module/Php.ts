@@ -1,5 +1,5 @@
 import { join, dirname, basename, isAbsolute } from 'path'
-import { copyFileSync, createWriteStream, existsSync, writeFileSync, mkdirSync, readFileSync, rmSync, readdir } from 'fs'
+import { copyFileSync, createWriteStream, existsSync, writeFileSync, mkdirSync, readFileSync, rmSync, readdirSync } from 'fs'
 import { Base } from './Base'
 import { I18nT } from '@lang/index'
 import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
@@ -460,7 +460,7 @@ xdebug.output_dir = "${output_dir}"
       const zend = ['php_opcache', 'php_xdebug']
 
       if (existsSync(dir)) {
-        let all: any = await readdir(dir)
+        let all: any = readdirSync(dir)
         all = all
           .map((a: string) => a.split('.').shift()!)
           .map((a: string) => {
@@ -520,7 +520,7 @@ xdebug.output_dir = "${output_dir}"
             if (name !== 'php_imagick') {
               return
             }
-            const allFile = await readdir(cacheDir)
+            const allFile = readdirSync(cacheDir)
             const allDLL = allFile.filter((a) => a.toLowerCase().endsWith('.dll'))
             const destDir = version.path
             await Promise.all(allDLL.map((a) => copyFileSync(join(cacheDir, a), join(destDir, a))))

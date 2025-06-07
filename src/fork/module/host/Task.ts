@@ -1,7 +1,7 @@
 import type { AppHost, SoftInstalled } from '@shared/app'
 import { ForkPromise } from '@shared/ForkPromise'
 import { join } from 'path'
-import { existsSync, copyFileSync, readdirSync, readdir, readFileSync, rmSync, writeFileSync, mkdirSync } from 'fs'
+import { existsSync, copyFileSync, readdirSync, readFileSync, rmSync, writeFileSync, mkdirSync } from 'fs'
 import { setDirRole } from './Host'
 import { I18nT } from '@lang/index'
 import { downFile, moveDirToDir, waitTime } from '../../Fn'
@@ -117,7 +117,7 @@ export function TaskAddPhpMyAdminSite(this: any, phpVersion?: number, write = tr
         const tmplDir = join(global.Server.Cache!, 'phpMyAdmin-tmpl')
         try {
           await zipUnPack(zipFile, tmplDir)
-          const subDirs = await readdir(tmplDir)
+          const subDirs = readdirSync(tmplDir)
           const subDir = subDirs.pop()
           if (subDir) {
             await moveDirToDir(join(tmplDir, subDir), siteDir)
