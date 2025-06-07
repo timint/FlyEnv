@@ -5,8 +5,10 @@
 import fs from 'fs'
 import path from 'path'
 import glob from 'glob'
+import { fileURLToPath } from 'url'
 
-const __dirname = path.dirname(new URL(import.meta.url).pathname)
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 // Config
 const PROJECT_ROOT = path.join(__dirname, '..')

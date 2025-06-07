@@ -9,7 +9,7 @@ import { EOL } from 'os'
 import { PItem, ProcessListSearch, ProcessPidList } from '../Process'
 import { AppServiceAliasItem } from '@shared/app'
 import { promisify } from 'node:util'
-import { exec } from 'node:child-process'
+import { exec } from 'child_process'
 import RequestTimer from '@shared/requestTimer'
 import {
   addPath,

@@ -19,7 +19,7 @@ electronDebug({
 app.on('ready', async () => {
   console.log('electron ready !!!!!!')
   const vue_devtools_beta = { id: 'ljjemllljcmogpfapbkkighbhhppjdbg', electron: '>=1.2.1' };
-  installExtension.default(vue_devtools_beta)
+  installExtension(vue_devtools_beta)
     .then(() => {
       console.log('VUEJS_DEVTOOLS !!!')
     })

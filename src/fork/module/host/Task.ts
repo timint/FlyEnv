@@ -1,7 +1,7 @@
 import type { AppHost, SoftInstalled } from '@shared/app'
 import { ForkPromise } from '@shared/ForkPromise'
 import { join } from 'path'
-import { existsSync, copy, readdirSync, readdir, readFileSync, rmSync, writeFileSync, mkdirSync } from 'fs'
+import { existsSync, copyFileSync, readdirSync, readdir, readFileSync, rmSync, writeFileSync, mkdirSync } from 'fs'
 import { setDirRole } from './Host'
 import { I18nT } from '@lang/index'
 import { downFile, moveDirToDir, waitTime } from '../../Fn'
@@ -204,7 +204,7 @@ export function TaskAddPhpMyAdminSite(this: any, phpVersion?: number, write = tr
     downFile(url, zipTmpFile)
       .on(on)
       .then(async () => {
-        return copy(zipTmpFile, zipFile)
+        return copyFileSync(zipTmpFile, zipFile)
       })
       .then(() => {
         if (existsSync(zipFile)) {

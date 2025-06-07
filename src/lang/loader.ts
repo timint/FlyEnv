@@ -3,7 +3,7 @@ import ZH from './zh/index'
 import EN from './en/index'
 import { AppStore } from '@/store/app'
 import { AppAllLang, AppI18n } from '@lang/index'
-import IPC from '@render/util/IPC'
+import IPC from '@/util/IPC'
 import { readdirSync, readFileSync, writeFileSync } from 'fs';
 import { join, resolve } from 'path'
 

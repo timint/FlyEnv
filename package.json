@@ -1,9 +1,10 @@
 {
   "name": "PhpWebStudy",
+  "productName": "FlyEnv",
   "version": "4.9.12",
   "description": "All-In-One Full-Stack Environment Management Tool",
   "author": {
-    "name": "pengfei xu",
+    "name": "Pengfei Xu",
     "email": "250881478@qq.com"
   },
   "copyright": "Copyright© pengfei xu",

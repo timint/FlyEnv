@@ -7,8 +7,10 @@ import { I18nT } from '@lang/index'
 import type { AppUpdater } from 'electron-updater/out/AppUpdater'
 import electronUpdaterPkg from 'electron-updater'
 const { autoUpdater } = electronUpdaterPkg
+import { fileURLToPath } from 'url'
 
-const __dirname = dirname(new URL(import.meta.url).pathname)
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
 
 if (is.dev()) {
   autoUpdater.updateConfigPath = resolve(__dirname, '../../app-update.yml')

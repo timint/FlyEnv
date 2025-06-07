@@ -22,7 +22,7 @@
   import { I18nT } from '@lang/index'
   import { app } from '@electron/remote'
   import { promisify } from 'node:util'
-  import { exec } from 'node:child-process'
+  import { exec } from 'child_process'
   import { writeFileSync, rmSync, readFileSync, mkdirSync } from 'fs'
   import { join } from 'path'
 

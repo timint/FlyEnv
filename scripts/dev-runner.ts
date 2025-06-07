@@ -3,13 +3,15 @@ import { promisify } from 'util'
 import { spawn, exec, ChildProcess } from 'child_process'
 import { build } from 'esbuild'
 import { cpSync, readFileSync, watch } from 'fs'
-import path from 'path'
+import { dirname, join, resolve } from 'path'
 import md5 from 'md5'
+import { fileURLToPath } from 'url'
 
 import viteConfig from 'configs/vite.config.js'
 import esbuildConfig from 'configs/esbuild.config.js'
 
-const __dirname = path.dirname(new URL(import.meta.url).pathname)
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
 
 let restart = false
 let electronProcess: ChildProcess | null
@@ -17,8 +19,8 @@ let electronProcess: ChildProcess | null
 const execAsync = promisify(exec);
 
 async function killAllElectron() {
-  const sh = path.resolve(__dirname, '../scripts/electron-kill.ps1')
-  const scriptDir = path.dirname(sh)
+  const sh = resolve(__dirname, '../scripts/electron-kill.ps1')
+  const scriptDir = dirname(sh)
   console.log('sh: ', sh, scriptDir)
   const command = `powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Unblock-File -LiteralPath './electron-kill.ps1'; & './electron-kill.ps1'"`
   let res: any = null
@@ -132,7 +134,7 @@ if (process.env.TEST === 'browser') {
 
 process.on('SIGINT', async () => {
   console.log('Catch SIGINT, Cleaning Electron Process...')
-  //await killAllElectron()
+  await killAllElectron()
   process.exit(0)
 })
 
@@ -142,7 +144,7 @@ let fsWait = false
 const next = (base: string, file?: string | null) => {
   if (file) {
     if (fsWait) return
-    const currentMd5 = md5(readFileSync(path.join(base, file))) as string
+    const currentMd5 = md5(readFileSync(join(base, file))) as string
     if (currentMd5 == preveMd5) {
       return
     }
@@ -176,14 +178,14 @@ watch(forkPath, { recursive: true }, (event, filename) => {
 watch(staticPath, { recursive: true }, (event, filename) => {
   if (filename) {
     if (fsWait) return
-    const from = path.join(staticPath, filename)
+    const from = join(staticPath, filename)
     const currentMd5 = md5(readFileSync(from)) as string
     if (currentMd5 == preveMd5) {
       return
     }
     fsWait = true
     preveMd5 = currentMd5
-    const to = path.resolve(__dirname, '../dist/electron/static/', filename)
+    const to = resolve(__dirname, '../dist/electron/static/', filename)
     console.log(`${filename} file updated`)
     console.log('Copy file: ', from, to)
     cpSync(from, to)

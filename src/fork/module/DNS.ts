@@ -1,12 +1,12 @@
-import type { SoftInstalled } from '@shared/app';
 import { readFileSync } from 'fs'
 import { Base } from './Base'
 import { ForkPromise } from '@shared/ForkPromise'
 import dns2 from 'dns2'
-import { Packet } from 'dns2'
 import * as ip from 'neoip'
 import { join } from 'path'
-import Tangerine from 'tangerine';
+import Tangerine from 'tangerine'
+
+const { Packet } = dns2
 
 class Manager extends Base {
   server: any
@@ -51,6 +51,7 @@ class Manager extends Base {
   start() {
     return new ForkPromise((resolve) => {
       const LOCAL_IP = ip.address()
+      const tangerine = new Tangerine()
       const server = dns2.createServer({
         udp: true,
         handle: (request: any, send: any) => {

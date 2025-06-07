@@ -1,18 +1,19 @@
 import type { AppHost, SoftInstalled } from '@shared/app'
-import { type ChildProcess, exec, execSync, spawn } from 'child_process'
+import { exec, execSync, spawn } from 'child_process'
 import { chmodSync, createWriteStream, existsSync, mkdirSync, readdirSync, realpathSync, statSync } from 'fs'
+import { copyFileSync, unlinkSync, writeFileSync, readFileSync, appendFileSync, renameSync, rmSync as rmDirSync } from 'fs'
 import { dirname, isAbsolute, join, parse, basename, normalize } from 'path'
 import { merge } from 'lodash-es'
 import { ForkPromise } from '@shared/ForkPromise'
 import crypto from 'crypto'
 import axios from 'axios'
-import type { AppHost, SoftInstalled } from '@shared/app'
 import sudoPrompt from '@shared/sudo'
 import { compareVersions } from 'compare-versions'
 import chardet from 'chardet'
 import iconv from 'iconv-lite'
 import { I18nT } from '@lang/index'
 import { userInfo, hostname } from 'os'
+import packageJson from '../../package.json'
 
 export const ProcessSendSuccess = (key: string, data: any, on?: boolean) => {
   process?.send?.({
@@ -98,7 +99,7 @@ export function execPromiseRoot(command: string): ForkPromise<{
       sudoPrompt(
         command,
         {
-          name: 'PhpWebStudy',
+          name: packageJson.productName,
           dir: global.Server.Cache!,
           // dir: 'E:/test aaa/新建 文件夹',
           debug: false
@@ -1266,7 +1267,7 @@ export async function serviceStartExecGetPID(
 
   const psName = `${typeFlag}-${versionStr}-start.ps1`.split(' ').join('')
   const psPath = join(baseDir, psName)
-  await writeFile(psPath, psScript)
+  writeFileSync(psPath, psScript)
 
   on({
     'APP-On-Log': AppLog('info', I18nT('appLog.execStartCommand'))
@@ -1314,9 +1315,9 @@ export async function serviceStartExecGetPID(
   const regex = /FlyEnv-Process-ID(.*?)FlyEnv-Process-ID/g
   const match = regex.exec(stdout)
   if (match) {
-    pid = match[1] // 捕获组 (\d+) 的内容
+    pid = match[1] // Capture group (\d+) content
   }
-  writeFile(pidPath, pid)
+  writeFileSync(pidPath, pid)
   on({
     'APP-On-Log': AppLog('info', I18nT('appLog.startServiceSuccess', { pid: pid }))
   })

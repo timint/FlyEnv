@@ -19,6 +19,7 @@ import packet from 'dns-packet'
 import semver from 'semver'
 import structuredClone from '@ungap/structured-clone'
 import { getService } from 'port-numbers'
+import { request as undiciRequest } from 'undici'
 const pkg = {
   name: 'tangerine',
   version: '1.5.4'
@@ -332,7 +333,7 @@ class Tangerine extends dns.promises.Resolver {
     return err
   }
 
-  constructor(options = {}, request = require('undici').request) {
+  constructor(options = {}, request = undiciRequest) {
     const timeout = options.timeout && options.timeout !== -1 ? options.timeout : 5000
     const tries = options.tries || 4
 

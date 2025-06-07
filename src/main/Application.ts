@@ -3,7 +3,6 @@ import { app, BrowserWindow, ipcMain, shell } from 'electron'
 import logger from './core/Logger'
 import ConfigManager from './core/ConfigManager'
 import WindowManager from './ui/WindowManager'
-import { join, resolve } from 'path'
 import { mkdirSync, readFileSync, writeFileSync } from 'fs'
 import TrayManager from './ui/TrayManager'
 import { getLanguage } from './utils'
@@ -21,9 +20,11 @@ import ScreenManager from './core/ScreenManager'
 import ServeHandler from 'serve-handler'
 import Http from 'http'
 import * as IP from 'neoip'
-import path from 'path';
+import { dirname, join, resolve } from 'path'
+import { fileURLToPath } from 'url'
 
-const __dirname = path.dirname(new URL(import.meta.url).pathname)
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
 
 export default class Application extends EventEmitter {
   isReady: boolean
@@ -117,6 +118,9 @@ export default class Application extends EventEmitter {
     if (is.dev()) {
       runpath = resolve(__static, '../../../data')
     }
+
+    mkdirSync(runpath, { recursive: true })
+
     console.log('userData: ', runpath)
     this.setProxy()
 
@@ -124,40 +128,43 @@ export default class Application extends EventEmitter {
     console.log('global.Server.UserHome: ', global.Server.UserHome)
 
     global.Server.BaseDir = join(runpath, 'server')
-    mkdirSync(global.Server.BaseDir)
+    mkdirSync(global.Server.BaseDir, { recursive: true })
 
     global.Server.AppDir = join(runpath, 'app')
-    mkdirSync(global.Server.AppDir)
+    mkdirSync(global.Server.AppDir, { recursive: true })
 
     global.Server.NginxDir = join(runpath, 'server/nginx')
-    mkdirSync(global.Server.NginxDir)
+    mkdirSync(global.Server.NginxDir, { recursive: true })
 
     global.Server.PhpDir = join(runpath, 'server/php')
-    mkdirSync(global.Server.PhpDir)
+    mkdirSync(global.Server.PhpDir, { recursive: true })
 
     global.Server.MysqlDir = join(runpath, 'server/mysql')
-    mkdirSync(global.Server.MysqlDir)
+    mkdirSync(global.Server.MysqlDir, { recursive: true })
 
     global.Server.MariaDBDir = join(runpath, 'server/mariadb')
-    mkdirSync(global.Server.MariaDBDir)
+    mkdirSync(global.Server.MariaDBDir, { recursive: true })
 
     global.Server.ApacheDir = join(runpath, 'server/apache')
-    mkdirSync(global.Server.ApacheDir)
+    mkdirSync(global.Server.ApacheDir, { recursive: true })
 
     global.Server.MemcachedDir = join(runpath, 'server/memcached')
-    mkdirSync(global.Server.MemcachedDir)
+    mkdirSync(global.Server.MemcachedDir, { recursive: true })
 
     global.Server.RedisDir = join(runpath, 'server/redis')
-    mkdirSync(global.Server.RedisDir)
+    mkdirSync(global.Server.RedisDir, { recursive: true })
 
     global.Server.MongoDBDir = join(runpath, 'server/mongodb')
-    mkdirSync(global.Server.MongoDBDir)
+    mkdirSync(global.Server.MongoDBDir, { recursive: true })
 
     global.Server.FTPDir = join(runpath, 'server/ftp')
+    mkdirSync(global.Server.FTPDir, { recursive: true })
+
     global.Server.PostgreSqlDir = join(runpath, 'server/postgresql')
+    mkdirSync(global.Server.PostgreSqlDir, { recursive: true })
 
     global.Server.Cache = join(runpath, 'server/cache')
-    mkdirSync(global.Server.Cache)
+    mkdirSync(global.Server.Cache, { recursive: true })
 
     global.Server.Static = __static
   }

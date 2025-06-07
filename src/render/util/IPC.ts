@@ -6,7 +6,7 @@ class IPC {
 
   constructor() {
     this.listens = {}
-    ipcRenderer.on('command', (e, command, key, ...args) => {
+    ipcRenderer.on('command', (e: any, command: any, key: any, ...args: any[]) => {
       console.log('command on: ', command, key, args)
       if (this.listens[key]) {
         this.listens[key](key, ...args)

@@ -32,7 +32,7 @@
   import { MessageError } from '@/util/Element'
   import { existsSync, realpathSync } from 'fs'
   import { isAbsolute } from 'path'
-  import { exec } from 'node:child-process'
+  import { exec } from 'child_process'
   import { promisify } from 'node:util'
 
   const execAsync = promisify(exec)

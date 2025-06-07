@@ -2,7 +2,7 @@ import { computed, onMounted, onUnmounted, reactive, ref } from 'vue'
 import { type SoftInstalled } from '@/store/brew'
 import { join } from 'path'
 import { promisify } from 'node:util'
-import { exec } from 'node:child-process'
+import { exec } from 'child_process'
 
 const execAsync = promisify(exec)
 

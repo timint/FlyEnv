@@ -5,6 +5,7 @@ interface TaskItem {
   param: any
   state: 'wait' | 'running'
 }
+
 class TaskQueue {
   private callBack: WeakMap<TaskItem, { resolve: Function; reject: Function }> = new WeakMap()
   #queue: Array<TaskItem> = []
@@ -76,4 +77,5 @@ class TaskQueue {
     })
   }
 }
+
 export default new TaskQueue()

@@ -82,10 +82,11 @@
   const siteStore = SiteSuckerStore()
   siteStore.initSetup()
   const links = computed(() => {
-    const running = siteStore.links.filter((f) => f.state === 'running')
-    const wait = siteStore.links.filter((f) => f.state === 'wait')
-    const fails = siteStore.links.filter((f) => f.state === 'fail')
-    const other = siteStore.links.filter((f) => !['fail', 'wait', 'running'].includes(f.state))
+    const linksArr = Array.isArray(siteStore.links) ? siteStore.links : []
+    const running = linksArr.filter((f) => f.state === 'running')
+    const wait = linksArr.filter((f) => f.state === 'wait')
+    const fails = linksArr.filter((f) => f.state === 'fail')
+    const other = linksArr.filter((f) => !['fail', 'wait', 'running'].includes(f.state))
     const arr = [...running, ...wait, ...fails, ...other]
     const s = search.value.trim()
     if (!s) {

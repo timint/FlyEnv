@@ -1,12 +1,17 @@
 import { Event as ElectronEvent, BrowserWindowConstructorOptions } from 'electron'
 import { EventEmitter } from 'events'
 import { app, BrowserWindow, screen } from 'electron'
+import path from 'path'
+import { fileURLToPath } from 'url'
 
 import { initialize, enable } from '@electron/remote/main/index.js'
 import pageConfig from '../configs/page'
 import { debounce } from 'lodash-es'
 
 initialize()
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 const defaultBrowserOptions: BrowserWindowConstructorOptions = {
   titleBarStyle: 'hiddenInset',
@@ -15,10 +20,11 @@ const defaultBrowserOptions: BrowserWindowConstructorOptions = {
   width: 1200,
   height: 800,
   webPreferences: {
-    nodeIntegration: true,
-    contextIsolation: false,
+    nodeIntegration: false,
+    contextIsolation: true,
     webSecurity: false,
-    webviewTag: true
+    webviewTag: true,
+    preload: path.join(__dirname, '../preload.js')
   }
 }
 const trayBrowserOptions: BrowserWindowConstructorOptions = {
@@ -33,9 +39,10 @@ const trayBrowserOptions: BrowserWindowConstructorOptions = {
   opacity: 0,
   transparent: true,
   webPreferences: {
-    nodeIntegration: true,
-    contextIsolation: false,
-    webSecurity: false
+    nodeIntegration: false,
+    contextIsolation: true,
+    webSecurity: false,
+    preload: path.join(__dirname, '../preload.js')
   }
 }
 export default class WindowManager extends EventEmitter {

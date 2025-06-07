@@ -5,12 +5,10 @@ import { ViteDevPort } from './vite.port'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import wasm from 'vite-plugin-wasm-esm'
 import monacoEditorPlugin from 'vite-plugin-monaco-editor-esm'
+import { fileURLToPath } from 'url'
 
-const __dirname = path.dirname(
-  process.platform === 'win32'
-    ? new URL(import.meta.url).pathname.slice(1)
-    : new URL(import.meta.url).pathname
-)
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 const renderPath = path.resolve(__dirname, '../src/render/')
 const sharePath = path.resolve(__dirname, '../src/shared/')
