@@ -1,7 +1,36 @@
-/* Theme Light (default)
--------------------------- */
-@import './Default.scss';
+// Import Element Plus base styles
+@import 'element-plus/dist/index.css';
 
-/* Theme Dark
--------------------------- */
-@import './Dark.scss';
+// Light theme variables
+.theme-light {
+  --el-color-primary: #409eff;
+  --el-bg-color: #fff;
+  --el-text-color-primary: #303133;
+  --el-border-color: #dcdfe6;
+  // Add more Element Plus variables as needed
+}
+
+// Dark theme variables
+.theme-dark {
+  --el-color-primary: #409eff;
+  --el-bg-color: #1f1f1f;
+  --el-text-color-primary: #e5eaf3;
+  --el-border-color: #414243;
+  // Add more Element Plus variables as needed
+}
+
+// Apply variables to Element Plus root
+.theme-light,
+.theme-dark {
+  .el-button,
+  .el-input,
+  .el-card,
+  .el-dialog,
+  .el-table,
+  .el-menu {
+    background-color: var(--el-bg-color);
+    color: var(--el-text-color-primary);
+    border-color: var(--el-border-color);
+  }
+  // Add more Element Plus component overrides as needed
+}

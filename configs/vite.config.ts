@@ -60,9 +60,7 @@ const config: UserConfig = {
     // CSS preprocessor options
     preprocessorOptions: {
       scss: {
-      // Import Variables.scss so that predefined variables can be used globally
-      // Add ; at the end of the import path
-        additionalData: '@import "@/components/Theme/Variables.scss";'
+        api: 'modern-compiler'
       }
     }
   }
