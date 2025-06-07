@@ -75,7 +75,7 @@ const devFork: BuildOptions = {
   outfile: 'dist/electron/fork.js',
   minify: false,
   bundle: true,
-  external,
+  external: external,
 }
 
 const distFork: BuildOptions = {
@@ -86,7 +86,7 @@ const distFork: BuildOptions = {
   outfile: 'dist/electron/fork.js',
   minify: true,
   bundle: true,
-  external,
+  external: external,
   drop: ['debugger', 'console']
 }
 

@@ -75,15 +75,7 @@ export function fixEnv(): { [k: string]: any } {
 export function execSyncFix(command: string, opt?: { [k: string]: any }): string | undefined {
   let res: any = undefined
   try {
-    res = execSync(
-      command,
-      merge(
-        {
-          env: fixEnv()
-        },
-        opt
-      )
-    ).toString()
+    res = execSync(command, { ...opt, env: fixEnv() }).toString()
   } catch (e) {
     res = undefined
   }
