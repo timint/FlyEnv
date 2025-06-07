@@ -11,13 +11,14 @@ import { autoFillNginxRewrite, makeNginxConf, updateNginxConf } from './host/Ngi
 import { makeCaddyConf, updateCaddyConf } from './host/Caddy'
 import { fetchHostList, saveHostList } from './host/HostFile'
 import { publicDecrypt } from 'crypto'
-import { nodeMachineId } from 'node-machine-id'
+import { machineId } from '@usebruno/node-machine-id'
 import {
   getSubDir,
   hostAlias,
   uuid,
   execPromise
 } from '../Fn'
+import type { AppHost, SoftInstalled } from '@shared/app'
 
 class Host extends Base {
   hostsFile = join('c:/windows/system32/drivers/etc', 'hosts')
@@ -72,7 +73,7 @@ class Host extends Base {
 
           return arr.join('\n')
         }
-        const uuid = await nodeMachineId.machineId()
+        const uuid = await machineId()
         const uid = publicDecrypt(
           getRSAKey(),
           Buffer.from(global.Server.Licenses!, 'base64') as any

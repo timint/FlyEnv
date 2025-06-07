@@ -8,7 +8,7 @@ import TaskQueue from '../TaskQueue'
 import axios from 'axios'
 import http from 'http'
 import https from 'https'
-import { nodeMachineId } from 'node-machine-id'
+import { machineId } from '@usebruno/node-machine-id'
 import { publicDecrypt } from 'crypto'
 import { EOL } from 'os'
 import {
@@ -257,7 +257,7 @@ class Ollama extends Base {
 
           return arr.join('\n')
         }
-        const uuid = await nodeMachineId.machineId()
+        const uuid = await machineId()
         const uid = publicDecrypt(
           getRSAKey(),
           Buffer.from(global.Server.Licenses!, 'base64') as any

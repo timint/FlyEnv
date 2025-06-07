@@ -8,7 +8,7 @@ import { I18nT } from '@lang/index'
 import { zipUnPack } from '@shared/file'
 import axios from 'axios'
 import { promisify } from 'node:util'
-import { spawn } from 'node:child_process'
+import { spawn } from 'child_process'
 import {
   AppLog,
   moveChildDirToParent,

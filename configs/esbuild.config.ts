@@ -5,6 +5,7 @@ const external = [
   '7zip-min-electron',
   '@electron/remote',
   '@lzwme/get-physical-address',
+  '@usebruno/node-machine-id',
   '@vue',
   'axios',
   'child_process',

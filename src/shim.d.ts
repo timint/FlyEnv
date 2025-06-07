@@ -26,3 +26,6 @@ declare module 'vue' {
     dropNode?: any
   }
 }
+declare module '@usebruno/node-machine-id' {
+  export function machineId(original?: boolean): Promise<string>;
+}

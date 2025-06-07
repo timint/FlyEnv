@@ -1,6 +1,6 @@
 import { Base } from './Base'
 import { getMac } from '@lzwme/get-physical-address'
-import { nodeMachineId } from 'node-machine-id'
+import { machineId } from '@usebruno/node-machine-id'
 import { ForkPromise } from '@shared/ForkPromise'
 import { cpus, arch } from 'os'
 import axios from 'axios'
@@ -70,7 +70,8 @@ class App extends Base {
     } catch (e) {
       const key = '[handleWindowsDefenderExclusionPath][Get-MpPreference][error]'
       console.log(`${key}: `, e)
-      await appendFile(join(global.Server.BaseDir!, 'debug.log'), `${key}: ${e}\n`)
+      await appendFile(join(global.Server.BaseDir!, 'debug.log'), `${key}: ${e}
+`, { encoding: 'utf8', flag: 'a' }, () => {})
     }
     unlinkSync(shFile)
     const needAdd: string[] = []
@@ -95,7 +96,8 @@ class App extends Base {
       } catch (e) {
         const key = '[handleWindowsDefenderExclusionPath][Add-MpPreference][error]'
         console.log(`${key}: `, e)
-        await appendFile(join(global.Server.BaseDir!, 'debug.log'), `${key}: ${e}\n`)
+        await appendFile(join(global.Server.BaseDir!, 'debug.log'), `${key}: ${e}
+`, { encoding: 'utf8', flag: 'a' }, () => {})
       }
       unlinkSync(shFile)
     }
@@ -109,7 +111,7 @@ class App extends Base {
         return
       }
 
-      const uuid_new = await nodeMachineId.machineId()
+      const uuid_new = await machineId()
       const uuid = await this.getUUID()
       const os = `Windows ${arch()}`
 
@@ -143,7 +145,7 @@ class App extends Base {
 
   feedback(info: any) {
     return new ForkPromise(async (resolve, reject) => {
-      const uuid = await nodeMachineId.machineId()
+      const uuid = await machineId()
 
       const data = {
         uuid,
@@ -169,7 +171,7 @@ class App extends Base {
 
   licensesInit() {
     return new ForkPromise(async (resolve, reject, on) => {
-      const uuid = await nodeMachineId.machineId()
+      const uuid = await machineId()
       const data = {
         uuid,
         activeCode: '',
@@ -198,7 +200,7 @@ class App extends Base {
 
   licensesState() {
     return new ForkPromise(async (resolve, reject, on) => {
-      const uuid = await nodeMachineId.machineId()
+      const uuid = await machineId()
       const obj = {
         uuid,
         activeCode: '',
@@ -238,7 +240,7 @@ class App extends Base {
 
   licensesRequest(message: string) {
     return new ForkPromise(async (resolve, reject) => {
-      const uuid = await nodeMachineId.machineId()
+      const uuid = await machineId()
 
       axios({
         url: 'https://api.one-env.com/api/app/active_code_request',
