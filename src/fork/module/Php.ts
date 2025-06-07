@@ -85,6 +85,10 @@ class Php extends Base {
           }
         })
 
+        // Set default timezone to timezone of the current system (Prevents PHP warning for date_default_timezone_set()
+        const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone
+        content = content.replace(';date.timezone =', `date.timezone = "${timezone}"`)
+
         // Set CA certificate path
         const cacertpem = join(global.Server.BaseDir!, 'CA/cacert.pem').split('\\').join('/')
         mkdirSync(dirname(cacertpem), { recursive: true })
