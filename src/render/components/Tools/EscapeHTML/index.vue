@@ -2,26 +2,8 @@
   import { watch } from 'vue'
   import Store from './store'
   import { I18nT } from '@lang/index'
-
-  watch(
-    () => Store.encodeInput,
-    () => {
-      Store.doEncode()
-    },
-    {
-      immediate: true
-    }
-  )
-
-  watch(
-    () => Store.decodeInput,
-    () => {
-      Store.doDecode()
-    },
-    {
-      immediate: true
-    }
-  )
+  watch(() => Store.encodeInput, Store.doEncode, { immediate: true })
+  watch(() => Store.decodeInput, Store.doDecode, { immediate: true })
 </script>
 
 <template>

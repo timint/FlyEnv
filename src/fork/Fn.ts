@@ -153,7 +153,7 @@ export function spawnPromise(
   return new ForkPromise((resolve, reject, on) => {
     const stdout: Array<Buffer> = []
     const stderr: Array<Buffer> = []
-    const child = spawn(
+    const child: ChildProcess = spawn(
       command,
       params,
       {
@@ -163,7 +163,7 @@ export function spawnPromise(
       }
     )
     const stdinFn = (txt: string) => {
-      child?.stdin?.write(`${txt}\n`)
+      (child.stdin as any)?.write(`${txt}\n`)
     }
     let exit = false
     const onEnd = (code: number | null) => {
@@ -176,16 +176,17 @@ export function spawnPromise(
       }
     }
 
-    child?.stdout?.on('data', (data: any) => {
+    // Use type assertions for all evented streams due to type conflicts
+    ((child.stdout as any)?.on as Function)?.call(child.stdout, 'data', (data: any) => {
       stdout.push(data)
       on(data.toString(), stdinFn)
     })
-    child?.stderr?.on('data', (err: any) => {
+    ((child.stderr as any)?.on as Function)?.call(child.stderr, 'data', (err: any) => {
       stderr.push(err)
       on(err.toString(), stdinFn)
     })
-    child.on('exit', onEnd)
-    child.on('close', onEnd)
+    ((child as any).on as Function)?.call(child, 'exit', onEnd)
+    ((child as any).on as Function)?.call(child, 'close', onEnd)
   })
 }
 

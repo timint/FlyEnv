@@ -3,7 +3,7 @@ import { EventEmitter } from 'events'
 import { app, BrowserWindow, screen } from 'electron'
 import { initialize, enable } from '@electron/remote/main/index.js'
 import pageConfig from '../configs/page'
-import { debounce } from '@/render/core/Helpers/General'
+import { debounce } from '../../render/core/Helpers/General'
 
 initialize()
 

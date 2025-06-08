@@ -1,4 +1,5 @@
 import type MarkdownIt from 'markdown-it'
+import type { Token, StateCore } from 'markdown-it'
 
 import { escapeHtml } from '../shared'
 

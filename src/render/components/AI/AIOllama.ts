@@ -23,13 +23,13 @@ export class AIOllama extends AIBase {
         method: 'post',
         responseType: 'stream',
         data: {
-          ...param
+          ...param,
           model: model,
           stream: true,
           messages: [],
           options: {
             temperature: this.temperature
-          },
+          }
         }
       }
       IPC.send('app-fork:ollama', 'chat', data, AISetup.trialStartTime).then(
