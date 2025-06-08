@@ -135,7 +135,6 @@
     "markdown-it-container": "^4.0.0",
     "markdown-it-emoji": "^3.0.0",
     "markdown-it-mathjax3": "^4.3.2",
-    "md5": "^2.3.0",
     "mime-types": "^3.0.1",
     "monaco-editor": "^0.52.2",
     "php-parser": "^3.2.3",
