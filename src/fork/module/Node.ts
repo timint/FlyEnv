@@ -11,7 +11,7 @@ import TaskQueue from '../TaskQueue'
 import ncu from 'npm-check-updates'
 import { sleep } from '@shared/Helpers/General'
 import { versionBinVersion, versionFilterSame, versionFixed, versionLocalFetch, versionSort } from '../util/Version'
-import { fetchPathByBin, fetchRawPATH, handleWinPathArr, moveChildDirToParent, writePath } from '../Fn'
+import { fetchPathByBin, fetchRawPATH, handleWinPathArr, moveChildDirToParent, writePath } from '../util/Filesystem'
 
 class Manager extends Base {
   constructor() {

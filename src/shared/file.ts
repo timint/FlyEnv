@@ -90,7 +90,8 @@ export function getSubDir(fp: string, fullpath = true) {
   return arr
 }
 
-export function chmod(fp: string, mode: string) {
+// Note this function seems unused, but it is a utility function that can be useful in some cases
+export function chmodRecursiveSync(fp: string, mode: string) {
   if (statSync(fp).isFile()) {
     chmodSync(fp, mode)
     return
@@ -101,7 +102,7 @@ export function chmod(fp: string, mode: string) {
     chmodSync(fPath, mode)
     const stat = statSync(fPath)
     if (stat.isDirectory() === true) {
-      chmod(fPath, mode)
+      chmodRecursiveSync(fPath, mode)
     }
   })
 }

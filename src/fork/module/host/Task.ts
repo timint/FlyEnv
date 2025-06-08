@@ -6,7 +6,8 @@ import { existsSync, copyFileSync, readdirSync, readFileSync, rmSync, writeFileS
 import { setDirRole } from './Host'
 import { I18nT } from '@lang/index'
 import { sleep } from '@shared/Helpers/General'
-import { downloadFile, moveDirToDir } from '../../Fn'
+import { downloadFile } from '../../Fn'
+import { moveDirToDir } from '../../util/Filesystem'
 import { extractZip } from '@shared/file'
 import { fetchHostList } from './HostFile'
 

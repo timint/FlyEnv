@@ -1,6 +1,15 @@
-import { existsSync, readdirSync, statSync, chmodSync, copyFileSync, unlinkSync, writeFileSync, readFileSync } from 'fs'
+import { appendFileSync, chmodSync, copyFileSync, existsSync, mkdirSync, readdirSync, statSync, readFileSync, renameSync, unlinkSync, writeFileSync } from 'fs'
+import { dirname, isAbsolute, join, normalize, parse } from 'path'
+import { execSync } from 'child_process'
+import { spawnPromise } from '../Fn'
+import { ForkPromise } from '@shared/ForkPromise'
+import { userInfo, hostname } from 'os'
+import { sleep } from '../../shared/Helpers/General'
+import iconv from 'iconv-lite'
+import chardet from 'chardet'
 
-export function chmod(fp: string, mode: string) {
+// Note this function seems unused, but it is a utility function that can be useful in some cases
+export function chmodRecursiveSync(fp: string, mode: string) {
   if (statSync(fp).isFile()) {
     chmodSync(fp, mode)
     return
@@ -11,7 +20,7 @@ export function chmod(fp: string, mode: string) {
     chmodSync(fPath, mode)
     const stat = statSync(fPath)
     if (stat.isDirectory()) {
-      chmod(fPath, mode)
+      chmodRecursiveSync(fPath, mode)
     }
   })
 }

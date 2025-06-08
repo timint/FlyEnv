@@ -16,11 +16,8 @@ import { fetchHostList, saveHostList } from './host/HostFile'
 import { publicDecrypt } from 'crypto'
 // @ts-ignore: Custom type declaration is provided in types/usebruno__node-machine-id.d.ts
 import { machineId } from '@usebruno/node-machine-id'
-import {
-  getSubDir,
-  hostAlias,
-  uuid,
-} from '../Fn'
+import { getSubDir } from '../util/Filesystem'
+import { hostAlias, uuid } from '../Fn'
 
 class Host extends Base {
   hostsFile = join('c:/windows/system32/drivers/etc', 'hosts')

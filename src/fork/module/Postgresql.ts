@@ -9,7 +9,8 @@ import { ForkPromise } from '@shared/ForkPromise'
 import TaskQueue from '../TaskQueue'
 import { sleep } from '@shared/Helpers/General'
 import { versionBinVersion, versionFilterSame, versionFixed, versionLocalFetch, versionSort } from '../util/Version'
-import { AppLog, serviceStartExecCMD, setDir777ToCurrentUser } from '../Fn'
+import { setDir777ToCurrentUser } from '../util/Filesystem'
+import { AppLog, serviceStartExecCMD } from '../Fn'
 
 class Manager extends Base {
   constructor() {

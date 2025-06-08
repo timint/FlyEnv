@@ -2,7 +2,7 @@ import type { ModuleExecItem } from '@shared/app'
 
 import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'fs'
 import { dirname, join } from 'path'
-import { waitPidFile } from '../Fn'
+import { waitPidFile } from '../util/Filesystem'
 import { ForkPromise } from '@shared/ForkPromise'
 import { spawn } from 'child_process'
 

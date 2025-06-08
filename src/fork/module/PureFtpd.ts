@@ -6,7 +6,7 @@ import { Base } from './Base'
 import { ForkPromise } from '@shared/ForkPromise'
 import FtpServer from 'ftp-srv'
 import * as ip from 'neoip'
-import { setDir777ToCurrentUser } from '../Fn'
+import { setDir777ToCurrentUser } from '../util/Filesystem'
 
 class Manager extends Base {
   server?: FtpServer

@@ -11,7 +11,8 @@ import { extractZip } from '@shared/file'
 import axios from 'axios'
 import { spawn } from 'child_process'
 import { versionBinVersion, versionFilterSame, versionFixed, versionLocalFetch, versionSort } from '../util/Version'
-import { AppLog, moveChildDirToParent, serviceStartExecCMD } from '../Fn'
+import { moveChildDirToParent } from '../util/Filesystem'
+import { AppLog, serviceStartExecCMD } from '../Fn'
 
 const spawnAsync = promisify(spawn)
 const rmAsync = promisify(rm)

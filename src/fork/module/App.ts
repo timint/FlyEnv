@@ -9,10 +9,7 @@ import { publicDecrypt } from 'crypto'
 import { join, resolve as pathResolve } from 'path'
 import { appendFileSync, unlinkSync, writeFileSync } from 'fs'
 import { execSync } from 'child_process'
-import {
-  md5,
-  uuid
-} from '../Fn'
+import { md5, uuid } from '../Fn'
 
 class App extends Base {
   constructor() {

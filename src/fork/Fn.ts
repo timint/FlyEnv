@@ -2,17 +2,16 @@ import type { AppHost, SoftInstalled } from '@shared/app'
 
 import { exec, execSync, type ChildProcess, spawn } from 'child_process'
 import { createWriteStream, existsSync, mkdirSync, writeFileSync, readFileSync, rmSync, unlinkSync } from 'fs'
-import { dirname, isAbsolute, join, parse, basename, normalize } from 'path'
+import { dirname, join, basename } from 'path'
 import { ForkPromise } from '@shared/ForkPromise'
+import { readFileAsUTF8, waitPidFile } from './util/Filesystem'
 import crypto from 'crypto'
 import axios from 'axios'
 import sudoPrompt from '@shared/sudo'
 import chardet from 'chardet'
 import iconv from 'iconv-lite'
 import { I18nT } from '@lang/index'
-import { userInfo, hostname } from 'os'
 import packageJson from '../../package.json'
-import { sleep } from '@shared/Helpers/General'
 
 const processSend = (key: string, info: any, on?: boolean) => {
   process?.send?.({ on, key, info })

@@ -1,9 +1,10 @@
 import type { SoftInstalled } from '@shared/app'
+
 import { existsSync, realpathSync, statSync } from 'fs'
 import { execSync } from 'child_process'
 import { join, dirname } from 'path'
 import { compareVersions } from 'compare-versions'
-import { getAllFileAsync, fetchPathByBin, getSubDirAsync } from 'FileSystem'
+import { getAllFileAsync, fetchPathByBin, getSubDirAsync } from './Filesystem'
 
 export function versionFixed(version?: string | null) {
   return (
