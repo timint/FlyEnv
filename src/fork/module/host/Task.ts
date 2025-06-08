@@ -6,7 +6,7 @@ import { existsSync, copyFileSync, readdirSync, readFileSync, rmSync, writeFileS
 import { setDirRole } from './Host'
 import { I18nT } from '@lang/index'
 import { sleep } from '@/core/Helpers/General'
-import { downFile, moveDirToDir } from '../../Fn'
+import { downloadFile, moveDirToDir } from '../../Fn'
 import { zipUnPack } from '@shared/file'
 import { fetchHostList } from './HostFile'
 
@@ -203,7 +203,7 @@ export function TaskAddPhpMyAdminSite(this: any, phpVersion?: number, write = tr
       rmSync(zipTmpFile)
     }
     const url = 'https://www.phpmyadmin.net/downloads/phpMyAdmin-latest-all-languages.zip'
-    downFile(url, zipTmpFile)
+    downloadFile(url, zipTmpFile)
       .on(on)
       .then(async () => {
         return copyFileSync(zipTmpFile, zipFile)
