@@ -5,7 +5,7 @@ import { ForkPromise } from '@shared/ForkPromise'
 import { copyFileSync, createReadStream, existsSync, mkdirSync, readdirSync, realpathSync, readFileSync, statSync, unlinkSync, writeFile, writeFileSync } from 'fs'
 import { TaskItem, TaskQueue, TaskQueueProgress } from '@shared/TaskQueue'
 import { basename, dirname, isAbsolute, join, resolve as pathResolve } from 'path'
-import { zipUnPack } from '@shared/file'
+import { extractZip } from '@shared/file'
 import { EOL } from 'os'
 import { PItem, ProcessListSearch, ProcessPidList } from '../Process'
 import { AppServiceAliasItem } from '@shared/app'
@@ -114,7 +114,7 @@ class Manager extends Base {
     return new ForkPromise(async (resolve, reject) => {
       const openssl = join(global.Server.AppDir!, 'openssl/bin/openssl.exe')
       if (!existsSync(openssl)) {
-        await zipUnPack(join(global.Server.Static!, `zip/openssl.7z`), global.Server.AppDir!)
+        await extractZip(join(global.Server.Static!, `zip/openssl.7z`), global.Server.AppDir!)
       }
       const opensslCnf = join(global.Server.AppDir!, 'openssl/openssl.cnf')
       if (!existsSync(opensslCnf)) {

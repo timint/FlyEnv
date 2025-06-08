@@ -7,7 +7,7 @@ import { setDirRole } from './Host'
 import { I18nT } from '@lang/index'
 import { sleep } from '@shared/Helpers/General'
 import { downloadFile, moveDirToDir } from '../../Fn'
-import { zipUnPack } from '@shared/file'
+import { extractZip } from '@shared/file'
 import { fetchHostList } from './HostFile'
 
 export function TaskAddRandaSite(this: any, version?: SoftInstalled, write = true, ipv6 = true) {
@@ -118,7 +118,7 @@ export function TaskAddPhpMyAdminSite(this: any, phpVersion?: number, write = tr
         mkdirSync(siteDir, { recursive: true })
         const tmplDir = join(global.Server.Cache!, 'phpMyAdmin-tmpl')
         try {
-          await zipUnPack(zipFile, tmplDir)
+          await extractZip(zipFile, tmplDir)
           const subDirs = readdirSync(tmplDir)
           const subDir = subDirs.pop()
           if (subDir) {

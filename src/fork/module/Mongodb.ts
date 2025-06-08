@@ -7,7 +7,7 @@ import { Base } from './Base'
 import { ForkPromise } from '@shared/ForkPromise'
 import TaskQueue from '../TaskQueue'
 import { I18nT } from '@lang/index'
-import { zipUnPack } from '@shared/file'
+import { extractZip } from '@shared/file'
 import axios from 'axios'
 import { spawn } from 'child_process'
 import { versionBinVersion, versionFilterSame, versionFixed, versionLocalFetch, versionSort } from '../util/Version'
@@ -132,7 +132,7 @@ class Manager extends Base {
           try {
             rmSync(appDir, { recursive: true, force: true })
             mkdirSync(appDir, { recursive: true })
-            await zipUnPack(zip, appDir)
+            await extractZip(zip, appDir)
             await moveChildDirToParent(appDir)
             return existsSync(mongosh)
           } catch (e) {

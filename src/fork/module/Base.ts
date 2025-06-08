@@ -5,7 +5,7 @@ import { basename, dirname, join } from 'path'
 import { appendFileSync, copyFile, copyFileSync, createWriteStream, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, unlinkSync, writeFileSync } from 'fs'
 import { spawn, execSync } from 'child_process'
 import { ForkPromise } from '@shared/ForkPromise'
-import { zipUnPack } from '@shared/file'
+import { extractZip } from '@shared/file'
 import axios from 'axios'
 import { ProcessListSearch, ProcessPidList, ProcessPidListByPid } from '../Process'
 import { sleep } from '@shared/Helpers/General'
@@ -41,7 +41,7 @@ export class Base {
               I18nT('appLog.serviceUseBundle', { service: `${flag}-${version.version}` })
             )
           })
-          zipUnPack(
+          extractZip(
             join(global.Server.Static!, `zip/${flag}-${version.version}.7z`),
             global.Server.AppDir!
           )
@@ -285,7 +285,7 @@ export class Base {
         const darkDir = join(global.Server.Cache!, 'dark')
         if (!existsSync(dark)) {
           const darkZip = join(global.Server.Static!, 'zip/dark.zip')
-          await zipUnPack(darkZip, dirname(dark))
+          await extractZip(darkZip, dirname(dark))
         }
         const pythonSH = join(global.Server.Static!, 'sh/python.ps1')
         let content = readFileSync(pythonSH, 'utf-8')
@@ -367,7 +367,7 @@ export class Base {
         if (existsSync(tmpDir)) {
           rmSync(tmpDir, { recursive: true, force: true })
         }
-        await zipUnPack(row.zip, tmpDir)
+        await extractZip(row.zip, tmpDir)
         let dir = join(tmpDir, `memcached-${row.version}`, 'libevent-2.1', 'x64')
         if (!existsSync(dir)) {
           dir = join(tmpDir, `memcached-${row.version}`, 'cygwin', 'x64')
@@ -389,7 +389,7 @@ export class Base {
       const handleTwoLevDir = async () => {
         rmSync(row.appDir, { recursive: true, force: true })
         mkdirSync(row.appDir, { recursive: true })
-        await zipUnPack(row.zip, row.appDir)
+        await extractZip(row.zip, row.appDir)
         await moveChildDirToParent(row.appDir)
       }
 
@@ -444,13 +444,13 @@ php "%~dp0composer.phar" %*`
         mkdirSync(row.appDir, { recursive: true })
         const cacheDir = join(global.Server.Cache!, uuid())
         mkdirSync(cacheDir, { recursive: true })
-        await zipUnPack(row.zip, cacheDir)
+        await extractZip(row.zip, cacheDir)
         const files = readdirSync(cacheDir)
         const find = files.find((f) => f.includes('.tar'))
         if (!find) {
           throw new Error('UnZIP failed')
         }
-        await zipUnPack(join(cacheDir, find), row.appDir)
+        await extractZip(join(cacheDir, find), row.appDir)
         await moveChildDirToParent(row.appDir)
         rmSync(cacheDir, { recursive: true, force: true })
       }
@@ -481,7 +481,7 @@ php "%~dp0composer.phar" %*`
         } else if (row.type === 'rust') {
           await handleRust()
         } else {
-          await zipUnPack(row.zip, row.appDir)
+          await extractZip(row.zip, row.appDir)
         }
       }
 

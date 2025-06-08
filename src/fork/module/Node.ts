@@ -4,7 +4,7 @@ import { ForkPromise } from '@shared/ForkPromise'
 import { dirname, join, isAbsolute, basename } from 'path'
 import { compareVersions } from 'compare-versions'
 import { copyFileSync, createWriteStream, existsSync, mkdirSync, readFileSync, writeFileSync, readdirSync, realpathSync, rmSync, unlinkSync } from 'fs'
-import { zipUnPack } from '@shared/file'
+import { extractZip } from '@shared/file'
 import axios from 'axios'
 import { SoftInstalled } from '@shared/app'
 import TaskQueue from '../TaskQueue'
@@ -46,7 +46,7 @@ class Manager extends Base {
       }
 
       const local = join(global.Server.AppDir!, 'nvm/nvm.exe')
-      await zipUnPack(join(global.Server.Static!, `zip/nvm.7z`), global.Server.AppDir!)
+      await extractZip(join(global.Server.Static!, `zip/nvm.7z`), global.Server.AppDir!)
       const installcmd = join(global.Server.AppDir!, 'nvm/install.cmd')
       unlinkSync(installcmd)
       copyFileSync(join(global.Server.Static!, 'sh/install-nvm.cmd'), installcmd)
@@ -102,7 +102,7 @@ class Manager extends Base {
       }
 
       const local = join(global.Server.AppDir!, 'fnm/fnm.exe')
-      await zipUnPack(join(global.Server.Static!, `zip/fnm.7z`), global.Server.AppDir!)
+      await extractZip(join(global.Server.Static!, `zip/fnm.7z`), global.Server.AppDir!)
       const installcmd = join(global.Server.AppDir!, 'fnm/install.cmd')
       unlinkSync(installcmd)
       copyFileSync(join(global.Server.Static!, 'sh/install-fnm.cmd'), installcmd)
@@ -420,7 +420,7 @@ class Manager extends Base {
 
           const unpack = async () => {
             try {
-              await zipUnPack(zip, destDir)
+              await extractZip(zip, destDir)
               await moveChildDirToParent(destDir)
             } catch (e) {
               return e

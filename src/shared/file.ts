@@ -134,8 +134,8 @@ export function readFileAsync(fp: string, encode: BufferEncoding = 'utf-8') {
   })
 }
 
-export function zipUnPack(fp: string, dist: string) {
-  console.log('zipUnPack start: ', fp, dist, global.Server.Static!)
+export function extractZip(fp: string, dist: string) {
+  console.log('extractZip start: ', fp, dist, global.Server.Static!)
   return new Promise(async (resolve, reject) => {
     const info = {
       fp,
@@ -145,7 +145,7 @@ export function zipUnPack(fp: string, dist: string) {
     }
     appendFileSync(
       path.join(global.Server.BaseDir!, 'debug.log'),
-      `[zipUnPack][info]: ${JSON.stringify(info, undefined, 4)}\n`
+      `[extractZip][info]: ${JSON.stringify(info, undefined, 4)}\n`
     )
     if (fp.includes(global.Server.Static!)) {
       const cacheFP = path.join(global.Server.Cache!, path.basename(fp))
@@ -155,7 +155,7 @@ export function zipUnPack(fp: string, dist: string) {
         } catch (e) {
           appendFileSync(
             path.join(global.Server.BaseDir!, 'debug.log'),
-            `[zipUnPack][copyFileSync][error]: ${e}\n`
+            `[extractZip][copyFileSync][error]: ${e}\n`
           )
         }
       }
@@ -163,11 +163,11 @@ export function zipUnPack(fp: string, dist: string) {
       console.log('cacheFP: ', fp)
     }
     compressing.unpack(fp, dist, async (err: any, res: any) => {
-      console.log('zipUnPack end: ', err, res)
+      console.log('extractZip end: ', err, res)
       if (err) {
         appendFileSync(
           path.join(global.Server.BaseDir!, 'debug.log'),
-          `[zipUnPack][unpack][error]: ${err}\n`
+          `[extractZip][unpack][error]: ${err}\n`
         )
         reject(err)
         return

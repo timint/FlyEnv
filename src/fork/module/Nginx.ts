@@ -4,7 +4,7 @@ import { join, dirname, basename } from 'path'
 import { existsSync, readFileSync, writeFileSync, mkdirSync } from 'fs'
 import { Base } from './Base'
 import { ForkPromise } from '@shared/ForkPromise'
-import { zipUnPack } from '@shared/file'
+import { extractZip } from '@shared/file'
 import TaskQueue from '../TaskQueue'
 import { fetchHostList } from './host/HostFile'
 import { I18nT } from '@lang/index'
@@ -50,7 +50,7 @@ class Nginx extends Base {
         on({
           'APP-On-Log': AppLog('info', I18nT('appLog.confInit'))
         })
-        zipUnPack(join(global.Server.Static!, 'zip/nginx.zip'), global.Server.NginxDir!)
+        extractZip(join(global.Server.Static!, 'zip/nginx.zip'), global.Server.NginxDir!)
           .then(() => {
 
             const content = readFileSync(conf, 'utf-8')

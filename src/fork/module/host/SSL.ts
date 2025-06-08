@@ -5,7 +5,7 @@ import { hostAlias, suExecPromise } from '../../Fn'
 import { dirname, join } from 'path'
 import { copyFileSync, existsSync, mkdirSync, rmSync, writeFileSync } from 'fs'
 import { EOL } from 'os'
-import { zipUnPack } from '@shared/file'
+import { extractZip } from '@shared/file'
 
 const initCARoot = () => {
   return new Promise(async (resolve) => {
@@ -27,13 +27,13 @@ export const makeAutoSSL = (host: AppHost): ForkPromise<{ crt: string; key: stri
       const CADir = dirname(CARoot)
       if (!existsSync(CARoot)) {
         mkdirSync(CADir, { recursive: true })
-        await zipUnPack(join(global.Server.Static!, `zip/CA.7z`), CADir)
+        await extractZip(join(global.Server.Static!, `zip/CA.7z`), CADir)
         await initCARoot()
       }
 
       const openssl = join(global.Server.AppDir!, 'openssl/bin/openssl.exe')
       if (!existsSync(openssl)) {
-        await zipUnPack(join(global.Server.Static!, `zip/openssl.7z`), global.Server.AppDir!)
+        await extractZip(join(global.Server.Static!, `zip/openssl.7z`), global.Server.AppDir!)
       }
 
       const hostCAName = `CA-${host.id}`

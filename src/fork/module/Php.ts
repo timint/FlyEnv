@@ -6,7 +6,7 @@ import { execSync } from 'child_process'
 import { Base } from './Base'
 import { I18nT } from '@lang/index'
 import { ForkPromise } from '@shared/ForkPromise'
-import { zipUnPack } from '@shared/file'
+import { extractZip } from '@shared/file'
 import TaskQueue from '../TaskQueue'
 import { ProcessListSearch } from '../Process'
 import axios from 'axios'
@@ -154,7 +154,7 @@ class Php extends Base {
     return new Promise((resolve) => {
       const fpm = join(global.Server.PhpDir!, 'php-cgi-spawner.exe')
       if (!existsSync(fpm)) {
-        zipUnPack(join(global.Server.Static!, `zip/php_cgi_spawner.7z`), global.Server.PhpDir!)
+        extractZip(join(global.Server.Static!, `zip/php_cgi_spawner.7z`), global.Server.PhpDir!)
           .then(resolve)
           .catch(resolve)
         return
@@ -257,7 +257,7 @@ class Php extends Base {
         const obfuscatorDir = join(cacheDir, 'php-obfuscator')
         rmSync(obfuscatorDir)
         const zipFile = join(global.Server.Static!, 'zip/php-obfuscator.zip')
-        await zipUnPack(zipFile, obfuscatorDir)
+        await extractZip(zipFile, obfuscatorDir)
         const bin = join(obfuscatorDir, 'yakpro-po.php')
         let command = ''
         if (params.config) {
@@ -531,7 +531,7 @@ xdebug.output_dir = "${output_dir}"
 
               if (existsSync(zipFile)) {
                 try {
-                  await zipUnPack(zipFile, cacheDir)
+                  await extractZip(zipFile, cacheDir)
                 } catch (e) {}
                 if (existsSync(dll)) {
                   copyFileSync(dll, file)
@@ -582,7 +582,7 @@ xdebug.output_dir = "${output_dir}"
                     })
                     try {
                       if (existsSync(zipFile)) {
-                        await zipUnPack(zipFile, cacheDir)
+                        await extractZip(zipFile, cacheDir)
                       }
                     } catch (e) {
                       reject(e)
