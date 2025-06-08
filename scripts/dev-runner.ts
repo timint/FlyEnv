@@ -4,7 +4,7 @@ import { spawn, exec, execSync, ChildProcess } from 'child_process'
 import { build } from 'esbuild'
 import { cpSync, readFileSync, watch } from 'fs'
 import { dirname, join, resolve } from 'path'
-import md5 from 'md5'
+import { createHash } from 'crypto'
 import { fileURLToPath } from 'url'
 
 import viteConfig from 'configs/vite.config.js'
@@ -112,28 +112,20 @@ process.on('SIGINT', async () => {
 })
 
 // Watch for changes in main files
-let preveMd5 = ''
+let previousMd5 = ''
 let fsWait = false
-const next = (base: string, file?: string | null) => {
-  if (file) {
-    if (fsWait) return
-    const currentMd5 = md5(readFileSync(join(base, file))) as string
-    if (currentMd5 == preveMd5) {
-      return
-    }
-    fsWait = true
-    preveMd5 = currentMd5
-    console.log(`${file} file updated`)
-    restart = true
-    buildMainProcess()
-      .then()
-      .catch((err) => {
-        console.error(err)
-      })
-    setTimeout(() => {
-      fsWait = false
-    }, 500)
-  }
+
+function next(base: string, file?: string | null) {
+  if (!file || fsWait) return
+  const content = readFileSync(join(base, file))
+  const currentMd5 = createHash('md5').update(content).digest('hex')
+  if (currentMd5 === previousMd5) return
+  fsWait = true
+  previousMd5 = currentMd5
+  console.log(`${file} file updated`)
+  restart = true
+  buildMainProcess().catch(console.error)
+  setTimeout(() => { fsWait = false }, 500)
 }
 
 const mainPath = 'src/main'
@@ -149,21 +141,16 @@ watch(forkPath, { recursive: true }, (event, filename) => {
 })
 
 watch(staticPath, { recursive: true }, (event, filename) => {
-  if (filename) {
-    if (fsWait) return
-    const from = join(staticPath, filename)
-    const currentMd5 = md5(readFileSync(from)) as string
-    if (currentMd5 == preveMd5) {
-      return
-    }
-    fsWait = true
-    preveMd5 = currentMd5
-    const to = resolve(__dirname, '../dist/electron/static/', filename)
-    console.log(`${filename} file updated`)
-    console.log('Copy file: ', from, to)
-    cpSync(from, to)
-    setTimeout(() => {
-      fsWait = false
-    }, 500)
-  }
+  if (!filename || fsWait) return
+  const from = join(staticPath, filename)
+  const to = resolve(__dirname, '../dist/electron/static/', filename)
+  const content = readFileSync(from)
+  const currentMd5 = createHash('md5').update(content).digest('hex')
+  if (currentMd5 === previousMd5) return
+  fsWait = true
+  previousMd5 = currentMd5
+  console.log(`${filename} file updated`)
+  console.log('Copy file:', from, to)
+  cpSync(from, to)
+  setTimeout(() => { fsWait = false }, 500)
 })

@@ -18,11 +18,6 @@ export function formatBytes(bytes: number, decimals = 2) {
   return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i]
 }
 
-export function md5(str: string) {
-  const md5 = crypto.createHash('md5')
-  return md5.update(str).digest('hex')
-}
-
 export function pathFixedToUnix(path: string) {
   return path.split('\\').join('/')
 }

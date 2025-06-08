@@ -5,7 +5,8 @@ import { existsSync, rmSync, writeFileSync } from 'fs'
 import PHPManager from './Php'
 import { I18nT } from '@lang/index'
 import { moveDirToDir } from '../util/Filesystem'
-import { AppLog, md5, spawnPromise, uuid } from '../Fn'
+import { AppLog, spawnPromise, uuid } from '../Fn'
+import { createHash } from 'crypto'
 
 class Manager extends Base {
   constructor() {
@@ -128,7 +129,7 @@ class Manager extends Base {
             if (framework === 'laravel') {
               const envFile = join(dir, '.env')
               if (!existsSync(envFile)) {
-                const key = md5(uuid())
+                const key = createHash('md5').update(uuid()).digest('hex')
                 writeFileSync(envFile, [
                   'APP_DEBUG=true',
                   `APP_KEY=${key}`
@@ -165,10 +166,10 @@ class Manager extends Base {
         if (framework === 'laravel') {
           const envFile = join(dir, '.env')
           if (!existsSync(envFile)) {
-            const key = md5(uuid())
+            const key = createHash('md5').update(uuid()).digest('hex')
             writeFileSync(envFile, [
-                'APP_DEBUG=true',
-                `APP_KEY=${key}`,
+              'APP_DEBUG=true',
+              `APP_KEY=${key}`,
             ].join('\n'))
           }
         }

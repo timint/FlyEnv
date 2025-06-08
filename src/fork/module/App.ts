@@ -9,7 +9,8 @@ import { publicDecrypt } from 'crypto'
 import { join, resolve as pathResolve } from 'path'
 import { appendFileSync, unlinkSync, writeFileSync } from 'fs'
 import { execSync } from 'child_process'
-import { md5, uuid } from '../Fn'
+import { uuid } from '../Fn'
+import { createHash } from 'crypto'
 
 class App extends Base {
   constructor() {
@@ -40,7 +41,8 @@ class App extends Base {
   private async getUUID() {
     const mac = await getMac()
     const cpu = cpus()?.pop()?.model ?? ''
-    return md5(`${mac}-${cpu}`)
+    const md5Checksum = createHash('md5').update(`${mac}-${cpu}`).digest('hex');
+    return md5Checksum
   }
 
   private async handleWindowsDefenderExclusionPath() {

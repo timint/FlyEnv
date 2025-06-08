@@ -1,6 +1,6 @@
 import Config from './Config'
 import { basename, extname, join } from 'path'
-import { md5 } from '@shared/utils'
+import { createHash } from 'crypto'
 import { Store } from './Store'
 
 export const checkIsExcludeUrl = (url: string, isPage: boolean): boolean => {
@@ -36,7 +36,8 @@ export const urlToDir = (url: string, isPageUrl?: boolean) => {
        */
       const name = basename(pathDir)
       if (url.includes('?')) {
-        const newName = `${md5(name)}.html`
+        const md5Checksum = createHash('md5').update(name).digest('hex');
+        const newName = `${md5Checksum}.html`
         pathDir = pathDir.replace(name, newName)
       } else {
         const ext = extname(pathDir)
@@ -68,7 +69,8 @@ export const urlToDir = (url: string, isPageUrl?: boolean) => {
     uobj.search = ''
     url = uobj.toString()
     const ext = extname(url.split('/').pop()!)
-    saveFile = join(Store.dir, `outsite/${md5(url)}${ext}`)
+    const md5Checksum = createHash('md5').update(url).digest('hex');
+    saveFile = join(Store.dir, `outsite/${md5Checksum}${ext}`)
   }
   return saveFile
 }

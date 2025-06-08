@@ -225,11 +225,6 @@ export function spawnPromiseMore(
   }
 }
 
-export function md5(str: string) {
-  const md5 = crypto.createHash('md5')
-  return md5.update(str).digest('hex')
-}
-
 export function downloadFile(url: string, savepath: string) {
   return new ForkPromise((resolve, reject, on) => {
     const proxyUrl =
