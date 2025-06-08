@@ -15,10 +15,11 @@
 </template>
 
 <script lang="tsx" setup>
+  import type { Column } from 'element-plus'
+  
   import { I18nT } from '@lang/index'
   import { NodeDefaultSetup, Setup } from './setup'
   import { ElInput, ElButton, ElTooltip, ElProgress } from 'element-plus'
-  import type { Column } from 'element-plus'
   import { MessageSuccess } from '@/util/Element'
   import { clipboard } from '@electron/remote'
   import { join } from 'path'

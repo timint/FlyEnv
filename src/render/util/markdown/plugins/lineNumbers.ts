@@ -1,6 +1,5 @@
 // markdown-it plugin for generating line numbers.
 // It depends on preWrapper plugin.
-
 import type MarkdownIt from 'markdown-it'
 
 export const lineNumberPlugin = (md: MarkdownIt, enable = false) => {

@@ -35,10 +35,11 @@
 </template>
 
 <script lang="ts" setup>
+  import type { MysqlGroupItem } from '@shared/app'
+  
   import { I18nT } from '@lang/index'
   import { AsyncComponentShow } from '@/util/AsyncComponent'
   import { MessageSuccess } from '@/util/Element'
-  import type { MysqlGroupItem } from '@shared/app'
   import Base from '@/core/Base'
   import { MysqlStore } from '@/components/Mysql/mysql'
   import { join } from 'path'

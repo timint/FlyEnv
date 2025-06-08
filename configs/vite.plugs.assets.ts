@@ -1,4 +1,5 @@
 import type { NormalizedOutputOptions, OutputBundle, Plugin } from 'rollup'
+
 import { join } from 'path'
 import { existsSync, readFileSync, writeFileSync } from 'fs'
 

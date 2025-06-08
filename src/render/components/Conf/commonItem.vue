@@ -40,8 +40,9 @@
   </el-card>
 </template>
 <script lang="ts" setup>
-  import { computed } from 'vue'
   import type { CommonSetItem } from '@/components/Conf/setup'
+  
+  import { computed } from 'vue'
   import { Folder } from '@element-plus/icons-vue'
   import { dialog } from '@electron/remote'
 

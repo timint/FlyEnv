@@ -1,11 +1,9 @@
 <script setup lang="ts">
+  import type { Scope } from './chmod-calculator.types'
+
   import { computed, ref } from 'vue'
   import { I18nT } from '@lang/index'
-  import {
-    computeChmodOctalRepresentation,
-    computeChmodSymbolicRepresentation
-  } from './chmod-calculator.service'
-  import type { Scope } from './chmod-calculator.types'
+  import {  computeChmodOctalRepresentation, computeChmodSymbolicRepresentation } from './chmod-calculator.service'
   import { CopyDocument } from '@element-plus/icons-vue'
   import { MessageSuccess } from '@/util/Element'
   import { clipboard } from '@electron/remote'

@@ -1,6 +1,7 @@
+import type { AllAppModule } from '@/core/type'
+
 import { computed } from 'vue'
 import { BrewStore } from '@/store/brew'
-import type { AllAppModule } from '@/core/type'
 import installedVersions from '@/util/InstalledVersions'
 import { VersionManagerStore } from '@/components/VersionManager/store'
 import { AsyncComponentShow } from '@/util/AsyncComponent'

@@ -1,10 +1,11 @@
+import type { AppUpdater } from 'electron-updater/out/AppUpdater'
+
 import { EventEmitter } from 'events'
 import { dialog } from 'electron'
 import is from 'electron-is'
 import { dirname, resolve } from 'path'
 import logger from './Logger'
 import { I18nT } from '@lang/index'
-import type { AppUpdater } from 'electron-updater/out/AppUpdater'
 import electronUpdaterPkg from 'electron-updater'
 const { autoUpdater } = electronUpdaterPkg
 import { fileURLToPath } from 'url'

@@ -46,8 +46,9 @@
   </el-card>
 </template>
 <script lang="ts" setup>
-  import { computed } from 'vue'
   import type { ProjectItem } from '@/components/PHP/projects/setup'
+  
+  import { computed } from 'vue'
   import IPC from '@/util/IPC'
   import { MessageError } from '@/util/Element'
   import { Project } from '@/util/Project'

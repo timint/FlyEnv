@@ -1,6 +1,7 @@
+import type { AllAppModule } from '@/core/type'
+
 import { computed, reactive } from 'vue'
 import { BrewStore, SoftInstalled } from '@/store/brew'
-import type { AllAppModule } from '@/core/type'
 import installedVersions from '@/util/InstalledVersions'
 import { ServiceActionStore } from '@/components/ServiceManager/EXT/store'
 import { AppStore } from '@/store/app'

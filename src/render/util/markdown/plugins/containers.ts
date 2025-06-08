@@ -1,7 +1,8 @@
 import type MarkdownIt from 'markdown-it'
-import container from 'markdown-it-container'
 import type { RenderRule } from 'markdown-it/lib/renderer.mjs'
 import type Token from 'markdown-it/lib/token.mjs'
+
+import container from 'markdown-it-container'
 import { extractTitle, getAdaptiveThemeMarker, type Options } from './preWrapper'
 
 export const containerPlugin = (

@@ -1,5 +1,6 @@
-import { defineAsyncComponent, markRaw } from 'vue'
 import type { AppToolModuleItem } from '@/core/type'
+
+import { defineAsyncComponent, markRaw } from 'vue'
 import { I18nT } from '@lang/index'
 
 const module: AppToolModuleItem = {

@@ -283,6 +283,8 @@
 </template>
 
 <script lang="ts" setup>
+  import type { AllAppModule } from '@/core/type'
+
   import { computed, type ComputedRef, reactive } from 'vue'
   import { reGetInstalled, startService, stopService } from '@/util/Service'
   import { type AppHost, AppStore } from '@/store/app'
@@ -295,7 +297,6 @@
   import { AsyncComponentShow } from '@/util/AsyncComponent'
   import ExtSet from './EXT/index.vue'
   import IPC from '@/util/IPC'
-  import type { AllAppModule } from '@/core/type'
   import { ServiceActionStore } from '@/components/ServiceManager/EXT/store'
   import { shell } from '@electron/remote'
   import { existsSync } from 'fs'

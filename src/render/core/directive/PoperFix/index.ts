@@ -1,4 +1,5 @@
 import type { App } from 'vue'
+
 import { nextTick } from 'vue'
 
 const install = function (Vue: App) {

@@ -1,4 +1,5 @@
 import type { SoftInstalled } from '@shared/app'
+
 import { Base } from './Base'
 import { ForkPromise } from '@shared/ForkPromise'
 import { copyFileSync, createReadStream, existsSync, mkdirSync, readdirSync, realpathSync, readFileSync, statSync, unlinkSync, writeFile, writeFileSync } from 'fs'

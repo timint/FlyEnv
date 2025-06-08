@@ -7,11 +7,12 @@
   </template>
 </template>
 <script lang="ts" setup>
+  import type { AppToolModuleItem } from '@/core/type'
+
   import { computed, ComputedRef } from 'vue'
   import { AppToolStore } from '@/components/Tools/store'
   import { Star, StarFilled } from '@element-plus/icons-vue'
   import { AppToolModules } from '@/core/AppTool'
-  import type { AppToolModuleItem } from '@/core/type'
   const likeID = computed(() => {
     return AppToolStore.like
   })

@@ -1,5 +1,6 @@
-import { reactive } from 'vue'
 import type { AllAppModule } from '@/core/type'
+
+import { reactive } from 'vue'
 
 type StoreType = {
   fetching: Record<AllAppModule, boolean>

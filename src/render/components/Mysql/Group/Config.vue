@@ -30,12 +30,13 @@
 </template>
 
 <script lang="ts" setup>
+  import type { MysqlGroupItem } from '@shared/app'
+  import type { CommonSetItem } from '@/components/Conf/setup'
+  
   import { computed, Ref, ref, watch, reactive } from 'vue'
   import { I18nT } from '@lang/index'
-  import type { MysqlGroupItem } from '@shared/app'
   import { AsyncComponentSetup } from '@/util/AsyncComponent'
   import Conf from '@/components/Conf/drawer.vue'
-  import type { CommonSetItem } from '@/components/Conf/setup'
   import { debounce } from 'lodash-es'
   import { uuid } from "@shared/utils"
   import { existsSync, writeFile } from 'fs'

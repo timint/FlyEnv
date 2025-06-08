@@ -63,13 +63,14 @@
   </el-dialog>
 </template>
 <script lang="ts" setup>
+  import type { MysqlGroupItem } from '@shared/app'
+  
   import { computed, ref, watch } from 'vue'
   import { AsyncComponentSetup } from '@/util/AsyncComponent'
   import { I18nT } from '@lang/index'
   import { uuid } from '@shared/utils'
   import { BrewStore } from '@/store/brew'
   import { MessageSuccess } from '@/util/Element'
-  import type { MysqlGroupItem } from '@shared/app'
   import { MysqlStore } from '@/components/Mysql/mysql'
   import { join } from 'path'
   import { dialog } from '@electron/remote'

@@ -1,3 +1,10 @@
+import type { BundledLanguage, ShikiTransformer } from 'shiki'
+import type { Logger } from 'vite'
+import type { MarkdownOptions, ThemeOptions } from '../markdown'
+
+import { customAlphabet } from 'nanoid'
+import c from 'picocolors'
+import { createHighlighter, guessEmbeddedLanguages, isSpecialLang } from 'shiki'
 import {
   transformerCompactLineOptions,
   transformerNotationDiff,
@@ -6,12 +13,6 @@ import {
   transformerNotationHighlight,
   type TransformerCompactLineOption
 } from '@shikijs/transformers'
-import { customAlphabet } from 'nanoid'
-import c from 'picocolors'
-import type { BundledLanguage, ShikiTransformer } from 'shiki'
-import { createHighlighter, guessEmbeddedLanguages, isSpecialLang } from 'shiki'
-import type { Logger } from 'vite'
-import type { MarkdownOptions, ThemeOptions } from '../markdown'
 
 const nanoid = customAlphabet('abcdefghijklmnopqrstuvwxyz', 10)
 

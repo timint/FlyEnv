@@ -15,10 +15,11 @@
 </template>
 
 <script lang="tsx" setup>
+  import type { Column } from 'element-plus'
+  
   import { I18nT } from '@lang/index'
   import { FNMSetup, Setup } from '@/components/Nodejs/fnm/setup'
   import { ElInput, ElButton, ElTooltip } from 'element-plus'
-  import type { Column } from 'element-plus'
   import { MessageSuccess } from '@/util/Element'
   import { clipboard } from '@electron/remote'
 

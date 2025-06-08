@@ -78,6 +78,7 @@
 
 <script lang="ts" setup>
   import type { AllAppModule } from '@/core/type'
+
   import { Setup } from '@/components/VersionManager/setup'
 
   const props = defineProps<{

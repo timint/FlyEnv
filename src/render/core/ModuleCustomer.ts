@@ -1,4 +1,5 @@
 import type { CustomerModuleExecItem, CustomerModuleItem } from '@/core/Module'
+
 import { reactive } from 'vue'
 import IPC from '@/util/IPC'
 import { MessageError, MessageSuccess } from '@/util/Element'

@@ -165,6 +165,8 @@
 </template>
 
 <script lang="ts" setup>
+  import type { AppHost } from '@shared/app'
+  
   import { ref, computed, onMounted, nextTick, onBeforeUnmount, type Ref } from 'vue'
   import { handleHost } from '@/util/Host'
   import IPC from '@/util/IPC'
@@ -174,7 +176,6 @@
   import Base from '@/core/Base'
   import { I18nT } from '@lang/index'
   import { AsyncComponentShow } from '@/util/AsyncComponent'
-  import type { AppHost } from '@shared/app'
   import { isDeepStrictEqual } from 'node:util'
   import { HostStore } from '@/components/Host/store'
   import { shell } from '@electron/remote'

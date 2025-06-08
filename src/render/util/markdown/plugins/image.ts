@@ -1,5 +1,4 @@
 // markdown-it plugin for normalizing image source
-
 import type MarkdownIt from 'markdown-it'
 
 export interface Options {

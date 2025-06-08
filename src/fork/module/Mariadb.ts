@@ -1,9 +1,10 @@
+import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
+
 import { join, dirname, basename } from 'path'
 import { existsSync, chmodSync, mkdirSync, rmSync, readdirSync, writeFileSync } from 'fs'
 import { execSync } from 'child_process'
 import { Base } from './Base'
 import { I18nT } from '@lang/index'
-import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
 import { ForkPromise } from '@shared/ForkPromise'
 import TaskQueue from '../TaskQueue'
 import {

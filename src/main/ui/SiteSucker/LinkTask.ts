@@ -1,3 +1,5 @@
+import type { LinkItem } from './LinkItem'
+
 import request from '@shared/request'
 import Config from './Config'
 import { checkIsExcludeUrl } from './Fn'
@@ -5,7 +7,6 @@ import { Store } from './Store'
 import { wait } from '../../utils'
 import { dirname } from 'path'
 import { createWriteStream, existsSync, mkdirSync, rmSync, statSync } from 'fs'
-import type { LinkItem } from './LinkItem'
 
 class LinkTaskItem {
   isDestory?: boolean

@@ -62,9 +62,10 @@
 </template>
 
 <script lang="tsx" setup>
+  import type { Column } from 'element-plus'
+  
   import { DnsStore } from './dns'
   import { computed } from 'vue'
-  import type { Column } from 'element-plus'
 
   const dnsStore = DnsStore()
   const ip = computed(() => {

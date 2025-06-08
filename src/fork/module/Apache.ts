@@ -1,4 +1,5 @@
 import type { AppHost, OnlineVersionItem, SoftInstalled } from '@shared/app'
+
 import { join, basename, dirname } from 'path'
 import { existsSync, readFileSync, writeFileSync, rmSync } from 'fs'
 import { execSync } from 'child_process'

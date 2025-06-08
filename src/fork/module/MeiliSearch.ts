@@ -1,7 +1,8 @@
+import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
+
 import { basename, join } from 'path'
 import { existsSync } from 'fs'
 import { Base } from './Base'
-import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
 import { ForkPromise } from '@shared/ForkPromise'
 import { mkdirSync, readFileSync, writeFileSync } from 'fs'
 import { I18nT } from '@lang/index'

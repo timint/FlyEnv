@@ -1,7 +1,8 @@
+import type { ModuleExecItem } from '@shared/app'
+
 import { ForkPromise } from '@shared/ForkPromise'
 import { existsSync } from 'fs'
 import { execSync } from 'child_process'
-import type { ModuleExecItem } from '@shared/app'
 import { ProcessPidListByPid } from '../Process'
 import { customerServiceStartExec } from '../util/Exec'
 

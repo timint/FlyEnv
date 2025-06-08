@@ -68,12 +68,13 @@
 </template>
 
 <script lang="tsx" setup>
+  import type { Column } from 'element-plus'
+  
   import { ref, computed } from 'vue'
   import IPC from '@/util/IPC'
   import { SiteSuckerStore } from '@/components/Tools/SiteSucker/store'
   import { Loading, Check, Warning } from '@element-plus/icons-vue'
   import { ElIcon } from 'element-plus'
-  import type { Column } from 'element-plus'
   import { AsyncComponentShow } from '@/util/AsyncComponent'
   import { ElInput } from 'element-plus'
   import { shell } from '@electron/remote'

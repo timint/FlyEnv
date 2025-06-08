@@ -1,4 +1,5 @@
 import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
+
 import { basename, join } from 'path'
 import { Base } from './Base'
 import { ForkPromise } from '@shared/ForkPromise'

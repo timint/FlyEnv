@@ -55,13 +55,14 @@
 </template>
 
 <script lang="ts" setup>
+  import type { AllAppModule } from '@/core/type'
+  import type { SoftInstalled } from '@/store/brew'
+
   import { I18nT } from '@lang/index'
   import { ServiceActionStore } from '../ServiceManager/EXT/store'
   import { SetupAll } from '@/components/VersionManager/setupAll'
-  import type { AllAppModule } from '@/core/type'
   import { FolderAdd } from '@element-plus/icons-vue'
   import { AppStore } from '@/store/app'
-  import type { SoftInstalled } from '@/store/brew'
   import StaticVM from '@/components/VersionManager/static/index.vue'
   import LocalVM from '@/components/VersionManager/local/index.vue'
   import { dirname } from 'path'

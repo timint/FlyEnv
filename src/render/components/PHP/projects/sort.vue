@@ -34,11 +34,12 @@
   </el-popover>
 </template>
 <script lang="ts" setup>
+  import type { AllAppModule } from '@/core/type'
+
   import { computed, nextTick, type Ref, ref, watch } from 'vue'
   import { AsyncComponentSetup } from '@/util/AsyncComponent'
   import { ClickOutside as vClickOutside } from 'element-plus'
   import { type ProjectItem, ProjectSetup } from './setup'
-  import type { AllAppModule } from '@/core/type'
 
   const { show, onClosed, onSubmit, closedFn } = AsyncComponentSetup()
 

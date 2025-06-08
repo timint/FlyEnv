@@ -1,7 +1,8 @@
+import type { PromptItem } from '@/components/AI/Prompt/setup'
+
 import { reactive } from 'vue'
 import { uuid } from '@shared/utils'
 import { I18nT } from '@lang/index'
-import type { PromptItem } from '@/components/AI/Prompt/setup'
 import { AIOllama } from '@/components/AI/AIOllama'
 import { AsyncComponentShow } from '@/util/AsyncComponent'
 import localForage from 'localforage'

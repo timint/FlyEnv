@@ -1,5 +1,6 @@
-import { reactive, watch } from 'vue'
 import type { AppHost } from '@/store/app'
+
+import { reactive, watch } from 'vue'
 import { AppStore } from '@/store/app'
 import { join } from 'path'
 import { writeFileSync } from 'fs'

@@ -106,6 +106,8 @@
 </template>
 
 <script lang="ts" setup>
+  import type { AppHost } from '@shared/app'
+  
   import { reactive, computed, watch } from 'vue'
   import List from './ListTable.vue'
   import IPC from '@/util/IPC'
@@ -115,7 +117,6 @@
   import { AsyncComponentShow } from '@/util/AsyncComponent'
   import { More, ArrowDown, Lock } from '@element-plus/icons-vue'
   import { MessageError, MessageSuccess } from '@/util/Element'
-  import type { AppHost } from '@shared/app'
   import { type HostProjectType, HostStore } from './store'
   import ListJava from './Java/ListTable.vue'
   import ListNode from './Node/ListTable.vue'

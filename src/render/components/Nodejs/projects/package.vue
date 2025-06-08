@@ -26,9 +26,10 @@
   </el-drawer>
 </template>
 <script lang="ts" setup>
+  import type { ProjectItem } from '@/components/PHP/projects/setup'
+  
   import { computed } from 'vue'
   import { AsyncComponentSetup } from '@/util/AsyncComponent'
-  import type { ProjectItem } from '@/components/PHP/projects/setup'
   import ScriptVM from './scripts/index.vue'
   import DependencieVM from './dependencies/index.vue'
 

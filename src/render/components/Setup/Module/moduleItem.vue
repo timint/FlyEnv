@@ -64,9 +64,10 @@
   </div>
 </template>
 <script lang="ts" setup>
+  import type { AppModuleItem } from '@/core/type'
+
   import { computed, ref, nextTick, reactive } from 'vue'
   import ModuleShowHide from '@/components/Setup/ModuleShowHide/index.vue'
-  import type { AppModuleItem } from '@/core/type'
   import { Delete, Edit, Lock, Plus } from '@element-plus/icons-vue'
   import { AppStore } from '@/store/app'
   import { I18nT } from '@lang/index'

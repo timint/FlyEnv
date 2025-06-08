@@ -1,10 +1,11 @@
+import type { IncomingMessage, RequestOptions } from 'http'
+import type { AgentOptions } from 'https'
+
 import http from 'http'
 import https from 'https'
 import dns from 'dns'
 import { performance } from 'perf_hooks'
 import { URL } from 'url'
-import type { IncomingMessage, RequestOptions } from 'http'
-import type { AgentOptions } from 'https'
 import { I18nT } from '@lang/index'
 
 interface TimingResults {

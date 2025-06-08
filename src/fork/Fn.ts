@@ -1,4 +1,5 @@
 import type { AppHost, SoftInstalled } from '@shared/app'
+
 import { exec, execSync, type ChildProcess, spawn } from 'child_process'
 import { appendFileSync, chmodSync, createWriteStream, existsSync, mkdirSync, readdirSync, realpathSync, statSync, writeFileSync, readFileSync, rmSync, unlinkSync, copyFileSync, renameSync } from 'fs'
 import { dirname, isAbsolute, join, parse, basename, normalize } from 'path'

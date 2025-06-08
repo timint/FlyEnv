@@ -47,7 +47,7 @@ export class CreateSite extends BaseTask {
         run: (dir: string) => {
           return new Promise(async (resolve, reject) => {
             if (!existsSync(dir)) {
-              reject(new Error(I18nT('ai.siteDirectoryInvalid')))
+              reject(new Error(I18nT('ai.siteDirectoryInvalid' as any)))
               return
             } else {
               this.host.root = dir
@@ -71,7 +71,7 @@ export class CreateSite extends BaseTask {
             try {
               new URL(`https://${url}`)
             } catch (e) {
-              reject(new Error(I18nT('ai.domainInvalid')))
+              reject(new Error(I18nT('ai.domainInvalid' as any)))
             }
             this.host.name = url
             resolve(true)

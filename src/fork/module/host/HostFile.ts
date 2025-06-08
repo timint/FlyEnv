@@ -1,4 +1,5 @@
 import type { AppHost } from '@shared/app'
+
 import { join } from 'path'
 import { existsSync } from 'fs'
 import { readFileSync, writeFileSync } from 'fs'

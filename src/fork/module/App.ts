@@ -1,5 +1,6 @@
 import { Base } from './Base'
 import { getMac } from '@lzwme/get-physical-address'
+// @ts-ignore: Custom type declaration is provided in types/usebruno__node-machine-id.d.ts
 import { machineId } from '@usebruno/node-machine-id'
 import { ForkPromise } from '@shared/ForkPromise'
 import { cpus, arch } from 'os'
@@ -7,11 +8,11 @@ import axios from 'axios'
 import { publicDecrypt } from 'crypto'
 import { join, resolve as pathResolve } from 'path'
 import { appendFileSync, unlinkSync, writeFileSync } from 'fs'
+import { execSync } from 'child_process'
 import {
   md5,
   uuid
 } from '../Fn'
-import { execSync } from 'child_process'
 
 class App extends Base {
   constructor() {

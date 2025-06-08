@@ -1,4 +1,5 @@
 import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
+
 import { I18nT } from '@lang/index'
 import { basename, dirname, join } from 'path'
 import { appendFileSync, copyFile, copyFileSync, createWriteStream, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, unlinkSync, writeFileSync } from 'fs'

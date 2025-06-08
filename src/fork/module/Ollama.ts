@@ -1,10 +1,12 @@
-import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
+import type { SoftInstalled, OnlineVersionItem } from '../../shared/app'
+
 import { execSync } from 'child_process'
 import { basename, dirname, join } from 'path'
 import { existsSync, readFileSync, writeFileSync, mkdirSync } from 'fs'
 import axios from 'axios'
 import http from 'http'
 import https from 'https'
+// @ts-ignore: Custom type declaration is provided in types/usebruno__node-machine-id.d.ts
 import { machineId } from '@usebruno/node-machine-id'
 import { publicDecrypt } from 'crypto'
 import { EOL } from 'os'

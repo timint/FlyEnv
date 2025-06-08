@@ -176,6 +176,8 @@
 </template>
 
 <script lang="ts" setup>
+  import type { AllAppModule } from '@/core/type'
+
   import { computed, nextTick, onBeforeUnmount, onMounted, reactive, type Ref, ref } from 'vue'
   import { I18nT } from '@lang/index'
   import { type ProjectItem, ProjectSetup } from './setup'
@@ -184,7 +186,6 @@
   import { AsyncComponentShow } from '@/util/AsyncComponent'
   import { isDeepStrictEqual } from 'node:util'
   import { Project } from '@/util/Project'
-  import type { AllAppModule } from '@/core/type'
   import { SetupStore } from '@/components/Setup/store'
   import Router from '@/router'
   import { AppStore } from '@/store/app'

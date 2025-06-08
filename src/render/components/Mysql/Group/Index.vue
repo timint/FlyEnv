@@ -36,11 +36,12 @@
 </template>
 
 <script lang="tsx" setup>
+  import type { Column } from 'element-plus'
+  import type { MysqlGroupItem } from '@shared/app'
+  
   import { computed } from 'vue'
   import { MysqlStore } from '@/components/Mysql/mysql'
-  import type { Column } from 'element-plus'
   import { I18nT } from '@lang/index'
-  import type { MysqlGroupItem } from '@shared/app'
   import { AsyncComponentShow } from '@/util/AsyncComponent'
   import { MessageError, MessageSuccess } from '@/util/Element'
   import Popper from './SetupPopper.vue'

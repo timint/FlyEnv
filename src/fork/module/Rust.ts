@@ -1,6 +1,7 @@
+import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
+
 import { Base } from './Base'
 import { ForkPromise } from '@shared/ForkPromise'
-import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
 import {
   versionBinVersion,
   versionFilterSame,

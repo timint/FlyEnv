@@ -1,8 +1,9 @@
+import type { AllAppModule } from '@/core/type'
+
 import { computed } from 'vue'
 import { BrewStore } from '@/store/brew'
 import IPC from '@/util/IPC'
 import { staticVersionDel } from '@/util/Version'
-import type { AllAppModule } from '@/core/type'
 import installedVersions from '@/util/InstalledVersions'
 import { fetchVerion } from '@/util/Brew'
 import { VersionManagerStore } from '@/components/VersionManager/store'

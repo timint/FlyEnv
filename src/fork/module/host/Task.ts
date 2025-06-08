@@ -1,4 +1,5 @@
 import type { AppHost, SoftInstalled } from '@shared/app'
+
 import { ForkPromise } from '@shared/ForkPromise'
 import { join } from 'path'
 import { existsSync, copyFileSync, readdirSync, readFileSync, rmSync, writeFileSync, mkdirSync } from 'fs'

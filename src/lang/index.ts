@@ -1,6 +1,4 @@
-import { createI18n } from 'vue-i18n'
 import type { I18n } from 'vue-i18n'
-
 import type ai from './zh/ai.json'
 import type apache from './zh/apache.json'
 import type appLog from './zh/appLog.json'
@@ -32,6 +30,8 @@ import type licenses from './zh/licenses.json'
 import type requestTimer from './zh/requestTimer.json'
 import type meilisearch from './zh/meilisearch.json'
 import type minio from './zh/minio.json'
+
+import { createI18n } from 'vue-i18n'
 
 import ZH from './zh/index'
 import EN from './en/index'

@@ -1,5 +1,6 @@
-import type { AppHost } from '@shared/app'
 import type { ServiceItem } from './service/ServiceItem'
+import type { AppHost } from '@shared/app'
+
 import { Base } from './Base'
 import { ForkPromise } from '@shared/ForkPromise'
 import { ServiceItemJavaSpring } from './service/ServiceItemJavaSpring'

@@ -38,12 +38,13 @@
   </el-dialog>
 </template>
 <script lang="ts" setup>
+  import type { FormInstance, FormRules } from 'element-plus'
+  import type { AIOllama } from '@/components/AI/AIOllama'
+  
   import { computed, onBeforeUnmount, reactive, ref } from 'vue'
   import { AsyncComponentSetup } from '@/util/AsyncComponent'
   import { I18nT } from '@lang/index'
-  import type { FormInstance, FormRules } from 'element-plus'
   import { MessageError } from '@/util/Element'
-  import type { AIOllama } from '@/components/AI/AIOllama'
 
   const { show, onClosed, onSubmit, closedFn, callback } = AsyncComponentSetup()
 

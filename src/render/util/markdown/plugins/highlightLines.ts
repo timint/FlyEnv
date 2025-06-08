@@ -1,7 +1,6 @@
 // Modified from https://github.com/egoist/markdown-it-highlight-lines
 // Now this plugin is only used to normalize line attrs.
 // The else part of line highlights logic is in './highlight.ts'.
-
 import type MarkdownIt from 'markdown-it'
 
 const RE = /{([\d,-]+)}/

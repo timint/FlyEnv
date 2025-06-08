@@ -13,9 +13,10 @@
 </template>
 
 <script lang="ts" setup>
+  import type { CommonSetItem } from '@/components/Conf/setup'
+  
   import { computed, ref, watch, Ref, reactive } from 'vue'
   import Conf from '@/components/Conf/index.vue'
-  import type { CommonSetItem } from '@/components/Conf/setup'
   import { I18nT } from '@lang/index'
   import { debounce } from 'lodash-es'
   import { AppStore } from '@/store/app'

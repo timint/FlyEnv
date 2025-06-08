@@ -1,6 +1,7 @@
 <script setup lang="ts">
-  import { ref } from 'vue'
   import type { QRCodeErrorCorrectionLevel } from 'qrcode'
+
+  import { ref } from 'vue'
   import { useQRCode } from './useQRCode'
   import { I18nT } from '@lang/index'
   import { MessageError } from '@/util/Element'

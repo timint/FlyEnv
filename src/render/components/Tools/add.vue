@@ -42,11 +42,12 @@
   </el-dialog>
 </template>
 <script lang="ts" setup>
+  import type { AppToolModuleItem } from '@/core/type'
+
   import { computed, ref } from 'vue'
   import { AsyncComponentSetup } from '@/util/AsyncComponent'
   import { I18nT } from '@lang/index'
   import { AppToolStore } from './store'
-  import type { AppToolModuleItem } from '@/core/type'
 
   const { show, onClosed, onSubmit, closedFn, callback } = AsyncComponentSetup()
 

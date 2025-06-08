@@ -46,11 +46,12 @@
 </template>
 
 <script lang="ts" setup>
+  import type { AllAppModule } from '@/core/type'
+
   import { reactive, ref, watch, onBeforeUnmount, nextTick } from 'vue'
   import { AsyncComponentSetup } from '@/util/AsyncComponent'
   import { AppStore } from '@/store/app'
   import { BrewStore } from '@/store/brew'
-  import type { AllAppModule } from '@/core/type'
   import { dialog } from '@electron/remote'
 
   const { show, onClosed, onSubmit, closedFn, callback } = AsyncComponentSetup()

@@ -54,8 +54,9 @@
 </template>
 
 <script lang="ts" setup>
-  import { I18nT } from '@lang/index'
   import type { AllAppModule } from '@/core/type'
+  
+  import { I18nT } from '@lang/index'
   import { Setup } from './setup'
 
   const props = defineProps<{

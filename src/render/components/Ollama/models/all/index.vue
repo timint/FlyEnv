@@ -88,9 +88,10 @@
 </template>
 
 <script lang="ts" setup>
+  import type { TreeNode } from 'element-plus'
+  
   import { I18nT } from '@lang/index'
   import { OllamaAllModelsSetup, Setup } from './setup'
-  import type { TreeNode } from 'element-plus'
   import { OllamaLocalModelsSetup } from '@/components/Ollama/models/local/setup'
   import { Download, Delete } from '@element-plus/icons-vue'
 

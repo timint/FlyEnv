@@ -1,9 +1,10 @@
+import type { AllAppModule } from '@/core/type'
+
 import { computed, ComputedRef, nextTick, onMounted, onUnmounted, reactive, ref, watch } from 'vue'
 import { editor, KeyCode, KeyMod } from 'monaco-editor/esm/vs/editor/editor.api.js'
 import { EditorConfigMake, EditorCreate } from '@/util/Editor'
 import { MessageError, MessageSuccess } from '@/util/Element'
 import { I18nT } from '@lang/index'
-import type { AllAppModule } from '@/core/type'
 import { dialog } from '@electron/remote'
 import { shell } from '@electron/remote'
 import { existsSync, statSync } from 'fs'

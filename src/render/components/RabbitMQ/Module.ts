@@ -1,5 +1,6 @@
-import { defineAsyncComponent } from 'vue'
 import type { AppModuleItem } from '@/core/type'
+
+import { defineAsyncComponent } from 'vue'
 
 const module: AppModuleItem = {
   moduleType: 'dataQueue',

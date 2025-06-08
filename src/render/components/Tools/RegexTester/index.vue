@@ -1,8 +1,9 @@
 <script setup lang="ts">
+  import type { ShadowRootExpose } from 'vue-shadow-dom'
+
   import { onBeforeUnmount, ref, watch, watchEffect } from 'vue'
   import Store from './store'
   import { I18nT } from '@lang/index'
-  import type { ShadowRootExpose } from 'vue-shadow-dom'
   import { ShadowRoot } from 'vue-shadow-dom'
   import { render } from '@regexper/render'
 

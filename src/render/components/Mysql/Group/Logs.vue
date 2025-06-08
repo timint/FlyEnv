@@ -22,10 +22,11 @@
 </template>
 
 <script lang="ts" setup>
+  import type { MysqlGroupItem } from '@shared/app'
+  
   import { ref, computed } from 'vue'
   import { I18nT } from '@lang/index'
   import { AsyncComponentSetup } from '@/util/AsyncComponent'
-  import type { MysqlGroupItem } from '@shared/app'
   import LogVM from '@/components/Log/index.vue'
   import ToolVM from '@/components/Log/tool.vue'
   import { join } from 'path'

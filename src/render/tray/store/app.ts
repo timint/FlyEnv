@@ -1,5 +1,6 @@
-import { defineStore } from 'pinia'
 import type { AllAppModule } from '@/core/type'
+
+import { defineStore } from 'pinia'
 
 type ModuleItemState = {
   show: boolean

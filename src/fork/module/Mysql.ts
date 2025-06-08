@@ -1,4 +1,5 @@
 import type { MysqlGroupItem, OnlineVersionItem, SoftInstalled } from '@shared/app'
+
 import { join, dirname, basename } from 'path'
 import { existsSync, chmodSync, readdirSync, readFileSync, rmSync, writeFileSync, mkdirSync } from 'fs'
 import { execSync } from 'child_process'

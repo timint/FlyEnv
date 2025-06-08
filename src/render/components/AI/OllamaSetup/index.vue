@@ -34,10 +34,11 @@
   </el-dialog>
 </template>
 <script lang="ts" setup>
+  import type { FormInstance, FormRules } from 'element-plus'
+  
   import { onBeforeUnmount, reactive, ref, watch } from 'vue'
   import { AsyncComponentSetup } from '@/util/AsyncComponent'
   import { I18nT } from '@lang/index'
-  import type { FormInstance, FormRules } from 'element-plus'
   import { MessageError } from '@/util/Element'
   import { AISetup, type OllamaServerSetup } from '@/components/AI/setup'
   import IPC from '@/util/IPC'

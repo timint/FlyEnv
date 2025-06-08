@@ -1,3 +1,5 @@
+import type { AllAppModule } from '@/core/type'
+
 import { computed, ComputedRef, reactive } from 'vue'
 import { Service } from '@/components/ServiceManager/service'
 import { AppHost, AppStore } from '@/store/app'
@@ -9,7 +11,6 @@ import { MessageError } from '@/util/Element'
 import { MysqlStore } from '@/components/Mysql/mysql'
 import { AsyncComponentShow } from '@/util/AsyncComponent'
 import { handleWriteHosts } from '@/util/Host'
-import type { AllAppModule } from '@/core/type'
 
 import { shell } from '@electron/remote'
 

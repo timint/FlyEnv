@@ -46,8 +46,9 @@
 </template>
 
 <script lang="tsx" setup>
-  import { computed, ref } from 'vue'
   import type { Column } from 'element-plus'
+  
+  import { computed, ref } from 'vue'
   import { FtpStore } from '@/components/FTP/ftp'
   import { I18nT } from '@lang/index'
   import { AsyncComponentShow } from '@/util/AsyncComponent'

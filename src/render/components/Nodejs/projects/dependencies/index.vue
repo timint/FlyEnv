@@ -72,13 +72,14 @@
 </template>
 
 <script setup lang="ts">
-  import { computed, ComputedRef, reactive, ref } from 'vue'
   import type { ProjectItem } from '@/components/PHP/projects/setup'
+  import type { TableInstance } from 'element-plus'
+
+  import { computed, ComputedRef, reactive, ref } from 'vue'
   import { Check } from '@element-plus/icons-vue'
   import IPC from '@/util/IPC'
   import { MessageError } from '@/util/Element'
   import { ElMessage } from 'element-plus'
-  import type { TableInstance } from 'element-plus'
   import { I18nT } from '@lang/index'
   import { join } from 'path'
   import { shell } from '@electron/remote'

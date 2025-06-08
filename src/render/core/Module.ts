@@ -1,6 +1,7 @@
+import type { AllAppModule } from '@/core/type'
+
 import { computed, reactive } from 'vue'
 import { AppStore } from '@/store/app'
-import type { AllAppModule } from '@/core/type'
 import localForage from 'localforage'
 import { ModuleCustomer, ModuleCustomerExecItem } from '@/core/ModuleCustomer'
 

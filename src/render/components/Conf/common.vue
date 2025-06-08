@@ -25,8 +25,9 @@
   </template>
 </template>
 <script lang="ts" setup>
-  import { computed, ref, watch } from 'vue'
   import type { CommonSetItem } from '@/components/Conf/setup'
+  
+  import { computed, ref, watch } from 'vue'
   import CommonItem from './commonItem.vue'
 
   const props = defineProps<{

@@ -1,7 +1,8 @@
+import type { FtpItem, SoftInstalled } from '@shared/app'
+
 import { join } from 'path'
 import { existsSync, readFileSync, writeFileSync, mkdirSync } from 'fs'
 import { Base } from './Base'
-import type { FtpItem, SoftInstalled } from '@shared/app'
 import { ForkPromise } from '@shared/ForkPromise'
 import FtpServer from 'ftp-srv'
 import * as ip from 'neoip'
@@ -34,7 +35,8 @@ class Manager extends Base {
   _startServer() {
     const resolverFunction = (clientIP: string) => {
       if (clientIP === '127.0.0.1' || clientIP === '::1') {
-        return '127.0.0.1' // 本地连接直接返回回环地址
+        // For local connections, directly return the loopback address
+        return '127.0.0.1'
       }
       return ip.address()
     }
@@ -44,6 +46,7 @@ class Manager extends Base {
       this.server = new FtpServer({
         url: 'ftp://0.0.0.0:' + port,
         anonymous: true,
+        // @ts-expect-error: pasv_url is not in the type definition but is used by the library
         pasv_url: resolverFunction as any,
         pasv_min: 49152,
         pasv_max: 65535

@@ -11,9 +11,10 @@
 </template>
 
 <script lang="ts" setup>
+  import type { AllAppModule } from '@/core/type'
+
   import { AppStore } from '@/store/app'
   import { computed } from 'vue'
-  import type { AllAppModule } from '@/core/type'
 
   type StringFn = () => string
 

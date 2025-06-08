@@ -1,3 +1,5 @@
+import type { AppHost, SoftInstalled } from '@shared/app'
+
 import { join } from 'path'
 import { existsSync } from 'fs'
 import { execSync } from 'child_process'
@@ -12,13 +14,13 @@ import { autoFillNginxRewrite, makeNginxConf, updateNginxConf } from './host/Ngi
 import { makeCaddyConf, updateCaddyConf } from './host/Caddy'
 import { fetchHostList, saveHostList } from './host/HostFile'
 import { publicDecrypt } from 'crypto'
+// @ts-ignore: Custom type declaration is provided in types/usebruno__node-machine-id.d.ts
 import { machineId } from '@usebruno/node-machine-id'
 import {
   getSubDir,
   hostAlias,
   uuid,
 } from '../Fn'
-import type { AppHost, SoftInstalled } from '@shared/app'
 
 class Host extends Base {
   hostsFile = join('c:/windows/system32/drivers/etc', 'hosts')

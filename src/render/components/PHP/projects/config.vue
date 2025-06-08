@@ -47,9 +47,10 @@
 </template>
 
 <script lang="ts" setup>
+  import type { AllAppModule } from '@/core/type'
+
   import { computed } from 'vue'
   import { FolderOpened } from '@element-plus/icons-vue'
-  import type { AllAppModule } from '@/core/type'
   import { ConfSetup } from '@/components/Conf/setup'
   import { I18nT } from '@lang/index'
   import { AsyncComponentSetup } from '@/util/AsyncComponent'

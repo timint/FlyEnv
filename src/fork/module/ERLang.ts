@@ -1,4 +1,5 @@
 import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
+
 import { basename, dirname, join } from 'path'
 import { existsSync } from 'fs'
 import { Base } from './Base'

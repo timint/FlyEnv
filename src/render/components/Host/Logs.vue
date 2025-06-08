@@ -39,12 +39,11 @@
 </template>
 
 <script lang="ts" setup>
-  import { nextTick, ref, computed, watch, onMounted, onUnmounted } from 'vue'
-  import { writeFileAsync, readFileAsync } from '@shared/file'
-  import { AppStore } from '@/store/app'
-  import { EventBus } from '@/global'
-  import { editor } from 'monaco-editor/esm/vs/editor/editor.api.js'
   import type { FSWatcher } from 'fs'
+
+  import { nextTick, ref, watch, onMounted, onUnmounted } from 'vue'
+  import { writeFileAsync, readFileAsync } from '@shared/file'
+  import { editor } from 'monaco-editor/esm/vs/editor/editor.api.js'
   import { I18nT } from '@lang/index'
   import { AsyncComponentSetup } from '@/util/AsyncComponent'
   import { EditorConfigMake, EditorCreate } from '@/util/Editor'

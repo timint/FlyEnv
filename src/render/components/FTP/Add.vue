@@ -70,11 +70,12 @@
   </el-dialog>
 </template>
 <script lang="ts" setup>
-  import { computed, ref, watch } from 'vue'
+  import type { FtpItem } from './ftp'
+
+  import { ref, watch } from 'vue'
   import { AsyncComponentSetup } from '@/util/AsyncComponent'
   import IPC from '@/util/IPC'
   import { I18nT } from '@lang/index'
-  import type { FtpItem } from './ftp'
   import { FtpStore } from './ftp'
   import { uuid } from '@shared/utils'
   import { AppStore } from '@/store/app'

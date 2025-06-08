@@ -1,6 +1,7 @@
+import type { AllAppModule } from '@/core/type'
+
 import { computed, onMounted, onUnmounted, reactive } from 'vue'
 import { BrewStore } from '@/store/brew'
-import type { AllAppModule } from '@/core/type'
 import installedVersions from '@/util/InstalledVersions'
 import { fetchVerion } from '@/util/Brew'
 import {MessageError, MessageSuccess} from '@/util/Element'

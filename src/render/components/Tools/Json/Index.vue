@@ -65,13 +65,14 @@
 </template>
 
 <script lang="ts" setup>
+  import type { TabPaneName } from 'element-plus'
+
   import { computed, nextTick, onMounted, onUnmounted, reactive, ref, watch } from 'vue'
   import { editor, languages } from 'monaco-editor/esm/vs/editor/editor.api.js'
 
   import TomlRules from '@shared/transform/TomlRules'
   import { AppStore } from '@/store/app'
   import JSONStore, { JSONStoreTab } from '@/components/Tools/Json/store'
-  import type { TabPaneName } from 'element-plus'
   import { MessageSuccess } from '@/util/Element'
   import { I18nT } from '@lang/index'
   import { Document } from '@element-plus/icons-vue'
@@ -80,9 +81,9 @@
   import { dialog, shell, nativeTheme } from '@electron/remote'
   import { readFileSync, writeFileSync } from 'fs'
 
-  // 注册自定义语言
+  // Register custom language
   languages.register({ id: 'toml' })
-  // 为该自定义语言基本的Token
+  // Set basic tokens for the custom language
   languages.setMonarchTokensProvider('toml', TomlRules as any)
 
   const emit = defineEmits(['doClose'])

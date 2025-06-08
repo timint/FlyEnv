@@ -23,9 +23,10 @@
 </template>
 
 <script lang="ts" setup>
+  import type { AppHost } from '@/store/app'
+  
   import { ref, Ref } from 'vue'
   import { AsyncComponentSetup } from '@/util/AsyncComponent'
-  import type { AppHost } from '@/store/app'
   import { I18nT } from '@lang/index'
   import { MessageSuccess } from '@/util/Element'
   import { shell, clipboard } from '@electron/remote'

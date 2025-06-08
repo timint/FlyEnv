@@ -1,8 +1,8 @@
 // markdown-it plugin for:
 // 1. adding target="_blank" to external links
 // 2. normalize internal links to end with `.html`
-
 import type MarkdownIt from 'markdown-it'
+
 import { isExternal, treatAsHtml } from '../shared'
 
 const indexRE = /(^|.*\/)index.md(#?.*)$/i

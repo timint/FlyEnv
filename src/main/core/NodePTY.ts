@@ -1,9 +1,10 @@
+import type { PtyItem } from '../type'
+
 // Use createRequire to load @lydell/node-pty at runtime to avoid ESM dynamic require issues
 import { createRequire } from 'module'
 const require = createRequire(import.meta.url)
 const nodePty = require('@lydell/node-pty')
 const spawn = nodePty.spawn
-import type { PtyItem } from '../type'
 import { uuid } from '../utils'
 
 class NodePTY {

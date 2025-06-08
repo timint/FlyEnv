@@ -1,6 +1,7 @@
-import { defineStore } from 'pinia'
-import type { AIChatItem } from '@shared/app'
 import type BaseTask from '@/components/AI/Task/BaseTask'
+import type { AIChatItem } from '@shared/app'
+
+import { defineStore } from 'pinia'
 
 interface State {
   show: boolean

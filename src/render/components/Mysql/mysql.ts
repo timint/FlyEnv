@@ -1,5 +1,6 @@
-import { defineStore } from 'pinia'
 import type { MysqlGroupItem } from '@shared/app'
+
+import { defineStore } from 'pinia'
 import IPC from '@/util/IPC'
 import { existsSync, readFileSync, writeFileSync, mkdirSync } from 'fs'
 import { join } from 'path'

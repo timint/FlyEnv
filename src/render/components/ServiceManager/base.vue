@@ -148,10 +148,11 @@
 </template>
 
 <script lang="ts" setup>
+  import type { AllAppModule } from '@/core/type'
+
   import { FolderAdd } from '@element-plus/icons-vue'
   import { ServiceActionStore } from '@/components/ServiceManager/EXT/store'
   import { I18nT } from '@lang/index'
-  import type { AllAppModule } from '@/core/type'
   import { Setup } from '@/components/ServiceManager/setup'
   import EXT from '@/components/ServiceManager/EXT/index.vue'
 

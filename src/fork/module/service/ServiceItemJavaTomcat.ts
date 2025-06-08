@@ -1,4 +1,5 @@
 import type { AppHost, SoftInstalled } from '@shared/app'
+
 import { basename, dirname, join, resolve as pathResolve } from 'path'
 import { existsSync, readFileSync, writeFileSync, copyFileSync, realpathSync, mkdirSync } from 'fs'
 import { hostAlias, waitTime } from '../../Fn'

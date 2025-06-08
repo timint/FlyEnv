@@ -1,7 +1,8 @@
 import type BaseTask from '@/components/AI/Task/BaseTask'
+import type { SoftInstalled } from '@shared/app'
+
 import { startService } from '@/util/Service'
 import { AIStore } from '@/components/AI/store'
-import type { SoftInstalled } from '@shared/app'
 import { I18nT } from '@lang/index'
 
 export function startPhp(this: BaseTask, version: SoftInstalled) {

@@ -1,4 +1,5 @@
 import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
+
 import { join, basename, dirname } from 'path'
 import { createWriteStream, chmodSync, existsSync, mkdirSync, readFileSync, rm, rmSync, writeFileSync } from 'fs'
 import { promisify } from 'node:util'

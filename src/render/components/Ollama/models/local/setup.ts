@@ -1,6 +1,7 @@
+import type { OllamaModelItem } from '@/components/Ollama/models/all/setup'
+
 import { computed, reactive } from 'vue'
 import IPC from '@/util/IPC'
-import type { OllamaModelItem } from '@/components/Ollama/models/all/setup'
 import { BrewStore } from '@/store/brew'
 import { AppStore } from '@/store/app'
 import InstalledVersions from '@/util/InstalledVersions'

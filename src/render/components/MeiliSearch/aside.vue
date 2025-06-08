@@ -29,6 +29,7 @@
 <script lang="ts" setup>
   import type { AllAppModule } from '@/core/type'
   import type { SoftInstalled } from '@/store/brew'
+
   import { AsideSetup, AppServiceModule } from '@/core/ASide'
   import { MeiliSearchSetup } from './setup'
   import { ServiceActionExtParam } from '@/util/Service'

@@ -4,7 +4,9 @@ import { ForkPromise } from '@shared/ForkPromise'
 import dns2 from 'dns2'
 import * as ip from 'neoip'
 import { join } from 'path'
+// @ts-ignore: Custom type declaration is provided in types/tangerine.d.ts
 import Tangerine from 'tangerine'
+/// <reference path='../../../types/tangerine.d.ts' />
 
 const { Packet } = dns2
 

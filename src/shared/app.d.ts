@@ -1,7 +1,8 @@
 import type { AppServerCurrent } from '@/store/app'
-import { AllAppModule } from '@/core/type'
+import type { AllAppModule } from '@/core/type'
 
 export interface SoftInstalled {
+  typeFlag: AllAppModule
   version: string | null
   bin: string
   path: string
@@ -16,7 +17,6 @@ export interface SoftInstalled {
   flag?: string
   isLocal7Z?: boolean
   pid?: string
-  typeFlag: AllAppModule
 }
 
 export interface AppHostReverseProxyItem {
@@ -28,6 +28,8 @@ export interface AppHost {
   id: number
   reverseProxy?: AppHostReverseProxyItem[]
   type?: string
+  isTop?: boolean
+  isSorting?: boolean
   projectName?: string
   projectPort?: number
   startCommand?: string
@@ -41,8 +43,6 @@ export interface AppHost {
   pythonDir?: string
   bin?: string
   envFile: string
-  isTop?: boolean
-  isSorting?: boolean
   name: string
   alias: string
   useSSL: boolean
@@ -58,8 +58,8 @@ export interface AppHost {
     apache_ssl: number
     caddy: number
     caddy_ssl: number
-    tomcat: number
-    tomcat_ssl: number
+    tomcat?: number
+    tomcat_ssl?: number
   }
   nginx: {
     rewrite: string
@@ -68,6 +68,7 @@ export interface AppHost {
   root: string
   phpVersion?: number
   mark?: string
+  bookmark?: string
 }
 
 export interface FtpItem {

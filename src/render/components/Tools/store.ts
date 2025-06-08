@@ -1,4 +1,5 @@
 import type { AppToolModuleItem } from '@/core/type'
+
 import { reactive } from 'vue'
 import { uuid } from '@/util/Index'
 import { existsSync, readFileSync, writeFileSync } from 'fs'

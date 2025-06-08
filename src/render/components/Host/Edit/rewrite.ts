@@ -1,4 +1,5 @@
 import type { FSWatcher, WatchEventType } from 'fs'
+
 import { reactive, markRaw } from 'vue'
 import { getAllFileAsync } from '@shared/file'
 import { join } from 'path'

@@ -22,12 +22,13 @@
   </el-drawer>
 </template>
 <script lang="ts" setup>
+  import type { SoftInstalled } from '@/store/brew'
+
   import { ref, computed } from 'vue'
   import { I18nT } from '@lang/index'
   import { AsyncComponentSetup } from '@/util/AsyncComponent'
   import LogVM from '@/components/Log/index.vue'
   import ToolVM from '@/components/Log/tool.vue'
-  import type { SoftInstalled } from '@/store/brew'
 
   import { join } from 'path'
 
