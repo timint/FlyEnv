@@ -7,15 +7,8 @@ import { ForkPromise } from '@shared/ForkPromise'
 import { mkdirSync, readFileSync, writeFileSync } from 'fs'
 import { I18nT } from '@lang/index'
 import TaskQueue from '../TaskQueue'
-import {
-  AppLog,
-  serviceStartExecGetPID,
-  versionBinVersion,
-  versionFilterSame,
-  versionFixed,
-  versionLocalFetch,
-  versionSort
-} from '../Fn'
+import { versionBinVersion, versionFilterSame, versionFixed, versionLocalFetch, versionSort } from '../util/Version'
+import { AppLog, serviceStartExecGetPID } from '../Fn'
 
 class MeiliSearch extends Base {
   constructor() {

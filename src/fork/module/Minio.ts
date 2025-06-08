@@ -6,15 +6,8 @@ import type { SoftInstalled } from '@shared/app'
 import axios from 'axios'
 import TaskQueue from '../TaskQueue'
 import { I18nT } from '@lang/index'
-import {
-  AppLog,
-  serviceStartExec,
-  spawnPromise,
-  versionBinVersion,
-  versionFilterSame,
-  versionLocalFetch,
-  versionSort
-} from '../Fn'
+import { versionBinVersion, versionFilterSame, versionLocalFetch, versionSort } from '../util/Version'
+import { AppLog, serviceStartExec, spawnPromise } from '../Fn'
 
 class Minio extends Base {
   constructor() {

@@ -4,12 +4,7 @@ import { Base } from './Base'
 import { ForkPromise } from '@shared/ForkPromise'
 import { OnlineVersionItem, SoftInstalled } from '@shared/app'
 import TaskQueue from '../TaskQueue'
-import {
-  versionFilterSame,
-  versionFixed,
-  versionLocalFetch,
-  versionSort
-} from '../Fn'
+import { versionFilterSame, versionFixed, versionLocalFetch, versionSort } from '../util/Version'
 
 class Composer extends Base {
   constructor() {

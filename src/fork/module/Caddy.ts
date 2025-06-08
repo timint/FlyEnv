@@ -7,17 +7,8 @@ import { ForkPromise } from '@shared/ForkPromise'
 import TaskQueue from '../TaskQueue'
 import { fetchHostList } from './host/HostFile'
 import { I18nT } from '@lang/index'
-import {
-  AppLog,
-  hostAlias,
-  serviceStartExecCMD,
-  versionBinVersion,
-  versionFilterSame,
-  versionFixed,
-  versionInitedApp,
-  versionLocalFetch,
-  versionSort
-} from '../Fn'
+import { versionBinVersion, versionFilterSame, versionFixed, versionInitedApp, versionLocalFetch, versionSort } from '../util/Version'
+import { AppLog, hostAlias, serviceStartExecCMD } from '../Fn'
 
 class Caddy extends Base {
   constructor() {

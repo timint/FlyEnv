@@ -6,15 +6,8 @@ import { Base } from './Base'
 import { ForkPromise } from '@shared/ForkPromise'
 import { I18nT } from '@lang/index'
 import TaskQueue from '../TaskQueue'
-import {
-  AppLog,
-  serviceStartExecCMD,
-  versionBinVersion,
-  versionFilterSame,
-  versionFixed,
-  versionLocalFetch,
-  versionSort
-} from '../Fn'
+import { versionBinVersion, versionFilterSame, versionFixed, versionLocalFetch, versionSort } from '../util/Version'
+import { AppLog, serviceStartExecCMD } from '../Fn'
 
 class Elasticsearch extends Base {
   constructor() {

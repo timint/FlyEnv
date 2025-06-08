@@ -8,17 +8,8 @@ import { I18nT } from '@lang/index'
 import { ForkPromise } from '@shared/ForkPromise'
 import TaskQueue from '../TaskQueue'
 import { fetchHostList } from './host/HostFile'
-import {
-  AppLog,
-  getAllFileAsync,
-  versionBinVersion,
-  versionFilterSame,
-  versionFixed,
-  versionInitedApp,
-  versionLocalFetch,
-  versionSort,
-  serviceStartExecCMD
-} from '../Fn'
+import { AppLog, getAllFileAsync, serviceStartExecCMD } from '../Fn'
+import { versionBinVersion, versionFilterSame, versionFixed, versionInitedApp, versionLocalFetch, versionSort } from '../util/Version'
 
 class Apache extends Base {
   constructor() {

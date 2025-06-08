@@ -10,16 +10,8 @@ import { I18nT } from '@lang/index'
 import { zipUnPack } from '@shared/file'
 import axios from 'axios'
 import { spawn } from 'child_process'
-import {
-  AppLog,
-  moveChildDirToParent,
-  serviceStartExecCMD,
-  versionBinVersion,
-  versionFilterSame,
-  versionFixed,
-  versionLocalFetch,
-  versionSort
-} from '../Fn'
+import { versionBinVersion, versionFilterSame, versionFixed, versionLocalFetch, versionSort } from '../util/Version'
+import { AppLog, moveChildDirToParent, serviceStartExecCMD } from '../Fn'
 
 const spawnAsync = promisify(spawn)
 const rmAsync = promisify(rm)

@@ -7,15 +7,8 @@ import { ForkPromise } from '@shared/ForkPromise'
 import TaskQueue from '../TaskQueue'
 import { EOL } from 'os'
 import { I18nT } from '@lang/index'
-import {
-  AppLog,
-  serviceStartExec,
-  versionBinVersion,
-  versionFilterSame,
-  versionFixed,
-  versionLocalFetch,
-  versionSort
-} from '../Fn'
+import { versionBinVersion, versionFilterSame, versionFixed, versionLocalFetch, versionSort } from '../util/Version'
+import { AppLog, serviceStartExec } from '../Fn'
 
 class MailPit extends Base {
   constructor() {

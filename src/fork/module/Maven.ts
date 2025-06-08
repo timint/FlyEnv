@@ -5,13 +5,7 @@ import { existsSync } from 'fs'
 import { Base } from './Base'
 import { ForkPromise } from '@shared/ForkPromise'
 import TaskQueue from '../TaskQueue'
-import {
-  versionBinVersion,
-  versionFilterSame,
-  versionFixed,
-  versionLocalFetch,
-  versionSort
-} from '../Fn'
+import { versionBinVersion, versionFilterSame, versionFixed, versionLocalFetch, versionSort } from '../util/Version'
 
 class Maven extends Base {
   constructor() {

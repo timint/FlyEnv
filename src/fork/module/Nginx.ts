@@ -8,16 +8,8 @@ import { zipUnPack } from '@shared/file'
 import TaskQueue from '../TaskQueue'
 import { fetchHostList } from './host/HostFile'
 import { I18nT } from '@lang/index'
-import {
-  AppLog,
-  serviceStartExecCMD,
-  versionBinVersion,
-  versionFilterSame,
-  versionFixed,
-  versionInitedApp,
-  versionLocalFetch,
-  versionSort
-} from '../Fn'
+import { versionBinVersion, versionFilterSame, versionFixed, versionInitedApp, versionLocalFetch, versionSort } from '../util/Version'
+import { AppLog, serviceStartExecCMD } from '../Fn'
 
 class Nginx extends Base {
   constructor() {

@@ -8,16 +8,8 @@ import { ForkPromise } from '@shared/ForkPromise'
 import TaskQueue from '../TaskQueue'
 import { ProcessListSearch } from '../Process'
 import { I18nT } from '@lang/index'
-import {
-  AppLog,
-  serviceStartExecCMD,
-  versionBinVersion,
-  versionFilterSame,
-  versionFixed,
-  versionInitedApp,
-  versionLocalFetch,
-  versionSort
-} from '../Fn'
+import { versionBinVersion, versionFilterSame, versionFixed, versionInitedApp, versionLocalFetch, versionSort } from '../util/Version'
+import { AppLog, serviceStartExecCMD } from '../Fn'
 
 class Redis extends Base {
   constructor() {

@@ -10,17 +10,8 @@ import TaskQueue from '../TaskQueue'
 import { EOL } from 'os'
 import { PItem, ProcessListSearch } from '../Process'
 import { sleep } from '@shared/Helpers/General'
-import {
-  versionLocalFetch,
-  versionFilterSame,
-  versionBinVersion,
-  versionFixed,
-  versionInitedApp,
-  versionSort,
-  AppLog,
-  serviceStartExecCMD,
-  spawnPromise
-} from '../Fn'
+import { versionLocalFetch, versionFilterSame, versionBinVersion, versionFixed, versionInitedApp, versionSort } from '../util/Version'
+import { AppLog, serviceStartExecCMD, spawnPromise } from '../Fn'
 
 class Mysql extends Base {
   constructor() {

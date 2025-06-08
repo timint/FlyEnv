@@ -9,15 +9,8 @@ import { ForkPromise } from '@shared/ForkPromise'
 import TaskQueue from '../TaskQueue'
 import { ProcessListSearch } from '../Process'
 import { sleep } from '@shared/Helpers/General'
-import {
-  AppLog,
-  serviceStartExecCMD,
-  versionBinVersion,
-  versionFilterSame,
-  versionFixed,
-  versionLocalFetch,
-  versionSort,
-} from '../Fn'
+import { versionBinVersion, versionFilterSame, versionFixed, versionLocalFetch, versionSort } from '../util/Version'
+import { AppLog, serviceStartExecCMD } from '../Fn'
 
 class RabbitMQ extends Base {
   baseDir: string = ''

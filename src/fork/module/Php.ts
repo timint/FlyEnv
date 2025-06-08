@@ -10,16 +10,8 @@ import { zipUnPack } from '@shared/file'
 import TaskQueue from '../TaskQueue'
 import { ProcessListSearch } from '../Process'
 import axios from 'axios'
-import {
-  AppLog,
-  serviceStartExec,
-  versionBinVersion,
-  versionFilterSame,
-  versionFixed,
-  versionInitedApp,
-  versionLocalFetch,
-  versionSort
-} from '../Fn'
+import { versionBinVersion, versionFilterSame, versionFixed, versionInitedApp, versionLocalFetch, versionSort } from '../util/Version'
+import { AppLog, serviceStartExec } from '../Fn'
 
 class Php extends Base {
   constructor() {

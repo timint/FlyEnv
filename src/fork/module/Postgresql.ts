@@ -8,16 +8,8 @@ import { I18nT } from '@lang/index'
 import { ForkPromise } from '@shared/ForkPromise'
 import TaskQueue from '../TaskQueue'
 import { sleep } from '@shared/Helpers/General'
-import {
-  AppLog,
-  serviceStartExecCMD,
-  setDir777ToCurrentUser,
-  versionBinVersion,
-  versionFilterSame,
-  versionFixed,
-  versionLocalFetch,
-  versionSort
-} from '../Fn'
+import { versionBinVersion, versionFilterSame, versionFixed, versionLocalFetch, versionSort } from '../util/Version'
+import { AppLog, serviceStartExecCMD, setDir777ToCurrentUser } from '../Fn'
 
 class Manager extends Base {
   constructor() {

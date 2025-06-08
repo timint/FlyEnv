@@ -14,15 +14,8 @@ import { Base } from './Base'
 import { ForkPromise } from '@shared/ForkPromise'
 import { I18nT } from '@lang/index'
 import TaskQueue from '../TaskQueue'
-import {
-  AppLog,
-  serviceStartExec,
-  versionBinVersion,
-  versionFilterSame,
-  versionFixed,
-  versionLocalFetch,
-  versionSort
-} from '../Fn'
+import { versionBinVersion, versionFilterSame, versionFixed, versionLocalFetch, versionSort } from '../util/Version'
+import { AppLog, serviceStartExec } from '../Fn'
 
 class Ollama extends Base {
   constructor() {

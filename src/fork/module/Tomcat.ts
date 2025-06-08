@@ -9,15 +9,8 @@ import { makeGlobalTomcatServerXML } from './service/ServiceItemJavaTomcat'
 import { ProcessListSearch } from '../Process'
 import { I18nT } from '@lang/index'
 import { sleep } from '@shared/Helpers/General'
-import {
-  AppLog,
-  serviceStartExecCMD,
-  versionBinVersion,
-  versionFilterSame,
-  versionFixed,
-  versionLocalFetch,
-  versionSort
-} from '../Fn'
+import { versionBinVersion, versionFilterSame, versionFixed, versionLocalFetch, versionSort } from '../util/Version'
+import { AppLog, serviceStartExecCMD } from '../Fn'
 
 class Tomcat extends Base {
   constructor() {
