@@ -12,40 +12,20 @@ import iconv from 'iconv-lite'
 import { I18nT } from '@lang/index'
 import { userInfo, hostname } from 'os'
 import packageJson from '../../package.json'
-import { sleep } from '@/core/Helpers/General'
+import { sleep } from '@shared/Helpers/General'
 
-export const ProcessSendSuccess = (key: string, data: any, on?: boolean) => {
-  process?.send?.({
-    on,
-    key,
-    info: {
-      code: 0,
-      data
-    }
-  })
+const processSend = (key: string, info: any, on?: boolean) => {
+  process?.send?.({ on, key, info })
 }
 
-export const ProcessSendError = (key: string, msg: any, on?: boolean) => {
-  process?.send?.({
-    on,
-    key,
-    info: {
-      code: 1,
-      msg
-    }
-  })
-}
+export const ProcessSendSuccess = (key: string, data: any, on?: boolean) =>
+  processSend(key, { code: 0, data }, on)
 
-export const ProcessSendLog = (key: string, msg: any, on?: boolean) => {
-  process?.send?.({
-    on,
-    key,
-    info: {
-      code: 200,
-      msg
-    }
-  })
-}
+export const ProcessSendError = (key: string, msg: any, on?: boolean) =>
+  processSend(key, { code: 1, msg }, on)
+
+export const ProcessSendLog = (key: string, msg: any, on?: boolean) =>
+  processSend(key, { code: 200, msg }, on)
 
 export function uuid(length = 32) {
   const num = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
@@ -57,10 +37,13 @@ export function uuid(length = 32) {
 }
 
 export function fixEnv(): { [k: string]: any } {
-  let path = `C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\;%SYSTEMROOT%\\System32\\WindowsPowerShell\\v1.0\\;${process.env['PATH']}`
+  let path = [
+    'C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\',
+    '%SYSTEMROOT%\\System32\\WindowsPowerShell\\v1.0\\',
+    process.env['PATH'],
+  ].join(';')
   path = Array.from(new Set(path.split(';'))).join(';')
-  const env = { ...process.env, PATH: path }
-  return env
+  return { ...process.env, PATH: path }
 }
 
 export function execSyncFix(command: string, opt?: { [k: string]: any }): string | undefined {
