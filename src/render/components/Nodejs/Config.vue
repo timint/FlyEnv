@@ -18,7 +18,7 @@
   import { computed, reactive, Ref, ref, watch } from 'vue'
   import Conf from '@/components/Conf/index.vue'
   import { I18nT } from '@lang/index'
-  import { debounce } from '@/core/Helpers/General'
+  import { debounce } from '@shared/Helpers/General'
   import { uuid } from '@/util/Index'
   import { join } from 'path'
 

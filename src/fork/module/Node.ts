@@ -9,7 +9,7 @@ import axios from 'axios'
 import { SoftInstalled } from '@shared/app'
 import TaskQueue from '../TaskQueue'
 import ncu from 'npm-check-updates'
-import { sleep } from '@/core/Helpers/General'
+import { sleep } from '@shared/Helpers/General'
 import {
   fetchPathByBin,
   fetchRawPATH,

@@ -8,7 +8,7 @@ import { ForkPromise } from '@shared/ForkPromise'
 import { zipUnPack } from '@shared/file'
 import axios from 'axios'
 import { ProcessListSearch, ProcessPidList, ProcessPidListByPid } from '../Process'
-import { sleep } from '@/core/Helpers/General'
+import { sleep } from '@shared/Helpers/General'
 import {
   AppLog,
   getAllFileAsync,

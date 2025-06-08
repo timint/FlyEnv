@@ -19,7 +19,7 @@
   import Conf from '@/components/Conf/index.vue'
   import IPC from '@/util/IPC'
   import { I18nT } from '@lang/index'
-  import { debounce } from '@/core/Helpers/General'
+  import { debounce } from '@shared/Helpers/General'
   import { uuid } from '@shared/utils'
   import { join } from 'path'
   import { existsSync } from 'fs'

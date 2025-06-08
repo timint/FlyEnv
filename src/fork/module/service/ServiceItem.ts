@@ -2,7 +2,7 @@ import type { AppHost } from '@shared/app'
 
 import { existsSync, FSWatcher, readFileSync, watch } from 'fs'
 import { ForkPromise } from '@shared/ForkPromise'
-import { sleep } from '@/core/Helpers/General'
+import { sleep } from '@shared/Helpers/General'
 import { suExecPromise } from '../../Fn'
 
 export const getHostItemEnv = async (item: AppHost) => {

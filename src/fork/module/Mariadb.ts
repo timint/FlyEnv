@@ -7,7 +7,7 @@ import { Base } from './Base'
 import { I18nT } from '@lang/index'
 import { ForkPromise } from '@shared/ForkPromise'
 import TaskQueue from '../TaskQueue'
-import { sleep } from '@/core/Helpers/General'
+import { sleep } from '@shared/Helpers/General'
 import {
   execPromise,
   versionLocalFetch,

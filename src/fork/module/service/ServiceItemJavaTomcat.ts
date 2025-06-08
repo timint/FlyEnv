@@ -2,7 +2,7 @@ import type { AppHost, SoftInstalled } from '@shared/app'
 
 import { basename, dirname, join, resolve as pathResolve } from 'path'
 import { existsSync, readFileSync, writeFileSync, copyFileSync, realpathSync, mkdirSync } from 'fs'
-import { sleep } from '@/core/Helpers/General'
+import { sleep } from '@shared/Helpers/General'
 import { hostAlias } from '../../Fn'
 import { XMLBuilder, XMLParser } from 'fast-xml-parser'
 import { ServiceItem } from './ServiceItem'

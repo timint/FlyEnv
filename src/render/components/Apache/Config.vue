@@ -19,7 +19,7 @@
   import { AppStore } from '@/store/app'
   import Conf from '@/components/Conf/index.vue'
   import { I18nT } from '@lang/index'
-  import { debounce } from '@/core/Helpers/General'
+  import { debounce } from '@shared/Helpers/General'
 
   import { uuid } from "@shared/utils"
   import { join } from 'path'

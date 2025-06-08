@@ -1,7 +1,7 @@
 import { reactive } from 'vue'
 import { MessageSuccess } from '@/util/Element'
 import { I18nT } from '@lang/index'
-import { escapeHtml, unescapeHtml } from '@/core/Helpers/Escape'
+import { escapeHtml, unescapeHtml } from '@shared/Helpers/Escape'
 import { clipboard } from '@electron/remote'
 
 const store = reactive({

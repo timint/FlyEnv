@@ -37,7 +37,7 @@
   import { I18nT } from '@lang/index'
   import { AsyncComponentSetup } from '@/util/AsyncComponent'
   import Conf from '@/components/Conf/drawer.vue'
-  import { debounce } from '@/core/Helpers/General'
+  import { debounce } from '@shared/Helpers/General'
   import { uuid } from "@shared/utils"
   import { existsSync, writeFile } from 'fs'
   import { join } from 'path'

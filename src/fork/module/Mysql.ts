@@ -9,7 +9,7 @@ import { ForkPromise } from '@shared/ForkPromise'
 import TaskQueue from '../TaskQueue'
 import { EOL } from 'os'
 import { PItem, ProcessListSearch } from '../Process'
-import { sleep } from '@/core/Helpers/General'
+import { sleep } from '@shared/Helpers/General'
 import {
   versionLocalFetch,
   versionFilterSame,
