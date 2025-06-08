@@ -1,5 +1,4 @@
 import type { GroupPermissions, Permissions } from './chmod-calculator.types'
-import * as _ from 'lodash-es'
 
 export { computeChmodOctalRepresentation, computeChmodSymbolicRepresentation }
 
@@ -7,9 +6,8 @@ function computeChmodOctalRepresentation({ permissions }: { permissions: Permiss
   const permissionValue = { read: 4, write: 2, execute: 1 }
 
   const getGroupPermissionValue = (permission: GroupPermissions) =>
-    _.reduce(
-      permission,
-      (acc: number, isPermSet: boolean, key: string) => acc + (isPermSet ? _.get(permissionValue, key, 0) : 0),
+    (['read', 'write', 'execute'] as const).reduce(
+      (acc: number, key) => acc + (permission[key] ? permissionValue[key] : 0),
       0
     )
 
@@ -24,9 +22,8 @@ function computeChmodSymbolicRepresentation({ permissions }: { permissions: Perm
   const permissionValue = { read: 'r', write: 'w', execute: 'x' }
 
   const getGroupPermissionValue = (permission: GroupPermissions) =>
-    _.reduce(
-      permission,
-      (acc: string, isPermSet: boolean, key: string) => acc + (isPermSet ? _.get(permissionValue, key, '') : '-'),
+    (['read', 'write', 'execute'] as const).reduce(
+      (acc: string, key) => acc + (permission[key] ? permissionValue[key] : '-'),
       ''
     )
 

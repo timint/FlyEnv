@@ -250,7 +250,6 @@
   import { I18nT } from '@lang/index'
   import Base from '@/core/Base'
   import { AsyncComponentSetup } from '@/util/AsyncComponent'
-  import { merge } from 'lodash-es'
   import { ElMessageBox } from 'element-plus'
   import IPC from '@/util/IPC'
   import SSLTips from './SSLTips/index.vue'
@@ -305,7 +304,7 @@
     port_apache_ssl: false,
     port_caddy_ssl: false
   })
-  merge(item.value, props.edit)
+  Object.assign(item.value, props.edit)
   const appStore = AppStore()
   const brewStore = BrewStore()
   const hosts = computed(() => {

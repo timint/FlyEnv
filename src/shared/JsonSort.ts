@@ -1,5 +1,3 @@
-import * as _ from 'lodash-es'
-
 const copySymbolsToObj = (src: any, dest: any) => {
   const srcSymbols = Object.getOwnPropertySymbols(src)
   for (const srcSymbol of srcSymbols) {
@@ -8,9 +6,10 @@ const copySymbolsToObj = (src: any, dest: any) => {
 }
 
 export const JSONSort = (obj: any, order: 'desc' | 'asc' = 'asc') => {
-  if (_.isArray(obj)) {
-    const array: any[] = _.map(obj, function (value) {
-      if (!_.isNumber(value) && !_.isFunction(value) && _.isObject(value)) {
+
+  if (Array.isArray(obj)) {
+    const array: any[] = obj.map(function (value) {
+      if (typeof value !== 'number' && typeof value !== 'function' && typeof value === 'object' && value !== null) {
         return JSONSort(value, order)
       } else {
         return value
@@ -18,18 +17,24 @@ export const JSONSort = (obj: any, order: 'desc' | 'asc' = 'asc') => {
     })
     copySymbolsToObj(obj, array)
     return array
-  } else {
-    const keys = _.orderBy(_.keys(obj), [], [order])
-    const newObj = _.zipObject(
-      keys,
-      _.map(keys, function (key) {
-        if (!_.isNumber(obj[key]) && !_.isFunction(obj[key]) && _.isObject(obj[key])) {
-          obj[key] = JSONSort(obj[key], order)
-        }
-        return obj[key]
-      })
-    )
+  }
+
+  if (typeof obj === 'object' && obj !== null) {
+    const keys = Object.keys(obj).sort((a, b) => {
+      if (order === 'asc') return a.localeCompare(b)
+      else return b.localeCompare(a)
+    })
+    const newObj: any = {}
+    for (const key of keys) {
+      if (typeof obj[key] !== 'number' && typeof obj[key] !== 'function' && typeof obj[key] === 'object' && obj[key] !== null) {
+        newObj[key] = JSONSort(obj[key], order)
+      } else {
+        newObj[key] = obj[key]
+      }
+    }
     copySymbolsToObj(obj, newObj)
     return newObj
   }
+
+  return obj
 }

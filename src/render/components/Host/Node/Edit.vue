@@ -166,7 +166,6 @@
   import { AppHost, AppStore } from '@/store/app'
   import { I18nT } from '@lang/index'
   import { AsyncComponentSetup } from '@/util/AsyncComponent'
-  import { merge } from 'lodash-es'
   import { dialog } from '@electron/remote'
   import { existsSync, readFileSync } from 'fs'
   import { dirname, join } from 'path'
@@ -206,7 +205,7 @@
     nodeDir: false,
     root: false
   })
-  merge(item.value, props.edit)
+  Object.assign(item.value, props.edit)
 
   const scripts = ref({})
   const appStore = AppStore()

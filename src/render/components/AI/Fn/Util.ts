@@ -1,6 +1,5 @@
 import type BaseTask from '@/components/AI/Task/BaseTask'
 
-import { merge } from 'lodash-es'
 import installedVersions from '@/util/InstalledVersions'
 import IPC from '@/util/IPC'
 import { AllAppModule } from '@/core/type'
@@ -40,14 +39,10 @@ export function execPromise(
 }> {
   return new Promise((resolve, reject) => {
     try {
-      exec(
-        command,
-        merge(
-          {
-            env: fixEnv()
-          },
-          opt
-        ),
+      exec(command, {
+          ...opt,
+          env: fixEnv()
+        },
         (error: any, stdout: string, stderr: string) => {
           if (!error) {
             resolve({

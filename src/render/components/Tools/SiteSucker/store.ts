@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia'
 import IPC from '@/util/IPC'
 import { reactive } from 'vue'
-import { merge } from 'lodash-es'
 
 export type LinkState = 'wait' | 'running' | 'success' | 'fail' | 'replace'
 
@@ -52,7 +51,7 @@ export const SiteSuckerStore = defineStore('siteSucker', {
       return new Promise((resolve) => {
         IPC.send('app-sitesucker-setup').then((key: string, res: any) => {
           IPC.off(key)
-          merge(this.commonSetup, res?.commonSetup)
+          Object.assign(this.commonSetup, res?.commonSetup)
           resolve(true)
         })
       })

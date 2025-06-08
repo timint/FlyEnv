@@ -211,7 +211,6 @@
   import { onMounted, onUnmounted, reactive, ref, watch } from 'vue'
   import { I18nT } from '@lang/index'
   import { AsyncComponentSetup } from '@/util/AsyncComponent'
-  import { merge } from 'lodash-es'
   import { uuid } from '@/util/Index'
   import { Delete, Plus } from '@element-plus/icons-vue'
   import { dialog } from '@electron/remote'
@@ -239,7 +238,7 @@
     command: false,
     commandFile: false
   })
-  merge(item.value, props.edit)
+  Object.assign(item.value, props.edit)
 
   watch(
     item,

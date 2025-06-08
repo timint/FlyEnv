@@ -18,7 +18,7 @@
   import { computed, ref, watch, Ref, reactive } from 'vue'
   import Conf from '@/components/Conf/index.vue'
   import { I18nT } from '@lang/index'
-  import { debounce } from 'lodash-es'
+  import { debounce } from '@/core/Helpers/General'
   import { AppStore } from '@/store/app'
   import IPC from '@/util/IPC'
   import {uuid} from "@shared/utils";

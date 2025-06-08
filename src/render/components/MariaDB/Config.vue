@@ -14,11 +14,11 @@
 
 <script lang="ts" setup>
   import type { CommonSetItem } from '@/components/Conf/setup'
-  
+
   import { computed, ref, watch, Ref, reactive } from 'vue'
   import Conf from '@/components/Conf/index.vue'
   import { I18nT } from '@lang/index'
-  import { debounce } from 'lodash-es'
+  import { debounce } from '@/core/Helpers/General'
   import { AppStore } from '@/store/app'
   import { uuid } from "@shared/utils"
   import { join } from 'path'

@@ -148,7 +148,6 @@
   import { AppHost, AppStore } from '@/store/app'
   import { I18nT } from '@lang/index'
   import { AsyncComponentSetup } from '@/util/AsyncComponent'
-  import { merge } from 'lodash-es'
   import { dialog } from '@electron/remote'
   import { dirname, basename } from 'path'
 
@@ -181,7 +180,7 @@
     bin: false,
     root: false
   })
-  merge(item.value, props.edit)
+  Object.assign(item.value, props.edit)
 
   const appStore = AppStore()
   const hosts = computed(() => {

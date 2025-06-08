@@ -1,5 +1,4 @@
 import { AIBase } from '@/components/AI/AIBase'
-import { merge } from 'lodash-es'
 import type { ChatItem } from '@/components/AI/setup'
 import { reactive } from 'vue'
 import { MessageError } from '@/util/Element'
@@ -23,17 +22,15 @@ export class AIOllama extends AIBase {
         },
         method: 'post',
         responseType: 'stream',
-        data: merge(
-          {
-            model: model,
-            stream: true,
-            messages: [],
-            options: {
-              temperature: this.temperature
-            }
+        data: {
+          ...param
+          model: model,
+          stream: true,
+          messages: [],
+          options: {
+            temperature: this.temperature
           },
-          param
-        )
+        }
       }
       IPC.send('app-fork:ollama', 'chat', data, AISetup.trialStartTime).then(
         (key: string, res: any) => {

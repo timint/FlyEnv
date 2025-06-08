@@ -14,11 +14,11 @@
 
 <script lang="ts" setup>
   import type { CommonSetItem } from '@/components/Conf/setup'
-  
+
   import { computed, reactive, Ref, ref, watch } from 'vue'
   import Conf from '@/components/Conf/index.vue'
   import { I18nT } from '@lang/index'
-  import { debounce } from 'lodash-es'
+  import { debounce } from '@/core/Helpers/General'
   import { uuid } from '@/util/Index'
   import { join } from 'path'
 

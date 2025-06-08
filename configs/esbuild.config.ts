@@ -24,7 +24,6 @@ const external = [
   'ip',
   'js-yaml',
   'jszip',
-  'lodash',
   'nock',
   'node-pty',
   'nodejieba',

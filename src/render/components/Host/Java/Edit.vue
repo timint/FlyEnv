@@ -285,7 +285,6 @@
   import { BrewStore } from '@/store/brew'
   import { I18nT } from '@lang/index'
   import { AsyncComponentSetup } from '@/util/AsyncComponent'
-  import { merge } from 'lodash-es'
   import installedVersions from '@/util/InstalledVersions'
   import { dialog } from '@electron/remote'
 
@@ -339,7 +338,7 @@
     root: false,
     tomcatDir: false
   })
-  merge(item.value, props.edit)
+  Object.assign(item.value, props.edit)
 
   const appStore = AppStore()
   const brewStore = BrewStore()

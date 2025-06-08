@@ -1,14 +1,14 @@
 import { reactive } from 'vue'
 import { MessageSuccess } from '@/util/Element'
 import { I18nT } from '@lang/index'
-import { escape, unescape } from 'lodash-es'
+import { escapeHtml, unescapeHtml } from '@/core/Helpers/Escape'
 import { clipboard } from '@electron/remote'
 
 const store = reactive({
   encodeInput: '<title>FlyEnv</title>',
   encodeOutput: '',
   doEncode() {
-    this.encodeOutput = escape(this.encodeInput)
+    this.encodeOutput = escapeHtml(this.encodeInput)
   },
   copyEncode() {
     clipboard.writeText(this.encodeOutput)
@@ -17,7 +17,7 @@ const store = reactive({
   decodeInput: '&lt;title&gt;FlyEnv&lt;/title&gt;',
   decodeOutput: '',
   doDecode() {
-    this.decodeOutput = unescape(this.decodeInput)
+    this.decodeOutput = unescapeHtml(this.decodeInput)
   },
   copyDecode() {
     clipboard.writeText(this.decodeOutput)

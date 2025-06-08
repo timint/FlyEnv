@@ -3,7 +3,6 @@ import type { AppHost, SoftInstalled } from '@shared/app'
 import { exec, execSync, type ChildProcess, spawn } from 'child_process'
 import { appendFileSync, chmodSync, createWriteStream, existsSync, mkdirSync, readdirSync, realpathSync, statSync, writeFileSync, readFileSync, rmSync, unlinkSync, copyFileSync, renameSync } from 'fs'
 import { dirname, isAbsolute, join, parse, basename, normalize } from 'path'
-import { merge } from 'lodash-es'
 import { ForkPromise } from '@shared/ForkPromise'
 import crypto from 'crypto'
 import axios from 'axios'
@@ -124,21 +123,19 @@ export function execPromise(
     try {
       exec(
         command,
-        merge(
-          {
-            encoding: 'utf-8',
-            env: fixEnv()
-          },
-          opt
-        ),
+        {
+          ...(opt || {}),
+          encoding: 'utf-8',
+          env: fixEnv()
+        },
         (error, stdout, stderr) => {
           if (!error) {
-            resolve({
-              stdout,
-              stderr
-            })
+        resolve({
+          stdout,
+          stderr
+        })
           } else {
-            reject(error)
+        reject(error)
           }
         }
       )
@@ -159,13 +156,11 @@ export function spawnPromise(
     const child = spawn(
       command,
       params,
-      merge(
-        {
-          encoding: 'utf-8',
-          env: fixEnv()
-        },
-        opt
-      )
+      {
+        ...(opt || {}),
+        encoding: 'utf-8',
+        env: fixEnv()
+      }
     )
     const stdinFn = (txt: string) => {
       child?.stdin?.write(`${txt}\n`)
@@ -209,13 +204,11 @@ export function spawnPromiseMore(
     child = spawn(
       command,
       params,
-      merge(
-        {
-          env: fixEnv(),
-          windowsHide: true
-        },
-        opt
-      )
+      {
+        ...(opt || {}),
+        env: fixEnv(),
+        windowsHide: true
+      }
     )
   } catch (e) {
     console.log('spawnPromiseMore err: ', e)
@@ -898,9 +891,12 @@ export function stringToUTF8(str: string): string {
 }
 
 export async function setDir777ToCurrentUser(folderPath: string) {
+
   if (!existsSync(folderPath)) {
+    console.error(`Directory does not exist: ${folderPath}`)
     return
   }
+
   const username = userInfo().username
   const domain = hostname()
   const identity = `"${domain}\\${username}"`
@@ -908,7 +904,7 @@ export async function setDir777ToCurrentUser(folderPath: string) {
   const args = [
     `"${normalize(folderPath)}"`,
     '/grant',
-    `${identity}:(F)`, // 注意这里不再额外加引号
+    `${identity}:(F)`, // Note: no extra quotes here
     '/t',
     '/c',
     '/q'
