@@ -19,7 +19,7 @@ class Python extends Base {
     this.type = 'python'
   }
 
-  fetchAllOnLineVersion() {
+  fetchAllOnlineVersion() {
     return new ForkPromise(async (resolve) => {
       try {
         const all: OnlineVersionItem[] = await this._fetchOnlineVersion('python')
@@ -35,7 +35,7 @@ class Python extends Base {
         })
         resolve(all)
       } catch (e) {
-        console.log('fetchAllOnLineVersion error: ', e)
+        console.log('fetchAllOnlineVersion error: ', e)
         resolve([])
       }
     })
