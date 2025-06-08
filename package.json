@@ -12,7 +12,8 @@
     "dev": "cross-env NODE_ENV=development TEST=electron tsx scripts/dev-runner.ts",
     "clean": "rd /s /q dist",
     "build": "cross-env NODE_ENV=production tsx electron/app-builder.ts",
-    "postinstall": "electron-builder install-app-deps"
+    "postinstall": "electron-builder install-app-deps",
+    "test": "npx tsc --noEmit && npx eslint --ext .ts,.tsx,.vue src"
   },
   "main": "./dist/electron/main.js",
   "type": "module",
