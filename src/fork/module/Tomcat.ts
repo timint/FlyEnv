@@ -8,6 +8,7 @@ import TaskQueue from '../TaskQueue'
 import { makeGlobalTomcatServerXML } from './service/ServiceItemJavaTomcat'
 import { ProcessListSearch } from '../Process'
 import { I18nT } from '@lang/index'
+import { sleep } from '@/core/Helpers/General'
 import {
   AppLog,
   serviceStartExecCMD,
@@ -15,8 +16,7 @@ import {
   versionFilterSame,
   versionFixed,
   versionLocalFetch,
-  versionSort,
-  waitTime
+  versionSort
 } from '../Fn'
 
 class Tomcat extends Base {
@@ -178,7 +178,7 @@ class Tomcat extends Base {
               })
             } else {
               if (time < 20) {
-                await waitTime(2000)
+                await sleep(2000)
                 await doCheck(time + 1)
               } else {
                 resolve(undefined)
@@ -188,7 +188,7 @@ class Tomcat extends Base {
           doCheck(0).then().catch()
         })
       }
-      await waitTime(3000)
+      await sleep(3000)
       const res = await checkPid()
       if (res && res?.pid) {
         writeFileSync(this.pidPath, `${res.pid}`)

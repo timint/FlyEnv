@@ -13,6 +13,7 @@ import iconv from 'iconv-lite'
 import { I18nT } from '@lang/index'
 import { userInfo, hostname } from 'os'
 import packageJson from '../../package.json'
+import { sleep } from '@/core/Helpers/General'
 
 export const ProcessSendSuccess = (key: string, data: any, on?: boolean) => {
   process?.send?.({
@@ -54,14 +55,6 @@ export function uuid(length = 32) {
     str += num.charAt(Math.floor(Math.random() * num.length))
   }
   return str
-}
-
-export function waitTime(time: number) {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(true)
-    }, time)
-  })
 }
 
 export function fixEnv(): { [k: string]: any } {
@@ -954,7 +947,7 @@ export async function waitPidFile(
     }
   } else {
     if (time < maxTime) {
-      await waitTime(timeToWait)
+      await sleep(timeToWait)
       res = res || (await waitPidFile(pidFile, time + 1, maxTime, timeToWait))
     } else {
       res = false

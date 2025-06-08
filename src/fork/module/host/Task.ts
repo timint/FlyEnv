@@ -5,7 +5,8 @@ import { join } from 'path'
 import { existsSync, copyFileSync, readdirSync, readFileSync, rmSync, writeFileSync, mkdirSync } from 'fs'
 import { setDirRole } from './Host'
 import { I18nT } from '@lang/index'
-import { downFile, moveDirToDir, waitTime } from '../../Fn'
+import { sleep } from '@/core/Helpers/General'
+import { downFile, moveDirToDir } from '../../Fn'
 import { zipUnPack } from '@shared/file'
 import { fetchHostList } from './HostFile'
 
@@ -122,7 +123,7 @@ export function TaskAddPhpMyAdminSite(this: any, phpVersion?: number, write = tr
           const subDir = subDirs.pop()
           if (subDir) {
             await moveDirToDir(join(tmplDir, subDir), siteDir)
-            await waitTime(300)
+            await sleep(300)
             rmSync(tmplDir)
           }
         } catch (e) {

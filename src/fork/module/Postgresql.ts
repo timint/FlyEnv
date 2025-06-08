@@ -7,6 +7,7 @@ import { Base } from './Base'
 import { I18nT } from '@lang/index'
 import { ForkPromise } from '@shared/ForkPromise'
 import TaskQueue from '../TaskQueue'
+import { sleep } from '@/core/Helpers/General'
 import {
   AppLog,
   serviceStartExecCMD,
@@ -15,8 +16,7 @@ import {
   versionFilterSame,
   versionFixed,
   versionLocalFetch,
-  versionSort,
-  waitTime
+  versionSort
 } from '../Fn'
 
 class Manager extends Base {
@@ -105,7 +105,7 @@ class Manager extends Base {
           reject(e)
           return
         }
-        await waitTime(1000)
+        await sleep(1000)
         if (!existsSync(confFile)) {
           on({
             'APP-On-Log': AppLog(

@@ -8,6 +8,7 @@ import { I18nT } from '@lang/index'
 import { ForkPromise } from '@shared/ForkPromise'
 import TaskQueue from '../TaskQueue'
 import { ProcessListSearch } from '../Process'
+import { sleep } from '@/core/Helpers/General'
 import {
   AppLog,
   serviceStartExecCMD,
@@ -16,7 +17,6 @@ import {
   versionFixed,
   versionLocalFetch,
   versionSort,
-  waitTime
 } from '../Fn'
 
 class RabbitMQ extends Base {
@@ -142,7 +142,7 @@ set "PLUGINS_DIR=${pluginsDir}"`
           })
         } else {
           if (time < 20) {
-            await waitTime(500)
+            await sleep(500)
             await checkpid(time + 1)
           } else {
             const msg = I18nT('fork.startFail')

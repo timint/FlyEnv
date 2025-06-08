@@ -8,12 +8,12 @@ import { ForkPromise } from '@shared/ForkPromise'
 import { zipUnPack } from '@shared/file'
 import axios from 'axios'
 import { ProcessListSearch, ProcessPidList, ProcessPidListByPid } from '../Process'
+import { sleep } from '@/core/Helpers/General'
 import {
   AppLog,
   getAllFileAsync,
   moveChildDirToParent,
-  uuid,
-  waitTime
+  uuid
 } from '../Fn'
 
 export class Base {
@@ -222,7 +222,7 @@ export class Base {
       }
     } else {
       if (time < 20) {
-        await waitTime(500)
+        await sleep(500)
         res = res || (await this.waitPidFile(pidFile, errLog, time + 1))
       } else {
         res = false
@@ -330,7 +330,7 @@ export class Base {
             res = true
           } else {
             if (time < 20) {
-              await waitTime(1000)
+              await sleep(1000)
               res = res || (await checkState(time + 1))
             }
           }
@@ -338,7 +338,7 @@ export class Base {
         }
         const res = await checkState()
         if (res) {
-          await waitTime(1000)
+          await sleep(1000)
           sh = join(global.Server.Cache!, `pip-install-${uuid()}.ps1`)
           let content = readFileSync(join(global.Server.Static!, 'sh/pip.ps1'), 'utf-8')
           content = content.replace('#APPDIR#', APPDIR)
@@ -353,12 +353,12 @@ export class Base {
             )
           }
           // unlinkSync(sh)
-          await waitTime(1000)
+          await sleep(1000)
           unlinkSync(tmpDir)
           return
         } else {
           try {
-            await waitTime(500)
+            await sleep(500)
             rmSync(APPDIR, { recursive: true })
             rmSync(tmpDir, { recursive: true })
           } catch (e) {}
@@ -411,13 +411,13 @@ php "%~dp0composer.phar" %*`
 
       const handleMongoDB = async () => {
         await handleTwoLevDir()
-        await waitTime(1000)
+        await sleep(1000)
         // @ts-ignore
         await this.initMongosh()
       }
 
       const handleMeilisearch = async () => {
-        await waitTime(500)
+        await sleep(500)
         mkdirSync(dirname(row.bin), { recursive: true })
         try {
           await new Promise((resolve, reject) => {
@@ -426,7 +426,7 @@ php "%~dp0composer.phar" %*`
               resolve(true)
             })
           })
-          await waitTime(500)
+          await sleep(500)
           await spawn(basename(row.bin), ['--version'], {
             shell: false,
             cwd: dirname(row.bin)

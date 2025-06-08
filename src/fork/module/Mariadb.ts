@@ -7,9 +7,9 @@ import { Base } from './Base'
 import { I18nT } from '@lang/index'
 import { ForkPromise } from '@shared/ForkPromise'
 import TaskQueue from '../TaskQueue'
+import { sleep } from '@/core/Helpers/General'
 import {
   execPromise,
-  waitTime,
   versionLocalFetch,
   versionFilterSame,
   versionBinVersion,
@@ -169,10 +169,10 @@ datadir="${dataDir}"`
         on({
           'APP-On-Log': AppLog('info', I18nT('appLog.initDBDataDirSuccess', { dir: dataDir }))
         })
-        await waitTime(500)
+        await sleep(500)
         try {
           const res = await doStart()
-          await waitTime(500)
+          await sleep(500)
           await this._initPassword(version).on(on)
           on(I18nT('fork.postgresqlInit', { dir: dataDir }))
           resolve(res)

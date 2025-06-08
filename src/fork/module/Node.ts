@@ -9,6 +9,7 @@ import axios from 'axios'
 import { SoftInstalled } from '@shared/app'
 import TaskQueue from '../TaskQueue'
 import ncu from 'npm-check-updates'
+import { sleep } from '@/core/Helpers/General'
 import {
   fetchPathByBin,
   fetchRawPATH,
@@ -19,7 +20,6 @@ import {
   versionFixed,
   versionLocalFetch,
   versionSort,
-  waitTime,
   writePath
 } from '../Fn'
 
@@ -79,7 +79,7 @@ class Manager extends Base {
         execSync(`setx /M NVM_SYMLINK "${NVM_SYMLINK}"`)
       } catch (e) {}
       await this._resortToolInPath('nvm')
-      await waitTime(1000)
+      await sleep(1000)
       resolve(NVM_HOME)
     })
   }

@@ -2,7 +2,8 @@ import type { AppHost } from '@shared/app'
 
 import { existsSync, FSWatcher, readFileSync, watch } from 'fs'
 import { ForkPromise } from '@shared/ForkPromise'
-import { waitTime, suExecPromise } from '../../Fn'
+import { sleep } from '@/core/Helpers/General'
+import { suExecPromise } from '../../Fn'
 
 export const getHostItemEnv = async (item: AppHost) => {
   if (item?.envVarType === 'none') {
@@ -129,7 +130,7 @@ export class ServiceItem {
           resolve(pid)
         } else {
           if (time < 20) {
-            await waitTime(1000)
+            await sleep(1000)
             await doCheck(time + 1)
           } else {
             reject(new Error('pid file not found'))

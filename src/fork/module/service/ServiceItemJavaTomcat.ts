@@ -2,7 +2,8 @@ import type { AppHost, SoftInstalled } from '@shared/app'
 
 import { basename, dirname, join, resolve as pathResolve } from 'path'
 import { existsSync, readFileSync, writeFileSync, copyFileSync, realpathSync, mkdirSync } from 'fs'
-import { hostAlias, waitTime } from '../../Fn'
+import { sleep } from '@/core/Helpers/General'
+import { hostAlias } from '../../Fn'
 import { XMLBuilder, XMLParser } from 'fast-xml-parser'
 import { ServiceItem } from './ServiceItem'
 import { ForkPromise } from '@shared/ForkPromise'
@@ -406,7 +407,7 @@ export class ServiceItemJavaTomcat extends ServiceItem {
           resolve(pid)
         } else {
           if (time < 20) {
-            await waitTime(1000)
+            await sleep(1000)
             await doCheck(time + 1)
           } else {
             reject(new Error('pid file not found'))
