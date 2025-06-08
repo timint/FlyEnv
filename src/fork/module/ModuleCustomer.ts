@@ -1,6 +1,6 @@
-import { execPromise } from '../Fn'
 import { ForkPromise } from '@shared/ForkPromise'
 import { existsSync } from 'fs'
+import { execSync } from 'child_process'
 import type { ModuleExecItem } from '@shared/app'
 import { ProcessPidListByPid } from '../Process'
 import { customerServiceStartExec } from '../util/Exec'
@@ -26,7 +26,7 @@ class ModuleCustomer {
       if (pids.length > 0) {
         const str = pids.map((s) => `/pid ${s}`).join(' ')
         try {
-          await execPromise(`taskkill /f /t ${str}`)
+          execSync(`taskkill /f /t ${str}`)
         } catch (e) {}
       }
 

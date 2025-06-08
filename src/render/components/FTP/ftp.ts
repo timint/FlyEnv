@@ -31,7 +31,8 @@ export const FtpStore = defineStore('ftp', {
   getters: {},
   actions: {
     getIP() {
-      this.ip = IP.address()
+      const ip = IP.address();
+      this.ip = ip ?? '';
     },
     getPort() {
       IPC.send('app-fork:pure-ftpd', 'getPort').then((key: string, res?: any) => {

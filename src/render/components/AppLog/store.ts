@@ -1,6 +1,6 @@
 import { reactive } from 'vue'
 import IPC from '@/util/IPC'
-import { existsSync, readFileSync, writeFileSync, writeFileSync } from 'fs'
+import { existsSync, readFileSync, writeFileSync } from 'fs'
 import { join } from 'path'
 import { shell } from '@electron/remote'
 

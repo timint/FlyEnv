@@ -8,10 +8,10 @@ import { publicDecrypt } from 'crypto'
 import { join, resolve as pathResolve } from 'path'
 import { appendFileSync, unlinkSync, writeFileSync } from 'fs'
 import {
-  execPromise,
   md5,
   uuid
 } from '../Fn'
+import { execSync } from 'child_process'
 
 class App extends Base {
   constructor() {
@@ -56,12 +56,12 @@ class App extends Base {
     writeFileSync(shFile, command)
     process.chdir(global.Server.Cache!)
     try {
-      const res = await execPromise(
-        `powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Unblock-File -LiteralPath '${shFile}'; & '${shFile}'"`
-      )
+      const command = `powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Unblock-File -LiteralPath '${shFile}'; & '${shFile}'"`
+      const res = execSync(command)
       console.log('Get-MpPreference res: ', res)
       const arr =
-        res?.stdout
+        res
+          ?.toString()
           ?.trim()
           ?.split('\n')
           ?.filter((s) => !!s.trim())
@@ -71,7 +71,7 @@ class App extends Base {
       const key = '[handleWindowsDefenderExclusionPath][Get-MpPreference][error]'
       console.log(`${key}: `, e)
       appendFileSync(join(global.Server.BaseDir!, 'debug.log'), `${key}: ${e}
-`, { encoding: 'utf8', flag: 'a' }, () => {})
+`, { encoding: 'utf8', flag: 'a' })
     }
     unlinkSync(shFile)
     const needAdd: string[] = []
@@ -89,15 +89,13 @@ class App extends Base {
       writeFileSync(shFile, command)
       process.chdir(global.Server.Cache!)
       try {
-        const res = await execPromise(
-          `powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Unblock-File -LiteralPath '${shFile}'; & '${shFile}'"`
-        )
+        const res = execSync(`powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Unblock-File -LiteralPath '${shFile}'; & '${shFile}'"`)
         console.log('Add-MpPreference res: ', res)
       } catch (e) {
         const key = '[handleWindowsDefenderExclusionPath][Add-MpPreference][error]'
         console.log(`${key}: `, e)
         appendFileSync(join(global.Server.BaseDir!, 'debug.log'), `${key}: ${e}
-`, { encoding: 'utf8', flag: 'a' }, () => {})
+`, { encoding: 'utf8', flag: 'a' })
       }
       unlinkSync(shFile)
     }

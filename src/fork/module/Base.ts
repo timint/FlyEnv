@@ -1,15 +1,14 @@
 import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
 import { I18nT } from '@lang/index'
 import { basename, dirname, join } from 'path'
-import { appendFileSync, copyFileSync, createWriteStream, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, unlinkSync, writeFileSync } from 'fs'
+import { appendFileSync, copyFile, copyFileSync, createWriteStream, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, unlinkSync, writeFileSync } from 'fs'
+import { spawn, execSync } from 'child_process'
 import { ForkPromise } from '@shared/ForkPromise'
 import { zipUnPack } from '@shared/file'
 import axios from 'axios'
 import { ProcessListSearch, ProcessPidList, ProcessPidListByPid } from '../Process'
-import TaskQueue from '../TaskQueue'
 import {
   AppLog,
-  execPromise,
   getAllFileAsync,
   moveChildDirToParent,
   uuid,
@@ -119,13 +118,15 @@ export class Base {
         if (pids.length > 0) {
           const str = pids.map((s) => `/pid ${s}`).join(' ')
           try {
-            await execPromise(`taskkill /f /t ${str}`)
+            execSync(`taskkill /f /t ${str}`)
           } catch (e) {}
         }
         on({
           'APP-Service-Stop-Success': true
         })
-        TaskQueue.run(unlinkSync, appPidFile).then().catch()
+        try {
+          unlinkSync(appPidFile)
+        } catch (e) {}
         on({
           'APP-On-Log': AppLog('info', I18nT('appLog.stopServiceEnd', { service: this.type }))
         })
@@ -140,7 +141,7 @@ export class Base {
         if (pids.length > 0) {
           const str = pids.map((s) => `/pid ${s}`).join(' ')
           try {
-            await execPromise(`taskkill /f /t ${str}`)
+            execSync(`taskkill /f /t ${str}`)
           } catch (e) {}
         }
         on({
@@ -176,7 +177,7 @@ export class Base {
       if (all.length > 0) {
         const str = all.map((s) => `/pid ${s.ProcessId}`).join(' ')
         try {
-          await execPromise(`taskkill /f /t ${str}`)
+          execSync(`taskkill /f /t ${str}`)
         } catch (e) {}
       }
       on({
@@ -281,7 +282,7 @@ export class Base {
       const handlePython = async () => {
         const tmpDir = join(global.Server.Cache!, `python-${row.version}-tmp`)
         if (existsSync(tmpDir)) {
-          await execPromise(`rmdir /S /Q ${tmpDir}`)
+          execSync(`rmdir /S /Q ${tmpDir}`)
         }
         const dark = join(global.Server.Cache!, 'dark/dark.exe')
         const darkDir = join(global.Server.Cache!, 'dark')
@@ -306,9 +307,7 @@ export class Base {
 
         process.chdir(global.Server.Cache!)
         try {
-          await execPromise(
-            `powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Unblock-File -LiteralPath '${sh}'; & '${sh}'"`
-          )
+          execSync(`powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Unblock-File -LiteralPath '${sh}'; & '${sh}'"`)
         } catch (e) {
           console.log('[python-install][error]: ', e)
           appendFileSync(
@@ -345,9 +344,7 @@ export class Base {
           writeFileSync(sh, content)
           process.chdir(global.Server.Cache!)
           try {
-            await execPromise(
-              `powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Unblock-File -LiteralPath '${sh}'; & '${sh}'"`
-            )
+            execSync(`powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Unblock-File -LiteralPath '${sh}'; & '${sh}'"`)
           } catch (e) {
             appendFileSync(
               join(global.Server.BaseDir!, 'debug.log'),
@@ -422,7 +419,12 @@ php "%~dp0composer.phar" %*`
         await waitTime(500)
         mkdirSync(dirname(row.bin), { recursive: true })
         try {
-          await copyFile(row.zip, row.bin)
+          await new Promise((resolve, reject) => {
+            copyFile(row.zip, row.bin, (err) => {
+              if (err) return reject(err)
+              resolve(true)
+            })
+          })
           await waitTime(500)
           await spawn(basename(row.bin), ['--version'], {
             shell: false,
@@ -433,7 +435,7 @@ php "%~dp0composer.phar" %*`
             unlinkSync(row.bin)
           }
           appendFileSync(
-            path.join(global.Server.BaseDir!, 'debug.log'),
+            join(global.Server.BaseDir!, 'debug.log'),
             `[handleMeilisearch][error]: ${e.toString()}\n`
           )
           throw e
@@ -441,7 +443,7 @@ php "%~dp0composer.phar" %*`
       }
 
       const handleRust = async () => {
-        rmdirSync(row.appDir, { recursive: true, force: true })
+        rmSync(row.appDir, { recursive: true, force: true })
         mkdirSync(row.appDir, { recursive: true })
         const cacheDir = join(global.Server.Cache!, uuid())
         mkdirSync(cacheDir, { recursive: true })
@@ -453,7 +455,7 @@ php "%~dp0composer.phar" %*`
         }
         await zipUnPack(join(cacheDir, find), row.appDir)
         await moveChildDirToParent(row.appDir)
-        rmdirSync(cacheDir, { recursive: true, force: true })
+        rmSync(cacheDir, { recursive: true, force: true })
       }
 
       const doHandleZip = async () => {

@@ -1,19 +1,19 @@
 import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
+import { execSync } from 'child_process'
 import { basename, dirname, join } from 'path'
-import { Base } from './Base'
 import { existsSync, readFileSync, writeFileSync, mkdirSync } from 'fs'
-import { ForkPromise } from '@shared/ForkPromise'
-import { I18nT } from '@lang/index'
-import TaskQueue from '../TaskQueue'
 import axios from 'axios'
 import http from 'http'
 import https from 'https'
 import { machineId } from '@usebruno/node-machine-id'
 import { publicDecrypt } from 'crypto'
 import { EOL } from 'os'
+import { Base } from './Base'
+import { ForkPromise } from '@shared/ForkPromise'
+import { I18nT } from '@lang/index'
+import TaskQueue from '../TaskQueue'
 import {
   AppLog,
-  execPromise,
   serviceStartExec,
   versionBinVersion,
   versionFilterSame,
@@ -129,7 +129,7 @@ class Ollama extends Base {
       const command = `ollama.exe list`
       let res: any
       try {
-        res = await execPromise(command, {
+        res = execSync(command, {
           cwd: dirname(version.bin)
         })
       } catch (e) {

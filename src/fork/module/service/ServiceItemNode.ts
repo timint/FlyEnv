@@ -3,7 +3,7 @@ import { dirname, join } from 'path'
 import { existsSync, writeFileSync, readFileSync, mkdirSync } from 'fs'
 import { getHostItemEnv, ServiceItem } from './ServiceItem'
 import { ForkPromise } from '@shared/ForkPromise'
-import { execPromiseRoot } from '../../Fn'
+import { suExecPromise } from '../../Fn'
 import { ProcessPidListByPid } from '../../Process'
 import { EOL } from 'os'
 
@@ -39,7 +39,7 @@ export class ServiceItemNode extends ServiceItem {
       const log = join(javaDir, `${item.id}.log`)
       if (existsSync(pid)) {
         try {
-          await execPromiseRoot(`del -Force ${pid}`)
+          await suExecPromise(`del -Force ${pid}`)
         } catch (e) {}
       }
 
@@ -64,7 +64,7 @@ export class ServiceItemNode extends ServiceItem {
       writeFileSync(sh, this.command)
       process.chdir(global.Server.Cache!)
       try {
-        await execPromiseRoot(
+        await suExecPromise(
           `powershell.exe -Command "(Start-Process -FilePath ./service-${this.id}.cmd -PassThru -WindowStyle Hidden).Id" > "${pid}"`
         )
         const cpid = await this.checkPid()

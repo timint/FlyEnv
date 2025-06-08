@@ -21,12 +21,9 @@
   import { MessageError } from '@/util/Element'
   import { I18nT } from '@lang/index'
   import { app } from '@electron/remote'
-  import { promisify } from 'node:util'
-  import { exec } from 'child_process'
+  import { execSync } from 'child_process'
   import { writeFileSync, rmSync, readFileSync, mkdirSync } from 'fs'
   import { join } from 'path'
-
-  const execAsync = promisify(exec)
 
   const store = AppStore()
 
@@ -40,12 +37,11 @@
         mkdirSync(global.Server.Cache!, { recursive: true })
         const file = join(global.Server.Cache!, 'flyenv-auto-start.ps1')
         writeFileSync(file, content)
-        const res = await execAsync(
-          `powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Unblock-File -LiteralPath '${file}'; & '${file}'"`,
-          { shell: true }
-        )
+        const res = execSync(`powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Unblock-File -LiteralPath '${file}'; & '${file}'"`, {
+          shell: 'powershell.exe'
+        })
         console.log('file: ', file)
-        console.log('res: ', res.stdout, res.stderr)
+        console.log('res: ', res.toString())
         rmSync(file)
         return true
       } catch (e: any) {
@@ -54,7 +50,7 @@
       }
     } else {
       try {
-        await execAsync(`schtasks /delete /tn "${taskName}" /f`)
+        execSync(`schtasks /delete /tn "${taskName}" /f`)
       } catch (e: any) {}
       return true
     }

@@ -77,22 +77,26 @@ class Base {
     return loading
   }
 
-  _Message(message: string, type = 'success') {
+  _Message(message: string, type: 'success' | 'warning' | 'info' | 'error' = 'success') {
     return new Promise((resolve) => {
-      Message({
-        offset: 60,
-        showClose: true,
-        message: message,
-        // @ts-ignore
-        type: type,
-        dangerouslyUseHTMLString: true,
-        duration: 3000,
-        onClose: () => {
-          // @ts-ignore
-          // eslint-disable-next-line prefer-rest-params
-          resolve(...arguments)
-        }
-      })
+      let msgHandler
+      switch (type) {
+        case 'success':
+          msgHandler = Message.success(message)
+          break
+        case 'warning':
+          msgHandler = Message.warning(message)
+          break
+        case 'info':
+          msgHandler = Message.info(message)
+          break
+        case 'error':
+          msgHandler = Message.error(message)
+          break
+        default:
+          msgHandler = Message(message)
+      }
+      setTimeout(() => resolve(msgHandler), 3000)
     })
   }
 

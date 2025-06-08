@@ -82,8 +82,13 @@ export const Setup = (typeFlag: AllAppModule) => {
       row.type = typeFlag
       const all = brewStore.module(typeFlag).list
       const find = all.find((r: any) => r.bin === row.bin && r.zip === row.zip)
-      find.downing = true
-      find.type = typeFlag
+      if (find) {
+        (find as any).downing = true
+        // 'type' is not a property of OnlineVersionItem, so only assign if it exists
+        if ('type' in find) {
+          (find as any).type = typeFlag
+        }
+      }
       IPC.send(`app-fork:${typeFlag}`, 'installSoft', JSON.parse(JSON.stringify(row))).then(
         (key: string, res: any) => {
           const findInstalling = brewStore.module(typeFlag).installing[row.bin]

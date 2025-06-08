@@ -12,13 +12,15 @@ function generateRawPairs({ bits = 2048 }) {
     }
     pki.rsa.generateKeyPair(
       { bits, workers: 2 },
-      (err: any, keyPair: { privateKey: string; publicKey: string }) => {
-        console.log('generateRawPairs: ', bits, err, keyPair)
+      (err: any, keyPair: { privateKey: any; publicKey: any }) => {
         if (err) {
           reject(err)
           return
         }
-        resolve(keyPair)
+        resolve({
+          privateKey: pki.privateKeyToPem(keyPair.privateKey),
+          publicKey: pki.publicKeyToPem(keyPair.publicKey)
+        })
       }
     )
   })
@@ -39,8 +41,8 @@ const store = reactive({
     this.timer = setTimeout(async () => {
       try {
         const { privateKey, publicKey } = await generateRawPairs({ bits: this.bits })
-        this.privateKeyPem = pki.privateKeyToPem(privateKey)
-        this.publicKeyPem = pki.publicKeyToPem(publicKey)
+        this.privateKeyPem = privateKey
+        this.publicKeyPem = publicKey
       } catch (e) {}
       this.timer = undefined
     }, this.debounce) as any

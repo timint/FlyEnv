@@ -15,7 +15,7 @@
   import Conf from '@/components/Conf/index.vue'
   import { AppStore } from '@/store/app'
   import { join } from 'path'
-  import { readFileSync } from 'fs'
+  import { readFile } from 'fs'
 
   const appStore = AppStore()
 
@@ -39,7 +39,7 @@
   const getDefault = () => {
     const tmpl = join(global.Server.Static, 'tmpl/mongodb.conf')
     const dataDir = join(global.Server.MongoDBDir, `data-${vm.value}`)
-    readFileSync(tmpl, 'utf-8').then((conf: string) => {
+    readFile(tmpl, 'utf-8').then((conf: string) => {
       defaultConf.value = conf.replace('##DB-PATH##', dataDir)
     })
   }

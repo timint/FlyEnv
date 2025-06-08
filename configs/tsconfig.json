@@ -11,13 +11,18 @@
     "lib": ["esnext", "dom"],
     "sourceMap": false,
     "strictFunctionTypes": false,
-    "importsNotUsedAsValues": "error",
     "noUnusedLocals": true,
     "noImplicitReturns": true,
     "isolatedModules": true,
     "noImplicitAny": true,
     "allowJs": false,
-    "noEmit": true
+    "noEmit": true,
+    "verbatimModuleSyntax": true
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"]
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue"
+  ]
 }

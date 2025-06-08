@@ -77,7 +77,7 @@ class Manager extends Base {
             reject(e)
           })
           .finally(() => {
-            rmSync(copyFileSync).then().catch()
+            rmSync(copyFileSync)
           })
       } else {
         const names: { [k: string]: string } = {
@@ -134,11 +134,10 @@ class Manager extends Base {
               const envFile = join(dir, '.env')
               if (!existsSync(envFile)) {
                 const key = md5(uuid())
-                writeFileSync(
-                  envFile,
-                  `APP_DEBUG=true
-APP_KEY=${key}`
-                )
+                writeFileSync(envFile, [
+                  'APP_DEBUG=true',
+                  `APP_KEY=${key}`
+                ].join('\n'))
               }
             }
             on({
@@ -153,7 +152,7 @@ APP_KEY=${key}`
             reject(e)
           })
           .finally(() => {
-            rmSync(copyFileSync).then().catch()
+            rmSync(copyFileSync)
           })
       }
     })

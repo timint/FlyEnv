@@ -1,7 +1,6 @@
 import type { AppHost, SoftInstalled } from '@shared/app'
-import { exec, execSync, spawn } from 'child_process'
-import { chmodSync, createWriteStream, existsSync, mkdirSync, readdirSync, realpathSync, statSync } from 'fs'
-import { copyFileSync, unlinkSync, writeFileSync, readFileSync, appendFileSync, renameSync, rmSync as rmDirSync } from 'fs'
+import { exec, execSync, type ChildProcess, spawn } from 'child_process'
+import { appendFileSync, chmodSync, createWriteStream, existsSync, mkdirSync, readdirSync, realpathSync, statSync, writeFileSync, readFileSync, rmSync, unlinkSync, copyFileSync, renameSync } from 'fs'
 import { dirname, isAbsolute, join, parse, basename, normalize } from 'path'
 import { merge } from 'lodash-es'
 import { ForkPromise } from '@shared/ForkPromise'
@@ -82,7 +81,7 @@ export function execSyncFix(command: string, opt?: { [k: string]: any }): string
   return res
 }
 
-export function execPromiseRoot(command: string): ForkPromise<{
+export function suExecPromise(command: string): ForkPromise<{
   stdout: string
   stderr: string
 }> {
@@ -181,11 +180,11 @@ export function spawnPromise(
       }
     }
 
-    child?.stdout?.on('data', (data) => {
+    child?.stdout?.on('data', (data: any) => {
       stdout.push(data)
       on(data.toString(), stdinFn)
     })
-    child?.stderr?.on('data', (err) => {
+    child?.stderr?.on('data', (err: any) => {
       stderr.push(err)
       on(err.toString(), stdinFn)
     })
@@ -238,12 +237,12 @@ export function spawnPromiseMore(
         reject(new Error(Buffer.concat(stderr).toString().trim()))
       }
     }
-    child?.stdout?.on('data', (data) => {
+    child?.stdout?.on('data', (data: any) => {
       console.log('spawnPromiseMore stdout: ', data.toString())
       stdout.push(data)
       on(data.toString(), stdinFn)
     })
-    child?.stderr?.on('data', (err) => {
+    child?.stderr?.on('data', (err: any) => {
       console.log('spawnPromiseMore stderr: ', err.toString())
       stderr.push(err)
       on(err.toString(), stdinFn)
@@ -505,7 +504,7 @@ export const versionBinVersion = (
       })
     }
     try {
-      const res = await execPromise(command, {
+      const res = execSync(command, {
         cwd: dirname(bin)
       })
       console.log('versionBinVersion: ', command, reg, res)
@@ -725,9 +724,8 @@ export const writePath = async (path: string[], other: string = '') => {
   writeFileSync(copySh, content, 'utf-8')
   process.chdir(global.Server.Cache!)
   try {
-    await execPromise(
-      `powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Unblock-File -LiteralPath '${copySh}'; & '${copySh}'"`
-    )
+    const command = `powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Unblock-File -LiteralPath '${copySh}'; & '${copySh}'"`
+    execSync(command)
   } catch (e) {
     console.log('writePath error: ', e)
     appendFileSync(join(global.Server.BaseDir!, 'debug.log'), `[writePath][error]: ${e}\n`)
@@ -811,14 +809,9 @@ export async function isNTFS(fileOrDirPath: string) {
     return NTFS[driveLetter]
   }
   try {
-    const jsonResult =
-      (
-        await execPromise(
-          `powershell -command "Get-Volume -DriveLetter ${driveLetter} | ConvertTo-Json"`,
-          { encoding: 'utf-8' }
-        )
-      )?.stdout ?? ''
-    const { FileSystem, FileSystemType } = JSON.parse(jsonResult)
+    const command = `powershell -command "Get-Volume -DriveLetter ${driveLetter} | ConvertTo-Json"`
+    const result = execSync(command, { encoding: 'utf-8' }) ?? ''
+    const { FileSystem, FileSystemType } = JSON.parse(result)
     const is = FileSystem === 'NTFS' || FileSystemType === 'NTFS'
     NTFS[driveLetter] = is
     return is
@@ -1093,7 +1086,7 @@ export async function serviceStartExec(
   }
   let msg = 'Start Fail'
   if (existsSync(errFile)) {
-    msg = (readFileSyncAsUTF8(errFile)) || 'Start Fail'
+    msg = await readFileAsUTF8(errFile) || 'Start Fail'
   }
   on({
     'APP-On-Log': AppLog(
@@ -1211,7 +1204,7 @@ export async function serviceStartExecCMD(
   }
   let msg = 'Start Fail'
   if (existsSync(errFile)) {
-    msg = (readFileAsUTF8(errFile)) || 'Start Fail'
+    msg = await readFileAsUTF8(errFile) || 'Start Fail'
   }
   on({
     'APP-On-Log': AppLog(
@@ -1237,7 +1230,7 @@ export async function serviceStartExecGetPID(
 ): Promise<{ 'APP-Service-Start-PID': string }> {
   if (pidPath && existsSync(pidPath)) {
     try {
-      rmDirSync(pidPath)
+      rmSync(pidPath, { recursive: true, force: true })
     } catch (e) {}
   }
 

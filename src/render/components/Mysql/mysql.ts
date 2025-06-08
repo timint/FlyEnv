@@ -23,7 +23,11 @@ export const MysqlStore = defineStore('mysqlGroup', {
         return
       }
       this.inited = true
-      const file = join(global.Server.MysqlDir, 'group/group.json')
+      const mysqlDir = global.Server.MysqlDir
+      if (!mysqlDir) {
+        throw new Error('MysqlDir is not defined')
+      }
+      const file = join(mysqlDir, 'group/group.json')
       if (existsSync(file)) {
         const arr: Array<any> = []
         try {
@@ -44,7 +48,11 @@ export const MysqlStore = defineStore('mysqlGroup', {
         delete j?.version?.fetching
         delete j?.version?.running
       })
-      const groupDir = join(global.Server.MysqlDir, 'group')
+      const mysqlDir = global.Server.MysqlDir
+      if (!mysqlDir) {
+        throw new Error('MysqlDir is not defined')
+      }
+      const groupDir = join(mysqlDir, 'group')
       mkdirSync(groupDir, { recursive: true })
       const file = join(groupDir, 'group.json')
       writeFileSync(file, JSON.stringify(json))

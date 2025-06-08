@@ -30,7 +30,7 @@ export const DnsStore = defineStore('dns', {
   getters: {},
   actions: {
     getIP() {
-      this.ip = IP.address()
+      this.ip = IP.address() ?? ''
     },
     init() {
       IPC.on('App_DNS_Log').then((key: string, res: DNSLogItem) => {

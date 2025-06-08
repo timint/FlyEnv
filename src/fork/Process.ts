@@ -1,12 +1,9 @@
 import { uuid } from './Fn'
 import { join } from 'path'
 import { readFileSync, unlinkSync } from 'fs'
-import { promisify } from 'node:util'
-import { exec } from 'child_process'
+import { execSync } from 'child_process'
 import { existsSync } from 'fs'
 import JSON5 from 'json5'
-
-const execAsync = promisify(exec)
 
 export type PItem = {
   ProcessId: number
@@ -19,9 +16,8 @@ export const ProcessPidList = async (): Promise<PItem[]> => {
   console.log('ProcessPidList !!!')
   const all: PItem[] = []
   const json = join(global.Server.Cache!, `${uuid()}.json`)
-  const command = `powershell.exe -NoProfile -WindowStyle Hidden -command "[Console]::OutputEncoding = [System.Text.Encoding]::UTF8;[Console]::InputEncoding = [System.Text.Encoding]::UTF8;Get-CimInstance Win32_Process | Select-Object CommandLine,ProcessId,ParentProcessId | ConvertTo-Json | Out-File -FilePath '${json}' -Encoding utf8"`
   try {
-    await execAsync(command)
+    execSync(`powershell.exe -NoProfile -WindowStyle Hidden -command "[Console]::OutputEncoding = [System.Text.Encoding]::UTF8;[Console]::InputEncoding = [System.Text.Encoding]::UTF8;Get-CimInstance Win32_Process | Select-Object CommandLine,ProcessId,ParentProcessId | ConvertTo-Json | Out-File -FilePath '${json}' -Encoding utf8"`)
     const content = readFileSync(json, 'utf8')
     const list = JSON5.parse(content)
     all.push(...list)

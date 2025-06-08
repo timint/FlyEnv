@@ -1,5 +1,7 @@
 import { uuid } from './Index'
-import { ipcRenderer } from 'electron'
+
+// Use the exposed ipcRenderer from the preload script
+const ipcRenderer = (window as any).electron?.ipcRenderer;
 
 class IPC {
   listens: { [key: string]: Function }

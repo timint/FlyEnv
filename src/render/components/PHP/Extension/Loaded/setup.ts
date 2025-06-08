@@ -1,10 +1,7 @@
 import { computed, onMounted, onUnmounted, reactive, ref } from 'vue'
 import { type SoftInstalled } from '@/store/brew'
 import { join } from 'path'
-import { promisify } from 'node:util'
-import { exec } from 'child_process'
-
-const execAsync = promisify(exec)
+import { execSync } from 'child_process'
 
 export const LoadedSetup = reactive<{
   list: { [k: string]: any }
@@ -30,30 +27,29 @@ export const Setup = (version: SoftInstalled) => {
     LoadedSetup.fetching[version.bin] = true
     const bin = join(version?.path, 'php.exe')
     console.log('macport bin: ', bin)
-    execAsync('php.exe -m', {
-      cwd: version?.path
-    })
-      .then((res: any) => {
-        let phpModules = res.stdout.split(`[PHP Modules]\n`).pop()!.trim()!
-        const arr = phpModules.split(`[Zend Modules]`)
-        phpModules = arr.shift()!.trim()
-        const zendModules = arr.pop()?.trim() ?? ''
-        const phpModuleArr = phpModules
-          .split(`\n`)
-          .filter((s) => !!s.trim())
-          .map((s) => s.trim().toLowerCase())
-        const zendModuleArr = zendModules
-          .split(`\n`)
-          .filter((s) => !!s.trim())
-          .map((s) => s.trim().toLowerCase())
-        LoadedSetup.list[version.bin] = reactive(
-          Array.from(new Set([...phpModuleArr, ...zendModuleArr])).map((s) => ({ name: s }))
-        )
-        LoadedSetup.fetching[version.bin] = false
+    try {
+      const res = execSync('php.exe -m', {
+        cwd: version?.path
       })
-      .catch(() => {
-        LoadedSetup.fetching[version.bin] = false
-      })
+      let phpModules = res.toString().split(`[PHP Modules]\n`).pop()!.trim()!
+      const arr = phpModules.split(`[Zend Modules]`)
+      phpModules = arr.shift()!.trim()
+      const zendModules = arr.pop()?.trim() ?? ''
+      const phpModuleArr = phpModules
+        .split(`\n`)
+        .filter((s: string) => !!s.trim())
+        .map((s: string) => s.trim().toLowerCase())
+      const zendModuleArr = zendModules
+        .split(`\n`)
+        .filter((s: string) => !!s.trim())
+        .map((s: string) => s.trim().toLowerCase())
+      LoadedSetup.list[version.bin] = reactive(
+        Array.from(new Set([...phpModuleArr, ...zendModuleArr])).map((s) => ({ name: s }))
+      )
+      LoadedSetup.fetching[version.bin] = false
+    } catch (e) {
+      LoadedSetup.fetching[version.bin] = false
+    }
   }
 
   const reGetData = () => {

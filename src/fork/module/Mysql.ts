@@ -1,6 +1,7 @@
 import type { MysqlGroupItem, OnlineVersionItem, SoftInstalled } from '@shared/app'
 import { join, dirname, basename } from 'path'
 import { existsSync, chmodSync, readdirSync, readFileSync, rmSync, writeFileSync, mkdirSync } from 'fs'
+import { execSync } from 'child_process'
 import { Base } from './Base'
 import { I18nT } from '@lang/index'
 import { ForkPromise } from '@shared/ForkPromise'
@@ -16,7 +17,6 @@ import {
   versionInitedApp,
   versionSort,
   AppLog,
-  execPromise,
   serviceStartExecCMD,
   spawnPromise
 } from '../Fn'
@@ -40,7 +40,7 @@ class Mysql extends Base {
       if (existsSync(bin)) {
         process.chdir(dirname(bin))
         try {
-          await execPromise(`mysqladmin.exe -uroot password "root"`)
+          execSync(`mysqladmin.exe -uroot password "root"`)
         } catch (e) {
           on({
             'APP-On-Log': AppLog('error', I18nT('appLog.initDBPassFail', { error: e }))
@@ -169,9 +169,9 @@ datadir="${dataDir}"`
         command = `${basename(bin)} ${params.join(' ')}`
         console.log('command: ', command)
         try {
-          const res = await execPromise(command)
+          const res = execSync(command).toString()
           console.log('init res: ', res)
-          on(res.stdout)
+          on(res)
         } catch (e: any) {
           on({
             'APP-On-Log': AppLog('error', I18nT('appLog.initDBDataDirFail', { error: e }))
@@ -216,7 +216,7 @@ datadir="${dataDir}"`
 
       if (arr.length > 0) {
         const str = arr.map((s) => `/pid ${s}`).join(' ')
-        await execPromise(`taskkill /f /t ${str}`)
+        execSync(`taskkill /f /t ${str}`)
       }
       await waitTime(500)
       resolve({
@@ -332,9 +332,7 @@ sql-mode=NO_ENGINE_SUBSTITUTION`
           if (existsSync(bin)) {
             process.chdir(dirname(bin))
             try {
-              await execPromise(
-                `${basename(bin)} -P${version.port} -S"${sock}" -uroot password "root"`
-              )
+              execSync(`${basename(bin)} -P${version.port} -S"${sock}" -uroot password "root"`)
             } catch (e) {
               console.log('_initPassword err: ', e)
               reject(e)
@@ -365,9 +363,9 @@ sql-mode=NO_ENGINE_SUBSTITUTION`
         command = `${basename(bin!)} ${params.join(' ')}`
         console.log('command: ', command)
         try {
-          const res = await execPromise(command)
+          const res = execSync(command).toString()
           console.log('init res: ', res)
-          on(res.stdout)
+          on(res)
         } catch (e: any) {
           reject(e)
           return

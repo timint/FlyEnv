@@ -1,9 +1,9 @@
 import { AIStore } from '@/components/AI/store'
 import { I18nT } from '@lang/index'
 /**
- * content: 聊天内容
- * needInput: 是否需要用户的输入
- * 任务运行方法
+ * content: Chat content
+ * needInput: Whether user input is required
+ * Task execution method
  */
 export interface BaseTaskItem {
   content?: () => void
@@ -47,7 +47,7 @@ class BaseTask {
           const aiStore = AIStore()
           aiStore.chatList.push({
             user: 'ai',
-            content: I18nT('ai.任务执行失败', { err: e.toString() })
+            content: I18nT('ai.taskExecutionFailed', { err: e.toString() })
           })
         })
     }

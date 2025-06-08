@@ -1,0 +1,9 @@
+declare module 'tangerine';
+declare module '@usebruno/node-machine-id';
+declare module 'node-forge';
+declare module 'semver-utils';
+declare module 'conf';
+declare module 'markdown-it-async';
+declare module 'rollup/parseAst';
+declare module '@shikijs/core/types';
+declare module './virtual-tree';

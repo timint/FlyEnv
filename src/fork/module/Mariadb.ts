@@ -1,5 +1,6 @@
 import { join, dirname, basename } from 'path'
 import { existsSync, chmodSync, mkdirSync, rmSync, readdirSync, writeFileSync } from 'fs'
+import { execSync } from 'child_process'
 import { Base } from './Base'
 import { I18nT } from '@lang/index'
 import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
@@ -154,9 +155,9 @@ datadir="${dataDir}"`
         console.log('command: ', command)
 
         try {
-          const res = await execPromise(command)
+          const res = execSync(command).toString()
           console.log('init res: ', res)
-          on(res.stdout)
+          on(res)
         } catch (e: any) {
           on({
             'APP-On-Log': AppLog('error', I18nT('appLog.initDBDataDirFail', { error: e }))

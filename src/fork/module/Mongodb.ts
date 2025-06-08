@@ -1,13 +1,13 @@
 import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
 import { join, basename, dirname } from 'path'
-import { createWriteStream, chmodSync, existsSync, mkdirSync, readFileSync, rmSync, unlinkSync, writeFileSync } from 'fs'
+import { createWriteStream, chmodSync, existsSync, mkdirSync, readFileSync, rm, rmSync, writeFileSync } from 'fs'
+import { promisify } from 'node:util'
 import { Base } from './Base'
 import { ForkPromise } from '@shared/ForkPromise'
 import TaskQueue from '../TaskQueue'
 import { I18nT } from '@lang/index'
 import { zipUnPack } from '@shared/file'
 import axios from 'axios'
-import { promisify } from 'node:util'
 import { spawn } from 'child_process'
 import {
   AppLog,
@@ -21,6 +21,7 @@ import {
 } from '../Fn'
 
 const spawnAsync = promisify(spawn)
+const rmAsync = promisify(rm)
 
 class Manager extends Base {
   mongoshVersion = '2.5.0'
@@ -53,7 +54,7 @@ class Manager extends Base {
         if (existsSync(appPidFile)) {
           const pid = (readFileSync(appPidFile, 'utf-8')).trim()
           pids.add(pid)
-          TaskQueue.run(unlinkSync, appPidFile).then().catch()
+          TaskQueue.run(rmAsync, appPidFile).then().catch()
         }
         if (version?.pid) {
           pids.add(`${version.pid}`)
@@ -142,7 +143,7 @@ class Manager extends Base {
             await moveChildDirToParent(appDir)
             return existsSync(mongosh)
           } catch (e) {
-            unlinkSync(zip)
+            rmSync(zip)
           }
         }
         return false

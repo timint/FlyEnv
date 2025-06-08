@@ -50,7 +50,7 @@ class Manager extends Base {
   }
   start() {
     return new ForkPromise((resolve) => {
-      const LOCAL_IP = ip.address()
+      const LOCAL_IP = ip.address() ?? '127.0.0.1'
       const tangerine = new Tangerine()
       const server = dns2.createServer({
         udp: true,
@@ -68,7 +68,7 @@ class Manager extends Base {
               type: Packet.TYPE.A,
               class: Packet.CLASS.IN,
               ttl: 60,
-              address: ip
+              address: ip ?? ''
             }
             process?.send?.({
               on: true,

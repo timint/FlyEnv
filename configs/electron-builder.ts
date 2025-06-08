@@ -5,7 +5,6 @@ const conf: Configuration = {
   productName: packageJson.productName,
   executableName: 'PhpWebStudy',
   buildVersion: packageJson.version,
-  electronVersion: '31.7.7',
   appId: 'phpstudy.xpfme.com',
   asar: true,
   directories: {

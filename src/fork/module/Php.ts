@@ -1,5 +1,6 @@
 import { join, dirname, basename, isAbsolute } from 'path'
 import { copyFileSync, createWriteStream, existsSync, writeFileSync, mkdirSync, readFileSync, rmSync, readdirSync } from 'fs'
+import { execSync } from 'child_process'
 import { Base } from './Base'
 import { I18nT } from '@lang/index'
 import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
@@ -10,7 +11,6 @@ import { ProcessListSearch } from '../Process'
 import axios from 'axios'
 import {
   AppLog,
-  execPromise,
   serviceStartExec,
   versionBinVersion,
   versionFilterSame,
@@ -145,7 +145,7 @@ class Php extends Base {
       if (arr.length > 0) {
         const str = arr.map((s) => `/pid ${s}`).join(' ')
         try {
-          await execPromise(`taskkill /f /t ${str}`)
+          execSync(`taskkill /f /t ${str}`)
         } catch (e) {}
       }
       on({
@@ -274,7 +274,7 @@ class Php extends Base {
         } else {
           command = `${basename(params.bin)} "${bin}" "${params.src}" -o "${params.desc}"`
         }
-        await execPromise(command, {
+        execSync(command, {
           cwd: dirname(params.bin)
         })
         resolve(true)

@@ -139,8 +139,11 @@ function ParseRootDefinition(this: any, obj: any) {
   // 1. What is the default type for our Definition?
   const jsonType = Object.prototype.toString.call(obj)
 
-  if (jsonType === '[object Array]') parseArray.bind(this, obj, null)()
-  else if (jsonType === '[object Object]') parseObject.bind(this, obj, null)()
+  if (jsonType === '[object Array]') {
+    parseArray.bind(this, obj, '')()
+  } else if (jsonType === '[object Object]') {
+    parseObject.bind(this, obj, '')()
+  }
 }
 
 /**

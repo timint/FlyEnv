@@ -51,7 +51,18 @@ const store = reactive({
     if (this.digest === 'Bin') {
       return convertHexToBin(value.toString(enc.Hex))
     }
-    return value.toString(enc[this.digest])
+    // Map digest to encoding (use 'any' for encoder type to avoid type error)
+    const encodingMap: Record<string, any> = {
+      Hex: enc.Hex,
+      Base64: enc.Base64,
+      Base64url: (enc as any).Base64url ?? enc.Base64 // fallback if Base64url not present
+    }
+    const encoding = encodingMap[this.digest]
+    if (encoding) {
+      return value.toString(encoding)
+    }
+    // fallback: return hex if unknown digest
+    return value.toString(enc.Hex)
   },
   copy(algo: string) {
     const value = this.hashText(algo)

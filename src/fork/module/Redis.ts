@@ -1,6 +1,7 @@
 import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
+import { execSync } from 'child_process'
 import { join, dirname, basename } from 'path'
-import { chmod, copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs'
+import { chmodSync, copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs'
 import { Base } from './Base'
 import { ForkPromise } from '@shared/ForkPromise'
 import TaskQueue from '../TaskQueue'
@@ -8,7 +9,6 @@ import { ProcessListSearch } from '../Process'
 import { I18nT } from '@lang/index'
 import {
   AppLog,
-  execPromise,
   serviceStartExecCMD,
   versionBinVersion,
   versionFilterSame,
@@ -44,7 +44,7 @@ class Redis extends Base {
         const tmplFile = join(global.Server.Static!, 'tmpl/redis.conf')
         const dbDir = join(global.Server.RedisDir!, `db-${v}`)
         mkdirSync(dbDir, { recursive: true })
-        chmod(dbDir, '0755')
+        chmodSync(dbDir, '0755')
         let content = readFileSync(tmplFile, 'utf-8')
         content = content
           .replace(/#PID_PATH#/g, join(global.Server.RedisDir!, 'redis.pid').split('\\').join('/'))
@@ -80,7 +80,7 @@ class Redis extends Base {
       if (arr.length > 0) {
         const str = arr.map((s) => `/pid ${s}`).join(' ')
         try {
-          await execPromise(`taskkill /f /t ${str}`)
+          execSync(`taskkill /f /t ${str}`)
         } catch (e) {}
       }
       on({

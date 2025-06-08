@@ -1,5 +1,5 @@
 import { basename, dirname, join } from 'path'
-import { copyFileSync, createWriteStream, existsSync, mkdirSync, readFileSync, unlinkSync } from 'fs'
+import { copyFileSync, createWriteStream, existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync } from 'fs'
 import { Base } from './Base'
 import { ForkPromise } from '@shared/ForkPromise'
 import type { SoftInstalled } from '@shared/app'

@@ -6,7 +6,8 @@ import { I18nT } from '@lang/index'
 import type { AllAppModule } from '@/core/type'
 import { dialog } from '@electron/remote'
 import { shell } from '@electron/remote'
-import { existsSync, readFileSync, statSync, writeFile } from 'fs'
+import { existsSync, statSync } from 'fs'
+import { writeFileAsync, readFileAsync } from '@shared/file'
 
 type CommonSetItemOption = {
   label: string
@@ -105,7 +106,7 @@ export const ConfSetup = (props: ComputedRef<ConfSetupProps>) => {
       return
     }
     const content = monacoInstance?.getValue() ?? ''
-    writeFile(props.value.file, content).then(() => {
+    writeFileAsync(props.value.file, content).then(() => {
       config.value = content
       changed.value = false
       MessageSuccess(I18nT('base.success'))
@@ -124,13 +125,14 @@ export const ConfSetup = (props: ComputedRef<ConfSetupProps>) => {
   }
 
   const saveCustom = () => {
-    const opt = ['showHiddenFiles', 'createDirectory', 'showOverwriteConfirmation']
+    const opt: Array<'showHiddenFiles' | 'createDirectory' | 'showOverwriteConfirmation'> = ['showHiddenFiles', 'createDirectory', 'showOverwriteConfirmation']
     dialog
       .showSaveDialog({
         properties: opt,
         defaultPath: 'apache-custom.conf',
         filters: [
           {
+            name: 'Config',
             extensions: [props?.value?.fileExt ?? 'conf']
           }
         ]
@@ -140,7 +142,7 @@ export const ConfSetup = (props: ComputedRef<ConfSetupProps>) => {
           return
         }
         const content = monacoInstance?.getValue() ?? ''
-        writeFile(filePath, content).then(() => {
+        writeFileAsync(filePath, content).then(() => {
           MessageSuccess(I18nT('base.success'))
         })
       })
@@ -191,7 +193,7 @@ export const ConfSetup = (props: ComputedRef<ConfSetupProps>) => {
       initEditor()
       return
     }
-    readFileSync(props.value.file, 'utf-8').then((conf: string) => {
+    readFileAsync(props.value.file, 'utf-8').then((conf: string) => {
       config.value = conf
       initEditor()
     })
@@ -208,16 +210,18 @@ export const ConfSetup = (props: ComputedRef<ConfSetupProps>) => {
       initEditor()
       return
     }
-    readFileSync(props.value.defaultFile, 'utf-8').then((conf: string) => {
-      console.log('getDefault config.value === conf', config.value === conf)
-      changed.value = conf !== config.value
-      config.value = conf
-      initEditor()
-    })
+    if (props.value.defaultFile) {
+      readFileAsync(props.value.defaultFile, 'utf-8').then((conf: string) => {
+        console.log('getDefault config.value === conf', config.value === conf)
+        changed.value = conf !== config.value
+        config.value = conf
+        initEditor()
+      })
+    }
   }
 
   const loadCustom = () => {
-    const opt = ['openFile', 'showHiddenFiles']
+    const opt: Array<'openFile' | 'showHiddenFiles'> = ['openFile', 'showHiddenFiles']
     dialog
       .showOpenDialog({
         properties: opt
@@ -232,7 +236,7 @@ export const ConfSetup = (props: ComputedRef<ConfSetupProps>) => {
           MessageError(I18nT('base.fileBigErr'))
           return
         }
-        readFileSync(file, 'utf-8').then((conf: string) => {
+        readFileAsync(file, 'utf-8').then((conf: string) => {
           changed.value = conf !== config.value
           config.value = conf
           initEditor()

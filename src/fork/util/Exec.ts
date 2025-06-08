@@ -1,5 +1,5 @@
 import type { ModuleExecItem } from '@shared/app'
-import { existsSync, mkdirSync, readFileSync, rmdirSync, writeFileSync } from 'fs'
+import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'fs'
 import { dirname, join } from 'path'
 import { waitPidFile } from '../Fn'
 import { ForkPromise } from '@shared/ForkPromise'
@@ -44,7 +44,7 @@ export async function customerServiceStartExec(
   const pidPath = version?.pidPath ?? ''
   if (pidPath && existsSync(pidPath)) {
     try {
-      rmdirSync(pidPath)
+      rmSync(pidPath, { recursive: true, force: true })
     } catch (e) {}
   }
 
@@ -78,14 +78,12 @@ export async function customerServiceStartExec(
   let res: any
   let error: any
   try {
-    res = await spawnAsyncPromise(
-      'powershell.exe',
-      ['-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', `\`"${psPath}\`"`],
-      {
-        shell: 'powershell.exe',
-        cwd: baseDir
-      }
-    )
+    res = await spawnAsyncPromise('powershell.exe', [
+      '-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', `\`"${psPath}\`"`
+    ], {
+      shell: 'powershell.exe',
+      cwd: baseDir
+    })
   } catch (e) {
     error = e
     if (!version.pidPath) {

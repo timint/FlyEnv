@@ -1,6 +1,6 @@
 import { createServer } from 'vite'
 import { promisify } from 'util'
-import { spawn, exec, ChildProcess } from 'child_process'
+import { spawn, exec, execSync, ChildProcess } from 'child_process'
 import { build } from 'esbuild'
 import { cpSync, readFileSync, watch } from 'fs'
 import { dirname, join, resolve } from 'path'
@@ -16,40 +16,6 @@ const __dirname = dirname(__filename)
 let restart = false
 let electronProcess: ChildProcess | null
 
-const execAsync = promisify(exec);
-
-async function killAllElectron() {
-  const sh = resolve(__dirname, '../scripts/electron-kill.ps1')
-  const scriptDir = dirname(sh)
-  console.log('sh: ', sh, scriptDir)
-  const command = `powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Unblock-File -LiteralPath './electron-kill.ps1'; & './electron-kill.ps1'"`
-  let res: any = null
-  try {
-    res = await execAsync(command, {
-      cwd: scriptDir
-    })
-  } catch (e) {
-    console.log('killAllElectron err: ', e)
-  }
-  let all: any = []
-  try {
-    all = JSON.parse(res?.stdout?.trim() ?? '[]')
-  } catch (e) {}
-  console.log('all: ', all)
-  const arr: Array<string> = []
-  if (all && !Array.isArray(all)) {
-    all = [all]
-  }
-  for (const item of all) {
-    arr.push(item.ProcessId)
-  }
-  console.log('_stopServer arr: ', arr)
-  if (arr.length > 0) {
-    const str = arr.map((s) => `/pid ${s}`).join(' ')
-    await execAsync(`taskkill /f /t ${str}`)
-  }
-}
-
 async function launchViteDevServer(openInBrowser = false) {
   const config = openInBrowser ? viteConfig.serveConfig : viteConfig.serverConfig
   const server = await createServer({
@@ -62,7 +28,6 @@ async function launchViteDevServer(openInBrowser = false) {
 function buildMainProcess() {
   return new Promise((resolve, reject) => {
     Promise.all([
-      //killAllElectron(),
       build(esbuildConfig.dev),
       build(esbuildConfig.devFork)
     ])
@@ -134,7 +99,15 @@ if (process.env.TEST === 'browser') {
 
 process.on('SIGINT', async () => {
   console.log('Catch SIGINT, Cleaning Electron Process...')
-  await killAllElectron()
+  if (electronProcess && !electronProcess.killed) {
+    try {
+      electronProcess.kill('SIGTERM')
+      // Give it a moment to exit
+      await new Promise(res => setTimeout(res, 500))
+    } catch (e) {
+      console.log('Error killing electronProcess:', e)
+    }
+  }
   process.exit(0)
 })
 

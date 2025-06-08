@@ -1,5 +1,6 @@
 import { join } from 'path'
 import { existsSync } from 'fs'
+import { execSync } from 'child_process'
 import { Base } from './Base'
 import { I18nT } from '@lang/index'
 import { ForkPromise } from '@shared/ForkPromise'
@@ -16,7 +17,6 @@ import {
   getSubDir,
   hostAlias,
   uuid,
-  execPromise
 } from '../Fn'
 import type { AppHost, SoftInstalled } from '@shared/app'
 
@@ -384,7 +384,7 @@ class Host extends Base {
         } catch (e) {}
       }
       try {
-        await execPromise(`ipconfig /flushdns`)
+        execSync(`ipconfig /flushdns`)
       } catch (e) {}
       resolve(true)
     })

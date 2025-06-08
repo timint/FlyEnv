@@ -11,17 +11,17 @@ import type { StaticHttpServe, PtyItem } from './type'
 import type { ServerResponse } from 'http'
 import SiteSuckerManager from './ui/SiteSucker'
 import { ForkManager } from './core/ForkManager'
-import { execPromise } from '../fork/Fn'
 import is from 'electron-is'
 import UpdateManager from './core/UpdateManager'
 import { PItem, ProcessPidList, ProcessPidListByPids } from '../fork/Process'
 import NodePTY from './core/NodePTY'
 import ScreenManager from './core/ScreenManager'
 import ServeHandler from 'serve-handler'
-import Http from 'http'
+import Http, { IncomingMessage } from 'http'
 import * as IP from 'neoip'
 import { dirname, join, resolve } from 'path'
 import { fileURLToPath } from 'url'
+import { execSync } from 'child_process'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
@@ -274,7 +274,7 @@ export default class Application extends EventEmitter {
       })
       const str = arr.map((s) => `/pid ${s}`).join(' ')
       try {
-        await execPromise(`taskkill /f /t ${str}`)
+        execSync(`taskkill /f /t ${str}`)
       } catch (e) {
         console.log('taskkill e: ', e)
       }
@@ -289,7 +289,7 @@ export default class Application extends EventEmitter {
     if (all.length > 0) {
       const str = all.map((s) => `/pid ${s}`).join(' ')
       try {
-        await execPromise(`taskkill /f /t ${str}`)
+        execSync(`taskkill /f /t ${str}`)
       } catch (e) {
         console.log('taskkill e: ', e)
       }
@@ -577,17 +577,25 @@ export default class Application extends EventEmitter {
             httpServe.server.close()
             delete this.httpServes[path]
           }
-          const server = Http.createServer((request: Request, response: ServerResponse) => {
-            response.setHeader('Access-Control-Allow-Origin', '*')
-            response.setHeader('Access-Control-Allow-Headers', '*')
-            response.setHeader('Access-Control-Allow-Methods', '*')
-            return ServeHandler(request, response, {
+          const server = Http.createServer((req: IncomingMessage, res: ServerResponse) => {
+            res.setHeader('Access-Control-Allow-Origin', '*')
+            res.setHeader('Access-Control-Allow-Headers', '*')
+            res.setHeader('Access-Control-Allow-Methods', '*')
+            return ServeHandler(req, res, {
               public: path
             })
           })
           server.listen(0, () => {
-            console.log('server.address(): ', server.address())
-            const port = server.address().port
+            const address = server.address()
+            let port: number | undefined
+            if (address && typeof address === 'object' && 'port' in address) {
+              port = (address as any).port
+            }
+            if (!port) {
+              console.error('Could not determine server port')
+              return
+            }
+            console.log('server.address(): ', address)
             const host = [`http://localhost:${port}/`]
             const ip = IP.address()
             if (ip && typeof ip === 'string' && ip.includes('.')) {

@@ -1,17 +1,11 @@
-import { Event as ElectronEvent, BrowserWindowConstructorOptions } from 'electron'
+import { BrowserWindowConstructorOptions } from 'electron'
 import { EventEmitter } from 'events'
 import { app, BrowserWindow, screen } from 'electron'
-import path from 'path'
-import { fileURLToPath } from 'url'
-
 import { initialize, enable } from '@electron/remote/main/index.js'
 import pageConfig from '../configs/page'
 import { debounce } from 'lodash-es'
 
 initialize()
-
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
 
 const defaultBrowserOptions: BrowserWindowConstructorOptions = {
   titleBarStyle: 'hiddenInset',
@@ -288,8 +282,8 @@ export default class WindowManager extends EventEmitter {
   }
 
   handleAllWindowClosed() {
-    app.on('window-all-closed', (event: Event) => {
-      event.preventDefault()
+    app.on('window-all-closed', () => {
+      // Do nothing, prevent the default behavior
     })
   }
 

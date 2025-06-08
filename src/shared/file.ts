@@ -118,16 +118,17 @@ export function writeFileAsync(fp: string, content: string) {
   })
 }
 
-export function readFileAsync(fp: string, encode = 'utf-8') {
+export function readFileAsync(fp: string, encode: BufferEncoding = 'utf-8') {
   return new Promise<string>((resolve, reject) => {
     if (!existsSync(fp)) {
       reject(new Error(`File does not exist: ${fp}`))
+      return;
     }
-    readFile(fp, encode, (err: Error, data: string) => {
+    readFile(fp, encode as BufferEncoding, (err: Error | null, data: string | Buffer) => {
       if (err) {
         reject(err)
       } else {
-        resolve(data)
+        resolve(data.toString())
       }
     })
   })

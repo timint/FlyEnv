@@ -6,6 +6,7 @@ import vueJsx from '@vitejs/plugin-vue-jsx'
 import wasm from 'vite-plugin-wasm-esm'
 import monacoEditorPlugin from 'vite-plugin-monaco-editor-esm'
 import { fileURLToPath } from 'url'
+import Checker from 'vite-plugin-checker';
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -20,10 +21,11 @@ console.log('sharePath: ', sharePath)
 const config: UserConfig = {
   base: './',
   plugins: [
+    Checker({ typescript: true }),
     monacoEditorPlugin({}),
     wasm([]),
     vue(),
-    vueJsx()
+    vueJsx(),
   ],
   assetsInclude: [
     '**/*.node'

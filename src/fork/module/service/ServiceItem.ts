@@ -1,7 +1,7 @@
 import type { AppHost } from '@shared/app'
 import { existsSync, FSWatcher, readFileSync, watch } from 'fs'
 import { ForkPromise } from '@shared/ForkPromise'
-import { waitTime, execPromiseRoot } from '../../Fn'
+import { waitTime, suExecPromise } from '../../Fn'
 
 export const getHostItemEnv = async (item: AppHost) => {
   if (item?.envVarType === 'none') {
@@ -75,12 +75,12 @@ export class ServiceItem {
       if (arr.length > 0) {
         const str = arr.map((s) => `/pid ${s}`).join(' ')
         try {
-          await execPromiseRoot(`taskkill /f /t ${str}`)
+          await suExecPromise(`taskkill /f /t ${str}`)
         } catch (e) {}
       }
       if (this.pidFile && existsSync(this.pidFile)) {
         try {
-          await execPromiseRoot(`del -Force ${this.pidFile}`)
+          await suExecPromise(`del -Force ${this.pidFile}`)
         } catch (e) {}
       }
       resolve({

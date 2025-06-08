@@ -32,14 +32,14 @@ export const LogSetup = (file: Ref<string>) => {
       }
       const read = () => {
         return new Promise((resolve) => {
-          readFileSync(file.value, 'utf-8')
-            .then((str: string) => {
-              log.value = str
-              resolve(true)
-            })
-            .catch((e: any) => {
-              MessageError(e.toString())
-            })
+          try {
+            const str = readFileSync(file.value, 'utf-8')
+            log.value = str
+            resolve(true)
+          } catch (e: any) {
+            MessageError(e.toString())
+            resolve(false)
+          }
         })
       }
       read().then(() => {
@@ -63,14 +63,13 @@ export const LogSetup = (file: Ref<string>) => {
         getLog()
         break
       case 'clean':
-        writeFileSync(file.value, '')
-          .then(() => {
-            log.value = ''
-            MessageSuccess(I18nT('base.success'))
-          })
-          .catch((e: any) => {
-            MessageError(`${e}`)
-          })
+        try {
+          writeFileSync(file.value, '')
+          log.value = ''
+          MessageSuccess(I18nT('base.success'))
+        } catch (e: any) {
+          MessageError(`${e}`)
+        }
         break
     }
   }

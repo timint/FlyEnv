@@ -1,5 +1,4 @@
 import { uuid } from '@shared/utils'
-import TaskQueue from '../fork/TaskQueue'
 import { mkdir, rm, readFile, stat, writeFile, writeFileSync } from 'fs'
 import os from 'os'
 import path from 'path'
@@ -160,7 +159,8 @@ function Windows(instance: Sudo, callback: Function) {
       }
       if (error) return callback(error)
       callback(undefined, stdout, stderr)
-      TaskQueue.run(rm, instance.path!, { recursive: true }).then().catch()
+      // Remove directory using rm directly, no TaskQueue needed
+      rm(instance.path!, { recursive: true }, () => {});
     }
     WindowsWriteExecuteScript(instance, function (error: any) {
       if (error) return end(error)
@@ -194,7 +194,8 @@ function WindowsElevate(instance: Sudo, end: Function) {
   command.push('-Verb runAs')
   command = command.join(' ')
   const path = `C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\;%SYSTEMROOT%\\System32\\WindowsPowerShell\\v1.0\\;${process.env['PATH']}`
-  const child = child.exec(
+  const childProcess = require('child_process');
+  const child: import('child_process').ChildProcess = childProcess.exec(
     command,
     {
       encoding: 'utf-8',
@@ -213,15 +214,15 @@ function WindowsElevate(instance: Sudo, end: Function) {
       end()
     }
   )
-  child.stdin.end() // Otherwise PowerShell waits indefinitely on Windows 7.
+  if (child.stdin) child.stdin.end(); // Otherwise PowerShell waits indefinitely on Windows 7.
 }
 
 function WindowsResult(instance: Sudo, end: Function) {
-  readFile(instance.pathStatus, 'utf-8', function (error: any, code: any) {
+  readFile(instance.pathStatus ? instance.pathStatus : '', 'utf-8', function (error: any, code: any) {
     if (error) return end(error)
-    readFile(instance.pathStdout, 'utf-8', function (error: any, stdout: string) {
+    readFile(instance.pathStdout ? instance.pathStdout : '', 'utf-8', function (error: any, stdout: string) {
       if (error) return end(error)
-      readFile(instance.pathStderr, 'utf-8', function (error: any, stderr: string) {
+      readFile(instance.pathStderr ? instance.pathStderr : '', 'utf-8', function (error: any, stderr: string) {
         if (error) return end(error)
         code = parseInt(code.trim(), 10)
         if (code === 0) {
@@ -242,7 +243,7 @@ function WindowsWaitForStatus(instance: Sudo, end: Function) {
   // PowerShell can be used to elevate and wait on Windows 10.
   // PowerShell can be used to elevate on Windows 7 but it cannot wait.
   // powershell.exe Start-Process cmd.exe -Verb runAs -Wait
-  stat(instance.pathStatus, function (error: any, stats: any) {
+  stat(instance.pathStatus ? instance.pathStatus : '', function (error: any, stats: any) {
     if ((error && error.code === 'ENOENT') || stats.size < 2) {
       // Retry if file does not exist or is not finished writing.
       // We expect a file size of 2. That should cover at least "0\r".
@@ -252,7 +253,7 @@ function WindowsWaitForStatus(instance: Sudo, end: Function) {
         // If administrator has no password and user clicks Yes, then
         // PowerShell returns no error and execute (and command) never runs.
         // We check that command output has been redirected to stdout file:
-        stat(instance.pathStdout, function (error: any) {
+        stat(instance.pathStdout ? instance.pathStdout : '', function (error: any) {
           if (error) return end(new Error(PERMISSION_DENIED))
           WindowsWaitForStatus(instance, end)
         })
@@ -265,7 +266,7 @@ function WindowsWaitForStatus(instance: Sudo, end: Function) {
   })
 }
 
-function WindowsWriteCommandScript(instance: Sudo, end: Function) {
+function WindowsWriteCommandScript(instance: Sudo, end: (err: NodeJS.ErrnoException | null) => void) {
   const cwd = process.cwd()
   if (/"/.test(cwd)) {
     // We expect double quotes to be reserved on Windows.
@@ -293,6 +294,7 @@ function WindowsWriteCommandScript(instance: Sudo, end: Function) {
   }
   script.push(instance.command)
   script = script.join('\r\n')
+  if (!instance.pathCommand) throw new Error('pathCommand is undefined');
   writeFile(instance.pathCommand, script, 'utf-8', end)
 }
 
@@ -312,7 +314,9 @@ function WindowsWriteExecuteScript(instance: Sudo, end: Function) {
   )
   script.push('(echo %ERRORLEVEL%) > "' + instance.pathStatus + '"')
   script = script.join('\r\n')
-  writeFileSync(instance.pathExecute, script, 'utf-8', end)
+  if (!instance.pathExecute) throw new Error('pathExecute is undefined');
+  writeFileSync(instance.pathExecute, script, 'utf-8')
+  end()
 }
 
 const PERMISSION_DENIED = 'User did not grant permission.'

@@ -1,4 +1,8 @@
-import type { IPty, spawn } from '@lydell/node-pty'
+// Use createRequire to load @lydell/node-pty at runtime to avoid ESM dynamic require issues
+import { createRequire } from 'module'
+const require = createRequire(import.meta.url)
+const nodePty = require('@lydell/node-pty')
+const spawn = nodePty.spawn
 import type { PtyItem } from '../type'
 import { uuid } from '../utils'
 
@@ -12,7 +16,7 @@ class NodePTY {
   async initNodePty() {
     return new Promise((resolve) => {
       const key = uuid()
-      const pty: IPty = spawn('powershell.exe', [], {
+      const pty = spawn('powershell.exe', [], {
         name: 'xterm-color',
         cols: 80,
         rows: 34,

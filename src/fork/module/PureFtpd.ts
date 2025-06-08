@@ -1,7 +1,7 @@
 import { join } from 'path'
 import { existsSync, readFileSync, writeFileSync, mkdirSync } from 'fs'
 import { Base } from './Base'
-import type { FtpItem } from '@shared/app'
+import type { FtpItem, SoftInstalled } from '@shared/app'
 import { ForkPromise } from '@shared/ForkPromise'
 import FtpServer from 'ftp-srv'
 import * as ip from 'neoip'
@@ -23,11 +23,11 @@ class Manager extends Base {
 
   init() {}
 
-  _stopServer(): ForkPromise<unknown> {
+  _stopServer(version: SoftInstalled): ForkPromise<{ 'APP-Service-Stop-PID': number[] }> {
     return new ForkPromise((resolve) => {
       this.server?.close()
       this.server = undefined
-      resolve(true)
+      resolve({ 'APP-Service-Stop-PID': [] })
     })
   }
 

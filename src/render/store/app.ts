@@ -99,7 +99,7 @@ type StateBase = SetupBase & {
   forceStart: boolean
   showAIRobot: boolean
   showTool?: boolean
-  currentNodeTool: 'fnm' | 'nvm'
+  currentNodeTool: 'fnm' | 'nvm' | 'default'
   editorConfig: EditorConfig
   phpGroupStart: { [k: string]: boolean }
   serviceShowHide: Record<string, boolean>

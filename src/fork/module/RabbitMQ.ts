@@ -1,6 +1,7 @@
 import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
 import { dirname, join } from 'path'
-import { existsSync, mkdirSync, readdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'fs'
+import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'fs'
+import { execSync } from 'child_process'
 import { Base } from './Base'
 import { I18nT } from '@lang/index'
 import { ForkPromise } from '@shared/ForkPromise'
@@ -8,7 +9,6 @@ import TaskQueue from '../TaskQueue'
 import { ProcessListSearch } from '../Process'
 import {
   AppLog,
-  execPromise,
   serviceStartExecCMD,
   versionBinVersion,
   versionFilterSame,
@@ -56,7 +56,7 @@ class RabbitMQ extends Base {
       })
       process.chdir(dirname(version.bin))
       try {
-        const res = await execPromise(`rabbitmq-plugins.bat enable rabbitmq_management`)
+        const res = execSync(`rabbitmq-plugins.bat enable rabbitmq_management`)
         console.log('rabbitmq _initPlugin: ', res)
         on({
           'APP-On-Log': AppLog('info', I18nT('appLog.initPluginSuccess'))
@@ -218,14 +218,9 @@ set "PLUGINS_DIR=${pluginsDir}"`
     }
     let str = ''
     try {
-      const stdout = (
-        await execPromise(
-          'Write-Host "##FlyEnv-ERLANG_HOME$($env:ERLANG_HOME)FlyEnv-ERLANG_HOME##"',
-          {
-            shell: 'powershell.exe'
-          }
-        )
-      ).stdout.trim()
+      const stdout = execSync('Write-Host "##FlyEnv-ERLANG_HOME$($env:ERLANG_HOME)FlyEnv-ERLANG_HOME##"', {
+        shell: 'powershell.exe'
+      }).toString()
       const regex = /FlyEnv-ERLANG_HOME(.*?)FlyEnv-ERLANG_HOME/g
       const match = regex.exec(stdout)
       if (match) {
@@ -246,7 +241,7 @@ set "PLUGINS_DIR=${pluginsDir}"`
         console.log('epmd.exe existsSync: ', bin)
         process.chdir(dirname(bin))
         try {
-          await execPromise(`start /B ./epmd.exe > NUL 2>&1`, {
+          execSync(`start /B ./epmd.exe > NUL 2>&1`, {
             cwd: dirname(bin),
             shell: 'cmd.exe'
           })

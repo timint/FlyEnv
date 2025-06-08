@@ -40,3 +40,7 @@ declare global {
   var launcher: Launcher
 }
 export {}
+
+// TypeScript module declarations for missing types
+
+declare module '@taplo/lib';

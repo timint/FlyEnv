@@ -1,6 +1,5 @@
 import { Base } from './Base'
-import { promisify } from 'node:util'
-import { exec } from 'node:child_process'
+import { execSync } from 'child_process'
 import { ForkPromise } from '@shared/ForkPromise'
 import { dirname, join, isAbsolute, basename } from 'path'
 import { compareVersions } from 'compare-versions'
@@ -11,7 +10,6 @@ import { SoftInstalled } from '@shared/app'
 import TaskQueue from '../TaskQueue'
 import ncu from 'npm-check-updates'
 import {
-  execPromise,
   fetchPathByBin,
   fetchRawPATH,
   handleWinPathArr,
@@ -25,8 +23,6 @@ import {
   writePath
 } from '../Fn'
 
-const execAsync = promisify(exec)
-
 class Manager extends Base {
   constructor() {
     super()
@@ -37,8 +33,8 @@ class Manager extends Base {
       let NVM_HOME = ''
       try {
         const command = `set NVM_HOME`
-        const res = await execPromise(command)
-        NVM_HOME = res?.stdout?.trim()?.replace('NVM_HOME=', '').trim()
+        const res = execSync(command)
+        NVM_HOME = res.toString().trim().replace('NVM_HOME=', '').trim()
       } catch (e) {}
       if (NVM_HOME && existsSync(NVM_HOME) && existsSync(join(NVM_HOME, 'nvm.exe'))) {
         console.log('NVM_HOME 0: ', NVM_HOME)
@@ -49,8 +45,8 @@ class Manager extends Base {
 
       try {
         const command = `powershell.exe -command "$env:NVM_HOME"`
-        const res = await execPromise(command)
-        NVM_HOME = res?.stdout?.trim()?.replace('NVM_HOME=', '').trim()
+        const res = execSync(command)
+        NVM_HOME = res.toString().trim().replace('NVM_HOME=', '').trim()
       } catch (e) {}
       if (NVM_HOME && existsSync(NVM_HOME) && existsSync(join(NVM_HOME, 'nvm.exe'))) {
         console.log('NVM_HOME 1: ', NVM_HOME)
@@ -73,14 +69,14 @@ class Manager extends Base {
       writeFileSync(installcmd, content)
       process.chdir(nvmDir)
       try {
-        const res = await execPromise('install.cmd')
+        const res = execSync('install.cmd')
         console.log('installNvm res: ', res)
       } catch (e) {}
       NVM_HOME = dirname(local)
       const NVM_SYMLINK = join(NVM_HOME, 'nodejs-link')
       try {
-        await execPromise(`setx /M NVM_HOME "${NVM_HOME}"`)
-        await execPromise(`setx /M NVM_SYMLINK "${NVM_SYMLINK}"`)
+        execSync(`setx /M NVM_HOME "${NVM_HOME}"`)
+        execSync(`setx /M NVM_SYMLINK "${NVM_SYMLINK}"`)
       } catch (e) {}
       await this._resortToolInPath('nvm')
       await waitTime(1000)
@@ -93,8 +89,8 @@ class Manager extends Base {
       let FNM_HOME = ''
       try {
         const command = `set FNM_HOME`
-        const res = await execPromise(command)
-        FNM_HOME = res?.stdout?.trim()?.replace('FNM_HOME=', '').trim()
+        const res = execSync(command)
+        FNM_HOME = res.toString().trim().replace('FNM_HOME=', '').trim()
       } catch (e) {}
       if (FNM_HOME && existsSync(FNM_HOME) && existsSync(join(FNM_HOME, 'fnm.exe'))) {
         console.log('FNM_HOME 0: ', FNM_HOME)
@@ -105,8 +101,8 @@ class Manager extends Base {
 
       try {
         const command = `powershell.exe -command "$env:FNM_HOME"`
-        const res = await execPromise(command)
-        FNM_HOME = res?.stdout?.trim()?.replace('FNM_HOME=', '').trim()
+        const res = execSync(command)
+        FNM_HOME = res.toString().trim().replace('FNM_HOME=', '').trim()
       } catch (e) {}
       if (FNM_HOME && existsSync(FNM_HOME) && existsSync(join(FNM_HOME, 'fnm.exe'))) {
         console.log('FNM_HOME 1: ', FNM_HOME)
@@ -126,8 +122,7 @@ class Manager extends Base {
       content = content
         .replace(new RegExp('##FNM_PATH##', 'g'), nvmDir)
         .replace(new RegExp('##FNM_SYMLINK##', 'g'), linkDir)
-      let profile: any = await execAsync('$profile', { shell: 'powershell.exe' })
-      profile = profile.stdout.trim()
+      let profile = execSync('$profile', { shell: 'powershell.exe' }).toString().trim()
       const profile_root = profile.replace('WindowsPowerShell', 'PowerShell')
       mkdirSync(dirname(profile), { recursive: true })
       mkdirSync(dirname(profile_root), { recursive: true })
@@ -136,12 +131,12 @@ class Manager extends Base {
       writeFileSync(installcmd, content)
       process.chdir(nvmDir)
       try {
-        const res = await execPromise('install.cmd')
+        const res = execSync('install.cmd')
         console.log('installNvm res: ', res)
       } catch (e) {}
       FNM_HOME = dirname(local)
       try {
-        await execPromise(`setx /M FNM_HOME "${FNM_HOME}"`)
+        execSync(`setx /M FNM_HOME "${FNM_HOME}"`)
       } catch (e) {}
       await this._resortToolInPath('fnm')
       resolve(FNM_HOME)
@@ -224,8 +219,8 @@ class Manager extends Base {
         if (existsSync(currentDir) && existsSync(join(currentDir, 'node.exe'))) {
           const realDir = realpathSync(currentDir)
           process.chdir(realDir)
-          const res = await execPromise(`node.exe -v`)
-          current = res?.stdout?.trim()?.replace('v', '') ?? ''
+          const res = execSync(`node.exe -v`)
+          current = res.toString().trim().replace('v', '') ?? ''
         }
         versions.sort((a: string, b: string) => {
           return compareVersions(b, a)
@@ -255,7 +250,7 @@ class Manager extends Base {
       let res: any
       process.chdir(dir)
       try {
-        res = await execPromise(`${tool}.exe ls`, {
+        res = execSync(`${tool}.exe ls`, {
           cwd: dir,
           env
         })
@@ -269,7 +264,7 @@ class Manager extends Base {
         })
         return
       }
-      const stdout = res?.stdout?.trim() ?? ''
+      const stdout = res.toString().trim() ?? ''
       if (!stdout) {
         resolve({
           versions: [],
@@ -312,17 +307,18 @@ class Manager extends Base {
 
   async _resetFnmNodeLink() {
     const command = `fnm.exe env`
-    const res = await execPromise(command)
-    const find = res?.stdout
-      ?.split('\n')
-      ?.map((s) => s.trim())
-      ?.find((s) => s.includes('SET FNM_MULTISHELL_PATH='))
+    const res = execSync(command)
+    const find = res
+      .toString()
+      .split('\n')
+      .map((s: string) => s.trim())
+      .find((s: string) => s.includes('SET FNM_MULTISHELL_PATH='))
       ?.replace('SET FNM_MULTISHELL_PATH=', '')
       ?.trim()
     if (find) {
       const linkDir = join(global.Server.AppDir!, 'fnm/nodejs-link')
       rmSync(linkDir, { recursive: true, force: true })
-      await execPromise(`mklink /J "${linkDir}" "${find}"`)
+      execSync(`mklink /J "${linkDir}" "${find}"`)
     }
   }
 
@@ -350,7 +346,7 @@ class Manager extends Base {
     }
     const savePath = handleWinPathArr(allPath)
     if (pathStr !== JSON.stringify(savePath)) {
-      await writePath(savePath.join(';'))
+      await writePath(savePath)
     }
   }
 
@@ -375,7 +371,7 @@ class Manager extends Base {
       const env = await this._buildEnv(tool, dir)
       process.chdir(dir)
       try {
-        await execPromise(command, {
+        execSync(command, {
           cwd: dir,
           env
         })
@@ -531,7 +527,7 @@ class Manager extends Base {
       const env = await this._buildEnv(tool, dir)
       process.chdir(dir)
       try {
-        await execPromise(command, {
+        execSync(command, {
           cwd: dir,
           env
         })
@@ -567,22 +563,14 @@ class Manager extends Base {
       const all: any[] = []
       let fnmDir = ''
       try {
-        fnmDir = (
-          await execAsync(`echo %FNM_DIR%`, {
-            shell: 'cmd.exe'
-          })
-        ).stdout.trim()
+        fnmDir = execSync(`echo %FNM_DIR%`, { shell: 'cmd.exe' }).toString().trim()
         if (fnmDir === '%FNM_DIR%') {
           fnmDir = ''
         }
       } catch (e) {}
       if (!fnmDir) {
         try {
-          fnmDir = (
-            await execAsync(`$env:FNM_DIR`, {
-              shell: 'powershell.exe'
-            })
-          ).stdout.trim()
+          fnmDir = execSync(`$env:FNM_DIR`, { shell: 'powershell.exe' }).toString().trim()
         } catch (e) {}
       }
       if (fnmDir && existsSync(fnmDir)) {
@@ -610,23 +598,11 @@ class Manager extends Base {
 
       let nvmDir = ''
       try {
-        nvmDir = (
-          await execAsync(`nvm root`, {
-            shell: 'cmd.exe'
-          })
-        ).stdout
-          .trim()
-          .replace('Current Root: ', '')
+        nvmDir = execSync(`nvm root`, { shell: 'cmd.exe' }).toString().trim().replace('Current Root: ', '')
       } catch (e) {}
       if (!nvmDir) {
         try {
-          nvmDir = (
-            await execAsync(`nvm root`, {
-              shell: 'powershell.exe'
-            })
-          ).stdout
-            .trim()
-            .replace('Current Root: ', '')
+          nvmDir = execSync(`nvm root`, { shell: 'powershell.exe' }).toString().trim().replace('Current Root: ', '')
         } catch (e) {}
       }
       if (nvmDir && existsSync(nvmDir)) {

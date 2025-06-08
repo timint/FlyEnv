@@ -1,13 +1,13 @@
 import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
 import { join, dirname, basename } from 'path'
-import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs'
+import { copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'fs'
+import { execSync } from 'child_process'
 import { Base } from './Base'
 import { I18nT } from '@lang/index'
 import { ForkPromise } from '@shared/ForkPromise'
 import TaskQueue from '../TaskQueue'
 import {
   AppLog,
-  execPromise,
   serviceStartExecCMD,
   setDir777ToCurrentUser,
   versionBinVersion,
@@ -96,7 +96,7 @@ class Manager extends Base {
         process.chdir(dirname(initDB))
         const command = `start /B ./${basename(initDB)} -D "${dbPath}" -U root > NUL 2>&1 &`
         try {
-          await execPromise(command)
+          execSync(command)
         } catch (e) {
           on({
             'APP-On-Log': AppLog('error', I18nT('appLog.initDBDataDirFail', { error: e }))

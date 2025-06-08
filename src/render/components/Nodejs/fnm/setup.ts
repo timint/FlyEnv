@@ -44,7 +44,7 @@ export const Setup = () => {
     FNMSetup.local.splice(0)
     FNMSetup.current = ''
     fetchLocal()
-    store.chekTool()?.then()?.catch()
+    store.fetchAll()
   }
 
   FNMSetup.reFetch = reFetch

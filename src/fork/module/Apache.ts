@@ -1,6 +1,7 @@
 import type { AppHost, OnlineVersionItem, SoftInstalled } from '@shared/app'
 import { join, basename, dirname } from 'path'
-import { existsSync, readFileSync, writeFileSync } from 'fs'
+import { existsSync, readFileSync, writeFileSync, rmSync } from 'fs'
+import { execSync } from 'child_process'
 import { Base } from './Base'
 import { I18nT } from '@lang/index'
 import { ForkPromise } from '@shared/ForkPromise'
@@ -8,7 +9,6 @@ import TaskQueue from '../TaskQueue'
 import { fetchHostList } from './host/HostFile'
 import {
   AppLog,
-  execPromise,
   getAllFileAsync,
   versionBinVersion,
   versionFilterSame,
@@ -58,13 +58,13 @@ class Apache extends Base {
       on({
         'APP-On-Log': AppLog('info', I18nT('appLog.confInit'))
       })
-      // 获取httpd的默认配置文件路径
+      // Get the default configuration file path of httpd
       let str = ''
       try {
-        const res = await execPromise(`${basename(bin)} -V`, {
+        const res = execSync(`${basename(bin)} -V`, {
           cwd: dirname(bin)
         })
-        str = res?.stdout?.toString() ?? ''
+        str = res.toString()
       } catch (e: any) {
         on({
           'APP-On-Log': AppLog('error', I18nT('appLog.confInitFail', { error: e }))

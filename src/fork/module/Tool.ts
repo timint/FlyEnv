@@ -8,12 +8,10 @@ import { zipUnPack } from '@shared/file'
 import { EOL } from 'os'
 import { PItem, ProcessListSearch, ProcessPidList } from '../Process'
 import { AppServiceAliasItem } from '@shared/app'
-import { promisify } from 'node:util'
-import { exec } from 'child_process'
+import { execSync } from 'child_process'
 import RequestTimer from '@shared/requestTimer'
 import {
   addPath,
-  execPromise,
   fetchRawPATH,
   getAllFileAsync,
   handleWinPathArr,
@@ -22,8 +20,6 @@ import {
   uuid,
   writePath
 } from '../Fn'
-
-const execAsync = promisify(exec)
 
 class BomCleanTask implements TaskItem {
   path = ''
@@ -154,24 +150,24 @@ class Manager extends Base {
 
         process.chdir(dirname(openssl))
         let command = `${basename(openssl)} genrsa -out "${caKey}" 2048`
-        await execPromise(command)
+        execSync(command)
 
         const caCSR = join(param.savePath, `${caFileName}.csr`)
 
         process.chdir(dirname(openssl))
         command = `${basename(openssl)} req -new -key "${caKey}" -out "${caCSR}" -sha256 -subj "/CN=Dev Root CA ${caFileName}" -config "${opensslCnf}"`
-        await execPromise(command)
+        execSync(command)
 
         process.chdir(param.savePath)
         command = `echo basicConstraints=CA:true > "${caFileName}.cnf"`
-        await execPromise(command)
+        execSync(command)
 
         const caCRT = join(param.savePath, `${caFileName}.crt`)
         const caCnf = join(param.savePath, `${caFileName}.cnf`)
 
         process.chdir(dirname(openssl))
         command = `${basename(openssl)} x509 -req -in "${caCSR}" -signkey "${caKey}" -out "${caCRT}" -extfile "${caCnf}" -sha256 -days 3650`
-        await execPromise(command)
+        execSync(command)
       }
 
       let ext = `authorityKeyIdentifier=keyid,issuer
@@ -193,11 +189,11 @@ subjectAltName=@alt_names
 
       process.chdir(dirname(openssl))
       let command = `${basename(openssl)} req -new -newkey rsa:2048 -nodes -keyout "${saveKey}" -out "${saveCSR}" -sha256 -subj "/CN=${saveName}" -config "${opensslCnf}"`
-      await execPromise(command)
+      execSync(command)
 
       process.chdir(dirname(openssl))
       command = `${basename(openssl)} x509 -req -in "${saveCSR}" -out "${saveCrt}" -extfile "${saveExt}" -CA "${caFile}.crt" -CAkey "${caFile}.key" -CAcreateserial -sha256 -days 3650`
-      await execPromise(command)
+      execSync(command)
 
       const crtFile = join(param.savePath, `${saveName}.crt`)
       if (existsSync(crtFile)) {
@@ -245,7 +241,7 @@ subjectAltName=@alt_names
     return new ForkPromise(async (resolve) => {
       const str = pids.map((s) => `/pid ${s}`).join(' ')
       try {
-        await execPromise(`taskkill /f /t ${str}`)
+        execSync(`taskkill /f /t ${str}`)
       } catch (e) {}
       resolve(true)
     })
@@ -256,7 +252,7 @@ subjectAltName=@alt_names
       const command = `netstat -ano | findstr :${name}`
       let res: any
       try {
-        res = await execPromise(command)
+        res = execSync(command)
       } catch (e) {}
       const lines = res?.stdout?.trim()?.split('\n') ?? []
       const list = lines
@@ -338,7 +334,7 @@ subjectAltName=@alt_names
       const envDir = join(dirname(global.Server.AppDir!), 'env')
       const flagDir = join(envDir, typeFlag)
       try {
-        await execPromise(`rmdir /S /Q "${flagDir}"`)
+        execSync(`rmdir /S /Q "${flagDir}"`)
       } catch (e) {
         console.log('rmdir err: ', e)
       }
@@ -353,8 +349,8 @@ subjectAltName=@alt_names
         let res = true
         if (isAbsolute(p)) {
           try {
-            const realpathSync = realpathSync(p)
-            if (realpathSync.includes(flagDir) || realpathSync.includes(item.path)) {
+            const rp = realpathSync(p)
+            if (rp.includes(flagDir) || rp.includes(item.path)) {
               res = false
             }
           } catch (error) {}
@@ -433,13 +429,13 @@ subjectAltName=@alt_names
       const flagDir = join(envDir, typeFlag)
       console.log('flagDir: ', flagDir)
       try {
-        await execPromise(`rmdir /S /Q "${flagDir}"`)
+        execSync(`rmdir /S /Q "${flagDir}"`)
       } catch (e) {
         console.log('rmdir err: ', e)
       }
       if (!rawOldPath.includes(binDir)) {
         try {
-          await execPromise(`mklink /J "${flagDir}" "${item.path}"`)
+          execSync(`mklink /J "${flagDir}" "${item.path}"`)
         } catch (e) {
           console.log('updatePATH mklink err: ', e)
         }
@@ -491,8 +487,8 @@ subjectAltName=@alt_names
           let res = true
           if (isAbsolute(p)) {
             try {
-              const realpathSync = realpathSync(p)
-              if (realpathSync.includes(envPath) || realpathSync.includes(rawEnvPath)) {
+              const rp = realpathSync(p)
+              if (rp.includes(envPath) || rp.includes(rawEnvPath)) {
                 res = false
               }
             } catch (error) {}
@@ -538,16 +534,16 @@ subjectAltName=@alt_names
         }
         let composer_bin_dir = ''
         try {
-          const d = await execPromise(`echo %COMPOSER_HOME%\\Composer`)
-          composer_bin_dir = d?.stdout?.trim()
+          const d = execSync(`echo %COMPOSER_HOME%\\Composer`).toString().trim()
+          composer_bin_dir = d
           console.log('d: ', d)
         } catch (e) {}
         if (composer_bin_dir && isAbsolute(composer_bin_dir)) {
           oldPath.push(`%COMPOSER_HOME%\\vendor\\bin`)
         } else {
           try {
-            const d = await execPromise(`echo %APPDATA%\\Composer`)
-            composer_bin_dir = d?.stdout?.trim()
+            const d = execSync(`echo %APPDATA%\\Composer`).toString().trim()
+            composer_bin_dir = d
             console.log('d: ', d)
           } catch (e) {}
           if (composer_bin_dir && isAbsolute(composer_bin_dir)) {
@@ -573,15 +569,14 @@ subjectAltName=@alt_names
         )
         process.chdir(global.Server.Cache!)
         try {
-          await execPromise(
-            `powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Unblock-File -LiteralPath '${f}'; & '${f}'"`
-          )
+          execSync(`powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Unblock-File -LiteralPath '${f}'; & '${f}'"`)
         } catch (e) {}
         unlinkSync(f)
       }
 
       try {
-        writeFileSync(filePath, content)
+        const pathStr = Array.isArray(filePath) ? filePath.join(';') : filePath
+        writeFileSync(pathStr, content)
       } catch (e) {
         return reject(e)
       }
@@ -651,7 +646,7 @@ chcp 65001>nul
       }
 
       try {
-        await execPromise(`setx /M FLYENV_ALIAS "${aliasDir}"`)
+        execSync(`setx /M FLYENV_ALIAS "${aliasDir}"`)
       } catch (e) {}
 
       await addPath('%FLYENV_ALIAS%')
@@ -717,7 +712,7 @@ chcp 65001>nul
           }
         } else if (p.includes('%') || p.includes('$env:')) {
           try {
-            raw = (await execPromise(`echo ${p}`))?.stdout?.trim() ?? ''
+            raw = execSync(`echo ${p}`).toString().trim() ?? ''
             error = !raw || !existsSync(raw)
           } catch (e) {
             error = true
@@ -738,17 +733,14 @@ chcp 65001>nul
       let cmdRes = ''
       let psRes = ''
       try {
-        cmdRes = (await execAsync(`set PATH`))?.stdout?.trim() ?? ''
+        cmdRes = execSync(`set PATH`).toString().trim() ?? ''
       } catch (e) {
         cmdRes = `${e}`
       }
       try {
-        psRes =
-          (
-            await execAsync(`$env:PATH`, {
-              shell: 'powershell.exe'
-            })
-          )?.stdout?.trim() ?? ''
+        psRes = execSync(`$env:PATH`, {
+          shell: 'powershell.exe'
+        }).toString().trim() ?? ''
       } catch (e) {
         psRes = `${e}`
       }
@@ -762,7 +754,7 @@ chcp 65001>nul
   envPathUpdate(arr: string[]) {
     return new ForkPromise(async (resolve, reject) => {
       try {
-        await writePath(arr.join(';'))
+        await writePath(arr)
       } catch (e) {
         console.log('envPathUpdate err: ', e)
         return reject(e)
@@ -796,7 +788,7 @@ chcp 65001>nul
       command = JSON.stringify(command).slice(1, -1)
       console.log('command: ', command)
       try {
-        await execAsync(`start powershell -NoExit -Command "${command}"`)
+        execSync(`start powershell -NoExit -Command "${command}"`)
       } catch (e) {
         return reject(e)
       }
@@ -819,7 +811,6 @@ chcp 65001>nul
       | 'RustRover'
   ) {
     return new ForkPromise(async (resolve, reject) => {
-      let command = ''
       const JetBrains = [
         'PhpStorm',
         'WebStorm',
@@ -842,7 +833,7 @@ chcp 65001>nul
             for (const regPath of registryPaths) {
               try {
                 // Use the /s parameter to query all subkeys and values
-                const { stdout } = await execAsync(`reg query "${regPath}" /s`)
+                const stdout = execSync(`reg query "${regPath}" /s`).toString()
                 const lines = stdout.split('\n').map((line: string) => line.trim())
 
                 let basePath = null
@@ -875,9 +866,9 @@ chcp 65001>nul
         const findToolboxIdePath = async (ideName: string) => {
           try {
             // Attempt to get the Toolbox installation directory
-            const { stdout } = await execAsync(
+            const stdout = execSync(
               `reg query "HKCU\\SOFTWARE\\JetBrains\\Toolbox" /v "InstallDir"`
-            )
+            ).toString()
             const match = stdout.match(/InstallDir\s+REG_SZ\s+(.+)/i)
             if (!match) return null
 
@@ -885,7 +876,7 @@ chcp 65001>nul
             const appsPath = `${toolboxPath}\\apps\\${ideName}\\ch-0`
 
             // Get the latest version directory (sorted by modification time in descending order)
-            const { stdout: dirs } = await execAsync(`dir "${appsPath}" /AD /B /O-N`)
+            const dirs = execSync(`dir "${appsPath}" /AD /B /O-N`).toString()
             const latestVersionDir = dirs.split('\r\n')[0].trim()
             if (!latestVersionDir) return null
 
@@ -933,7 +924,7 @@ chcp 65001>nul
               return false
             }
 
-            await execAsync(`"${idePath}" "${folderPath}"`)
+            execSync(`"${idePath}" "${folderPath}"`)
             console.log(`Opened ${folderPath} with ${ideName}`)
             return true
           } catch (error) {
@@ -952,9 +943,9 @@ chcp 65001>nul
         const getHBuilderXPath = async (): Promise<string | null> => {
           try {
             // 查询注册表
-            const { stdout } = await execAsync(`reg query "HKCR\\hbuilderx\\shell\\open\\command" /ve`)
+            const stdout = execSync(`reg query "HKCR\\hbuilderx\\shell\\open\\command" /ve`).toString()
 
-            // 提取路径（示例输出: "(Default) REG_SZ "D:\Program Files\HBuilderX\HBuilderX.exe" "%1""）
+            // 提取路径（示例输出: "(Default) REG_SZ \"D:\\Program Files\\HBuilderX\\HBuilderX.exe\" \"%1\""）
             const match = stdout.match(/"(.*?HBuilderX\.exe)"/i)
             if (match && match[1]) {
               return match[1] // 返回可执行文件完整路径
@@ -970,7 +961,7 @@ chcp 65001>nul
             if (!hbuilderxPath) {
               return false
             }
-            await execAsync(`"${hbuilderxPath}" "${targetPath}"`)
+            execSync(`"${hbuilderxPath}" "${targetPath}"`)
             return true
           } catch (error: any) {
             return false
@@ -994,7 +985,7 @@ chcp 65001>nul
         cmd = `start pwsh.exe -NoExit -Command "${cmd}"`
       }
       try {
-        await execAsync(cmd)
+        execSync(cmd)
       } catch (e) {
         return reject(e)
       }
@@ -1049,7 +1040,7 @@ chcp 65001>nul
 
       for (const version of psVersions) {
         try {
-          const { stdout } = await execAsync(`Write-Output $PROFILE.${version.profileType}`, { shell: version.exe })
+          const stdout = execSync(`Write-Output $PROFILE.${version.profileType}`, { shell: version.exe }).toString()
           const profilePath = stdout.trim();
 
           if (!profilePath || profilePath === '') continue
@@ -1074,7 +1065,7 @@ chcp 65001>nul
         }
       }
       try {
-        await execAsync([
+        execSync([
           "if ((Get-ExecutionPolicy -Scope CurrentUser) -eq 'Restricted') {",
           '  Set-ExecutionPolicy RemoteSigned -Scope CurrentUser -Force',
           '}',
