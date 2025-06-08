@@ -11,16 +11,8 @@ import { PItem, ProcessListSearch, ProcessPidList } from '../Process'
 import { AppServiceAliasItem } from '@shared/app'
 import { execSync } from 'child_process'
 import RequestTimer from '@shared/requestTimer'
-import {
-  addPath,
-  fetchRawPATH,
-  getAllFileAsync,
-  handleWinPathArr,
-  isNTFS,
-  setDir777ToCurrentUser,
-  uuid,
-  writePath
-} from '../Fn'
+import { addPath, fetchRawPATH, getAllFileAsync, handleWinPathArr, isNTFS, setDir777ToCurrentUser, writePath } from '../util/Filesystem'
+import { uuid } from '../Fn'
 
 class BomCleanTask implements TaskItem {
   path = ''

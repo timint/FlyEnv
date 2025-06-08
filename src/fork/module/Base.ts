@@ -9,12 +9,8 @@ import { zipUnPack } from '@shared/file'
 import axios from 'axios'
 import { ProcessListSearch, ProcessPidList, ProcessPidListByPid } from '../Process'
 import { sleep } from '@shared/Helpers/General'
-import {
-  AppLog,
-  getAllFileAsync,
-  moveChildDirToParent,
-  uuid
-} from '../Fn'
+import { getAllFileAsync, moveChildDirToParent } from '../util/Filesystem'
+import { AppLog, uuid } from '../Fn'
 
 export class Base {
   type: string
