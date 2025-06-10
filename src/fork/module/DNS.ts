@@ -3,7 +3,7 @@ import { Base } from './Base'
 import { ForkPromise } from '@shared/ForkPromise'
 import dns2 from 'dns2'
 import { Packet } from 'dns2'
-import * as ip from 'ip'
+import { getlocalIP } from '@helper/net'
 import { join } from 'path'
 import Tangerine from 'tangerine';
 
@@ -60,7 +60,7 @@ class Manager extends Base {
   }
   start() {
     return new ForkPromise((resolve) => {
-      const LOCAL_IP = ip.address()
+      const LOCAL_IP = getlocalIP()
       const server = dns2.createServer({
         udp: true,
         handle: (request: any, send: any) => {
