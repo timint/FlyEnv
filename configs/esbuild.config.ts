@@ -15,6 +15,7 @@ const external = [
   'os',
   'child_process',
   'child-process-promise',
+  'dtrace-provider',
   'fs-extra',
   'dns2',
   'ip',
@@ -39,7 +40,9 @@ const external = [
   'electron-log',
   'jszip',
   'pako',
-  'electron-devtools-installer'
+  'electron-devtools-installer',
+  'punycode',
+  'p-timeout'
 ]
 
 const dev: BuildOptions = {
