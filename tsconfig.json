@@ -23,6 +23,7 @@
     "paths": {
       "@/*": ["src/render/*"],
       "@shared/*": ["src/shared/*"],
+      "@helper/*": ["src/helper/*"],
       "@lang/*": ["src/lang/*"]
     }
   },

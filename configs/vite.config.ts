@@ -8,6 +8,7 @@ import monacoEditorPlugin from 'vite-plugin-monaco-editor'
 
 const renderPath = path.resolve(__dirname, '../src/render/')
 const sharePath = path.resolve(__dirname, '../src/shared/')
+const helperPath = path.resolve(__dirname, '../src/helper/')
 const langPath = path.resolve(__dirname, '../src/lang/')
 
 console.log('renderPath: ', renderPath)
@@ -47,6 +48,7 @@ const config: UserConfig = {
     alias: {
       '@': renderPath,
       '@shared': sharePath,
+      '@helper': helperPath,
       '@lang': langPath
     }
   },
