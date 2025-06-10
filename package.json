@@ -46,6 +46,7 @@
     "node-machine-id": "^1.1.12",
     "node-rsa": "^1.1.1",
     "npm-check-updates": "^17.1.18",
+    "serve": "^14.2.4",
     "tangerine": "^1.6.0",
     "vue": "^3.5.13",
     "vue-i18n": "^9.14.2"
