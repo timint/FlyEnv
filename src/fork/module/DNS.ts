@@ -3,7 +3,7 @@ import { Base } from './Base'
 import { ForkPromise } from '@shared/ForkPromise'
 import dns2 from 'dns2'
 import { Packet } from 'dns2'
-import { getlocalIP } from '@helper/net'
+import { getlocalIp } from '@helper/net'
 import { join } from 'path'
 import Tangerine from 'tangerine';
 
