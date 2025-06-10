@@ -47,7 +47,6 @@
     "node-machine-id": "^1.1.12",
     "node-rsa": "^1.1.1",
     "npm-check-updates": "^17.1.18",
-    "serve": "^14.2.4",
     "tangerine": "^1.6.0",
     "vue": "^3.5.13",
     "vue-i18n": "^9.14.2"
@@ -135,7 +134,6 @@
     "svg-inline-loader": "^0.8.2",
     "tailwindcss": "^3.4.17",
     "terser": "^5.38.2",
-    "terser-webpack-plugin": "^5.3.14",
     "tiny-emitter": "^2.1.0",
     "tsx": "^4.19.4",
     "typescript": "^5.8.3",
