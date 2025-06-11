@@ -3,7 +3,7 @@ import IPC from '@/util/IPC'
 import { reactive } from 'vue'
 import { MessageError, MessageSuccess } from '@/util/Element'
 import { I18nT } from '@lang/index'
-import { getLocalIp } from '@/helper/net'
+import { getLocalIp } from '@helper/net'
 
 export interface DNSLogItem {
   host: string

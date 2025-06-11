@@ -5,7 +5,7 @@ import type { FtpItem } from '@shared/app'
 import { ForkPromise } from '@shared/ForkPromise'
 import { readFile, writeFile, mkdirp } from 'fs-extra'
 import FtpServer from 'ftp-srv'
-import { getLocalIp } from 'src/helper/net'
+import { getLocalIp } from '@helper/net'
 import { setDir777ToCurrentUser } from '../Fn'
 
 class Manager extends Base {
