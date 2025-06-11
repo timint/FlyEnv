@@ -56,6 +56,3 @@ function unURI(encoded: string): string {
     .replace(/[^A-Za-z0-9+/]/g, '')
 }
 
-function removePotentialPadding(str: string) {
-  return str.replace(/=/g, '')
-}

@@ -90,7 +90,6 @@
   const {
     changed,
     update,
-    config,
     input,
     type,
     disabled,

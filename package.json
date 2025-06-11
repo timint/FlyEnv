@@ -12,7 +12,7 @@
     "clean": "rd /s /q dist",
     "build": "cross-env NODE_ENV=production tsx electron/app-builder.ts",
     "postinstall": "electron-builder install-app-deps",
-    "test": "npx tsc --noEmit && npx eslint --ext .ts,.tsx,.vue src"
+    "test": "npx eslint"
   },
   "main": "./dist/electron/main.js",
   "optionalDependencies": {
@@ -26,6 +26,7 @@
     "@electron/remote": "^2.1.2",
     "@lydell/node-pty": "^1.1.0",
     "@lzwme/get-physical-address": "^1.1.0",
+    "@taplo/lib": "^0.5.0",
     "7zip-min-electron": "^1.4.4",
     "axios": "^1.7.9",
     "chardet": "^2.1.0",

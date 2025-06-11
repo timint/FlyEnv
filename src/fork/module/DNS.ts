@@ -15,7 +15,7 @@ const tangerine = new Tangerine({
     '119.28.28.28',
     '223.5.5.5',
     '114.114.114.114'
-  ]),
+  ])
 })
 
 class Manager extends Base {

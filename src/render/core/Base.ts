@@ -89,7 +89,6 @@ class Base {
         duration: 3000,
         onClose: () => {
           // @ts-ignore
-          // eslint-disable-next-line prefer-rest-params
           resolve(...arguments)
         }
       })
