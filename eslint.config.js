@@ -1,52 +1,56 @@
-import { defineConfig } from "eslint/config";
-import js from "@eslint/js";
-import vue from "eslint-plugin-vue";
-import typescript from "@typescript-eslint/eslint-plugin";
-import parser from "vue-eslint-parser";
-import prettier from "eslint-plugin-prettier";
-import tsParser from "@typescript-eslint/parser";
+const { defineConfig } = require("eslint/config");
+const vue = require("eslint-plugin-vue");
+const typescript = require("@typescript-eslint/eslint-plugin");
+const parser = require("vue-eslint-parser");
+const tsParser = require("@typescript-eslint/parser");
 
-export default defineConfig([
+module.exports = defineConfig([
   {
-    files: ["**/*.ts", "**/*.tsx", "**/*.vue"],
+    files: ['**/*.ts', '**/*.tsx', '**/*.vue'],
     languageOptions: {
       parser,
       parserOptions: {
-        parser: tsParser,
+        ecmaFeatures: { jsx: true },
         ecmaVersion: 2020,
-        sourceType: "module",
-        ecmaFeatures: { jsx: true }
+        parser: tsParser,
+        sourceType: 'module',
+        project: "tsconfig.json",
+        allowNonTsExtensions: true,
+        extraFileExtensions: [".vue"]
       }
     },
     plugins: {
-      vue,
-      "@typescript-eslint": typescript,
-      prettier
+      '@typescript-eslint': typescript,
+      vue
     },
+    extends: [
+      'plugin:vue/vue3-recommended',
+      'plugin:@typescript-eslint/recommended',
+      'plugin:prettier/recommended'
+    ],
     rules: {
-      "@typescript-eslint/ban-ts-ignore": "off",
-      "@typescript-eslint/explicit-function-return-type": "off",
-      "@typescript-eslint/no-explicit-any": "off",
-      "@typescript-eslint/no-var-requires": "off",
-      "@typescript-eslint/no-empty-function": "off",
-      "vue/custom-event-name-casing": "off",
+      "no-unused-vars": "off",
       "no-use-before-define": "off",
-      "@typescript-eslint/no-use-before-define": "off",
+      "comma-dangle": ["error", "never"],
+      "quotes": ["error", "single", { allowTemplateLiterals: true }],
+      "space-before-function-paren": "off",
+      "vue/custom-event-name-casing": "off",
       "@typescript-eslint/ban-ts-comment": "off",
       "@typescript-eslint/ban-types": "off",
-      "@typescript-eslint/no-non-null-assertion": "off",
+      "@typescript-eslint/explicit-function-return-type": "off",
       "@typescript-eslint/explicit-module-boundary-types": "off",
+      "@typescript-eslint/no-empty-function": "off",
+      "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/no-non-null-assertion": "off",
       "@typescript-eslint/no-unused-vars": [
-        "error",
+        "warn",
         {
-          argsIgnorePattern: "^h$",
-          varsIgnorePattern: "^h$"
+          argsIgnorePattern: "^e|h$",
+          varsIgnorePattern: "^e|h$"
         }
       ],
-      "no-unused-vars": "off",
-      "space-before-function-paren": "off",
-      "quotes": ["error", "single", { allowTemplateLiterals: true }],
-      "comma-dangle": ["error", "never"]
+      "@typescript-eslint/no-use-before-define": "off",
+      "@typescript-eslint/no-unnecessary-condition": "warn"
     }
   }
-]);
+];
