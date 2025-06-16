@@ -18,7 +18,6 @@ const external = [
   'dtrace-provider',
   'fs-extra',
   'dns2',
-  'tangerine',
   'lodash',
   'axios',
   'iconv-lite',

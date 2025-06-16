@@ -5,18 +5,16 @@ import dns2 from 'dns2'
 import { Packet } from 'dns2'
 import { getLocalIp } from '@helper/net'
 import { join } from 'path'
-import Tangerine from 'tangerine';
+import { DNSoverHTTPS } from 'dohdec';
 
-const tangerine = new Tangerine({
-  servers: new Set([
-    '1.1.1.1',
-    '1.0.0.1',
-    '8.8.8.8',
-    '119.28.28.28',
-    '223.5.5.5',
-    '114.114.114.114'
-  ])
-})
+const DOH_SERVERS = [
+  'https://one.one.one.one/dns-query', // 1.1.1.1 by Cloudflare
+  'https://dns.google/dns-query', // 8.8.8.8 by Google
+  'https://dns.quad9.net/dns-query', // 9.9.9.9 by Quad9
+  'https://doh.pub/dns-query', // 119.28.28.28 by DNSpod
+  'https://dns.alidns.com/dns-query', // 223.5.5.5 by AliDNS (CN)
+  'https://doh.114dns.com/dns-query' // 114.114.114.114 by 114DNS (CN)
+];
 
 class Manager extends Base {
   server: any
@@ -63,7 +61,7 @@ class Manager extends Base {
       const LOCAL_IP = getLocalIp()
       const server = dns2.createServer({
         udp: true,
-        handle: (request: any, send: any) => {
+        handle: async (request: any, send: any) => {
           const response = Packet.createResponseFromRequest(request)
           const [question] = request.questions
           const { name } = question
@@ -93,38 +91,44 @@ class Manager extends Base {
             return
           }
           try {
-            tangerine
-              .resolve(name, 'A', {
-                ttl: true
-              })
-              .then((res: any) => {
-                if (res && Array.isArray(res)) {
-                  res.forEach((item) => {
-                    response.answers.push({
-                      name,
-                      type: Packet.TYPE.A,
-                      class: Packet.CLASS.IN,
-                      ttl: item.ttl,
-                      address: item.address
-                    })
-                    process?.send?.({
-                      on: true,
-                      key: this.ipcCommandKey,
-                      info: {
-                        host: name,
-                        ttl: item.ttl,
-                        ip: item.address
-                      }
-                    })
+            let resolved = null;
+            for (const dohUrl of DOH_SERVERS) {
+              try {
+                const doh = new DNSoverHTTPS({ url: dohUrl });
+                const res = await doh.lookup(name, { rrtype: 'A' });
+                if (res && res.Answer && res.Answer.length > 0) {
+                  resolved = res.Answer;
+                  break;
+                }
+              } catch (e) {
+                // Try next server
+              }
+            }
+            if (resolved) {
+              resolved.forEach((item: any) => {
+                if (item.type === 1 && item.data) { // A record
+                  response.answers.push({
+                    name,
+                    type: Packet.TYPE.A,
+                    class: Packet.CLASS.IN,
+                    ttl: item.TTL || 60,
+                    address: item.data || item.data || item.address
                   })
-                  send(response)
+                  process?.send?.({
+                    on: true,
+                    key: this.ipcCommandKey,
+                    info: {
+                      host: name,
+                      ttl: item.TTL || 60,
+                      ip: item.data || item.address
+                    }
+                  })
                 }
               })
-              .catch((e: any) => {
-                console.log(`tangerine resolve error: ${e}`)
-                send(response)
-              })
+            }
+            send(response)
           } catch (e) {
+            console.log(`dohdec resolve error: ${e}`)
             send(response)
           }
         }

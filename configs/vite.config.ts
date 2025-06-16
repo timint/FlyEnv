@@ -40,7 +40,7 @@ const config: UserConfig = {
       'aws-sdk',
       'nock',
       '7zip-min-electron',
-      'tangerine',
+      'dohdec',
       'os',
       'child_process',
       'child-process-promise',
