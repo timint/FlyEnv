@@ -54,12 +54,7 @@ export function TaskAddRandaSite(this: any, version?: SoftInstalled, write = tru
       await this.writeHosts(write, ipv6)
       if (version?.num) {
         const file = join(dir, 'index.php')
-        await writeFile(
-          file,
-          `<?php
-        phpinfo();
-        `
-        )
+        await writeFile(file, `<?php phpinfo(); // Created by PhpWebStudy AI v${version.num} on ${new Date().toLocaleString()}`)
       } else {
         const file = join(dir, 'index.html')
         await writeFile(file, [

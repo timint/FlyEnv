@@ -10,8 +10,7 @@ async function packMain() {
     await esbuild(esbuildConfig.dist)
     await esbuild(esbuildConfig.distFork)
   } catch (err) {
-    console.log('\nfailed to build main process')
-    console.error(`\n${err}\n`)
+    console.error('Failed to build main process', err)
     process.exit(1)
   }
 }
@@ -20,8 +19,7 @@ async function packRenderer() {
   try {
     return viteBuild(viteConfig.buildConfig)
   } catch (err) {
-    console.log('\nfailed to build renderer process')
-    console.error(`\n${err}\n`)
+    console.error('Failed to build renderer process', err)
     process.exit(1)
   }
 }
@@ -37,7 +35,7 @@ Promise.all([packMain(), packRenderer()])
 
     electronBuild(options)
       .then(() => {
-        console.log('\nBuild completed in', Math.floor((Date.now() - buildStart) / 1000) + ' s.')
+        console.log('Build completed in', Math.floor((Date.now() - buildStart) / 1000) + ' s')
       })
       .catch((e) => {
         console.error(e)

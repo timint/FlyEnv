@@ -16,7 +16,7 @@ import { publicDecrypt } from 'crypto'
 import { machineId } from 'node-machine-id'
 
 class Host extends Base {
-  hostsFile = join('c:/windows/system32/drivers/etc', 'hosts')
+  hostsFile = '%SYSTEMROOT%/system32/drivers/etc/hosts'
 
   constructor() {
     super()

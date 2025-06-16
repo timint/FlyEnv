@@ -5,7 +5,7 @@ import dns2 from 'dns2'
 import { Packet } from 'dns2'
 import * as ip from 'ip'
 import { join } from 'path'
-import { DNSoverHTTPS } from 'dohdec';
+import { DNSoverHTTPS } from 'dohdec'
 
 const DOH_SERVERS = [
   'https://one.one.one.one/dns-query', // 1.1.1.1 by Cloudflare
@@ -33,7 +33,7 @@ class Manager extends Base {
   }
 
   initHosts(LOCAL_IP: string) {
-    const hostFile = join('c:/windows/system32/drivers/etc', 'hosts')
+    const hostFile = '%SYSTEMROOT%/system32/drivers/etc/hosts'
     const time = new Date().getTime()
     if (time - this.lastTime > 60000) {
       this.lastTime = time

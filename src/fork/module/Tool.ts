@@ -521,11 +521,10 @@ class Manager extends Base {
       if (typeFlag === 'composer') {
         const bat = join(binDir, 'composer.bat')
         if (!existsSync(bat)) {
-          await writeFile(
-            bat,
-            `@echo off
-php "%~dp0composer.phar" %*`
-          )
+          await writeFile(bat, [
+            '@echo off',
+            'php "%~dp0composer.phar" %*'
+          ].join(EOL))
         }
         let composer_bin_dir = ''
         try {

@@ -8,12 +8,25 @@ const { exec } = require('child_process')
 
 export function fixEnv(): { [k: string]: any } {
   const env = { ...process.env }
+  const defaultPaths = [
+    '/opt',
+    '/opt/homebrew/bin',
+    '/opt/homebrew/sbin',
+    '/opt/local/bin',
+    '/opt/local/sbin',
+    '/usr/local/bin',
+    '/usr/bin',
+    '/bin',
+    '/usr/sbin',
+    '/sbin'
+  ]
   if (!env['PATH']) {
-    env['PATH'] =
-      '/opt:/opt/homebrew/bin:/opt/homebrew/sbin:/opt/local/bin:/opt/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin'
+    env['PATH'] = defaultPaths.join(':')
   } else {
-    env['PATH'] =
-      `/opt:/opt/homebrew/bin:/opt/homebrew/sbin:/opt/local/bin:/opt/local/sbin:/usr/local/bin:/usr/bin:/usr/sbin:${env['PATH']}`
+    env['PATH'] = [
+      ...defaultPaths,
+      env['PATH']
+    ].join(':')
   }
   if (global.Server.Proxy) {
     for (const k in global.Server.Proxy) {

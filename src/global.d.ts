@@ -30,13 +30,8 @@ export interface ServerType {
 }
 
 declare global {
-   
   var Server: ServerType
-   
   var application: any
-   
   var __static: string
-   
   var launcher: Launcher
 }
-export {}

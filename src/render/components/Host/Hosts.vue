@@ -57,7 +57,7 @@
       return {
         show: true,
         config: '',
-        configpath: 'c:/windows/system32/drivers/etc/hosts'
+        configpath: '%SYSTEMROOT%/system32/drivers/etc/hosts'
       }
     },
     computed: {},

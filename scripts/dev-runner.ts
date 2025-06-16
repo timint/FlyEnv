@@ -1,11 +1,11 @@
 import { createServer } from 'vite'
 import { spawn, ChildProcess } from 'child_process'
 import { build } from 'esbuild'
-import _fs, { copySync } from 'fs-extra'
-import _path from 'path'
+import fs from 'fs-extra'
+import path from 'path'
 // @ts-ignore
-import _md5 from 'md5'
 import { exec } from 'child-process-promise'
+import md5 from 'md5'
 
 import viteConfig from '../configs/vite.config'
 import esbuildConfig from '../configs/esbuild.config'
@@ -81,8 +81,7 @@ function logPrinter(data: string[]) {
 }
 
 function runElectronApp() {
-  const args = ['--inspect=5858', 'dist/electron/main.js']
-  electronProcess = spawn('electron', args, {
+  electronProcess = spawn('electron', ['--inspect=5858', 'dist/electron/main.js'], {
     stdio: 'pipe',
     shell: process.platform === 'win32'
   })
@@ -126,19 +125,19 @@ process.on('SIGINT', async () => {
   process.exit(0)
 })
 
-// 监听main 文件改变
-let preveMd5 = ''
+// Watch for changes in main files
+let previousMd5 = ''
 let fsWait = false
 const next = (base: string, file?: string | null) => {
   if (file) {
     if (fsWait) return
-    const currentMd5 = _md5(_fs.readFileSync(_path.join(base, file))) as string
-    if (currentMd5 == preveMd5) {
+    const currentMd5 = md5(fs.readFileSync(path.join(base, file))) as string
+    if (currentMd5 == previousMd5) {
       return
     }
     fsWait = true
-    preveMd5 = currentMd5
-    console.log(`${file}文件发生更新`)
+    previousMd5 = currentMd5
+    console.log(`File ${file} has been updated`)
     restart = true
     buildMainProcess()
       .then()
@@ -150,51 +149,33 @@ const next = (base: string, file?: string | null) => {
     }, 500)
   }
 }
-const mainPath = _path.resolve(__dirname, '../src/main/')
-_fs.watch(
-  mainPath,
-  {
-    recursive: true
-  },
-  (event, filename) => {
-    next(mainPath, filename)
-  }
-)
+const mainPath = path.resolve(__dirname, '../src/main/')
+fs.watch(mainPath, { recursive: true }, (e, filename) => {
+  next(mainPath, filename)
+})
 
-const forkPath = _path.resolve(__dirname, '../src/fork/')
-_fs.watch(
-  forkPath,
-  {
-    recursive: true
-  },
-  (event, filename) => {
-    next(forkPath, filename)
-  }
-)
+const forkPath = path.resolve(__dirname, '../src/fork/')
+fs.watch(forkPath, { recursive: true }, (e, filename) => {
+  next(forkPath, filename)
+})
 
-const staticPath = _path.resolve(__dirname, '../static/')
-_fs.watch(
-  staticPath,
-  {
-    recursive: true
-  },
-  (event, filename) => {
-    if (filename) {
-      if (fsWait) return
-      const from = _path.join(staticPath, filename)
-      const currentMd5 = _md5(_fs.readFileSync(from)) as string
-      if (currentMd5 == preveMd5) {
-        return
-      }
-      fsWait = true
-      preveMd5 = currentMd5
-      const to = _path.resolve(__dirname, '../dist/electron/static/', filename)
-      console.log(`${filename}文件发生更新`)
-      console.log('Copy文件: ', from, to)
-      copySync(from, to)
-      setTimeout(() => {
-        fsWait = false
-      }, 500)
+const staticPath = path.resolve(__dirname, '../static/')
+fs.watch(staticPath, { recursive: true }, (e, filename) => {
+  if (filename) {
+    if (fsWait) return
+    const from = path.join(staticPath, filename)
+    const currentMd5 = md5(fs.readFileSync(from)) as string
+    if (currentMd5 == previousMd5) {
+      return
     }
+    fsWait = true
+    previousMd5 = currentMd5
+    const to = path.resolve(__dirname, '../dist/electron/static/', filename)
+    console.log(`File ${filename} has been updated`)
+    console.log('Copying file', from, to)
+    fs.copySync(from, to)
+    setTimeout(() => {
+      fsWait = false
+    }, 500)
   }
-)
+})

@@ -65,7 +65,6 @@ export function waitTime(time: number) {
 
 export function fixEnv(): { [k: string]: any } {
   let path = [
-    'C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\',
     '%SYSTEMROOT%\\System32\\WindowsPowerShell\\v1.0\\',
     process.env['PATH'] || ''
   ].filter(Boolean).join(';')
@@ -97,9 +96,7 @@ export function execPromiseRoot(command: string): ForkPromise<{
 }> {
   return new ForkPromise((resolve, reject) => {
     try {
-      sudoPrompt(
-        command,
-        {
+      sudoPrompt(command, {
           name: 'PhpWebStudy',
           dir: global.Server.Cache!,
           // dir: 'E:/test aaa/新建 文件夹',
@@ -131,16 +128,11 @@ export function execPromise(
 }> {
   return new ForkPromise((resolve, reject) => {
     try {
-      exec(
-        command,
-        merge(
-          {
-            encoding: 'utf-8',
-            env: fixEnv()
-          },
-          opt
-        ),
-        (error, stdout, stderr) => {
+      exec(command, {
+        encoding: 'utf-8',
+        env: fixEnv(),
+        ...opt
+      }, (error, stdout, stderr) => {
           if (!error) {
             resolve({
               stdout,
@@ -215,17 +207,11 @@ export function spawnPromiseMore(
   const stderr: Array<Buffer> = []
   let child: ChildProcess
   try {
-    child = spawn(
-      command,
-      params,
-      merge(
-        {
-          env: fixEnv(),
-          windowsHide: true
-        },
-        opt
-      )
-    )
+    child = spawn(command, params, {
+      env: fixEnv(),
+      windowsHide: true,
+      ...opt
+    })
   } catch (e) {
     console.log('spawnPromiseMore err: ', e)
     return {
@@ -705,35 +691,14 @@ export const fetchRawPATH = (): ForkPromise<string[]> => {
 }
 
 export const handleWinPathArr = (paths: string[]) => {
-  return Array.from(new Set(paths))
-    .map((p) => {
-      return p.trim()
-    })
-    .filter((p) => {
-      if (!p) {
-        return false
-      }
-      return isAbsolute(p) || p.includes('%') || p.includes('$env:')
-    })
+  return Array.from(new Set(paths.map(p => p.trim())))
+    .filter(p => p && (isAbsolute(p) || p.includes('%') || p.includes('$env:')))
     .sort((a, b) => {
-      // 判断a的类型
-      const aType = isAbsolute(a)
-        ? 1
-        : a.startsWith('%SystemRoot%')
-          ? 2
-          : a.includes('%') || a.includes('$env:')
-            ? 3
-            : 4
-      // 判断b的类型
-      const bType = isAbsolute(b)
-        ? 1
-        : b.startsWith('%SystemRoot%')
-          ? 2
-          : b.includes('%') || b.includes('$env:')
-            ? 3
-            : 4
-      // 比较优先级
-      return aType - bType
+      const type = (p: string) =>
+        isAbsolute(p) ? 1 :
+        p.startsWith('%SystemRoot%') ? 2 :
+        (p.includes('%') || p.includes('$env:')) ? 3 : 4
+      return type(a) - type(b)
     })
 }
 
@@ -760,24 +725,12 @@ export const writePath = async (path: string[], other: string = '') => {
 }
 
 export const addPath = async (dir: string) => {
-  let allPath: string[] = []
   try {
-    allPath = await fetchRawPATH()
-  } catch (e) {
-    return
-  }
-  const index = allPath.indexOf(dir)
-  if (index === 0) {
-    return
-  }
-  if (index > 0) {
-    allPath.splice(index, 1)
-  }
-  allPath.unshift(dir)
-  const savePath = handleWinPathArr(allPath)
-  try {
-    await writePath(savePath)
-  } catch (e) {}
+    let allPath = await fetchRawPATH()
+    allPath = allPath.filter(p => p !== dir)
+    allPath.unshift(dir)
+    await writePath(handleWinPathArr(allPath))
+  } catch {}
 }
 
 /**
@@ -786,7 +739,7 @@ export const addPath = async (dir: string) => {
  * @param dest
  */
 export async function moveDirToDir(src: string, dest: string) {
-  // 读取源目录
+  // Read the source directory
   const entries = await readdir(src, { withFileTypes: true })
 
   for (const entry of entries) {
@@ -795,10 +748,10 @@ export async function moveDirToDir(src: string, dest: string) {
 
     if (entry.isDirectory()) {
       await mkdirp(destPath)
-      // 递归移动子文件夹
+      // Recursively move subdirectories
       await moveDirToDir(srcPath, destPath)
     } else {
-      // 移动文件
+      // Move file
       await rename(srcPath, destPath)
     }
   }
@@ -860,11 +813,7 @@ export async function readFileAsUTF8(filePath: string): Promise<string> {
     }
     const detectedEncoding = chardet.detect(buffer)
     console.log('detectedEncoding: ', detectedEncoding)
-    if (
-      !detectedEncoding ||
-      detectedEncoding.toLowerCase() === 'utf-8' ||
-      detectedEncoding.toLowerCase() === 'utf8'
-    ) {
+    if (!detectedEncoding || detectedEncoding.match(/utf-?8/i)) {
       return buffer.toString('utf-8')
     }
 
@@ -1332,7 +1281,7 @@ export async function serviceStartExecGetPID(
   const regex = /FlyEnv-Process-ID(.*?)FlyEnv-Process-ID/g
   const match = regex.exec(stdout)
   if (match) {
-    pid = match[1] // 捕获组 (\d+) 的内容
+    pid = match[1] // content of the capture group (\d+)
   }
   await writeFile(pidPath, pid)
   on({
