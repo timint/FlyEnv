@@ -3,13 +3,7 @@ import { existsSync } from 'fs'
 import { Base } from './Base'
 import { ForkPromise } from '@shared/ForkPromise'
 import { OnlineVersionItem, SoftInstalled } from '@shared/app'
-import {
-  versionBinVersion,
-  versionFilterSame,
-  versionFixed,
-  versionLocalFetch,
-  versionSort
-} from '../Fn'
+import { versionBinVersion, versionFilterSame, versionFixed, versionLocalFetch, versionSort } from '../Fn'
 import TaskQueue from '../TaskQueue'
 
 class Java extends Base {

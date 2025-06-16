@@ -1,28 +1,8 @@
 import { createReadStream, readFileSync, statSync } from 'fs'
 import { Base } from './Base'
-import {
-  addPath,
-  execPromise,
-  fetchRawPATH,
-  getAllFileAsync,
-  handleWinPathArr,
-  isNTFS,
-  setDir777ToCurrentUser,
-  uuid,
-  writePath
-} from '../Fn'
+import { addPath, execPromise, fetchRawPATH, getAllFileAsync, handleWinPathArr, isNTFS, setDir777ToCurrentUser, uuid, writePath } from '../Fn'
 import { ForkPromise } from '@shared/ForkPromise'
-import {
-  copyFile,
-  existsSync,
-  mkdirp,
-  readdir,
-  readFile,
-  realpathSync,
-  remove,
-  writeFile,
-  stat
-} from 'fs-extra'
+import { copyFile, existsSync, mkdirp, readdir, readFile, realpathSync, remove, writeFile, stat } from 'fs-extra'
 import { TaskItem, TaskQueue, TaskQueueProgress } from '@shared/TaskQueue'
 import { basename, dirname, isAbsolute, join, resolve as PathResolve } from 'path'
 import { zipUnPack } from '@shared/file'

@@ -3,16 +3,7 @@ import { existsSync } from 'fs'
 import { Base } from './Base'
 import { ForkPromise } from '@shared/ForkPromise'
 import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
-import {
-  AppLog,
-  serviceStartExecCMD,
-  versionBinVersion,
-  versionFilterSame,
-  versionFixed,
-  versionLocalFetch,
-  versionSort,
-  waitTime
-} from '../Fn'
+import { AppLog, serviceStartExecCMD, versionBinVersion, versionFilterSame, versionFixed, versionLocalFetch, versionSort, waitTime } from '../Fn'
 import { copyFile, mkdirp, readFile, writeFile } from 'fs-extra'
 import TaskQueue from '../TaskQueue'
 import { makeGlobalTomcatServerXML } from './service/ServiceItemJavaTomcat'

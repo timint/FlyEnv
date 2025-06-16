@@ -3,15 +3,7 @@ import { createWriteStream, existsSync, unlinkSync } from 'fs'
 import { Base } from './Base'
 import { ForkPromise } from '@shared/ForkPromise'
 import type { SoftInstalled } from '@shared/app'
-import {
-  AppLog,
-  serviceStartExec,
-  spawnPromise,
-  versionBinVersion,
-  versionFilterSame,
-  versionLocalFetch,
-  versionSort
-} from '../Fn'
+import { AppLog, serviceStartExec, spawnPromise, versionBinVersion, versionFilterSame, versionLocalFetch, versionSort } from '../Fn'
 import { copyFile, mkdirp, remove, writeFile, readFile } from 'fs-extra'
 import TaskQueue from '../TaskQueue'
 import { I18nT } from '@lang/index'

@@ -2,13 +2,7 @@ import { basename, join } from 'path'
 import { Base } from './Base'
 import { ForkPromise } from '@shared/ForkPromise'
 import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
-import {
-  versionBinVersion,
-  versionFilterSame,
-  versionFixed,
-  versionLocalFetch,
-  versionSort
-} from '../Fn'
+import { versionBinVersion, versionFilterSame, versionFixed, versionLocalFetch, versionSort } from '../Fn'
 import TaskQueue from '../TaskQueue'
 import { existsSync } from 'fs'
 

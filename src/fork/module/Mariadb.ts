@@ -3,17 +3,7 @@ import { existsSync, readdirSync } from 'fs'
 import { Base } from './Base'
 import { I18nT } from '@lang/index'
 import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
-import {
-  execPromise,
-  waitTime,
-  versionLocalFetch,
-  versionFilterSame,
-  versionBinVersion,
-  versionFixed,
-  versionSort,
-  AppLog,
-  serviceStartExecCMD
-} from '../Fn'
+import { execPromise, waitTime, versionLocalFetch, versionFilterSame, versionBinVersion, versionFixed, versionSort, AppLog, serviceStartExecCMD } from '../Fn'
 import { ForkPromise } from '@shared/ForkPromise'
 import { writeFile, mkdirp, chmod, remove } from 'fs-extra'
 import TaskQueue from '../TaskQueue'

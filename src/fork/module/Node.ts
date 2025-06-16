@@ -1,18 +1,5 @@
 import { Base } from './Base'
-import {
-  execPromise,
-  fetchPathByBin,
-  fetchRawPATH,
-  handleWinPathArr,
-  moveChildDirToParent,
-  versionBinVersion,
-  versionFilterSame,
-  versionFixed,
-  versionLocalFetch,
-  versionSort,
-  waitTime,
-  writePath
-} from '../Fn'
+import { execPromise, fetchPathByBin, fetchRawPATH, handleWinPathArr, moveChildDirToParent, versionBinVersion, versionFilterSame, versionFixed, versionLocalFetch, versionSort, waitTime, writePath } from '../Fn'
 import { exec } from 'child-process-promise'
 import { ForkPromise } from '@shared/ForkPromise'
 import { dirname, join, isAbsolute, basename } from 'path'

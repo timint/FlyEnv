@@ -1,27 +1,10 @@
 import { type ChildProcess, exec, execSync, spawn } from 'child_process'
 import { merge } from 'lodash'
-import {
-  chmodSync,
-  createWriteStream,
-  existsSync,
-  mkdirSync,
-  readdirSync,
-  realpathSync,
-  statSync
-} from 'fs'
+import { chmodSync, createWriteStream, existsSync, mkdirSync, readdirSync, realpathSync, statSync } from 'fs'
 import { dirname, isAbsolute, join, parse, basename, normalize } from 'path'
 import { ForkPromise } from '@shared/ForkPromise'
 import axios from 'axios'
-import {
-  appendFile,
-  copyFile,
-  mkdirp,
-  readdir,
-  readFile,
-  remove,
-  rename,
-  writeFile
-} from 'fs-extra'
+import { appendFile, copyFile, mkdirp, readdir, readFile, remove, rename, writeFile } from 'fs-extra'
 import type { AppHost, SoftInstalled } from '@shared/app'
 import sudoPrompt from '@shared/sudo'
 import { compareVersions } from 'compare-versions'

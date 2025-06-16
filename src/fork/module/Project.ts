@@ -6,6 +6,7 @@ import { remove, writeFile } from 'fs-extra'
 import PHPManager from './Php'
 import { I18nT } from '@lang/index'
 import { existsSync } from 'fs'
+
 class Manager extends Base {
   constructor() {
     super()

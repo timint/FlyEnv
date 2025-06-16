@@ -3,19 +3,7 @@ import { existsSync, readdirSync } from 'fs'
 import { Base } from './Base'
 import { I18nT } from '@lang/index'
 import type { MysqlGroupItem, OnlineVersionItem, SoftInstalled } from '@shared/app'
-import {
-  waitTime,
-  versionLocalFetch,
-  versionFilterSame,
-  versionBinVersion,
-  versionFixed,
-  versionInitedApp,
-  versionSort,
-  AppLog,
-  execPromise,
-  serviceStartExecCMD,
-  spawnPromise
-} from '../Fn'
+import { waitTime, versionLocalFetch, versionFilterSame, versionBinVersion, versionFixed, versionInitedApp, versionSort, AppLog, execPromise, serviceStartExecCMD, spawnPromise } from '../Fn'
 import { ForkPromise } from '@shared/ForkPromise'
 import { mkdirp, writeFile, chmod, remove, readFile } from 'fs-extra'
 import TaskQueue from '../TaskQueue'

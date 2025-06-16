@@ -3,23 +3,14 @@ import { createWriteStream, existsSync } from 'fs'
 import { Base } from './Base'
 import { I18nT } from '@lang/index'
 import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
-import {
-  AppLog,
-  execPromise,
-  serviceStartExec,
-  versionBinVersion,
-  versionFilterSame,
-  versionFixed,
-  versionInitedApp,
-  versionLocalFetch,
-  versionSort
-} from '../Fn'
+import { AppLog, execPromise, serviceStartExec, versionBinVersion, versionFilterSame, versionFixed, versionInitedApp, versionLocalFetch, versionSort } from '../Fn'
 import { ForkPromise } from '@shared/ForkPromise'
 import { writeFile, readFile, remove, mkdirp, copyFile, readdir } from 'fs-extra'
 import { zipUnPack } from '@shared/file'
 import TaskQueue from '../TaskQueue'
 import { ProcessListSearch } from '../Process'
 import axios from 'axios'
+import { EOL } from 'os'
 
 class Php extends Base {
   constructor() {
