@@ -65,6 +65,7 @@
     "@babel/register": "^7.27.1",
     "@element-plus/icons-vue": "^2.3.1",
     "@iarna/toml": "^2.2.5",
+    "@intlify/eslint-plugin-vue-i18n": "^4.0.1",
     "@mdit-vue/plugin-component": "^2.1.4",
     "@mdit-vue/plugin-frontmatter": "^2.1.4",
     "@mdit-vue/plugin-headers": "^2.1.4",
