@@ -24,7 +24,7 @@ export function fixEnv(): { [k: string]: any } {
 }
 
 export function execPromise(
-  cammand: string,
+  command: string,
   opt?: { [k: string]: any }
 ): Promise<{
   stdout: string
@@ -33,7 +33,7 @@ export function execPromise(
   return new Promise((resolve, reject) => {
     try {
       exec(
-        cammand,
+        command,
         merge(
           {
             env: fixEnv()
