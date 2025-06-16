@@ -5,7 +5,7 @@ import type { FtpItem } from '@shared/app'
 import { ForkPromise } from '@shared/ForkPromise'
 import { readFile, writeFile, mkdirp } from 'fs-extra'
 import FtpServer from 'ftp-srv'
-import { getLocalIp } from '@helper/net'
+import * as ip from 'ip'
 import { setDir777ToCurrentUser } from '../Fn'
 
 class Manager extends Base {
@@ -34,7 +34,10 @@ class Manager extends Base {
 
   _startServer() {
     const resolverFunction = (clientIP: string) => {
-      return getLocalIp()
+      if (clientIP === '127.0.0.1' || clientIP === '::1') {
+        return '127.0.0.1' // 本地连接直接返回回环地址
+      }
+      return ip.address()
     }
 
     return new ForkPromise(async (resolve, reject) => {

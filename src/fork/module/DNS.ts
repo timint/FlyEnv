@@ -3,7 +3,7 @@ import { Base } from './Base'
 import { ForkPromise } from '@shared/ForkPromise'
 import dns2 from 'dns2'
 import { Packet } from 'dns2'
-import { getLocalIp } from '@helper/net'
+import * as ip from 'ip'
 import { join } from 'path'
 import { DNSoverHTTPS } from 'dohdec';
 
@@ -58,7 +58,7 @@ class Manager extends Base {
   }
   start() {
     return new ForkPromise((resolve) => {
-      const LOCAL_IP = getLocalIp()
+      const LOCAL_IP = ip.address()
       const server = dns2.createServer({
         udp: true,
         handle: async (request: any, send: any) => {

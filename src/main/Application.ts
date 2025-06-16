@@ -18,12 +18,11 @@ import UpdateManager from './core/UpdateManager'
 import { PItem, ProcessPidList, ProcessPidListByPids } from '../fork/Process'
 import NodePTY from './core/NodePTY'
 import ScreenManager from './core/ScreenManager'
-import { getLocalIp } from '@helper/net'
 
 const { createFolder } = require('../shared/file')
 const ServeHandler = require('serve-handler')
 const Http = require('http')
-
+const IP = require('ip')
 
 export default class Application extends EventEmitter {
   isReady: boolean
@@ -568,7 +567,7 @@ export default class Application extends EventEmitter {
             console.log('server.address(): ', server.address())
             const port = server.address().port
             const host = [`http://localhost:${port}/`]
-            const ip = getLocalIp()
+            const ip = IP.address()
             if (ip && typeof ip === 'string' && ip.includes('.')) {
               host.push(`http://${ip}:${port}/`)
             }

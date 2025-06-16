@@ -3,7 +3,7 @@ import IPC from '@/util/IPC'
 import { reactive } from 'vue'
 import { MessageError, MessageSuccess } from '@/util/Element'
 import { I18nT } from '@lang/index'
-import { getLocalIp } from '@helper/net'
+const IP = require('ip')
 
 export interface DNSLogItem {
   host: string
@@ -30,7 +30,7 @@ export const DnsStore = defineStore('dns', {
   getters: {},
   actions: {
     getIP() {
-      this.ip = getLocalIp()
+      this.ip = IP.address()
     },
     init() {
       IPC.on('App_DNS_Log').then((key: string, res: DNSLogItem) => {
