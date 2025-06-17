@@ -6,6 +6,7 @@ import { remove, writeFile } from 'fs-extra'
 import PHPManager from './Php'
 import { I18nT } from '@lang/index'
 import { existsSync } from 'fs'
+import { EOL } from 'os'
 
 class Manager extends Base {
   constructor() {
@@ -19,17 +20,19 @@ class Manager extends Base {
         await PHPManager.getIniPath({ path: dirname(php) } as any)
       }
       if (framework === 'wordpress') {
-        const tmpl = `{
-  "require": {
-    "johnpbloch/wordpress": "${version}"
-  },
-  "config": {
-    "allow-plugins": {
-      "johnpbloch/wordpress-core-installer": true
-    }
-  }
-}
-`
+        const tmpl = [
+          '{',
+          '  "require": {',
+          `    "johnpbloch/wordpress": "${version}"`,
+          '  },',
+          '  "config": {',
+          '    "allow-plugins": {',
+          '      "johnpbloch/wordpress-core-installer": true',
+          '    }',
+          '  }',
+          '}',
+          ''
+        ].join(EOL)
         await writeFile(join(dir, 'composer.json'), tmpl)
 
         const command = ['@echo off', 'chcp 65001>nul', `cd /d "${dir}"`]

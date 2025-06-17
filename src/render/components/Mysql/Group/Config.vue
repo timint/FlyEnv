@@ -56,17 +56,21 @@
   })
 
   const defaultConf = computed(() => {
-    return `[mysqld]
-# Only allow connections from localhost
-bind-address = 127.0.0.1
-sql-mode=NO_ENGINE_SUBSTITUTION`
+    return [
+      '[mysqld]',
+      '# Only allow connections from localhost',
+      'bind-address = 127.0.0.1',
+      'sql-mode=NO_ENGINE_SUBSTITUTION'
+    ].join('\n')
   })
 
   if (!existsSync(file.value)) {
-    const str = `[mysqld]
-# Only allow connections from localhost
-bind-address = 127.0.0.1
-sql-mode=NO_ENGINE_SUBSTITUTION`
+    const str = [
+      '[mysqld]',
+      '# Only allow connections from localhost',
+      'bind-address = 127.0.0.1',
+      'sql-mode=NO_ENGINE_SUBSTITUTION'
+    ].join('\n')
     writeFile(file.value, str).then(() => {
       conf?.value?.update()
     })

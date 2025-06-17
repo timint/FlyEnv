@@ -18,16 +18,18 @@ const handleReverseProxy = (host: AppHost, content: string) => {
     host.reverseProxy.forEach((item) => {
       const path = item.path
       const url = item.url
-      arr.push(`<IfModule mod_proxy.c>
-    ProxyRequests Off
-    SSLProxyEngine on
-    ProxyPass ${path} ${url}
-    ProxyPassReverse ${path} ${url}
-    RequestHeader set Host "%{Host}e"
-    RequestHeader set X-Real-IP "%{REMOTE_ADDR}e"
-    RequestHeader set X-Forwarded-For "%{X-Forwarded-For}e"
-    RequestHeader setifempty X-Forwarded-For "%{REMOTE_ADDR}e"
-    </IfModule>`)
+      arr.push([
+      '<IfModule mod_proxy.c>',
+      '    ProxyRequests Off',
+      '    SSLProxyEngine on',
+      `    ProxyPass ${path} ${url}`,
+      `    ProxyPassReverse ${path} ${url}`,
+      '    RequestHeader set Host "%{Host}e"',
+      '    RequestHeader set X-Real-IP "%{REMOTE_ADDR}e"',
+      '    RequestHeader set X-Forwarded-For "%{X-Forwarded-For}e"',
+      '    RequestHeader setifempty X-Forwarded-For "%{REMOTE_ADDR}e"',
+      '</IfModule>'
+      ].join('\n'))
     })
     arr.push('#PWS-REVERSE-PROXY-END#')
     arr.unshift('</FilesMatch>')

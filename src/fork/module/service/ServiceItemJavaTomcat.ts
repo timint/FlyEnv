@@ -100,11 +100,11 @@ export const makeTomcatServerXML = (cnfDir: string, serverContent: string, hostA
           hostAlias(host).forEach((h) => {
             const findHost = hostConfig.find((c: any) => c.hostName === h)
             if (!findHost) {
-              const str = `<SSLHostConfig appFlag="PhpWebStudy" hostName="${h}" sslProtocol="TLS" certificateVerification="false">
-                <Certificate certificateFile="${sslCert}"
-                             certificateKeyFile="${sslKey}"
-                             type="RSA"/>
-            </SSLHostConfig>`
+                const str = [
+                `<SSLHostConfig appFlag="PhpWebStudy" hostName="${h}" sslProtocol="TLS" certificateVerification="false">`,
+                `    <Certificate certificateFile="${sslCert}" certificateKeyFile="${sslKey}" type="RSA"/>`,
+                `</SSLHostConfig>`
+                ].join('\n')
               const xml = parser.parse(str)
               hostConfig.push(xml.SSLHostConfig)
             }
@@ -150,13 +150,13 @@ export const makeTomcatServerXML = (cnfDir: string, serverContent: string, hostA
         if (findHost) {
           findHost.appBase = hostRoot
         } else {
-          const str = `<Host name="${h}" appBase="${hostRoot}" appFlag="PhpWebStudy"
-                  unpackWARs="true" autoDeploy="true">
-                  <Context path="" docBase=""></Context>
-                <Valve className="org.apache.catalina.valves.AccessLogValve" directory="${logDir}"
-                       prefix="${host.name}-tomcat_access_log" suffix=".log"
-                       pattern="%h %l %u %t &quot;%r&quot; %s %b"/>
-            </Host>`
+            const str = [
+            `<Host name="${h}" appBase="${hostRoot}" appFlag="PhpWebStudy" unpackWARs="true" autoDeploy="true">`,
+            `    <Context path="" docBase=""></Context>`,
+            `    <Valve className="org.apache.catalina.valves.AccessLogValve" directory="${logDir}"`,
+            `        prefix="${host.name}-tomcat_access_log" suffix=".log" pattern="%h %l %u %t &quot;%r&quot; %s %b"/>`,
+            `</Host>`
+            ].join(EOL)
           const xml = parser.parse(str)
           hosts.push(xml.Host)
         }

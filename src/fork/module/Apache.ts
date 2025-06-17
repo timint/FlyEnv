@@ -151,8 +151,11 @@ class Apache extends Base {
       await mkdirp(vhost)
       vhost = vhost.split('\\').join('/')
 
-      content += `\nPidFile "${pidPath}"
-IncludeOptional "${vhost}*.conf"`
+      content += [
+        '',
+        `PidFile "${pidPath}"`,
+        `IncludeOptional "${vhost}*.conf"`
+      ].join('\n')
       await writeFile(defaultFile, content)
       await writeFile(defaultFileBack, content)
       on({

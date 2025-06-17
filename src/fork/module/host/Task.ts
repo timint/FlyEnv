@@ -62,22 +62,20 @@ export function TaskAddRandaSite(this: any, version?: SoftInstalled, write = tru
         )
       } else {
         const file = join(dir, 'index.html')
-        await writeFile(
-          file,
-          `<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" href="/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>PhpWebStudy AI Created</title>
-  </head>
-  <body>
-    PhpWebStudy AI Created
-  </body>
-</html>
-`
-        )
+        await writeFile(file, [
+          '<!DOCTYPE html>',
+          '<html>',
+          '  <head>',
+          '    <meta charset="UTF-8" />',
+          '    <link rel="icon" href="/favicon.ico" />',
+          '    <meta name="viewport" content="width=device-width, initial-scale=1.0" />',
+          '    <title>PhpWebStudy AI Created</title>',
+          '  </head>',
+          '  <body>',
+          '    PhpWebStudy AI Created',
+          '  </body>',
+          '</html>'
+        ].join('\n'))
       }
       await setDirRole(dir)
       resolve({

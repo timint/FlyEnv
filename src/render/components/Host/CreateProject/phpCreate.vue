@@ -223,17 +223,18 @@
     command.push(`cd "${form.dir}"`)
 
     if (props.type === 'WordPress') {
-      const tmpl = `{
-  "require": {
-    "johnpbloch/wordpress": "${form.version}"
-  },
-  "config": {
-    "allow-plugins": {
-      "johnpbloch/wordpress-core-installer": true
-    }
-  }
-}
-`
+      const tmpl = [
+      '{',
+      '  "require": {',
+      `    "johnpbloch/wordpress": "${form.version}"`,
+      '  },',
+      '  "config": {',
+      '    "allow-plugins": {',
+      '      "johnpbloch/wordpress-core-installer": true',
+      '    }',
+      '  }',
+      '}'
+      ].join('\n')
       await writeFile(join(form.dir, 'composer.json'), tmpl)
 
       if (form.php && form.composer) {
@@ -323,52 +324,88 @@
     const framework = props.type.toLowerCase()
     let dir = ProjectSetup.form.PHP.dir
     let nginxRewrite = ''
-    if (framework.includes('wordpress')) {
-      dir = join(ProjectSetup.form.PHP.dir, 'wordpress')
-      nginxRewrite = `location /
-{
-\t try_files $uri $uri/ /index.php?$args;
-}
 
-rewrite /wp-admin$ $scheme://$host$uri/ permanent;`
-    } else if (framework.includes('laravel')) {
-      dir = join(ProjectSetup.form.PHP.dir, 'public')
-      nginxRewrite = `location / {
-\ttry_files $uri $uri/ /index.php$is_args$query_string;
-}`
-    } else if (framework.includes('yii2')) {
-      dir = join(ProjectSetup.form.PHP.dir, 'web')
-      nginxRewrite = `location / {
-    try_files $uri $uri/ /index.php?$args;
-}`
-    } else if (framework.includes('thinkphp')) {
-      dir = join(ProjectSetup.form.PHP.dir, 'public')
-      nginxRewrite = `location / {
-\tif (!-e $request_filename){
-\t\trewrite  ^(.*)$  /index.php?s=$1  last;   break;
-\t}
-}`
-    } else if (framework.includes('symfony')) {
-      dir = join(ProjectSetup.form.PHP.dir, 'public')
-      nginxRewrite = `location / {
-        try_files $uri /index.php$is_args$args;
-}`
-    } else if (framework.includes('cakephp')) {
-      dir = join(ProjectSetup.form.PHP.dir, 'webroot')
-      nginxRewrite = `location / {
-    try_files $uri $uri/ /index.php?$args;
-}`
-    } else if (framework.includes('slim')) {
-      dir = join(ProjectSetup.form.PHP.dir, 'public')
-      nginxRewrite = `location / {
-        try_files $uri /index.php$is_args$args;
-}`
-    } else if (framework.includes('codeIgniter')) {
-      dir = join(ProjectSetup.form.PHP.dir, 'public')
-      nginxRewrite = `location / {
-        try_files $uri $uri/ /index.php$is_args$args;
-}`
+    switch (framework) {
+
+      case 'cakephp':
+        dir = join(ProjectSetup.form.PHP.dir, 'webroot')
+        nginxRewrite = [
+          'location / {',
+          '    try_files $uri $uri/ /index.php?$args;',
+          '}'
+        ].join('\n')
+        break
+
+      case 'codeIgniter':
+        dir = join(ProjectSetup.form.PHP.dir, 'public')
+        nginxRewrite = [
+          'location / {',
+          '    try_files $uri $uri/ /index.php$is_args$args;',
+          '}'
+        ].join('\n')
+        break
+
+      case 'laravel':
+        dir = join(ProjectSetup.form.PHP.dir, 'public')
+        nginxRewrite = [
+          'location / {',
+          '    try_files $uri $uri/ /index.php$is_args$query_string;',
+          '}'
+        ].join('\n')
+        break
+
+      case 'slim':
+        dir = join(ProjectSetup.form.PHP.dir, 'public')
+        nginxRewrite = [
+          'location / {',
+          '    try_files $uri /index.php$is_args$args;',
+          '}'
+        ].join('\n')
+
+      case 'symfony':
+        dir = join(ProjectSetup.form.PHP.dir, 'public')
+        nginxRewrite = [
+          'location / {',
+          '    try_files $uri /index.php$is_args$args;',
+          '}'
+        ].join('\n')
+        break
+
+      case 'thiunkphp':
+        dir = join(ProjectSetup.form.PHP.dir, 'public')
+        nginxRewrite = [
+          'location / {',
+          '    if (!-e $request_filename){',
+          '        rewrite  ^(.*)$  /index.php?s=$1  last;   break;',
+          '    }',
+          '}'
+        ].join('\n')
+        break
+
+      case 'wordpress':
+        dir = join(ProjectSetup.form.PHP.dir, 'wordpress')
+        nginxRewrite = [
+          'location / {',
+          '    try_files $uri $uri/ /index.php?$args;',
+          '}',
+          '',
+          'rewrite /wp-admin$ $scheme://$host$uri/ permanent;'
+        ].join('\n')
+        break
+
+      case 'yii':
+        dir = join(ProjectSetup.form.PHP.dir, 'web')
+        nginxRewrite = [
+          'location / {',
+          '    try_files $uri $uri/ /index.php?$args;',
+          '}'
+        ].join('\n')
+        break
+
+      default:
+        throw new Error(`Unsupported framework: ${framework}`)
     }
+
     show.value = false
     ProjectSetup.phpFormInit()
     nextTick().then(() => {

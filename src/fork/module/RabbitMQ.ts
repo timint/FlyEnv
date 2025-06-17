@@ -8,6 +8,7 @@ import { ForkPromise } from '@shared/ForkPromise'
 import { mkdirp, readdir, readFile, remove, writeFile } from 'fs-extra'
 import TaskQueue from '../TaskQueue'
 import { ProcessListSearch } from '../Process'
+import { EOL } from 'os'
 
 class RabbitMQ extends Base {
   baseDir: string = ''
@@ -73,11 +74,13 @@ class RabbitMQ extends Base {
         await this._initPlugin(version).on(on)
         const pluginsDir = join(version.path, 'plugins')
         const mnesiaBaseDir = join(this.baseDir, `mnesia-${v}`)
-        const content = `set "NODE_IP_ADDRESS=127.0.0.1"
-set "NODENAME=rabbit@localhost"
-set "RABBITMQ_LOG_BASE=${logDir}"
-set "MNESIA_BASE=${mnesiaBaseDir}"
-set "PLUGINS_DIR=${pluginsDir}"`
+        const content = [
+          `set "NODE_IP_ADDRESS=127.0.0.1"`,
+          `set "NODENAME=rabbit@localhost"`,
+          `set "RABBITMQ_LOG_BASE=${logDir}"`,
+          `set "MNESIA_BASE=${mnesiaBaseDir}"`,
+          `set "PLUGINS_DIR=${pluginsDir}"`
+        ].join(EOL)
         await writeFile(confFile, content)
         const defaultFile = join(this.baseDir, `rabbitmq-${v}-default.conf`)
         await writeFile(defaultFile, content)

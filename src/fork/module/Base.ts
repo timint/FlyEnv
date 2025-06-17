@@ -400,10 +400,10 @@ export class Base {
         }
         await copyFile(row.zip, join(row.appDir, 'composer.phar'))
         await writeFile(
-          join(row.appDir, 'composer.bat'),
-          `@echo off
-php "%~dp0composer.phar" %*`
-        )
+          join(row.appDir, 'composer.bat'),  [
+            '@echo off',
+            'php "%~dp0composer.phar" %*'
+          ].join('\n'))
       }
 
       const handleMongoDB = async () => {

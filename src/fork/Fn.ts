@@ -64,8 +64,11 @@ export function waitTime(time: number) {
 }
 
 export function fixEnv(): { [k: string]: any } {
-  let path = `C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\;%SYSTEMROOT%\\System32\\WindowsPowerShell\\v1.0\\;${process.env['PATH']}`
-  path = Array.from(new Set(path.split(';'))).join(';')
+  let path = [
+    'C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\',
+    '%SYSTEMROOT%\\System32\\WindowsPowerShell\\v1.0\\',
+    process.env['PATH'] || ''
+  ].filter(Boolean).join(';')
   const env = { ...process.env, PATH: path }
   return env
 }

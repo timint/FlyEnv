@@ -386,7 +386,7 @@ class Php extends Base {
         content = content.replace(regex, ``).trim()
         if (item.name === 'php_xdebug') {
           content = content
-            .replace(/;\[FlyEnv-xdebug-ini-begin\]([\s\S]*?);\[FlyEnv-xdebug-ini-end\]/g, ``)
+            .replace(/;\[FlyEnv-xdebug-ini-begin\]([\s\S]*?);\[FlyEnv-xdebug-ini-end\]/g, '')
             .trim()
         }
       } else {
@@ -394,19 +394,24 @@ class Php extends Base {
         if (item.name === 'php_xdebug') {
           const output_dir = join(global.Server.PhpDir!, 'xdebug')
           await mkdirp(output_dir)
-          content += `\n;[FlyEnv-xdebug-ini-begin]
-xdebug.idekey = "PHPSTORM"
-xdebug.client_host = localhost
-xdebug.client_port = 9003
-xdebug.mode = debug
-xdebug.profiler_append = 0
-xdebug.profiler_output_name = cachegrind.out.%p
-xdebug.start_with_request = yes
-xdebug.trigger_value=StartProfileForMe
-xdebug.output_dir = "${output_dir}"
-;[FlyEnv-xdebug-ini-end]`
+          content += [
+            '',
+            ';[FlyEnv-xdebug-ini-begin]',
+            'xdebug.idekey = "PHPSTORM"',
+            'xdebug.client_host = localhost',
+            'xdebug.client_port = 9003',
+            'xdebug.mode = debug',
+            'xdebug.profiler_append = 0',
+            'xdebug.profiler_output_name = cachegrind.out.%p',
+            'xdebug.start_with_request = yes',
+            'xdebug.trigger_value=StartProfileForMe',
+            `xdebug.output_dir = "${output_dir}"`,
+            ';[FlyEnv-xdebug-ini-end]'
+          ].join('\n')
         }
       }
+
+      content = content.replace(/\r\n?|\n/g, EOL) // Ensure line endings are consistent
 
       content = content.trim()
       await writeFile(ini, content)
@@ -626,17 +631,20 @@ xdebug.output_dir = "${output_dir}"
         if (name === 'php_xdebug') {
           const output_dir = join(global.Server.PhpDir!, 'xdebug')
           await mkdirp(output_dir)
-          content += `\n;[FlyEnv-xdebug-ini-begin]
-xdebug.idekey = "PHPSTORM"
-xdebug.client_host = localhost
-xdebug.client_port = 9003
-xdebug.mode = debug
-xdebug.profiler_append = 0
-xdebug.profiler_output_name = cachegrind.out.%p
-xdebug.start_with_request = yes
-xdebug.trigger_value=StartProfileForMe
-xdebug.output_dir = "${output_dir}"
-;[FlyEnv-xdebug-ini-end]`
+            content += [
+              '',
+              ';[FlyEnv-xdebug-ini-begin]',
+              'xdebug.idekey = "PHPSTORM"',
+              'xdebug.client_host = localhost',
+              'xdebug.client_port = 9003',
+              'xdebug.mode = debug',
+              'xdebug.profiler_append = 0',
+              'xdebug.profiler_output_name = cachegrind.out.%p',
+              'xdebug.start_with_request = yes',
+              'xdebug.trigger_value=StartProfileForMe',
+              `xdebug.output_dir = "${output_dir}"`,
+              ';[FlyEnv-xdebug-ini-end]'
+            ].join(EOL)
         }
       }
 

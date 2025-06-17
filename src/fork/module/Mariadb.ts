@@ -7,6 +7,7 @@ import { execPromise, waitTime, versionLocalFetch, versionFilterSame, versionBin
 import { ForkPromise } from '@shared/ForkPromise'
 import { writeFile, mkdirp, chmod, remove } from 'fs-extra'
 import TaskQueue from '../TaskQueue'
+import { EOL } from 'os'
 
 class Manager extends Base {
   constructor() {
@@ -66,12 +67,14 @@ class Manager extends Base {
         on({
           'APP-On-Log': AppLog('info', I18nT('appLog.confInit'))
         })
-        const conf = `[mariadbd]
-# Only allow connections from localhost
-bind-address = 127.0.0.1
-sql-mode=NO_ENGINE_SUBSTITUTION
-port = 3306
-datadir="${dataDir}"`
+        const conf = [
+          '[mariadbd]',
+          '# Only allow connections from localhost',
+          'bind-address = 127.0.0.1',
+          'sql-mode=NO_ENGINE_SUBSTITUTION',
+          'port = 3306',
+          `datadir="${dataDir}"`
+        ].join(EOL)
         await writeFile(m, conf)
         on({
           'APP-On-Log': AppLog('info', I18nT('appLog.confInitSuccess', { file: m }))

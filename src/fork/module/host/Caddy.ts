@@ -6,6 +6,7 @@ import { vhostTmpl } from './Host'
 import { existsSync } from 'fs'
 import { isEqual } from 'lodash'
 import { pathFixedToUnix } from '@shared/utils'
+import { EOL } from 'os'
 
 const handleReverseProxy = (host: AppHost, content: string) => {
   let x: any = content.match(/(#PWS-REVERSE-PROXY-BEGIN#)([\s\S]*?)(#PWS-REVERSE-PROXY-END#)/g)
@@ -18,12 +19,14 @@ const handleReverseProxy = (host: AppHost, content: string) => {
     host.reverseProxy.forEach((item) => {
       const path = item.path
       const url = item.url
-      arr.push(`    reverse_proxy ${path} {
-        to ${url}
-        header_up X-Real-IP {remote}
-        header_up X-Forwarded-For {remote}
-        header_up X-Forwarded-Proto {scheme}
-    }`)
+      arr.push(
+        `    reverse_proxy ${path} {`,
+        `        to ${url}`,
+        `        header_up X-Real-IP {remote}`,
+        `        header_up X-Forwarded-For {remote}`,
+        `        header_up X-Forwarded-Proto {scheme}`,
+        `    }`
+      )
     })
     arr.push('#PWS-REVERSE-PROXY-END#')
     arr.push('    file_server')

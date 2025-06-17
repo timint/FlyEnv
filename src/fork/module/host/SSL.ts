@@ -42,12 +42,14 @@ export const makeAutoSSL = (host: AppHost): ForkPromise<{ crt: string; key: stri
         await remove(hostCADir)
       }
       await mkdirp(hostCADir)
-      let ext = `authorityKeyIdentifier=keyid,issuer
-basicConstraints=CA:FALSE
-keyUsage=digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
-subjectAltName=@alt_names
-
-[alt_names]${EOL}`
+      let ext = [
+        'authorityKeyIdentifier=keyid,issuer',
+        'basicConstraints=CA:FALSE',
+        'keyUsage=digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment',
+        'subjectAltName=@alt_names',
+        '',
+        '[alt_names]'
+      ].join(EOL) + EOL
       alias.forEach((item, index) => {
         ext += `DNS.${index + 1} = ${item}${EOL}`
       })

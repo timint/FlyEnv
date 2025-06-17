@@ -73,11 +73,13 @@ class Mysql extends Base {
         on({
           'APP-On-Log': AppLog('info', I18nT('appLog.confInit'))
         })
-        const conf = `[mysqld]
-# Only allow connections from localhost
-bind-address = 127.0.0.1
-sql-mode=NO_ENGINE_SUBSTITUTION
-datadir="${dataDir}"`
+        const conf = [
+          '[mysqld]',
+          '# Only allow connections from localhost',
+          'bind-address = 127.0.0.1',
+          'sql-mode=NO_ENGINE_SUBSTITUTION',
+          `datadir="${dataDir}"`
+        ].join(EOL)
         await writeFile(m, conf)
         on({
           'APP-On-Log': AppLog('info', I18nT('appLog.confInitSuccess', { file: m }))
@@ -225,10 +227,12 @@ datadir="${dataDir}"`
       await mkdirp(dirname(m))
       const dataDir = version.dataDir
       if (!existsSync(m)) {
-        const conf = `[mysqld]
-# Only allow connections from localhost
-bind-address = 127.0.0.1
-sql-mode=NO_ENGINE_SUBSTITUTION`
+        const conf = [
+          '[mysqld]',
+          '# Only allow connections from localhost',
+          'bind-address = 127.0.0.1',
+          'sql-mode=NO_ENGINE_SUBSTITUTION'
+        ].join('\n')
         await writeFile(m, conf)
       }
 

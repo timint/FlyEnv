@@ -162,12 +162,14 @@ class Manager extends Base {
         await execPromise(command)
       }
 
-      let ext = `authorityKeyIdentifier=keyid,issuer
-basicConstraints=CA:FALSE
-keyUsage=digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
-subjectAltName=@alt_names
-
-[alt_names]${EOL}`
+      let ext = [
+        'authorityKeyIdentifier=keyid,issuer',
+        'basicConstraints=CA:FALSE',
+        'keyUsage=digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment',
+        'subjectAltName=@alt_names',
+        '',
+        '[alt_names]'
+      ].join(EOL) + EOL
       domains.forEach((item, index) => {
         ext += `DNS.${index + 1} = ${item}${EOL}`
       })
@@ -612,15 +614,19 @@ php "%~dp0composer.phar" %*`
         const file = join(aliasDir, `${item.name}.bat`)
         if (item?.php?.bin) {
           const bin = item?.php?.bin?.replace('php-cgi.exe', 'php.exe')
-          const content = `@echo off
-chcp 65001>nul
-"${bin}" "${service.bin}" %*`
+          const content = [
+            '@echo off',
+            'chcp 65001>nul',
+            `"${bin}" "${service.bin}" %*`
+          ].join(EOL)
           await writeFile(file, content)
         } else {
           const bin = service.bin.replace('php-cgi.exe', 'php.exe')
-          const content = `@echo off
-chcp 65001>nul
-"${bin}" %*`
+          const content = [
+            '@echo off',
+            'chcp 65001>nul',
+            `"${bin}" %*`
+          ].join(EOL)
           await writeFile(file, content)
         }
         if (!item.id) {

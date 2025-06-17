@@ -221,11 +221,13 @@
     store.value.files.splice(0)
     store.value.allExt.splice(0)
     store.value.allowExt.splice(0)
-    store.value.exclude = `.idea
-.git
-.svn
-.vscode
-node_modules`
+    store.value.exclude = [
+      '.idea',
+      '.git',
+      '.svn',
+      '.vscode',
+      'node_modules'
+    ].join('\n')
     store.value.progress = reactive({
       count: 0,
       finish: 0,

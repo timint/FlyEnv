@@ -18,22 +18,24 @@ const handleReverseProxy = (host: AppHost, content: string) => {
     host.reverseProxy.forEach((item) => {
       const path = item.path
       const url = item.url
-      arr.push(`location ^~ ${path} {
-      proxy_pass ${url};
-      proxy_set_header Host $http_host;
-      proxy_set_header X-Real-IP $remote_addr;
-      proxy_set_header X-Real-Port $remote_port;
-      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-      proxy_set_header X-Forwarded-Proto $scheme;
-      proxy_set_header X-Forwarded-Host $host;
-      proxy_set_header X-Forwarded-Port $server_port;
-      proxy_set_header REMOTE-HOST $remote_addr;
-      proxy_connect_timeout 60s;
-      proxy_send_timeout 600s;
-      proxy_read_timeout 600s;
-      proxy_http_version 1.1;
-      proxy_set_header Upgrade $http_upgrade;
-    }`)
+      arr.push([
+        `location ^~ ${path} {`,
+        `  proxy_pass ${url};`,
+        `  proxy_set_header Host $http_host;`,
+        `  proxy_set_header X-Real-IP $remote_addr;`,
+        `  proxy_set_header X-Real-Port $remote_port;`,
+        `  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;`,
+        `  proxy_set_header X-Forwarded-Proto $scheme;`,
+        `  proxy_set_header X-Forwarded-Host $host;`,
+        `  proxy_set_header X-Forwarded-Port $server_port;`,
+        `  proxy_set_header REMOTE-HOST $remote_addr;`,
+        `  proxy_connect_timeout 60s;`,
+        `  proxy_send_timeout 600s;`,
+        `  proxy_read_timeout 600s;`,
+        `  proxy_http_version 1.1;`,
+        `  proxy_set_header Upgrade $http_upgrade;`,
+        `}`,
+      ].join('\n'))
     })
     arr.push('#PWS-REVERSE-PROXY-END#')
     arr.unshift('#REWRITE-END')
@@ -53,38 +55,46 @@ export const autoFillNginxRewrite = (host: AppHost, chmod: boolean) => {
     existsSync(join(root, 'wp-content')) &&
     existsSync(join(root, 'wp-includes'))
   ) {
-    host.nginx.rewrite = `location /
-{
-\t try_files $uri $uri/ /index.php?$args;
-}
-
-rewrite /wp-admin$ $scheme://$host$uri/ permanent;`
+    host.nginx.rewrite = [
+      'location /',
+      '{',
+      '\t try_files $uri $uri/ /index.php?$args;',
+      '}',
+      '',
+      'rewrite /wp-admin$ $scheme://$host$uri/ permanent;'
+    ].join('\n')
     return
   }
   if (existsSync(join(root, 'vendor/laravel'))) {
-    host.nginx.rewrite = `location / {
-\ttry_files $uri $uri/ /index.php$is_args$query_string;
-}`
+    host.nginx.rewrite = [
+      'location / {',
+      '\ttry_files $uri $uri/ /index.php$is_args$query_string;',
+      '}'
+    ].join('\n')
     if (!chmod && basename(host.root) !== 'public') {
       host.root = join(host.root, 'public')
     }
     return
   }
   if (existsSync(join(root, 'vendor/yiisoft'))) {
-    host.nginx.rewrite = `location / {
-    try_files $uri $uri/ /index.php?$args;
-  }`
+    host.nginx.rewrite = [
+      'location / {',
+      '    try_files $uri $uri/ /index.php?$args;',
+      '}'
+    ].join('\n')
     if (!chmod && basename(host.root) !== 'web') {
       host.root = join(host.root, 'web')
     }
     return
   }
   if (existsSync(join(root, 'thinkphp')) || existsSync(join(root, 'vendor/topthink'))) {
-    host.nginx.rewrite = `location / {
-\tif (!-e $request_filename){
-\t\trewrite  ^(.*)$  /index.php?s=$1  last;   break;
-\t}
-}`
+    host.nginx.rewrite = [
+      'location / {',
+      '    if (!-e $request_filename){',
+      '        rewrite  ^(.*)$  /index.php?s=$1  last;   break;',
+      '    }',
+      '}'
+    ].join('\n')
     if (!chmod && basename(host.root) !== 'public') {
       host.root = join(host.root, 'public')
     }
