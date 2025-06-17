@@ -56,19 +56,23 @@ export const MysqlStore = defineStore('mysqlGroup', {
         const log: string[] = []
         IPC.send(`app-fork:mysql`, 'startGroupServer', JSON.parse(JSON.stringify(item))).then(
           (key: string, res: any) => {
-            if (res.code === 0) {
-              IPC.off(key)
-              item.version.running = true
-              item.version.fetching = false
-              resolve(true)
-            } else if (res.code === 1) {
-              IPC.off(key)
-              log.push(res.msg)
-              item.version.running = false
-              item.version.fetching = false
-              resolve(log.join('\n'))
-            } else if (res.code === 200) {
-              log.push(res.msg)
+            switch (res.code) {
+              case 0:
+                IPC.off(key)
+                item.version.running = true
+                item.version.fetching = false
+                resolve(true)
+                break
+              case 1:
+                IPC.off(key)
+                log.push(res.msg)
+                item.version.running = false
+                item.version.fetching = false
+                resolve(log.join('\n'))
+                break
+              case 200:
+                log.push(res.msg)
+                break
             }
           }
         )

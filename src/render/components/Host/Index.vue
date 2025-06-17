@@ -355,28 +355,35 @@
   })
 
   const toAdd = () => {
-    if (HostStore.tab === 'php') {
-      AsyncComponentShow(EditVM).then()
-    } else if (HostStore.tab === 'java') {
-      import('./Java/Edit.vue').then((res) => {
-        AsyncComponentShow(res.default).then()
-      })
-    } else if (HostStore.tab === 'node') {
-      import('./Node/Edit.vue').then((res) => {
-        AsyncComponentShow(res.default).then()
-      })
-    } else if (HostStore.tab === 'go') {
-      import('./Go/Edit.vue').then((res) => {
-        AsyncComponentShow(res.default).then()
-      })
-    } else if (HostStore.tab === 'python') {
-      import('./Python/Edit.vue').then((res) => {
-        AsyncComponentShow(res.default).then()
-      })
-    } else if (HostStore.tab === 'tomcat') {
-      import('./Tomcat/Edit.vue').then((res) => {
-        AsyncComponentShow(res.default).then()
-      })
+    switch (HostStore.tab) {
+      case 'php':
+        AsyncComponentShow(EditVM).then()
+        break
+      case 'java':
+        import('./Java/Edit.vue').then((res) => {
+          AsyncComponentShow(res.default).then()
+        })
+        break
+      case 'node':
+        import('./Node/Edit.vue').then((res) => {
+          AsyncComponentShow(res.default).then()
+        })
+        break
+      case 'go':
+        import('./Go/Edit.vue').then((res) => {
+          AsyncComponentShow(res.default).then()
+        })
+        break
+      case 'python':
+        import('./Python/Edit.vue').then((res) => {
+          AsyncComponentShow(res.default).then()
+        })
+        break
+      case 'tomcat':
+        import('./Tomcat/Edit.vue').then((res) => {
+          AsyncComponentShow(res.default).then()
+        })
+      break
     }
   }
 

@@ -17,18 +17,31 @@ class Service extends Base {
         await task.stop()
       }
       let item!: ServiceItem
-      if (host.type === 'java') {
-        if (host?.subType === 'springboot') {
-          item = new ServiceItemJavaSpring()
-        } else {
-          item = new ServiceItemJavaTomcat()
-        }
-      } else if (host.type === 'node') {
-        item = new ServiceItemNode()
-      } else if (host.type === 'go') {
-        item = new ServiceItemGo()
-      } else if (host.type === 'python') {
-        item = new ServiceItemPython()
+
+      switch (host.type) {
+
+        case 'java':
+          if (host?.subType === 'springboot') {
+            item = new ServiceItemJavaSpring()
+          } else {
+            item = new ServiceItemJavaTomcat()
+          }
+          break
+
+        case 'node':
+          item = new ServiceItemNode()
+          break
+
+        case 'go':
+          item = new ServiceItemGo()
+          break
+
+        case 'python':
+          item = new ServiceItemPython()
+          break
+
+        default:
+          throw new Error(`Unsupported host type: ${host.type}`)
       }
 
       item.id = `${host.id}`

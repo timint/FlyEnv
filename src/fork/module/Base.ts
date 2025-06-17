@@ -464,20 +464,30 @@ export class Base {
         ]
         if (two.includes(row.type)) {
           await handleTwoLevDir()
-        } else if (row.type === 'memcached') {
-          await handleMemcached()
-        } else if (row.type === 'composer') {
-          await handleComposer()
-        } else if (row.type === 'python') {
-          await handlePython()
-        } else if (row.type === 'mongodb') {
-          await handleMongoDB()
-        } else if (row.type === 'meilisearch') {
-          await handleMeilisearch()
-        } else if (row.type === 'rust') {
-          await handleRust()
         } else {
-          await zipUnPack(row.zip, row.appDir)
+          switch (row.type) {
+            case 'composer':
+              await handleComposer()
+              break
+            case 'meilisearch':
+              await handleMeilisearch()
+              break
+            case 'memcached':
+              await handleMemcached()
+              break
+            case 'mongodb':
+              await handleMongoDB()
+              break
+            case 'python':
+              await handlePython()
+              break
+            case 'rust':
+              await handleRust()
+              break
+            default:
+              await zipUnPack(row.zip, row.appDir)
+              break
+          }
         }
       }
 

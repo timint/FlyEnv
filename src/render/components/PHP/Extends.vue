@@ -117,18 +117,21 @@
   watch(
     tab,
     () => {
-      if (tab.value === 'local') {
-        if (!PHPSetup.localExtend[props.version.bin]?.length) {
-          PHPSetup.fetchLocal(props.version as any)
-        }
-      } else if (tab.value === 'lib') {
-        if (!PHPSetup.libExtend[props.version.bin]?.length) {
-          PHPSetup.fetchLib(props.version as any)
-        }
-      } else {
-        if (!LoadedSetup.list[props.version.bin]?.length) {
-          LoadedSetup.reFetch()
-        }
+      switch (tab.value) {
+        case 'local':
+          if (!PHPSetup.localExtend[props.version.bin]?.length) {
+            PHPSetup.fetchLocal(props.version as any)
+          }
+          break
+        case 'lib':
+          if (!PHPSetup.libExtend[props.version.bin]?.length) {
+            PHPSetup.fetchLib(props.version as any)
+          }
+          break
+        default:
+          if (!LoadedSetup.list[props.version.bin]?.length) {
+            LoadedSetup.reFetch()
+          }
       }
     },
     {

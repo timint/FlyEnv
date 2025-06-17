@@ -49,127 +49,153 @@ export class JSONStoreTab {
     }
     const model = this.editor().getModel()!
     let value = ''
-    if (this.to === 'json') {
-      this.toLang = 'json'
-      editor.setModelLanguage(model, 'json')
-      value = JSON.stringify(json, null, 4)
-    } else if (this.to === 'js') {
-      this.toLang = 'javascript'
-      editor.setModelLanguage(model, 'javascript')
-      value = jsonToJSON(json)
-    } else if (this.to === 'php') {
-      this.toLang = 'php'
-      editor.setModelLanguage(model, 'php')
-      if (this.type !== 'PHP') {
+    switch (this.to) {
+
+      case 'goBson':
+        this.toLang = 'go'
+        editor.setModelLanguage(model, 'go')
+        value = jsonToGoBase(json)
+        break
+
+      case 'goStruct':
+        this.toLang = 'go'
+        editor.setModelLanguage(model, 'go')
+        value = jsonToGoStruct(json)
+        break
+
+      case 'Java':
+        this.toLang = 'java'
+        editor.setModelLanguage(model, 'java')
+        value = jsonToJava(json)
+        break
+
+      case 'JSDoc':
+        this.toLang = 'javascript'
+        editor.setModelLanguage(model, 'javascript')
+        value = jsonToJSDoc(json)
+        break
+
+      case 'js':
+        this.toLang = 'javascript'
+        editor.setModelLanguage(model, 'javascript')
+        value = jsonToJSON(json)
+        break
+
+      case 'json':
+        this.toLang = 'json'
+        editor.setModelLanguage(model, 'json')
         value = JSON.stringify(json, null, 4)
-        value = value.replace(/": /g, `" => `).replace(/\{/g, '[').replace(/\}/g, ']')
-      } else {
-        value = this.value
-      }
-      if (!value.includes('<?php')) {
-        value = '<?php\n' + value
-      }
-      FormatPHP(value)
-        .then((php: string) => {
+        break
+
+      case 'Kotlin':
+        this.toLang = 'kotlin'
+        editor.setModelLanguage(model, 'kotlin')
+        value = jsonToKotlin(json)
+        break
+
+      case 'MySQL':
+        this.toLang = 'mysql'
+        editor.setModelLanguage(model, 'mysql')
+        value = jsonToMySQL(json)
+        break
+
+      case 'php':
+        this.toLang = 'php'
+        editor.setModelLanguage(model, 'php')
+        if (this.type !== 'PHP') {
+          value = JSON.stringify(json, null, 4)
+          value = value.replace(/": /g, `" => `).replace(/\{/g, '[').replace(/\}/g, ']')
+        } else {
+          value = this.value
+        }
+        if (!value.includes('<?php')) {
+          value = '<?php\n' + value
+        }
+        FormatPHP(value)
+          .then((php: string) => {
           this.editor().setValue(php)
-        })
-        .catch(() => {
+          })
+          .catch(() => {
           this.editor().setValue(value)
-        })
-      return
-    } else if (this.to === 'xml') {
-      this.toLang = 'xml'
-      editor.setModelLanguage(model, 'xml')
-      if (this.type === 'XML') {
-        value = this.value
-      } else {
-        value = jsonToXML(json)
-      }
-      console.log('xml value: ', value)
-      FormatHtml(value)
-        .then((xml: string) => {
+          })
+        return
+
+      case 'plist':
+        this.toLang = 'xml'
+        editor.setModelLanguage(model, 'xml')
+        if (this.type === 'PList') {
+          value = this.value
+        } else {
+          value = jsonToPList(json)
+        }
+        FormatHtml(value)
+          .then((xml: string) => {
           this.editor().setValue(xml)
-        })
-        .catch(() => {
+          })
+          .catch(() => {
           this.editor().setValue(value)
-        })
-      return
-    } else if (this.to === 'plist') {
-      this.toLang = 'xml'
-      editor.setModelLanguage(model, 'xml')
-      if (this.type === 'PList') {
-        value = this.value
-      } else {
-        value = jsonToPList(json)
-      }
-      FormatHtml(value)
-        .then((xml: string) => {
-          this.editor().setValue(xml)
-        })
-        .catch(() => {
-          this.editor().setValue(value)
-        })
-      return
-    } else if (this.to === 'yaml') {
-      this.toLang = 'yaml'
-      editor.setModelLanguage(model, 'yaml')
-      if (this.type === 'YAML') {
-        value = this.value
-      } else {
-        value = jsonToYAML(json)
-      }
-      FormatYaml(value)
-        .then((xml: string) => {
-          this.editor().setValue(xml)
-        })
-        .catch(() => {
-          this.editor().setValue(value)
-        })
-      return
-    } else if (this.to === 'ts') {
-      this.toLang = 'typescript'
-      editor.setModelLanguage(model, 'typescript')
-      value = jsonToTs(json)
-      FormatTS(value)
-        .then((ts) => {
+          })
+        return
+
+      case 'rustSerde':
+        this.toLang = 'rust'
+        editor.setModelLanguage(model, 'rust')
+        value = jsonToRust(json)
+        break
+
+      case 'toml':
+        this.toLang = 'toml'
+        editor.setModelLanguage(model, 'toml')
+        value = jsonToTOML(json)
+        break
+
+      case 'ts':
+        this.toLang = 'typescript'
+        editor.setModelLanguage(model, 'typescript')
+        value = jsonToTs(json)
+        FormatTS(value)
+          .then((ts) => {
           this.editor().setValue(ts)
-        })
-        .catch(() => {
+          })
+          .catch(() => {
           this.editor().setValue(value)
-        })
-      return
-    } else if (this.to === 'toml') {
-      this.toLang = 'toml'
-      editor.setModelLanguage(model, 'toml')
-      value = jsonToTOML(json)
-    } else if (this.to === 'goStruct') {
-      this.toLang = 'go'
-      editor.setModelLanguage(model, 'go')
-      value = jsonToGoStruct(json)
-    } else if (this.to === 'goBson') {
-      this.toLang = 'go'
-      editor.setModelLanguage(model, 'go')
-      value = jsonToGoBase(json)
-    } else if (this.to === 'Java') {
-      this.toLang = 'java'
-      editor.setModelLanguage(model, 'java')
-      value = jsonToJava(json)
-    } else if (this.to === 'Kotlin') {
-      this.toLang = 'kotlin'
-      editor.setModelLanguage(model, 'kotlin')
-      value = jsonToKotlin(json)
-    } else if (this.to === 'rustSerde') {
-      this.toLang = 'rust'
-      editor.setModelLanguage(model, 'rust')
-      value = jsonToRust(json)
-    } else if (this.to === 'MySQL') {
-      this.toLang = 'mysql'
-      editor.setModelLanguage(model, 'mysql')
-      value = jsonToMySQL(json)
-    } else if (this.to === 'JSDoc') {
-      this.toLang = 'javascript'
-      editor.setModelLanguage(model, 'javascript')
-      value = jsonToJSDoc(json)
+          })
+        return
+
+      case 'xml':
+        this.toLang = 'xml'
+        editor.setModelLanguage(model, 'xml')
+        if (this.type === 'XML') {
+          value = this.value
+        } else {
+          value = jsonToXML(json)
+        }
+        console.log('xml value: ', value)
+        FormatHtml(value)
+          .then((xml: string) => {
+          this.editor().setValue(xml)
+          })
+          .catch(() => {
+          this.editor().setValue(value)
+          })
+        return
+
+      case 'yaml':
+        this.toLang = 'yaml'
+        editor.setModelLanguage(model, 'yaml')
+        if (this.type === 'YAML') {
+          value = this.value
+        } else {
+          value = jsonToYAML(json)
+        }
+        FormatYaml(value)
+          .then((xml: string) => {
+          this.editor().setValue(xml)
+          })
+          .catch(() => {
+          this.editor().setValue(value)
+          })
+        return
     }
     this.editor().setValue(value)
   }

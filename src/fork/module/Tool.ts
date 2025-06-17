@@ -553,22 +553,21 @@ php "%~dp0composer.phar" %*`
 
       const pathString = oldPath
       let otherString = ''
-      if (typeFlag === 'java') {
-        otherString = `"JAVA_HOME" = "${flagDir}"`
-      } else if (typeFlag === 'erlang') {
-        otherString = `"ERLANG_HOME" = "${flagDir}"`
-        const f = join(global.Server.Cache!, `${uuid()}.ps1`)
-        await writeFile(
-          f,
-          `New-ItemProperty -Path "HKLM:\\SYSTEM\\CurrentControlSet\\Control\\FileSystem" -Name "LongPathsEnabled" -Value 1 -PropertyType DWORD -Force`
-        )
-        process.chdir(global.Server.Cache!)
-        try {
-          await execPromise(
-            `powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Unblock-File -LiteralPath '${f}'; & '${f}'"`
-          )
-        } catch (e) {}
-        await remove(f)
+      switch (typeFlag) {
+        case 'java':
+          otherString = `"JAVA_HOME" = "${flagDir}"`
+          break
+        case 'erlang':
+          otherString = `"ERLANG_HOME" = "${flagDir}"`
+          const f = join(global.Server.Cache!, `${uuid()}.ps1`)
+          await writeFile(f, `New-ItemProperty -Path "HKLM:\\SYSTEM\\CurrentControlSet\\Control\\FileSystem" -Name "LongPathsEnabled" -Value 1 -PropertyType DWORD -Force`)
+          process.chdir(global.Server.Cache!)
+          try {
+            await execPromise(`powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Unblock-File -LiteralPath '${f}'; & '${f}'"`)
+          } catch (e) {}
+          await remove(f)
+          break
+        // add more cases as needed
       }
 
       try {

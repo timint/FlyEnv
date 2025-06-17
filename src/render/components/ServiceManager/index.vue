@@ -501,26 +501,20 @@
       const nginxRunning = brewStore.module('nginx').installed.find((i) => i.run)
       const apacheRunning = brewStore.module('apache').installed.find((i) => i.run)
       const caddyRunning = brewStore.module('caddy').installed.find((i) => i.run)
-      let http = 'http://'
-      let port = 80
-      if (item.useSSL) {
-        http = 'https://'
-        port = 443
-        if (nginxRunning) {
-          port = item.port.nginx_ssl
-        } else if (apacheRunning) {
-          port = item.port.apache_ssl
-        } else if (caddyRunning) {
-          port = item.port.caddy_ssl
-        }
-      } else {
-        if (nginxRunning) {
-          port = item.port.nginx
-        } else if (apacheRunning) {
-          port = item.port.apache
-        } else if (caddyRunning) {
-          port = item.port.caddy
-        }
+
+      let http = item.useSSL ? 'https://' : 'http://'
+      let port = item.useSSL ? 443 : 80
+
+      switch (true) {
+        case !!apacheRunning:
+          port = item.useSSL ? item.port.apache_ssl : item.port.apache
+          break
+        case !!caddyRunning:
+          port = item.useSSL ? item.port.caddy_ssl : item.port.caddy
+          break
+        case !!nginxRunning:
+          port = item.useSSL ? item.port.nginx_ssl : item.port.nginx
+          break
       }
 
       const portStr = port === 80 || port === 443 ? '' : `:${port}`

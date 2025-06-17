@@ -222,53 +222,60 @@
     }
     command.push(`cd "${form.dir}"`)
 
-    if (props.type === 'WordPress') {
-      const tmpl = [
-      '{',
-      '  "require": {',
-      `    "johnpbloch/wordpress": "${form.version}"`,
-      '  },',
-      '  "config": {',
-      '    "allow-plugins": {',
-      '      "johnpbloch/wordpress-core-installer": true',
-      '    }',
-      '  }',
-      '}'
-      ].join('\n')
-      await writeFile(join(form.dir, 'composer.json'), tmpl)
+    switch (props.type) {
 
-      if (form.php && form.composer) {
-        command.push(`$Env:PATH = "${dirname(form.php)};" + $Env:PATH`)
-        command.push(`php "${form.composer}" update`)
-      } else if (form.php) {
-        command.push(`$Env:PATH = "${dirname(form.php)};" + $Env:PATH`)
-        command.push(`php composer update`)
-      } else if (form.composer) {
-        command.push(`php "${form.composer}" update`)
-      } else {
-        command.push(`php composer update`)
-      }
-    } else {
-      const name = app.value.package
-      if (form.php && form.composer) {
-        command.push(`$Env:PATH = "${dirname(form.php)};" + $Env:PATH`)
-        command.push(
-          `php "${form.composer}" create-project --prefer-dist "${name}" "flyenv-create-project" "${form.version}"`
-        )
-      } else if (form.php) {
-        command.push(`$Env:PATH = "${dirname(form.php)};" + $Env:PATH`)
-        command.push(
-          `php composer create-project --prefer-dist "${name}" "flyenv-create-project" "${form.version}"`
-        )
-      } else if (form.composer) {
-        command.push(
-          `php "${form.composer}" create-project --prefer-dist "${name}" "flyenv-create-project" "${form.version}"`
-        )
-      } else {
-        command.push(
-          `php composer create-project --prefer-dist "${name}" "flyenv-create-project" "${form.version}"`
-        )
-      }
+      case 'WordPress':
+        const tmpl = [
+        '{',
+        '  "require": {',
+        `    "johnpbloch/wordpress": "${form.version}"`,
+        '  },',
+        '  "config": {',
+        '    "allow-plugins": {',
+        '      "johnpbloch/wordpress-core-installer": true',
+        '    }',
+        '  }',
+        '}'
+        ].join('\n')
+        await writeFile(join(form.dir, 'composer.json'), tmpl)
+
+        switch (true) {
+          case !!form.php && !!form.composer:
+            command.push(`$Env:PATH = "${dirname(form.php)};" + $Env:PATH`)
+            command.push(`php "${form.composer}" update`)
+            break
+          case !!form.php:
+            command.push(`$Env:PATH = "${dirname(form.php)};" + $Env:PATH`)
+            command.push(`php composer update`)
+            break
+          case !!form.composer:
+            command.push(`php "${form.composer}" update`)
+            break
+          default:
+            command.push(`php composer update`)
+            break
+        }
+        break
+
+      default:
+        const name = app.value.package
+        switch (true) {
+          case !!form.php && !!form.composer:
+            command.push(`$Env:PATH = "${dirname(form.php)};" + $Env:PATH`)
+            command.push(`php "${form.composer}" create-project --prefer-dist "${name}" "flyenv-create-project" "${form.version}"`)
+            break
+          case !!form.php:
+            command.push(`$Env:PATH = "${dirname(form.php)};" + $Env:PATH`)
+            command.push(`php composer create-project --prefer-dist "${name}" "flyenv-create-project" "${form.version}"`)
+            break
+          case !!form.composer:
+            command.push(`php "${form.composer}" create-project --prefer-dist "${name}" "flyenv-create-project" "${form.version}"`)
+            break
+          default:
+            command.push(`php composer create-project --prefer-dist "${name}" "flyenv-create-project" "${form.version}"`)
+            break
+        }
+        break
     }
 
     nextTick().then(() => {
