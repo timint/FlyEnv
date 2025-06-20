@@ -27,7 +27,7 @@ class ModuleCustomer {
         const str = pids.map((s) => `/pid ${s}`).join(' ')
         try {
           await execPromise(`taskkill /f /t ${str}`)
-        } catch (e) {}
+        } catch (err) {}
       }
 
       resolve({
@@ -45,9 +45,9 @@ class ModuleCustomer {
       try {
         const res = await customerServiceStartExec(version)
         resolve(res)
-      } catch (e: any) {
-        console.log('-k start err: ', e)
-        reject(e)
+      } catch (err: any) {
+        console.debug('-k start err: ', err)
+        reject(err)
         return
       }
     })

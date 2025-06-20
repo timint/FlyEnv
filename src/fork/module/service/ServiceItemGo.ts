@@ -34,7 +34,7 @@ export class ServiceItemGo extends ServiceItem {
       if (existsSync(pid)) {
         try {
           await execPromiseRoot(`del -Force ${pid}`)
-        } catch (e) {}
+        } catch (err) {}
       }
 
       const opt = await getHostItemEnv(item)
@@ -52,7 +52,7 @@ export class ServiceItemGo extends ServiceItem {
       commands.push(`start /B ${item.startCommand} > "${log}" 2>&1 &`)
 
       this.command = commands.join(EOL)
-      console.log('command: ', this.command)
+      console.debug('command: ', this.command)
       const sh = join(global.Server.Cache!, `service-${this.id}.cmd`)
       await writeFile(sh, this.command)
       process.chdir(global.Server.Cache!)
@@ -65,9 +65,9 @@ export class ServiceItemGo extends ServiceItem {
         resolve({
           'APP-Service-Start-PID': cpid
         })
-      } catch (e) {
-        console.log('start e: ', e)
-        reject(e)
+      } catch (err) {
+        console.error('start e: ', err)
+        reject(err)
       }
     })
   }

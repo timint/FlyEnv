@@ -198,7 +198,7 @@ class PageTaskItem {
     }
 
     if (page.retry && page.retry >= Config.maxRetryTimes) {
-      console.log('run retryCount out: ', page.retry, page)
+      console.info('run retryCount out: ', page.retry, page)
       page.state = 'fail'
       await this.run()
       return
@@ -223,7 +223,7 @@ class PageTaskItem {
     Store.LoadedUrl.push(page.url)
     try {
       await this.window!.loadURL(page.url)
-    } catch (e) {}
+    } catch (err) {}
     clearTimeout(timer)
     await wait(1000)
     await this.onPageLoaded(page)
@@ -259,7 +259,7 @@ class PageTaskItem {
             right = false
           }
         }
-      } catch (e) {
+      } catch (err) {
         right = false
       }
       return right
@@ -379,7 +379,7 @@ class PageTaskItem {
   onPageLoaded(page: LinkItem) {
     return new Promise((resolve) => {
       const timer = setTimeout(() => {
-        console.log('onPageLoaded timer fail', page)
+        console.info('onPageLoaded timer fail', page)
         this.#pageRetry(page)
         resolve(true)
       }, Config.timeout)
@@ -409,21 +409,21 @@ class PageTaskItem {
               const dir = dirname(saveFile)
               try {
                 await mkdirp(dir)
-              } catch (e) {}
+              } catch (err) {}
               html = this.handlePageHtml(html, page)
               await writeFile(saveFile, html)
               page.state = 'success'
             }
             resolve(true)
           })
-          .catch((e) => {
-            console.log('onPageLoaded catch fail 0000', page, e)
+          .catch((err) => {
+            console.error('onPageLoaded catch fail 0000', page, err)
             clearTimeout(timer)
             this.#pageRetry(page)
             resolve(true)
           })
-      } catch (e: any) {
-        console.log('onPageLoaded catch fail 1111', page, e)
+      } catch (err: any) {
+        console.error('onPageLoaded catch fail 1111', page, err)
         clearTimeout(timer)
         this.#pageRetry(page)
         resolve(true)

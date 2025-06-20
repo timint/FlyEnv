@@ -51,8 +51,8 @@ export function startNginx(this: BaseTask) {
         await killPort.call(this, Array.from(port))
         try {
           await startNginx.call(this)
-        } catch (e) {
-          reject(e)
+        } catch (err) {
+          reject(err)
           return
         }
         resolve(true)

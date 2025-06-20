@@ -29,7 +29,7 @@ class Php extends Base {
         try {
           await mkdirp(dirname(capem))
           await copyFile(join(global.Server.Static!, 'tmpl/cacert.pem'), capem)
-        } catch (e) {}
+        } catch (err) {}
       }
       resolve(true)
     })
@@ -146,12 +146,12 @@ class Php extends Base {
         }
       })
       arr.unshift(...fpm)
-      console.log('php arr: ', arr)
+      console.info('php arr: ', arr)
       if (arr.length > 0) {
         const str = arr.map((s) => `/pid ${s}`).join(' ')
         try {
           await execPromise(`taskkill /f /t ${str}`)
-        } catch (e) {}
+        } catch (err) {}
       }
       on({
         'APP-On-Log': AppLog('info', I18nT('appLog.stopServiceEnd', { service: this.type }))
@@ -191,8 +191,8 @@ class Php extends Base {
         const res = await this._startServer(version).on(on)
         await this._resetEnablePhpConf(version)
         resolve(res)
-      } catch (e) {
-        reject(e)
+      } catch (err) {
+        reject(err)
       }
     })
   }
@@ -254,9 +254,9 @@ class Php extends Base {
           false
         )
         resolve(res)
-      } catch (e: any) {
-        console.log('-k start err: ', e)
-        reject(e)
+      } catch (err: any) {
+        console.error('-k start err: ', err)
+        reject(err)
         return
       }
     })
@@ -283,8 +283,8 @@ class Php extends Base {
           cwd: dirname(params.bin)
         })
         resolve(true)
-      } catch (e) {
-        reject(e)
+      } catch (err) {
+        reject(err)
       }
     })
   }
@@ -303,7 +303,7 @@ class Php extends Base {
           a.installed = existsSync(dir)
         })
         resolve(all)
-      } catch (e) {
+      } catch (err) {
         resolve([])
       }
     })
@@ -441,7 +441,7 @@ class Php extends Base {
         dir = join(dirname(version.bin), dir)
       }
 
-      console.log('fetchLocalExtend dir: ', dir)
+      console.info('fetchLocalExtend dir: ', dir)
 
       const local: any = []
       const used: any = []
@@ -504,7 +504,7 @@ class Php extends Base {
           proxy: this.getAxiosProxy()
         })
         list = res?.data?.data ?? []
-      } catch (e) {}
+      } catch (err) {}
       resolve(list)
     })
   }
@@ -549,7 +549,7 @@ class Php extends Base {
               if (existsSync(zipFile)) {
                 try {
                   await zipUnPack(zipFile, cacheDir)
-                } catch (e) {}
+                } catch (err) {}
                 if (existsSync(dll)) {
                   await copyFile(dll, file)
                   await handleImagick(cacheDir)
@@ -589,8 +589,8 @@ class Php extends Base {
                       if (existsSync(zipFile)) {
                         await remove(zipFile)
                       }
-                    } catch (e) {}
-                    reject(e)
+                    } catch (err) {}
+                    reject(err)
                   })
                   stream.on('finish', async () => {
                     on({
@@ -601,8 +601,8 @@ class Php extends Base {
                       if (existsSync(zipFile)) {
                         await zipUnPack(zipFile, cacheDir)
                       }
-                    } catch (e) {
-                      reject(e)
+                    } catch (err) {
+                      reject(err)
                       return
                     }
                     if (existsSync(dll)) {
@@ -622,8 +622,8 @@ class Php extends Base {
           }
           try {
             await install()
-          } catch (e) {
-            reject(e)
+          } catch (err) {
+            reject(err)
             return
           }
         }
@@ -654,4 +654,5 @@ class Php extends Base {
     })
   }
 }
+
 export default new Php()

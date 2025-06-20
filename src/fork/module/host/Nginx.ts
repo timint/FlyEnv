@@ -163,7 +163,7 @@ const handlePhpEnableConf = async (v: number) => {
       const content = tmplContent.replace('##VERSION##', `${v}`)
       await writeFile(confFile, content)
     }
-  } catch (e) {}
+  } catch (err) {}
 }
 
 export const updateNginxConf = async (host: AppHost, old: AppHost) => {

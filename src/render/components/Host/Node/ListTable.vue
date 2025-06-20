@@ -253,7 +253,7 @@
         arr.push(h)
       }
     })
-    console.log('hosts arr: ', arr)
+    console.debug('hosts arr: ', arr)
     return arr
   })
 
@@ -314,7 +314,7 @@
   })
 
   const action = (item: any, index: number, flag: string) => {
-    console.log('item: ', item)
+    console.debug('item: ', item)
     item = appStore.hosts.find((h) => h.id === item.id)
     task_index.value = index
     switch (flag) {
@@ -347,7 +347,7 @@
           .catch(() => {})
         break
       case 'link':
-        console.log('item: ', item)
+        console.debug('item: ', item)
         AsyncComponentShow(LinkVM, {
           host: item
         }).then()
@@ -392,17 +392,17 @@
   })
 
   const tbodyDblClick = (e: MouseEvent) => {
-    console.log('tbodyDblClick: ', e, e.target)
+    console.debug('tbodyDblClick: ', e, e.target)
     let node: HTMLElement = e.target as any
     while (node.nodeName.toLowerCase() !== 'tr') {
       node = node.parentNode as any
     }
-    console.log('tr: ', node)
+    console.debug('tr: ', node)
     const idDom: HTMLElement = node.querySelector('.host-list-table-cell-id') as any
     const id = idDom.getAttribute('data-host-id') ?? ''
-    console.log('id: ', id)
+    console.debug('id: ', id)
     const host = appStore.hosts.find((h) => `${h.id}` === `${id}`)
-    console.log('host: ', host)
+    console.debug('host: ', host)
     quickEdit.value = JSON.parse(JSON.stringify(host))
     quickEditTr.value = node as any
     quickEditBack = JSON.parse(JSON.stringify(host))
@@ -433,7 +433,7 @@
     nextTick().then(() => {
       const list: HTMLElement = hostList.value as any
       const tbody = list.querySelector('tbody')
-      console.log('tbody: ', tbody)
+      console.debug('tbody: ', tbody)
       tbody?.addEventListener('dblclick', tbodyDblClick)
     })
   })

@@ -35,7 +35,7 @@
   watchEffect(async () => {
     const regexValue = Store.regex
     const visualizer = visualizerSVG.value?.shadow_root
-    console.log('visualizer: ', visualizer)
+    console.debug('visualizer: ', visualizer)
     if (visualizer) {
       while (visualizer.lastChild) {
         visualizer.removeChild(visualizer.lastChild)

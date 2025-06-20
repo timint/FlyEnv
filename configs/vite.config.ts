@@ -11,8 +11,8 @@ const sharePath = path.resolve(__dirname, '../src/shared/')
 const helperPath = path.resolve(__dirname, '../src/helper/')
 const langPath = path.resolve(__dirname, '../src/lang/')
 
-console.log('renderPath: ', renderPath)
-console.log('sharePath: ', sharePath)
+console.debug('renderPath: ', renderPath)
+console.debug('sharePath: ', sharePath)
 
 const config: UserConfig = {
   base: './',
@@ -102,7 +102,7 @@ const buildConfig: UserConfig = {
         chunkFileNames: 'static/js/[name].[hash].js',
         assetFileNames: 'static/[ext]/[name].[hash].[ext]',
         manualChunks(id) {
-          console.log('id: ', id)
+          console.debug('id: ', id)
           if (id.includes('node_modules')) {
             return id.toString().split('node_modules/')[1].split('/')[0].toString()
           }

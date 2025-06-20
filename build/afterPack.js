@@ -20,6 +20,6 @@ exports.default = async function after(pack) {
   execSync('rm -rf app.asar', optdefault)
   execSync('asar pack app app.asar', optdefault)
   execSync('rm -rf app', optdefault)
-  console.log('afterPack handle end !!!!!!')
+  console.info('✅ afterPack event success')
   return true
 }

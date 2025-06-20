@@ -46,7 +46,7 @@ const store = reactive({
     }
   ],
   hashText(algo: string) {
-    console.log('hashText algo: ', algo)
+    console.debug('hashText algo: ', algo)
     const algoList: any = this.algoList
     const value: lib.WordArray = algoList[algo](this.text)
     if (this.digest === 'Bin') {

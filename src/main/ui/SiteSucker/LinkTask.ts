@@ -38,7 +38,7 @@ class LinkTaskItem {
       }
 
       if (link.retry && link.retry >= Config.maxRetryTimes) {
-        console.log('fetchLink retryCount out: ', link.retry, link)
+        console.info('fetchLink retryCount out: ', link.retry, link)
         link.state = 'fail'
         this.run().then()
         return
@@ -70,7 +70,7 @@ class LinkTaskItem {
         const dir = dirname(saveFile)
         try {
           await mkdirp(dir)
-        } catch (e) {}
+        } catch (err) {}
         const stream = createWriteStream(saveFile)
         const onError = () => {
           this.#retry(link)
@@ -81,7 +81,7 @@ class LinkTaskItem {
               }
               this.run().then()
             })
-          } catch (e) {
+          } catch (err) {
             this.run().then()
           }
         }
@@ -97,7 +97,7 @@ class LinkTaskItem {
         const taskFail = () => {
           try {
             controller.abort()
-          } catch (e) {}
+          } catch (err) {}
           onError()
         }
         timer = setTimeout(taskFail, Config.timeout)

@@ -133,10 +133,10 @@
       !AppCustomerModule.currentModule?.isService ||
       !AppCustomerModule.currentModule?.isOnlyRunOne
     ) {
-      console.log('currentItem 0000 !!!')
+      console.debug('currentItem 0000')
       return ''
     }
-    console.log('currentItem v: ', AppCustomerModule.currentModule)
+    console.debug('currentItem v: ', AppCustomerModule.currentModule)
     return AppCustomerModule.currentModule?.currentItemID ?? ''
   })
 

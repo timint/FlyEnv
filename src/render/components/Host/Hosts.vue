@@ -47,7 +47,7 @@
         intance.onClosed = () => {
           dom && dom.remove()
           dom = null
-          console.log('intance.onClosed !!!!!!')
+          console.debug('[on instance closed]')
         }
       })
     },

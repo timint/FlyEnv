@@ -30,7 +30,7 @@ class Apache extends Base {
         const reg = new RegExp('(Define SRVROOT ")([\\s\\S]*?)(")', 'g')
         try {
           srvroot = reg?.exec?.(content)?.[2] ?? ''
-        } catch (e) {}
+        } catch (err) {}
         if (srvroot) {
           const srvrootReplace = version.path.split('\\').join('/')
           if (srvroot !== srvrootReplace) {
@@ -62,17 +62,17 @@ class Apache extends Base {
         reject(new Error(I18nT('fork.apacheLogPathErr')))
         return
       }
-      console.log('resetConf: ', str)
+      console.info('resetConf: ', str)
 
       let reg = new RegExp('(SERVER_CONFIG_FILE=")([\\s\\S]*?)(")', 'g')
       let file = ''
       try {
         file = reg?.exec?.(str)?.[2] ?? ''
-      } catch (e) {}
+      } catch (err) {}
       file = file.trim()
       file = join(version.path, file)
 
-      console.log('file: ', file)
+      console.debug('file: ', file)
 
       if (!file || !existsSync(file)) {
         on({
@@ -90,21 +90,21 @@ class Apache extends Base {
       let logPath = ''
       try {
         logPath = reg?.exec?.(content)?.[2] ?? ''
-      } catch (e) {}
+      } catch (err) {}
       logPath = logPath.trim()
 
       reg = new RegExp('(ErrorLog ")([\\s\\S]*?)(")', 'g')
       let errLogPath = ''
       try {
         errLogPath = reg?.exec?.(content)?.[2] ?? ''
-      } catch (e) {}
+      } catch (err) {}
       errLogPath = errLogPath.trim()
 
       let srvroot = ''
       reg = new RegExp('(Define SRVROOT ")([\\s\\S]*?)(")', 'g')
       try {
         srvroot = reg?.exec?.(content)?.[2] ?? ''
-      } catch (e) {}
+      } catch (err) {}
 
       /**
        * LoadModule headers_module modules/mod_headers.so
@@ -169,7 +169,7 @@ class Apache extends Base {
     let host: Array<AppHost> = []
     try {
       host = await fetchHostList()
-    } catch (e) {}
+    } catch (err) {}
     if (host.length === 0) {
       return
     }
@@ -206,7 +206,7 @@ class Apache extends Base {
         }
       }
     }
-    console.log('allNeedPort: ', allNeedPort)
+    console.info('allNeedPort: ', allNeedPort)
     const configpath = join(global.Server.ApacheDir!, `${version.version}.conf`)
     let confContent = await readFile(configpath, 'utf-8')
     regex.lastIndex = 0
@@ -273,9 +273,9 @@ class Apache extends Base {
           on
         )
         resolve(res)
-      } catch (e: any) {
-        console.log('-k start err: ', e)
-        reject(e)
+      } catch (err: any) {
+        console.error('-k start err: ', err)
+        reject(err)
         return
       }
     })
@@ -296,7 +296,7 @@ class Apache extends Base {
           a.installed = existsSync(dir)
         })
         resolve(all)
-      } catch (e) {
+      } catch (err) {
         resolve([])
       }
     })

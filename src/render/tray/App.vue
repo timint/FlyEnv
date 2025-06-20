@@ -80,7 +80,7 @@
 
   const left: Ref<string | null> = ref(null)
   IPC.on('APP:Poper-Left').then((key: string, res: any) => {
-    console.log('APP:Poper-Left: ', key, res)
+    console.debug('APP:Poper-Left: ', key, res)
     left.value = `${res}px`
   })
 

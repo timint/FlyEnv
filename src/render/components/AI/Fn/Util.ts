@@ -64,8 +64,8 @@ export function execPromise(
           }
         }
       )
-    } catch (e) {
-      reject(e)
+    } catch (err) {
+      reject(err)
     }
   })
 }
@@ -85,7 +85,7 @@ export function killPort(this: BaseTask, ports: Array<string>) {
           const list = a.split(' ').filter((s: string) => {
             return s.trim().length > 0
           })
-          console.log('list: ', list)
+          console.info('list: ', list)
           list.shift()
           return list.shift()
         })
@@ -95,7 +95,7 @@ export function killPort(this: BaseTask, ports: Array<string>) {
       const pidStr: string = Array.from(pids).join(' ')
       try {
         await execPromise(`echo '${global.Server.Password}' | sudo -S kill -9 ${pidStr}`)
-      } catch (e) {}
+      } catch (err) {}
     }
     resolve(true)
   })
@@ -106,7 +106,7 @@ export function killPid(this: BaseTask, pids: Array<string>) {
     const pidStr: string = pids.join(' ')
     try {
       await execPromise(`echo '${global.Server.Password}' | sudo -S kill -9 ${pidStr}`)
-    } catch (e) {}
+    } catch (err) {}
     resolve(true)
   })
 }
@@ -123,7 +123,7 @@ export function wordSplit(txt: string) {
   return new Promise((resolve) => {
     IPC.send('app-fork:tools', 'wordSplit', txt).then((key: string, res: any) => {
       IPC.off(key)
-      console.log('wordSplit: ', res?.data)
+      console.debug('wordSplit: ', res?.data)
       resolve(res?.data ?? [])
     })
   })

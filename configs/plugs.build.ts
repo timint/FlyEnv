@@ -8,7 +8,7 @@ export const BuildPlugin: () => Plugin = () => {
     name: 'build-plugin',
     setup(build: PluginBuild) {
       build.onEnd(() => {
-        console.log('build end !!!!!!')
+        console.info('[on build end] Copying static files...')
         copySync(resolve(__dirname, '../static/'), resolve(__dirname, '../dist/electron/static/'))
       })
     }

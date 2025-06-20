@@ -17,7 +17,11 @@ class IPC {
   }
   send(command: string, ...args: any) {
     const key = 'IPC-Key-' + uuid()
-    console.log('command send: ', command, key, args)
+    console.info(`Sending IPC command: "${command}"`, {
+      ipcKey: key,
+      command: command,
+      args: args
+    })
     ipcRenderer.send('command', command, key, ...args)
     return {
       then: (callback: Function) => {
@@ -25,6 +29,7 @@ class IPC {
       }
     }
   }
+
   on(command: string) {
     return {
       then: (callback: Function) => {
@@ -32,8 +37,10 @@ class IPC {
       }
     }
   }
+
   off(command: string) {
     delete this.listens[command]
   }
 }
+
 export default new IPC()

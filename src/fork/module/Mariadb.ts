@@ -32,7 +32,7 @@ class Manager extends Base {
         cwd: dirname(bin)
       })
         .then((res) => {
-          console.log('_initPassword res: ', res)
+          console.debug('_initPassword res: ', res)
           on({
             'APP-On-Log': AppLog(
               'info',
@@ -45,7 +45,7 @@ class Manager extends Base {
           on({
             'APP-On-Log': AppLog('error', I18nT('appLog.initDBPassFail', { error: err }))
           })
-          console.log('_initPassword err: ', err)
+          console.error('_initPassword err: ', err)
           reject(err)
         })
     })
@@ -124,9 +124,9 @@ class Manager extends Base {
               1000
             )
             resolve(res)
-          } catch (e: any) {
-            console.log('-k start err: ', e)
-            reject(e)
+          } catch (err: any) {
+            console.info('-k start err: ', err)
+            reject(err)
             return
           }
         })
@@ -145,17 +145,17 @@ class Manager extends Base {
 
         process.chdir(dirname(binInstallDB))
         command = `${basename(binInstallDB)} ${params.join(' ')}`
-        console.log('command: ', command)
+        console.debug('command: ', command)
 
         try {
           const res = await execPromise(command)
-          console.log('init res: ', res)
+          console.info('init res: ', res)
           on(res.stdout)
-        } catch (e: any) {
+        } catch (err: any) {
           on({
-            'APP-On-Log': AppLog('error', I18nT('appLog.initDBDataDirFail', { error: e }))
+            'APP-On-Log': AppLog('error', I18nT('appLog.initDBDataDirFail', { error: err }))
           })
-          reject(e)
+          reject(err)
           return
         }
         on({
@@ -168,9 +168,9 @@ class Manager extends Base {
           await this._initPassword(version).on(on)
           on(I18nT('fork.postgresqlInit', { dir: dataDir }))
           resolve(res)
-        } catch (e) {
+        } catch (err) {
           await unlinkDirOnFail()
-          reject(e)
+          reject(err)
         }
       } else {
         doStart().then(resolve).catch(reject)
@@ -198,7 +198,7 @@ class Manager extends Base {
           a.installed = existsSync(dir) || existsSync(oldDir)
         })
         resolve(all)
-      } catch (e) {
+      } catch (err) {
         resolve([])
       }
     })

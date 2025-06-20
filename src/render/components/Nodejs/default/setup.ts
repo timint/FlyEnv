@@ -83,7 +83,7 @@ export const Setup = () => {
     NodeDefaultSetup.versionInstalling[item.version] = true
     IPC.send('app-fork:node', 'installOrUninstall', 'default', action, item.version).then(
       (key: string, res: any) => {
-        console.log('installOrUninstall res: ', res)
+        console.debug('installOrUninstall res: ', res)
         if (res?.code === 0) {
           IPC.off(key)
           NodeDefaultSetup.current = res?.data?.current ?? ''
@@ -105,7 +105,7 @@ export const Setup = () => {
           MessageError(res?.msg ?? I18nT('base.fail'))
         } else if (typeof res?.msg?.progress === 'number') {
           NodeDefaultSetup.installing[item.version] = res?.msg?.progress
-          console.log(
+          console.debug(
             'NodeDefaultSetup.installing[item.version]: ',
             NodeDefaultSetup.installing[item.version]
           )

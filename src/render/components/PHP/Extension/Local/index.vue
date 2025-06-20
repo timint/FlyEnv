@@ -68,7 +68,7 @@
     return PHPSetup.localFetching?.[props.version.bin] ?? false
   })
 
-  console.log('extend version: ', props.version)
+  console.debug('extend version: ', props.version)
 
   const sortName = (a: any, b: any) => {
     return a.name.toLowerCase() - b.name.toLowerCase()

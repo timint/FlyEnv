@@ -92,7 +92,7 @@
     computed: {},
     watch: {
       path(val) {
-        console.log('path: ', val)
+        console.debug('path: ', val)
         this.getInfo()
       }
     },
@@ -132,8 +132,8 @@
       },
       getInfo() {
         stat(this.path, (err, stats) => {
-          console.log(err)
-          console.log(stats)
+          console.error(err)
+          console.debug(stats)
           if (!err) {
             this.info.size = stats.size
             this.info.size_str = formatBytes(stats.size)

@@ -1,7 +1,7 @@
 import type { AppToolModuleItem } from '@/core/type'
 
 const modules = import.meta.glob('@/components/Tools/*/Module.ts', { eager: true })
-console.log('modules: ', modules)
+console.debug('modules: ', modules)
 const AppToolModules: AppToolModuleItem[] = []
 for (const k in modules) {
   const m: any = modules[k]

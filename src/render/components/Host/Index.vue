@@ -219,7 +219,7 @@
   const handleCommand = (
     command: 'export' | 'import' | 'newProject' | 'hostsCopy' | 'hostsOpen'
   ) => {
-    console.log('handleCommand: ', command)
+    console.info('handleCommand: ', command)
     switch (command) {
       case 'export':
         doExport()
@@ -307,7 +307,7 @@
           let arr = []
           try {
             arr = JSON.parse(conf)
-          } catch (e) {
+          } catch (err) {
             MessageError(I18nT('base.fail'))
             return
           }
@@ -400,7 +400,7 @@
   const openCreateProject = () => {
     import('./CreateProject/new.vue').then((res) => {
       AsyncComponentShow(res.default).then(({ dir, rewrite }: any) => {
-        console.log('openCreateProject dir: ', dir)
+        console.debug('openCreateProject dir: ', dir)
         AsyncComponentShow(EditVM, {
           edit: {
             root: dir,

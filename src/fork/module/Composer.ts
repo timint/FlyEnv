@@ -28,7 +28,7 @@ class Composer extends Base {
           a.type = 'composer'
         })
         resolve(all)
-      } catch (e) {
+      } catch (err) {
         resolve([])
       }
     })
@@ -51,7 +51,7 @@ class Composer extends Base {
             try {
               version = reg?.exec(str)?.[2]?.trim()
               reg!.lastIndex = 0
-            } catch (e) {}
+            } catch (err) {}
             resolve({
               version
             })
@@ -62,8 +62,8 @@ class Composer extends Base {
               stdout: res,
               stderr: ''
             })
-          } catch (e) {
-            handleCatch(e)
+          } catch (err) {
+            handleCatch(err)
           }
         })
       }

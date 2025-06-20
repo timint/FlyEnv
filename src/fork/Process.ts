@@ -13,7 +13,7 @@ export type PItem = {
 }
 
 export const ProcessPidList = async (): Promise<PItem[]> => {
-  console.log('ProcessPidList !!!')
+  console.info('ProcessPidList')
   const all: PItem[] = []
   const json = join(global.Server.Cache!, `${uuid()}.json`)
   const command = `powershell.exe -NoProfile -WindowStyle Hidden -command "[Console]::OutputEncoding = [System.Text.Encoding]::UTF8;[Console]::InputEncoding = [System.Text.Encoding]::UTF8;Get-CimInstance Win32_Process | Select-Object CommandLine,ProcessId,ParentProcessId | ConvertTo-Json | Out-File -FilePath '${json}' -Encoding utf8"`
@@ -25,8 +25,8 @@ export const ProcessPidList = async (): Promise<PItem[]> => {
     if (existsSync(json)) {
       await remove(json)
     }
-  } catch (e) {
-    console.log('ProcessPidList err0: ', e)
+  } catch (err) {
+    console.debug('ProcessPidList err0: ', err)
     if (existsSync(json)) {
       await remove(json)
     }
@@ -41,7 +41,7 @@ export const ProcessPidListByPids = async (pids: (string | number)[]): Promise<n
     ppid = Number(ppid)
     for (const item of arr) {
       if (item.ParentProcessId === ppid) {
-        console.log('find: ', ppid, item)
+        console.debug('find: ', ppid, item)
         all.add(item.ProcessId!)
         find(item.ProcessId!)
       }
@@ -73,7 +73,7 @@ export const ProcessPidListByPid = async (pid: string | number): Promise<number[
     ppid = Number(ppid)
     for (const item of arr) {
       if (item.ParentProcessId === ppid) {
-        console.log('find: ', ppid, item)
+        console.debug('find: ', ppid, item)
         all.add(item.ProcessId!)
         find(item.ProcessId!)
       }

@@ -54,10 +54,10 @@ class Manager extends Base {
         })
 
         const copyfile = join(global.Server.Cache!, `${uuid()}.cmd`)
-        console.log('createProject copyfile: ', copyfile)
+        console.info('createProject copyfile: ', copyfile)
         await writeFile(copyfile, command.join('\n'))
         const params = [copyfile]
-        console.log('params: ', params.join(' '))
+        console.info('params: ', params.join(' '))
         spawnPromise(`${basename(copyfile)}`, [], {
           cwd: global.Server.Cache!
         })
@@ -68,11 +68,11 @@ class Manager extends Base {
             })
             resolve(true)
           })
-          .catch((e) => {
+          .catch((err) => {
             on({
               'APP-On-Log': AppLog('error', I18nT('appLog.newProjectFail'))
             })
-            reject(e)
+            reject(err)
           })
           .finally(() => {
             remove(copyfile).then().catch()
@@ -116,10 +116,10 @@ class Manager extends Base {
         })
 
         const copyfile = join(global.Server.Cache!, `${uuid()}.cmd`)
-        console.log('createProject copyfile: ', copyfile)
+        console.info('createProject copyfile: ', copyfile)
         await writeFile(copyfile, command.join('\n'))
         const params = [copyfile]
-        console.log('params: ', params.join(' '))
+        console.info('params: ', params.join(' '))
         spawnPromise(`${basename(copyfile)}`, [], {
           cwd: global.Server.Cache!
         })
@@ -144,11 +144,11 @@ APP_KEY=${key}`
             })
             resolve(true)
           })
-          .catch((e) => {
+          .catch((err) => {
             on({
               'APP-On-Log': AppLog('error', I18nT('appLog.newProjectFail'))
             })
-            reject(e)
+            reject(err)
           })
           .finally(() => {
             remove(copyfile).then().catch()
@@ -177,8 +177,8 @@ APP_KEY=${key}`
             )
           }
         }
-      } catch (e) {
-        return reject(e)
+      } catch (err) {
+        return reject(err)
       }
       resolve(true)
     })

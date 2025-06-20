@@ -16,7 +16,7 @@ class TaskQueue {
   }
 
   #_handle() {
-    console.log('TaskQueue: ', this.#queue.length, this.#runQueue.length)
+    console.info('TaskQueue: ', this.#queue.length, this.#runQueue.length)
     /**
      * queue is empty. exit
      */
@@ -44,8 +44,8 @@ class TaskQueue {
           .then((...args) => {
             resolve(...args)
           })
-          .catch((e) => {
-            reject(e)
+          .catch((err) => {
+            reject(err)
           })
           .finally(() => {
             const index = this.#runQueue.indexOf(taskItem)

@@ -15,7 +15,7 @@ export const AssetsPlugin: () => Plugin = () => {
           const farr = fileName.split('/')
           const file = farr.pop()
           const ext = farr.pop()
-          console.log('ext: ', ext)
+          console.debug('ext: ', ext)
           if (ext !== 'js' && ext !== 'css') {
             assets['./' + file] = '../' + ext + '/' + file
           }
@@ -27,7 +27,7 @@ export const AssetsPlugin: () => Plugin = () => {
 
       for (const file of css) {
         const path = join(dir, file)
-        console.log(path)
+        console.debug(path)
         if (existsSync(path)) {
           let content = readFileSync(path, 'utf-8')
           for (const find in assets) {
@@ -35,7 +35,7 @@ export const AssetsPlugin: () => Plugin = () => {
             content = content.replace(new RegExp(find, 'g'), replace)
           }
           writeFileSync(path, content)
-          console.log('handle finished !!!')
+          console.info('✅ AssetsPlugin file written: ', path)
         }
       }
     }

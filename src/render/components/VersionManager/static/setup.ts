@@ -88,7 +88,7 @@ export const Setup = (typeFlag: AllAppModule) => {
       IPC.send(`app-fork:${typeFlag}`, 'installSoft', JSON.parse(JSON.stringify(row))).then(
         (key: string, res: any) => {
           const findInstalling = brewStore.module(typeFlag).installing[row.bin]
-          console.log('res: ', res)
+          console.debug('res: ', res)
           if (res?.code === 200) {
             find && Object.assign(find, res.msg)
             findInstalling && Object.assign(findInstalling, res.msg)

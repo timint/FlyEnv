@@ -11,7 +11,7 @@ export const ThemeInit = () => {
       return ''
     }
     const t = store?.theme
-    console.log('theme: ', t)
+    console.debug('theme: ', t)
     if (!t || t === 'system') {
       return nativeTheme.shouldUseDarkColors ? 'dark' : 'light'
     }
@@ -29,7 +29,7 @@ export const ThemeInit = () => {
   })
 
   nativeTheme.on('updated', () => {
-    console.log('nativeTheme updated !!!')
+    console.info('nativeTheme updated')
     index.value += 1
     resetHtmlThemeTag()
   })

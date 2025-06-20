@@ -58,7 +58,7 @@ export default class Launcher extends EventEmitter {
 
   handelAppReady() {
     app.on('ready', () => {
-      console.log('app on ready !!!!!!')
+      console.info('[on app ready]')
       global.application = new Application()
       global.application.start('index')
       global.application.on('ready', () => {})
@@ -66,7 +66,7 @@ export default class Launcher extends EventEmitter {
     })
 
     app.on('activate', () => {
-      console.log('app on activate !!!!!!')
+      console.info('[on app activate]')
       if (global.application) {
         logger.info('[PhpWebStudy] activate')
         global.application.showPage('index')
@@ -80,7 +80,7 @@ export default class Launcher extends EventEmitter {
       if (global.application) {
         global.application.stop()
       } else {
-        logger.info('[PhpWebStudy] global.application is null !!!')
+        logger.info('[PhpWebStudy] global.application is null')
       }
     })
   }

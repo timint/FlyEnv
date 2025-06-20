@@ -35,10 +35,10 @@ Promise.all([packMain(), packRenderer()])
 
     electronBuild(options)
       .then(() => {
-        console.log('Build completed in', Math.floor((Date.now() - buildStart) / 1000) + ' s')
+        console.info('Build completed in', Math.floor((Date.now() - buildStart) / 1000) + ' s')
       })
-      .catch((e) => {
-        console.error(e)
+      .catch((err) => {
+        console.error(err)
       })
   })
-  .catch((e) => console.log(e))
+  .catch((err) => console.error(err))

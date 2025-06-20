@@ -109,7 +109,7 @@ class TourClass {
 
     this.poperVM = createApp(Poper)
     const vm = this.poperVM.mount(this.poper)
-    console.log('poperVM: ', this.poperVM, vm)
+    console.debug('poperVM: ', this.poperVM, vm)
   }
 
   hide() {

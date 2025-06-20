@@ -17,12 +17,12 @@ export const AppModuleSetup = (flag: AllAppModule) => {
   }
   const tab = computed({
     get() {
-      console.log('tab get: ', AppModuleTab, AppModuleTab[flag])
+      console.debug('tab get: ', AppModuleTab, AppModuleTab[flag])
       return AppModuleTab[flag] ?? 0
     },
     set(v) {
       AppModuleTab[flag] = v
-      console.log('tab set: ', v, AppModuleTab)
+      console.debug('tab set: ', v, AppModuleTab)
     }
   })
 

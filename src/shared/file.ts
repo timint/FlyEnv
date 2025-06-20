@@ -84,8 +84,8 @@ export function getSubDir(fp: string, fullpath = true) {
           }
         }
       })
-    } catch (e) {
-      console.log(e)
+    } catch (err) {
+      console.error(err)
     }
   }
   return arr
@@ -116,7 +116,7 @@ export function createFolder(fp: string) {
   for (const p of arr) {
     dir = path.join(dir, p)
     if (!fs.existsSync(dir)) {
-      console.log('createFolder: ', dir)
+      console.info('createFolder: ', dir)
       fs.mkdirSync(dir)
     }
   }
@@ -151,7 +151,7 @@ export function readFileAsync(fp: string, encode = 'utf-8') {
 }
 
 export function zipUnPack(fp: string, dist: string) {
-  console.log('zipUnPack start: ', fp, dist, global.Server.Static!)
+  console.info('zipUnPack start: ', fp, dist, global.Server.Static!)
   return new Promise(async (resolve, reject) => {
     const info = {
       fp,
@@ -168,19 +168,20 @@ export function zipUnPack(fp: string, dist: string) {
       if (!fs.existsSync(cacheFP)) {
         try {
           await copyFile(fp, cacheFP)
-        } catch (e) {
+        } catch (err) {
           await appendFile(
             path.join(global.Server.BaseDir!, 'debug.log'),
-            `[zipUnPack][copyFile][error]: ${e}\n`
+            `[zipUnPack][copyFile][error]: ${err}\n`
           )
         }
       }
       fp = cacheFP
-      console.log('cacheFP: ', fp)
+      console.debug('cacheFP: ', fp)
     }
     compressing.unpack(fp, dist, async (err: any, res: any) => {
-      console.log('zipUnPack end: ', err, res)
+      console.debug('zipUnPack end: ', err, res)
       if (err) {
+        console.error('zipUnPack error: ', err)
         await appendFile(
           path.join(global.Server.BaseDir!, 'debug.log'),
           `[zipUnPack][unpack][error]: ${err}\n`

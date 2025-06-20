@@ -149,7 +149,7 @@
       edit: edit ? JSON.parse(JSON.stringify(edit)) : undefined,
       isEdit: !!edit
     }).then((res) => {
-      console.log('res: ', res)
+      console.debug('res: ', res)
       const save = reactive(new ModuleCustomer(res))
       save.moduleType = props.item.moduleType
       if (!edit) {

@@ -24,7 +24,7 @@ class InstalledVersions {
     this.taskRunning = false
   }
   allInstalledVersions(flags: Array<AllAppModule>) {
-    console.trace('allInstalledVersions: !!!')
+    console.trace('allInstalledVersions')
     if (this.taskRunning && this.runningFlags.find((f) => isEqual(f, flags))) {
       return new Promise((resolve) => {
         this._cb.push(resolve)

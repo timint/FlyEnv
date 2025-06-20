@@ -41,13 +41,13 @@ class BaseTask {
           this.currentTask = undefined
           this.next(res)
         })
-        .catch((e) => {
+        .catch((err) => {
           this.state = 'failed'
           this.currentTask = undefined
           const aiStore = AIStore()
           aiStore.chatList.push({
             user: 'ai',
-            content: I18nT('ai.任务执行失败', { err: e.toString() })
+            content: I18nT('ai.任务执行失败', { err: err.toString() })
           })
         })
     }

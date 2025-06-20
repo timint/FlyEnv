@@ -37,11 +37,11 @@ export const SetupAll = (typeFlag: AllAppModule) => {
 
   const reFetch = () => {
     if (tableTab.value === 'lib') {
-      console.log('reFetch static !!!')
+      console.debug('reFetch static')
       StaticSetup.reFetch()
     }
     if (tableTab.value === 'local') {
-      console.log('reFetch local !!!')
+      console.debug('reFetch local')
       LocalSetup.reFetch()
     }
   }
@@ -63,7 +63,7 @@ export const SetupAll = (typeFlag: AllAppModule) => {
       flag: typeFlag
     }).then((res) => {
       if (res) {
-        console.log('showCustomDir chagned !!!')
+        console.debug('showCustomDir changed')
         LocalSetup.fetching[typeFlag] = true
         const data = brewStore.module(typeFlag)
         data.installedInited = false

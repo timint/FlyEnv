@@ -42,8 +42,8 @@
           `powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Unblock-File -LiteralPath '${file}'; & '${file}'"`,
           { shell: true }
         )
-        console.log('file: ', file)
-        console.log('res: ', res.stdout, res.stderr)
+        console.debug('file: ', file)
+        console.debug('res: ', res.stdout, res.stderr)
         await remove(file)
         return true
       } catch (e: any) {

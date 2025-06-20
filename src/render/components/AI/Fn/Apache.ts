@@ -51,8 +51,8 @@ export function startApache(this: BaseTask) {
         await killPort.call(this, Array.from(port))
         try {
           await startApache.call(this)
-        } catch (e) {
-          reject(e)
+        } catch (err) {
+          reject(err)
           return
         }
         aiStore.chatList.push({

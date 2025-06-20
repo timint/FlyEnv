@@ -134,8 +134,8 @@
               log.value = str
               resolve(true)
             })
-            .catch((e) => {
-              MessageError(e.toString())
+            .catch((err) => {
+              MessageError(err.toString())
             })
         })
       }
@@ -173,8 +173,8 @@
             log.value = ''
             MessageSuccess(I18nT('base.success'))
           })
-          .catch((e) => {
-            MessageError(e.toString())
+          .catch((err) => {
+            MessageError(err.toString())
           })
         break
     }

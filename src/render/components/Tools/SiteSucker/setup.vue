@@ -144,9 +144,9 @@
   })
 
   const doSubmit = () => {
-    console.log('form.value: ', form.value)
+    console.debug('form.value: ', form.value)
     Object.assign(store.commonSetup, form.value)
-    console.log('store.commonSetup: ', store.commonSetup)
+    console.debug('store.commonSetup: ', store.commonSetup)
     store.save()
     show.value = false
   }

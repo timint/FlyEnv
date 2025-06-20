@@ -170,7 +170,7 @@ export class JSONStoreTab {
         } else {
           value = jsonToXML(json)
         }
-        console.log('xml value: ', value)
+        console.debug('xml value: ', value)
         FormatHtml(value)
           .then((xml: string) => {
           this.editor().setValue(xml)
@@ -212,7 +212,7 @@ export class JSONStoreTab {
       const u = new URL(this.value)
       const obj: any = {}
       Object.entries(Object.fromEntries(u?.searchParams.entries() ?? [])).forEach(([k, v]) => {
-        console.log('k: ', k, v)
+        console.debug('k: ', k, v)
         obj[k] = v
       })
       this.json = {
@@ -225,13 +225,13 @@ export class JSONStoreTab {
         Params: u.search,
         ParamObject: obj
       }
-      console.log('this.json: ', this.json)
+      console.debug('this.json: ', this.json)
       type = 'JSON'
-    } catch (e) {
+    } catch (err) {
       this.json = null
       type = ''
     }
-    console.log('type 000: ', type)
+    console.debug('type 000: ', type)
     if (type) {
       this.type = type
       this.transformTo()
@@ -241,11 +241,11 @@ export class JSONStoreTab {
     try {
       this.json = javascriptToJson(this.value)
       type = 'JSON'
-    } catch (e) {
+    } catch (err) {
       this.json = null
       type = ''
     }
-    console.log('type 000: ', type)
+    console.debug('type 000: ', type)
     if (type) {
       this.type = type
       this.transformTo()
@@ -255,11 +255,11 @@ export class JSONStoreTab {
     try {
       this.json = phpToJson(this.value)
       type = 'PHP'
-    } catch (e) {
+    } catch (err) {
       this.json = null
       type = ''
     }
-    console.log('type 111: ', type)
+    console.debug('type 111: ', type)
     if (type) {
       this.type = type
       this.transformTo()
@@ -269,12 +269,12 @@ export class JSONStoreTab {
     try {
       this.json = plistToJson(this.value)
       type = 'PList'
-    } catch (e) {
-      console.log('e 222: ', e)
+    } catch (err) {
+      console.debug('e 222: ', e)
       this.json = null
       type = ''
     }
-    console.log('type 222: ', type)
+    console.debug('type 222: ', type)
     if (type) {
       this.type = type
       this.transformTo()
@@ -284,11 +284,11 @@ export class JSONStoreTab {
     try {
       this.json = xmlToJson(this.value)
       type = 'XML'
-    } catch (e) {
+    } catch (err) {
       this.json = null
       type = ''
     }
-    console.log('type 333: ', type)
+    console.debug('type 333: ', type)
     if (type) {
       this.type = type
       this.transformTo()
@@ -298,11 +298,11 @@ export class JSONStoreTab {
     try {
       this.json = yamlToJson(this.value)
       type = 'YAML'
-    } catch (e) {
+    } catch (err) {
       this.json = null
       type = ''
     }
-    console.log('type 444: ', type)
+    console.debug('type 444: ', type)
     if (type) {
       this.type = type
       this.transformTo()
@@ -312,11 +312,11 @@ export class JSONStoreTab {
     try {
       this.json = tomlToJson(this.value)
       type = 'TOML'
-    } catch (e) {
+    } catch (err) {
       this.json = null
       type = ''
     }
-    console.log('type 555: ', type)
+    console.debug('type 555: ', type)
     if (type) {
       this.type = type
       this.transformTo()

@@ -13,8 +13,8 @@ const initCARoot = () => {
     const command = `certutil -addstore root "${CARoot}"`
     try {
       const res = await execPromiseRoot(command)
-      console.log('initCARoot res111: ', res)
-    } catch (e) {}
+      console.debug('initCARoot res111: ', res)
+    } catch (err) {}
     resolve(true)
   })
 }
@@ -67,14 +67,14 @@ export const makeAutoSSL = (host: AppHost): ForkPromise<{ crt: string; key: stri
       const caKey = join(hostCADir, `${hostCAName}.key`)
       const caCSR = join(hostCADir, `${hostCAName}.csr`)
       let command = `openssl.exe req -new -newkey rsa:2048 -nodes -keyout "${caKey}" -out "${caCSR}" -sha256 -subj "/CN=${hostCAName}" -config "${opensslCnf}"`
-      console.log('command: ', command)
+      console.debug('command: ', command)
       await execPromiseRoot(command)
 
       process.chdir(dirname(openssl))
       const caCRT = join(hostCADir, `${hostCAName}.crt`)
       const caEXT = join(hostCADir, `${hostCAName}.ext`)
       command = `openssl.exe x509 -req -in "${caCSR}" -out "${caCRT}" -extfile "${caEXT}" -CA "${rootCA}.crt" -CAkey "${rootCA}.key" -CAcreateserial -sha256 -days 3650`
-      console.log('command: ', command)
+      console.debug('command: ', command)
       await execPromiseRoot(command)
 
       const crt = join(hostCADir, `${hostCAName}.crt`)
@@ -86,7 +86,7 @@ export const makeAutoSSL = (host: AppHost): ForkPromise<{ crt: string; key: stri
         crt,
         key: join(hostCADir, `${hostCAName}.key`)
       })
-    } catch (e) {
+    } catch (err) {
       resolve(false)
     }
   })

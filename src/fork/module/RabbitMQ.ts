@@ -48,7 +48,7 @@ class RabbitMQ extends Base {
       process.chdir(dirname(version.bin))
       try {
         const res = await execPromise(`rabbitmq-plugins.bat enable rabbitmq_management`)
-        console.log('rabbitmq _initPlugin: ', res)
+        console.info('rabbitmq _initPlugin: ', res)
         on({
           'APP-On-Log': AppLog('info', I18nT('appLog.initPluginSuccess'))
         })
@@ -118,7 +118,7 @@ class RabbitMQ extends Base {
         if (pid) {
           await remove(join(mnesiaBaseDir, pid))
         }
-      } catch (e) {}
+      } catch (err) {}
 
       const checkpid = async (time = 0) => {
         const all = readdirSync(mnesiaBaseDir)
@@ -171,9 +171,9 @@ class RabbitMQ extends Base {
           500,
           false
         )
-      } catch (e: any) {
-        console.log('-k start err: ', e)
-        reject(e)
+      } catch (err: any) {
+        console.error('-k start err: ', err)
+        reject(err)
         return
       }
       await checkpid()
@@ -198,7 +198,7 @@ class RabbitMQ extends Base {
           a.installed = existsSync(dir)
         })
         resolve(all)
-      } catch (e) {
+      } catch (err) {
         resolve({})
       }
     })
@@ -225,18 +225,18 @@ class RabbitMQ extends Base {
         str = match[1] // 捕获组 (\d+) 的内容
       }
     } catch (e: any) {
-      console.log('set ERLANG_HOME error: ', e)
+      console.error('set ERLANG_HOME error: ', e)
     }
-    console.log('ERLANG_HOME: ', str)
+    console.info('ERLANG_HOME: ', str)
     if (!str || !existsSync(str)) {
       return
     }
     const dirs = await readdir(str)
     for (const dir of dirs) {
       const bin = join(str, dir, 'bin/epmd.exe')
-      console.log('epmd.exe: ', bin)
+      console.info('epmd.exe: ', bin)
       if (existsSync(bin)) {
-        console.log('epmd.exe existsSync: ', bin)
+        console.info('epmd.exe existsSync: ', bin)
         process.chdir(dirname(bin))
         try {
           await execPromise(`start /B ./epmd.exe > NUL 2>&1`, {
@@ -244,7 +244,7 @@ class RabbitMQ extends Base {
             shell: 'cmd.exe'
           })
         } catch (e: any) {
-          console.log('epmd.exe start error: ', e)
+          console.error('epmd.exe start error: ', e)
         }
         break
       }

@@ -49,8 +49,8 @@
     let is = false
     try {
       const u = new URL(url)
-      console.log(u)
-    } catch (e) {
+      console.debug(u)
+    } catch (err) {
       is = true
     }
     return is

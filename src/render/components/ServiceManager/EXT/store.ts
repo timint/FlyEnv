@@ -72,7 +72,7 @@ export const ServiceActionStore: ServiceActionType = reactive({
     })
   },
   cleanAlias() {
-    console.trace('cleanAlias !!!')
+    console.trace('cleanAlias')
     if (time > 5) {
       return
     }

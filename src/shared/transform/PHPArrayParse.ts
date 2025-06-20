@@ -49,7 +49,7 @@ const parseKey = (expr: any) => {
 
 export const PHPArrayParse = function (source: string) {
   const ast = parser.parseEval(source)
-  console.log('PHPArrayParse ast: ', ast)
+  console.debug('PHPArrayParse ast: ', ast)
   const array: any = ast.children.find((child: any) => child.kind === 'expressionstatement')
   return parseValue(array?.expression)
 }

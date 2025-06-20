@@ -532,7 +532,7 @@
       watcher()
     }
     let config = editConfig.replace(/\r\n/gm, '\n')
-    console.log('config: ', config)
+    console.info('config: ', config)
     const arr = [...names].map((item) => {
       const regex = new RegExp(`^[\\s\\n]?((?!#)([\\s]*?))${item.name}(.*?)([^\\n])(\\n|$)`, 'gm')
       const matchs =
@@ -549,7 +549,7 @@
             v
           }
         }) ?? []
-      console.log('getCommonSetting: ', matchs, item.name)
+      console.info('getCommonSetting: ', matchs, item.name)
       const find = matchs?.find((m) => m.k === item.name)
       item.enable = !!find
       item.value = find?.v ?? item.value
@@ -563,7 +563,7 @@
   }
 
   const onTypeChange = (type: 'default' | 'common', config: string) => {
-    console.log('onTypeChange: ', type, config)
+    console.info('onTypeChange: ', type, config)
     if (editConfig !== config || commonSetting.value.length === 0) {
       editConfig = config
       getCommonSetting()

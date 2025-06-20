@@ -93,7 +93,7 @@
     await formRef.value.validate((valid) => {
       if (valid) {
         Object.assign(props.item, form.value)
-        console.log('submit!')
+        console.info('submit!')
         show.value = false
       } else {
         submiting = false

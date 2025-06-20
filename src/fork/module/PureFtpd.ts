@@ -65,7 +65,7 @@ class Manager extends Base {
             const txt = await readFile(json, 'utf-8')
             const arr = JSON.parse(txt.toString())
             all.push(...arr)
-          } catch (e) {}
+          } catch (err) {}
         }
 
         const finduser = all.find((a) => a.user === username && a.pass === password)
@@ -87,7 +87,7 @@ class Manager extends Base {
       this.server
         .listen()
         .then(() => {
-          console.log('Ftp server is starting...')
+          console.info('Ftp server is starting...')
           resolve(true)
         })
         .catch(reject)
@@ -110,7 +110,7 @@ class Manager extends Base {
           const txt = await readFile(json, 'utf-8')
           const arr = JSON.parse(txt.toString())
           all.push(...arr)
-        } catch (e) {}
+        } catch (err) {}
       }
       resolve(all)
     })
@@ -130,7 +130,7 @@ class Manager extends Base {
           const txt = await readFile(json, 'utf-8')
           const arr = JSON.parse(txt.toString())
           all.push(...arr)
-        } catch (e) {}
+        } catch (err) {}
       }
       const findOld = all.findIndex((a) => a.user === item.user)
       if (findOld >= 0) {
@@ -147,7 +147,7 @@ class Manager extends Base {
       if (item.dir && existsSync(item.dir)) {
         try {
           await setDir777ToCurrentUser(item.dir)
-        } catch (e) {}
+        } catch (err) {}
       }
 
       const json = join(global.Server.FTPDir!, 'pureftpd.json')
@@ -157,7 +157,7 @@ class Manager extends Base {
           const txt = await readFile(json, 'utf-8')
           const arr = JSON.parse(txt.toString())
           all.push(...arr)
-        } catch (e) {}
+        } catch (err) {}
       }
       const findOld = all.findIndex((a) => a.user === item.user)
       if (findOld >= 0) {

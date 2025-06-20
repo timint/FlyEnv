@@ -49,7 +49,7 @@ export class TaskQueue {
           next()
         })
         .catch((err) => {
-          console.log('task catch: ', err)
+          console.error('task catch: ', err)
           this.#_progress.finish += 1
           this.#_progress.fail += 1
           task.msg = err.toString()

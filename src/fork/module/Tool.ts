@@ -203,7 +203,7 @@ class Manager extends Base {
       let list: PItem[] = []
       try {
         list = await ProcessListSearch(name, false)
-      } catch (e) {}
+      } catch (err) {}
 
       const arrs: PItem[] = []
 
@@ -236,7 +236,7 @@ class Manager extends Base {
       const str = pids.map((s) => `/pid ${s}`).join(' ')
       try {
         await execPromise(`taskkill /f /t ${str}`)
-      } catch (e) {}
+      } catch (err) {}
       resolve(true)
     })
   }
@@ -247,7 +247,7 @@ class Manager extends Base {
       let res: any
       try {
         res = await execPromise(command)
-      } catch (e) {}
+      } catch (err) {}
       const lines = res?.stdout?.trim()?.split('\n') ?? []
       const list = lines
         .filter((s: string) => !s.includes(`findstr `))
@@ -271,7 +271,7 @@ class Manager extends Base {
       if (pids.length === 0) {
         return resolve(arr)
       }
-      console.log('pids: ', pids)
+      console.info('pids: ', pids)
       const all = await ProcessPidList()
       for (const pid of pids) {
         const find = all.find((a) => `${a.ProcessId}` === `${pid}`)
@@ -317,22 +317,22 @@ class Manager extends Base {
       let oldPath: string[] = []
       try {
         oldPath = await fetchRawPATH()
-      } catch (e) {}
+      } catch (err) {}
       if (oldPath.length === 0) {
         reject(new Error('Fail'))
         return
       }
 
-      console.log('removePATH oldPath 0: ', oldPath)
+      console.info('removePATH oldPath 0: ', oldPath)
 
       const envDir = join(dirname(global.Server.AppDir!), 'env')
       const flagDir = join(envDir, typeFlag)
       try {
         await execPromise(`rmdir /S /Q "${flagDir}"`)
-      } catch (e) {
-        console.log('rmdir err: ', e)
+      } catch (err) {
+        console.error('rmdir err: ', err)
       }
-      console.log('removePATH flagDir: ', flagDir)
+      console.info('removePATH flagDir: ', flagDir)
 
       oldPath = oldPath.filter((p) => {
         const a = p.includes(flagDir)
@@ -352,11 +352,11 @@ class Manager extends Base {
         return res
       })
 
-      console.log('removePATH oldPath 1: ', oldPath)
+      console.info('removePATH oldPath 1: ', oldPath)
 
       oldPath = oldPath.filter((p) => !p.startsWith(item.path))
 
-      console.log('removePATH oldPath 2: ', oldPath)
+      console.info('removePATH oldPath 2: ', oldPath)
 
       const dirIndex = oldPath.findIndex((s) => isAbsolute(s))
       const varIndex = oldPath.findIndex((s) => !isAbsolute(s))
@@ -376,13 +376,13 @@ class Manager extends Base {
 
       oldPath = handleWinPathArr(oldPath)
 
-      console.log('removePATH oldPath 3: ', oldPath)
+      console.info('removePATH oldPath 3: ', oldPath)
 
       const pathString = oldPath
       try {
         await writePath(pathString, '')
-      } catch (e) {
-        return reject(e)
+      } catch (err) {
+        return reject(err)
       }
 
       const allPath = await this.fetchPATH()
@@ -402,13 +402,13 @@ class Manager extends Base {
           }
           return s
         })
-      } catch (e) {}
+      } catch (err) {}
       if (oldPath.length === 0) {
         reject(new Error('Fail'))
         return
       }
-      console.log('oldPath: ', oldPath)
-      console.log('rawOldPath: ', rawOldPath)
+      console.info('oldPath: ', oldPath)
+      console.info('rawOldPath: ', rawOldPath)
 
       const binDir = dirname(item.bin)
       /**
@@ -421,17 +421,17 @@ class Manager extends Base {
         await mkdirp(envDir)
       }
       const flagDir = join(envDir, typeFlag)
-      console.log('flagDir: ', flagDir)
+      console.info('flagDir: ', flagDir)
       try {
         await execPromise(`rmdir /S /Q "${flagDir}"`)
-      } catch (e) {
-        console.log('rmdir err: ', e)
+      } catch (err) {
+        console.error('rmdir err: ', err)
       }
       if (!rawOldPath.includes(binDir)) {
         try {
           await execPromise(`mklink /J "${flagDir}" "${item.path}"`)
-        } catch (e) {
-          console.log('updatePATH mklink err: ', e)
+        } catch (err) {
+          console.error('updatePATH mklink err: ', err)
         }
       }
 
@@ -452,14 +452,14 @@ class Manager extends Base {
           try {
             const rf = realpathSync(f)
             check = existsSync(rf) && statSync(rf).isDirectory()
-          } catch (e) {
+          } catch (err) {
             check = false
           }
           return check
         })
 
-      console.log('oldPath: ', oldPath)
-      console.log('allFile: ', allFile)
+      console.info('oldPath: ', oldPath)
+      console.info('allFile: ', allFile)
 
       /**
        * 从原有PATH删除全部env文件夹
@@ -530,16 +530,16 @@ class Manager extends Base {
         try {
           const d = await execPromise(`echo %COMPOSER_HOME%\\Composer`)
           composer_bin_dir = d?.stdout?.trim()
-          console.log('d: ', d)
-        } catch (e) {}
+          console.info('d: ', d)
+        } catch (err) {}
         if (composer_bin_dir && isAbsolute(composer_bin_dir)) {
           oldPath.push(`%COMPOSER_HOME%\\vendor\\bin`)
         } else {
           try {
             const d = await execPromise(`echo %APPDATA%\\Composer`)
             composer_bin_dir = d?.stdout?.trim()
-            console.log('d: ', d)
-          } catch (e) {}
+            console.info('d: ', d)
+          } catch (err) {}
           if (composer_bin_dir && isAbsolute(composer_bin_dir)) {
             oldPath.push(`%APPDATA%\\Composer\\vendor\\bin`)
           }
@@ -548,7 +548,7 @@ class Manager extends Base {
 
       oldPath = handleWinPathArr(oldPath)
 
-      console.log('oldPath: ', oldPath)
+      console.info('oldPath: ', oldPath)
 
       const pathString = oldPath
       let otherString = ''
@@ -571,15 +571,15 @@ class Manager extends Base {
 
       try {
         await writePath(pathString, otherString)
-      } catch (e) {
-        return reject(e)
+      } catch (err) {
+        return reject(err)
       }
 
       if (typeFlag === 'php') {
         const phpModule = (await import('./Php')).default
         try {
           await phpModule.getIniPath(item)
-        } catch (e) {}
+        } catch (err) {}
       }
 
       const allPath = await this.fetchPATH()
@@ -645,7 +645,7 @@ class Manager extends Base {
 
       try {
         await execPromise(`setx /M FLYENV_ALIAS "${aliasDir}"`)
-      } catch (e) {}
+      } catch (err) {}
 
       await addPath('%FLYENV_ALIAS%')
 
@@ -692,7 +692,7 @@ class Manager extends Base {
       let oldPath: string[] = []
       try {
         oldPath = await fetchRawPATH()
-      } catch (e) {}
+      } catch (err) {}
       if (oldPath.length === 0) {
         reject(new Error('Fail'))
         return
@@ -705,14 +705,14 @@ class Manager extends Base {
           try {
             raw = realpathSync(p)
             error = !existsSync(raw)
-          } catch (e) {
+          } catch (err) {
             error = true
           }
         } else if (p.includes('%') || p.includes('$env:')) {
           try {
             raw = (await execPromise(`echo ${p}`))?.stdout?.trim() ?? ''
             error = !raw || !existsSync(raw)
-          } catch (e) {
+          } catch (err) {
             error = true
           }
         }
@@ -732,8 +732,8 @@ class Manager extends Base {
       let psRes = ''
       try {
         cmdRes = (await exec(`set PATH`))?.stdout?.trim() ?? ''
-      } catch (e) {
-        cmdRes = `${e}`
+      } catch (err) {
+        cmdRes = `${err}`
       }
       try {
         psRes =
@@ -742,8 +742,8 @@ class Manager extends Base {
               shell: 'powershell.exe'
             })
           )?.stdout?.trim() ?? ''
-      } catch (e) {
-        psRes = `${e}`
+      } catch (err) {
+        psRes = `${err}`
       }
       resolve({
         cmd: cmdRes,
@@ -756,9 +756,9 @@ class Manager extends Base {
     return new ForkPromise(async (resolve, reject) => {
       try {
         await writePath(arr)
-      } catch (e) {
-        console.log('envPathUpdate err: ', e)
-        return reject(e)
+      } catch (err) {
+        console.error('envPathUpdate err: ', err)
+        return reject(err)
       }
       resolve(true)
     })
@@ -787,11 +787,11 @@ class Manager extends Base {
   runInTerminal(command: string) {
     return new ForkPromise(async (resolve, reject) => {
       command = JSON.stringify(command).slice(1, -1)
-      console.log('command: ', command)
+      console.info('command: ', command)
       try {
         await exec(`start powershell -NoExit -Command "${command}"`)
-      } catch (e) {
-        return reject(e)
+      } catch (err) {
+        return reject(err)
       }
       resolve(true)
     })
@@ -853,7 +853,7 @@ class Manager extends Base {
                 if (basePath) {
                   return formatExePath(basePath, ideName)
                 }
-              } catch (e) {
+              } catch (err) {
                 continue
               }
             }
@@ -927,7 +927,7 @@ class Manager extends Base {
             }
 
             await exec(`"${idePath}" "${folderPath}"`)
-            console.log(`Opened ${folderPath} with ${ideName}`)
+            console.info(`Opened ${folderPath} with ${ideName}`)
             return true
           } catch (error) {
             console.error(`Error opening IDE: ${error}`)
@@ -987,8 +987,8 @@ class Manager extends Base {
       }
       try {
         await exec(command)
-      } catch (e) {
-        return reject(e)
+      } catch (err) {
+        return reject(err)
       }
       resolve(true)
     })
@@ -1011,7 +1011,7 @@ class Manager extends Base {
         try {
           const content = await readFile(jsonFile, 'utf-8')
           json = JSON.parse(content)
-        } catch (e) {}
+        } catch (err) {}
       }
       if (action === 'add') {
         if (!json.includes('dir')) {
@@ -1063,7 +1063,7 @@ class Manager extends Base {
             }
           }
         } catch (err) {
-          console.log('initFlyEnvSH err: ', err)
+          console.error('initFlyEnvSH err: ', err)
         }
       }
       try {
@@ -1073,7 +1073,7 @@ class Manager extends Base {
 }`,
           { shell: 'powershell.exe' }
         )
-      } catch (e) {}
+      } catch (err) {}
 
       resolve(true)
     })
@@ -1083,7 +1083,7 @@ class Manager extends Base {
     return new ForkPromise(async (resolve) => {
       try {
         await setDir777ToCurrentUser(dir)
-      } catch (e) {}
+      } catch (err) {}
       resolve(true)
     })
   }

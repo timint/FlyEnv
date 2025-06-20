@@ -282,7 +282,7 @@
     siteStore.task.state = 'running'
     siteStore.links.splice(0)
     IPC.send('app-sitesucker-run', item).then((key: string, res: any) => {
-      console.log(res)
+      console.debug(res)
     })
   }
 

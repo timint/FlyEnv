@@ -53,7 +53,7 @@ class Manager extends Base {
             })
           }
         })
-      } catch (e) {}
+      } catch (err) {}
     }
   }
   start() {
@@ -65,9 +65,9 @@ class Manager extends Base {
           const response = Packet.createResponseFromRequest(request)
           const [question] = request.questions
           const { name } = question
-          console.log('question: ', question, name)
+          console.info('question: ', question, name)
           this.initHosts(LOCAL_IP)
-          console.log('this.hosts: ', this.hosts)
+          console.info('this.hosts: ', this.hosts)
           if (this.hosts[name]) {
             const ip = this.hosts[name]
             const item = {
@@ -100,7 +100,7 @@ class Manager extends Base {
                   resolved = res.Answer;
                   break;
                 }
-              } catch (e) {
+              } catch (err) {
                 // Try next server
               }
             }
@@ -127,15 +127,15 @@ class Manager extends Base {
               })
             }
             send(response)
-          } catch (e) {
-            console.log(`dohdec resolve error: ${e}`)
+          } catch (err) {
+            console.error(`dohdec resolve error: ${err}`)
             send(response)
           }
         }
       })
 
       server.on('listening', () => {
-        console.log('Start Success')
+        console.info('Start Success')
         resolve(true)
       })
 

@@ -49,9 +49,9 @@ class Elasticsearch extends Base {
           1000
         )
         resolve(res)
-      } catch (e: any) {
-        console.log('-k start err: ', e)
-        reject(e)
+      } catch (err: any) {
+        console.error('-k start err: ', err)
+        reject(err)
         return
       }
     })
@@ -76,7 +76,7 @@ class Elasticsearch extends Base {
           a.installed = existsSync(dir)
         })
         resolve(all)
-      } catch (e) {
+      } catch (err) {
         resolve({})
       }
     })

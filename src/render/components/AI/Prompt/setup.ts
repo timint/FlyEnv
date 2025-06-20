@@ -95,7 +95,7 @@ export const Setup = () => {
     }
     const cache = StorageGet('fetchVerion-ai-lang')
     if (cache) {
-      console.log('fetchLangs cache: ', cache)
+      console.debug('fetchLangs cache: ', cache)
       PromptSetup.langs = reactive(cache)
       return
     }

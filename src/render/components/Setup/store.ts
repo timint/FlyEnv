@@ -32,7 +32,7 @@ export const SetupStore = defineStore('setup', {
         if (res?.code !== 200) {
           IPC.off(key)
         }
-        console.log('licensesInit: ', res)
+        console.debug('licensesInit: ', res)
         Object.assign(this, res?.data)
         const store = AppStore()
         store.config.setup.license = this.activeCode
@@ -48,7 +48,7 @@ export const SetupStore = defineStore('setup', {
         if (res?.code !== 200) {
           IPC.off(key)
         }
-        console.log('refreshState: ', res)
+        console.debug('refreshState: ', res)
         Object.assign(this, res?.data)
         this.fetching = false
       })
@@ -62,7 +62,7 @@ export const SetupStore = defineStore('setup', {
       localStorage.setItem('flyenv-licenses-post-message', msg)
       IPC.send('app-fork:app', 'licensesRequest', msg).then((key: string, res?: any) => {
         IPC.off(key)
-        console.log('postRequest: ', res)
+        console.debug('postRequest: ', res)
         this.fetching = false
         ElMessage.success(I18nT('setup.requestedTips'))
       })

@@ -112,7 +112,7 @@ class XTerm implements XTermType {
   }
 
   initLog() {
-    console.log('initLog: ', this.logs)
+    console.info('initLog: ', this.logs)
     if (this.logs.length > 0) {
       for (const log of this.logs) {
         this.xterm?.write(log)
@@ -122,7 +122,7 @@ class XTerm implements XTermType {
 
   write(data: string) {
     if (!this.xterm) {
-      console.log('not xterm !!!!!!')
+      console.warn('🚨 No xterm')
     }
     this.xterm?.write(data)
     if (!this.resized) {
@@ -139,7 +139,7 @@ class XTerm implements XTermType {
       data.endsWith(`\\x1B[K\\x1B[13C`) ||
       data.endsWith(`\\u001b[K\\u001b[13C`)
     ) {
-      console.log('logs pop !!!!!!!!!!!!!!@@@@@@@@@@@@@@')
+      console.info('logs pop')
       this.logs.pop()
     }
     if (this.logs.length > 100) {
@@ -174,7 +174,7 @@ class XTerm implements XTermType {
     try {
       this.fitaddon?.dispose()
       this.xterm?.dispose()
-    } catch (e) {}
+    } catch (err) {}
     this.xterm = undefined
     this.fitaddon = undefined
     this.dom = undefined
@@ -192,7 +192,7 @@ class XTerm implements XTermType {
   }
 
   send(command: string[]) {
-    console.log('XTerm send:', command)
+    console.debug('XTerm send:', command)
     if (this.end) {
       return
     }
@@ -202,7 +202,7 @@ class XTerm implements XTermType {
       param.push(`echo "Task-${this.ptyKey}-End"`)
       param.push(`exit 0`)
       IPC.send('NodePty:exec', this.ptyKey, param).then((key: string) => {
-        console.log('static command finished: ', command)
+        console.debug('static command finished: ', command)
         IPC.off(key)
         this.end = true
         this.resolve = undefined

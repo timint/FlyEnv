@@ -71,7 +71,7 @@
         if (watcher) {
           watcher()
         }
-        console.log('registry onChange: ', nv, ov)
+        console.info('registry onChange: ', nv, ov)
         let config = editConfig
         registrys.forEach((s) => {
           if (s !== nv) {
@@ -201,7 +201,7 @@
     commonSetting.value.forEach((item) => {
       const regex = new RegExp(`^(?!\\s*#)\\s*${item.name}\\s*=(.*?)([^\\n])(\\n|$)`, 'gmu')
       if (item.enable) {
-        console.log(config.match(regex))
+        console.info(config.match(regex))
         if (regex.test(config)) {
           config = config.replace(regex, `${item.name}=${item.value}\n`)
         } else {
@@ -244,7 +244,7 @@
             v
           }
         }) ?? []
-      console.log('getCommonSetting: ', matchs, item.name)
+      console.info('getCommonSetting: ', matchs, item.name)
       const find = matchs?.find((m) => m.k === item.name)
       item.enable = !!find
       item.value = find?.v ?? item.value

@@ -106,9 +106,9 @@ class Ollama extends Base {
           false
         )
         resolve(res)
-      } catch (e: any) {
-        console.log('-k start err: ', e)
-        reject(e)
+      } catch (err: any) {
+        console.error('-k start err: ', err)
+        reject(err)
         return
       }
     })
@@ -122,8 +122,8 @@ class Ollama extends Base {
         res = await execPromise(command, {
           cwd: dirname(version.bin)
         })
-      } catch (e) {
-        return reject(e)
+      } catch (err) {
+        return reject(err)
       }
       const arr = res?.stdout?.split('\n')?.filter((s: string) => !!s.trim()) ?? []
       const list: any = []
@@ -153,7 +153,7 @@ class Ollama extends Base {
           a.installed = existsSync(dir)
         })
         resolve(all)
-      } catch (e) {
+      } catch (err) {
         resolve({})
       }
     })
@@ -216,7 +216,7 @@ class Ollama extends Base {
           proxy: this.getAxiosProxy()
         })
         list = res?.data?.data ?? []
-      } catch (e) {}
+      } catch (err) {}
       return resolve(list)
     })
   }
@@ -277,8 +277,8 @@ class Ollama extends Base {
             }
           })
         })
-        .catch((e) => {
-          reject(e)
+        .catch((err) => {
+          reject(err)
         })
     })
   }
@@ -289,8 +289,8 @@ class Ollama extends Base {
         .then((response) => {
           resolve(response.data)
         })
-        .catch((e) => {
-          reject(e)
+        .catch((err) => {
+          reject(err)
         })
     })
   }

@@ -24,9 +24,9 @@ class Manager extends Base {
         const command = `set NVM_HOME`
         const res = await execPromise(command)
         NVM_HOME = res?.stdout?.trim()?.replace('NVM_HOME=', '').trim()
-      } catch (e) {}
+      } catch (err) {}
       if (NVM_HOME && existsSync(NVM_HOME) && existsSync(join(NVM_HOME, 'nvm.exe'))) {
-        console.log('NVM_HOME 0: ', NVM_HOME)
+        console.debug('NVM_HOME 0: ', NVM_HOME)
         await this._resortToolInPath('nvm')
         resolve(NVM_HOME)
         return
@@ -36,9 +36,9 @@ class Manager extends Base {
         const command = `powershell.exe -command "$env:NVM_HOME"`
         const res = await execPromise(command)
         NVM_HOME = res?.stdout?.trim()?.replace('NVM_HOME=', '').trim()
-      } catch (e) {}
+      } catch (err) {}
       if (NVM_HOME && existsSync(NVM_HOME) && existsSync(join(NVM_HOME, 'nvm.exe'))) {
-        console.log('NVM_HOME 1: ', NVM_HOME)
+        console.debug('NVM_HOME 1: ', NVM_HOME)
         await this._resortToolInPath('nvm')
         resolve(NVM_HOME)
         return
@@ -59,14 +59,14 @@ class Manager extends Base {
       process.chdir(nvmDir)
       try {
         const res = await execPromise('install.cmd')
-        console.log('installNvm res: ', res)
-      } catch (e) {}
+        console.debug('installNvm res: ', res)
+      } catch (err) {}
       NVM_HOME = dirname(local)
       const NVM_SYMLINK = join(NVM_HOME, 'nodejs-link')
       try {
         await execPromise(`setx /M NVM_HOME "${NVM_HOME}"`)
         await execPromise(`setx /M NVM_SYMLINK "${NVM_SYMLINK}"`)
-      } catch (e) {}
+      } catch (err) {}
       await this._resortToolInPath('nvm')
       await waitTime(1000)
       resolve(NVM_HOME)
@@ -80,9 +80,9 @@ class Manager extends Base {
         const command = `set FNM_HOME`
         const res = await execPromise(command)
         FNM_HOME = res?.stdout?.trim()?.replace('FNM_HOME=', '').trim()
-      } catch (e) {}
+      } catch (err) {}
       if (FNM_HOME && existsSync(FNM_HOME) && existsSync(join(FNM_HOME, 'fnm.exe'))) {
-        console.log('FNM_HOME 0: ', FNM_HOME)
+        console.debug('FNM_HOME 0: ', FNM_HOME)
         await this._resortToolInPath('fnm')
         resolve(FNM_HOME)
         return
@@ -92,9 +92,9 @@ class Manager extends Base {
         const command = `powershell.exe -command "$env:FNM_HOME"`
         const res = await execPromise(command)
         FNM_HOME = res?.stdout?.trim()?.replace('FNM_HOME=', '').trim()
-      } catch (e) {}
+      } catch (err) {}
       if (FNM_HOME && existsSync(FNM_HOME) && existsSync(join(FNM_HOME, 'fnm.exe'))) {
-        console.log('FNM_HOME 1: ', FNM_HOME)
+        console.debug('FNM_HOME 1: ', FNM_HOME)
         await this._resortToolInPath('fnm')
         resolve(FNM_HOME)
         return
@@ -122,12 +122,12 @@ class Manager extends Base {
       process.chdir(nvmDir)
       try {
         const res = await execPromise('install.cmd')
-        console.log('installNvm res: ', res)
-      } catch (e) {}
+        console.debug('installNvm res: ', res)
+      } catch (err) {}
       FNM_HOME = dirname(local)
       try {
         await execPromise(`setx /M FNM_HOME "${FNM_HOME}"`)
-      } catch (e) {}
+      } catch (err) {}
       await this._resortToolInPath('fnm')
       resolve(FNM_HOME)
     })
@@ -139,7 +139,7 @@ class Manager extends Base {
         method: 'get',
         url: url
       })
-      // console.log('res: ', res)
+      // console.debug('res: ', res)
       const html = res.data
       const regex = /href="v([\d\.]+?)\/"/g
       let result
@@ -147,13 +147,13 @@ class Manager extends Base {
       while ((result = regex.exec(html)) != null) {
         links.push(result[1].trim())
       }
-      console.log('links: ', links)
+      console.debug('links: ', links)
       links = links
         .filter((s) => Number(s.split('.')[0]) > 7)
         .sort((a, b) => {
           return compareVersions(b, a)
         })
-      console.log('links: ', links)
+      console.debug('links: ', links)
       resolve({
         all: links,
         tool
@@ -165,7 +165,7 @@ class Manager extends Base {
     let allPath: string[] = []
     try {
       allPath = await fetchRawPATH()
-    } catch (e) {
+    } catch (err) {
       return
     }
     const env: any = {}
@@ -235,7 +235,7 @@ class Manager extends Base {
           tool
         })
       }
-      console.log('localVersion: ', dir, existsSync(dir))
+      console.debug('localVersion: ', dir, existsSync(dir))
       const env = await this._buildEnv(tool, dir)
       let res: any
       process.chdir(dir)
@@ -244,9 +244,9 @@ class Manager extends Base {
           cwd: dir,
           env
         })
-        console.log('localVersion: ', res)
-      } catch (e) {
-        console.log('localVersion err: ', e)
+        console.debug('localVersion: ', res)
+      } catch (err) {
+        console.error('localVersion err: ', err)
         resolve({
           versions: [],
           current: '',
@@ -316,7 +316,7 @@ class Manager extends Base {
     let allPath: string[] = []
     try {
       allPath = await fetchRawPATH()
-    } catch (e) {
+    } catch (err) {
       return
     }
     const pathStr = JSON.stringify(allPath)
@@ -372,13 +372,13 @@ class Manager extends Base {
         } else {
           return reject(new Error('Fail'))
         }
-      } catch (e) {
-        console.log('versionChange error: ', e)
-        return reject(e)
+      } catch (err) {
+        console.error('versionChange error: ', err)
+        return reject(err)
       }
       try {
         await this._resortToolInPath(tool)
-      } catch (e) {}
+      } catch (err) {}
       resolve(true)
     })
   }
@@ -395,8 +395,8 @@ class Manager extends Base {
           if (existsSync(dir)) {
             try {
               await remove(dir)
-            } catch (e) {
-              return reject(e)
+            } catch (err) {
+              return reject(err)
             }
           }
           const { versions, current }: { versions: Array<string>; current: string } =
@@ -411,7 +411,7 @@ class Manager extends Base {
           if (existsSync(destDir)) {
             try {
               await remove(destDir)
-            } catch (e) {}
+            } catch (err) {}
           }
           await mkdirp(destDir)
 
@@ -421,8 +421,8 @@ class Manager extends Base {
             try {
               await zipUnPack(zip, destDir)
               await moveChildDirToParent(destDir)
-            } catch (e) {
-              return e
+            } catch (err) {
+              return err
             }
             return true
           }
@@ -455,7 +455,7 @@ class Manager extends Base {
             try {
               await remove(zip)
               await remove(destDir)
-            } catch (e) {}
+            } catch (err) {}
           }
 
           axios({
@@ -476,7 +476,7 @@ class Manager extends Base {
               const stream = createWriteStream(zip)
               response.data.pipe(stream)
               stream.on('error', async (err: any) => {
-                console.log('stream error: ', err)
+                console.error('stream error: ', err)
                 await fail()
                 reject(err)
               })
@@ -489,7 +489,7 @@ class Manager extends Base {
               })
             })
             .catch(async (err) => {
-              console.log('down error: ', err)
+              console.error('down error: ', err)
               await fail()
               reject(err)
             })
@@ -536,8 +536,8 @@ class Manager extends Base {
         } else {
           reject(new Error('Fail'))
         }
-      } catch (e) {
-        reject(e)
+      } catch (err) {
+        reject(err)
       }
     })
   }
@@ -560,7 +560,7 @@ class Manager extends Base {
         if (fnmDir === '%FNM_DIR%') {
           fnmDir = ''
         }
-      } catch (e) {}
+      } catch (err) {}
       if (!fnmDir) {
         try {
           fnmDir = (
@@ -568,7 +568,7 @@ class Manager extends Base {
               shell: 'powershell.exe'
             })
           ).stdout.trim()
-        } catch (e) {}
+        } catch (err) {}
       }
       if (fnmDir && existsSync(fnmDir)) {
         fnmDir = join(fnmDir, 'node-versions')
@@ -576,7 +576,7 @@ class Manager extends Base {
           let allFnm: any[] = []
           try {
             allFnm = await readdir(fnmDir)
-          } catch (e) {}
+          } catch (err) {}
           allFnm = allFnm
             .filter(
               (f) => f.startsWith('v') && existsSync(join(fnmDir, f, 'installation/node.exe'))
@@ -602,7 +602,7 @@ class Manager extends Base {
         ).stdout
           .trim()
           .replace('Current Root: ', '')
-      } catch (e) {}
+      } catch (err) {}
       if (!nvmDir) {
         try {
           nvmDir = (
@@ -612,14 +612,14 @@ class Manager extends Base {
           ).stdout
             .trim()
             .replace('Current Root: ', '')
-        } catch (e) {}
+        } catch (err) {}
       }
       if (nvmDir && existsSync(nvmDir)) {
         if (existsSync(nvmDir)) {
           let allNVM: any[] = []
           try {
             allNVM = await readdir(nvmDir)
-          } catch (e) {}
+          } catch (err) {}
           allNVM = allNVM
             .filter((f) => f.startsWith('v') && existsSync(join(nvmDir, f, 'node.exe')))
             .map((f) => {
@@ -645,7 +645,7 @@ class Manager extends Base {
         .then(async (list) => {
           versions = list.flat()
           versions = versionFilterSame(versions)
-          console.log('versions: ', versions)
+          console.debug('versions: ', versions)
           const all = versions.map((item) => {
             const command = `${basename(item.bin)} -v`
             const reg = /(v)(\d+(\.\d+){1,4})(.*?)$/gm
@@ -689,7 +689,7 @@ class Manager extends Base {
                 })
               }
             })
-          } catch (e) {}
+          } catch (err) {}
           resolve(versionSort(versions))
         })
         .catch(() => {
@@ -707,8 +707,8 @@ class Manager extends Base {
         .then((res: any) => {
           resolve(res)
         })
-        .catch((e: any) => {
-          reject(e)
+        .catch((err: any) => {
+          reject(err)
         })
     })
   }

@@ -48,7 +48,7 @@ const tab: any = localStorage.getItem('PWS-CONF-STORE')
 if (tab) {
   try {
     Object.assign(ConfStore, JSON.parse(tab))
-  } catch (e) {}
+  } catch (err) {}
 }
 
 type ConfSetupProps = {
@@ -87,7 +87,7 @@ export const ConfSetup = (props: ComputedRef<ConfSetupProps>) => {
     if (!index.value) {
       return true
     }
-    console.log('disabled: ', props?.value?.file, existsSync(props.value.file))
+    console.info('disabled: ', props?.value?.file, existsSync(props.value.file))
     return !props?.value?.file || !existsSync(props.value.file)
   })
 
@@ -186,7 +186,7 @@ export const ConfSetup = (props: ComputedRef<ConfSetupProps>) => {
   }
 
   const getConfig = () => {
-    console.log('getConfig: ', disabled.value)
+    console.info('getConfig: ', disabled.value)
     if (disabled.value) {
       config.value = props?.value?.emptyTips ?? I18nT('base.configNoFound')
       initEditor()
@@ -210,7 +210,7 @@ export const ConfSetup = (props: ComputedRef<ConfSetupProps>) => {
       return
     }
     readFile(props.value.defaultFile, 'utf-8').then((conf: string) => {
-      console.log('getDefault config.value === conf', config.value === conf)
+      console.info('getDefault config.value === conf', config.value === conf)
       changed.value = conf !== config.value
       config.value = conf
       initEditor()
@@ -243,7 +243,7 @@ export const ConfSetup = (props: ComputedRef<ConfSetupProps>) => {
 
   watch(disabled, (v) => {
     nextTick().then(() => {
-      console.log('watch(disabled !!!', v)
+      console.info('[on watch disabled]', v)
       getConfig()
     })
   })

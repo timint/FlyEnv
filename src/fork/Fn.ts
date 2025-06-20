@@ -812,7 +812,7 @@ export async function readFileAsUTF8(filePath: string): Promise<string> {
       return ''
     }
     const detectedEncoding = chardet.detect(buffer)
-    console.log('detectedEncoding: ', detectedEncoding)
+    console.info('detectedEncoding: ', detectedEncoding)
     if (!detectedEncoding || detectedEncoding.match(/utf-?8/i)) {
       return buffer.toString('utf-8')
     }
@@ -821,7 +821,7 @@ export async function readFileAsUTF8(filePath: string): Promise<string> {
       let str = ''
       try {
         str = iconv.decode(buffer, detectedEncoding)
-      } catch (e) {}
+      } catch (err) {}
       return str
     }
 
@@ -846,7 +846,7 @@ export function stringToUTF8(str: string): string {
       return ''
     }
     const detectedEncoding = chardet.detect(buffer)
-    console.log('detectedEncoding: ', detectedEncoding)
+    console.info('detectedEncoding: ', detectedEncoding)
     if (
       !detectedEncoding ||
       detectedEncoding.toLowerCase() === 'utf-8' ||
@@ -859,7 +859,7 @@ export function stringToUTF8(str: string): string {
       let str = ''
       try {
         str = iconv.decode(buffer, detectedEncoding)
-      } catch (e) {}
+      } catch (err) {}
       return str
     }
 
@@ -894,7 +894,7 @@ export async function setDir777ToCurrentUser(folderPath: string) {
     '/q'
   ]
 
-  console.log(`Executing: icacls ${args.join(' ')}`)
+  console.info(`Executing: icacls ${args.join(' ')}`)
   await appendFile(
     join(global.Server.BaseDir!, 'debug.log'),
     `[setDir777ToCurrentUser][args]: icacls ${args.join(' ')}\n`
@@ -904,10 +904,10 @@ export async function setDir777ToCurrentUser(folderPath: string) {
       shell: true,
       windowsHide: true
     })
-  } catch (e) {
+  } catch (err) {
     await appendFile(
       join(global.Server.BaseDir!, 'debug.log'),
-      `[setDir777ToCurrentUser][error]: ${e}\n`
+      `[setDir777ToCurrentUser][error]: ${err}\n`
     )
   }
 }
@@ -943,7 +943,7 @@ export async function waitPidFile(
       res = false
     }
   }
-  console.log('waitPid: ', time, res)
+  console.debug('waitPid: ', time, res)
   return res
 }
 
@@ -962,7 +962,7 @@ export async function serviceStartExec(
   if (pidPath && existsSync(pidPath)) {
     try {
       await remove(pidPath)
-    } catch (e) {}
+    } catch (err) {}
   }
 
   const typeFlag = version.typeFlag
@@ -1096,7 +1096,7 @@ export async function serviceStartExecCMD(
   if (pidPath && existsSync(pidPath)) {
     try {
       await remove(pidPath)
-    } catch (e) {}
+    } catch (err) {}
   }
 
   const typeFlag = version.typeFlag
@@ -1135,7 +1135,7 @@ export async function serviceStartExecCMD(
       shell: 'cmd.exe',
       cwd: baseDir
     })
-  } catch (e) {
+  } catch (err) {
     on({
       'APP-On-Log': AppLog(
         'error',
@@ -1212,7 +1212,7 @@ export async function serviceStartExecGetPID(
   if (pidPath && existsSync(pidPath)) {
     try {
       await remove(pidPath)
-    } catch (e) {}
+    } catch (err) {}
   }
 
   const typeFlag = version.typeFlag
@@ -1256,12 +1256,12 @@ export async function serviceStartExecGetPID(
         cwd: baseDir
       }
     )
-  } catch (e) {
+  } catch (err) {
     on({
       'APP-On-Log': AppLog(
         'error',
         I18nT('appLog.execStartCommandFail', {
-          error: e,
+          error: err,
           service: `${version.typeFlag}-${version.version}`
         })
       )

@@ -57,14 +57,14 @@ class Manager extends Base {
           resolve({
             'APP-Service-Start-PID': pid
           })
-        } catch (e: any) {
-          console.log('-k start err: ', e)
-          reject(e)
+        } catch (err: any) {
+          console.error('-k start err: ', err)
+          reject(err)
           return
         }
       }
 
-      console.log('confFile: ', confFile, existsSync(confFile))
+      console.info('confFile: ', confFile, existsSync(confFile))
 
       if (existsSync(confFile)) {
         await doRun()
@@ -75,11 +75,11 @@ class Manager extends Base {
         process.env.LC_ALL = global.Server.Local!
         process.env.LANG = global.Server.Local!
 
-        console.log('global.Server.Local: ', global.Server.Local)
+        console.info('global.Server.Local: ', global.Server.Local)
         await mkdirp(dbPath)
         try {
           await setDir777ToCurrentUser(dbPath)
-        } catch (e) {}
+        } catch (err) {}
 
         const binDir = dirname(bin)
         const initDB = join(binDir, 'initdb.exe')
@@ -87,11 +87,11 @@ class Manager extends Base {
         const command = `start /B ./${basename(initDB)} -D "${dbPath}" -U root > NUL 2>&1 &`
         try {
           await execPromise(command)
-        } catch (e) {
+        } catch (err) {
           on({
-            'APP-On-Log': AppLog('error', I18nT('appLog.initDBDataDirFail', { error: e }))
+            'APP-On-Log': AppLog('error', I18nT('appLog.initDBDataDirFail', { error: err }))
           })
-          reject(e)
+          reject(err)
           return
         }
         await waitTime(1000)
@@ -149,7 +149,7 @@ class Manager extends Base {
           a.installed = existsSync(dir)
         })
         resolve(all)
-      } catch (e) {
+      } catch (err) {
         resolve([])
       }
     })

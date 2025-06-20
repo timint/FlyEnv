@@ -141,7 +141,7 @@
       }
     }
     currentSrc.value = 'rsync://rsync.macports.org/macports/release/tarballs/ports.tar'
-    console.log('getCurrentSrc: ', res, currentSrc.value)
+    console.debug('getCurrentSrc: ', res, currentSrc.value)
   })
 
   const changeSrc = async () => {

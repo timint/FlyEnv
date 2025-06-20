@@ -26,7 +26,7 @@ class Rust extends Base {
           a.installed = existsSync(dir)
         })
         resolve(all)
-      } catch (e) {
+      } catch (err) {
         resolve({})
       }
     })

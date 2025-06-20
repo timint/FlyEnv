@@ -127,7 +127,7 @@
         emits('update:modelValue', str)
         monacoInstance?.setValue?.(str)
       })
-    } catch (e) {}
+    } catch (err) {}
   }
 
   watch(
@@ -226,6 +226,6 @@
     monacoInstance = null
     HostNginxRewriteSetup.deinitFileWatch()
     HostNginxRewriteSetup.deinitNginxRewriteCustomWatch()
-    console.log('onUnmounted !!!!')
+    console.info('[on unmounted]')
   })
 </script>

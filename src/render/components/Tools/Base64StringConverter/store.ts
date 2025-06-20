@@ -25,7 +25,7 @@ const store = reactive({
     this.base64Output = ''
     try {
       this.base64Output = base64ToText(this.base64Input, { makeUrlSafe: this.decodeUrlSafe })
-    } catch (e) {
+    } catch (err) {
       this.error = true
     }
   },

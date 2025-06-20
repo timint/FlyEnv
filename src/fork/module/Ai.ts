@@ -24,8 +24,8 @@ class Ai extends Base {
           proxy: this.getAxiosProxy()
         })
         list = res?.data?.data?.[0] ?? []
-      } catch (e) {
-        console.log('allPrompt: err', e)
+      } catch (err) {
+        console.error('allPrompt: err', err)
       }
       resolve(list)
     })
@@ -45,8 +45,8 @@ class Ai extends Base {
           proxy: this.getAxiosProxy()
         })
         list = res?.data?.data?.[0] ?? []
-      } catch (e) {
-        console.log('allPrompt: err', e)
+      } catch (err) {
+        console.error('allPrompt: err', err)
       }
       resolve(list)
     })

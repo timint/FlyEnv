@@ -74,7 +74,7 @@ export const loadCustomerLang = async () => {
     let json: any
     try {
       json = JSON.parse(content)
-    } catch (e) {}
+    } catch (err) {}
     if (!json) {
       continue
     }
@@ -100,7 +100,7 @@ export const loadCustomerLang = async () => {
       let json: any
       try {
         json = JSON.parse(content)
-      } catch (e) {}
+      } catch (err) {}
       if (!json) {
         continue
       }
@@ -112,7 +112,7 @@ export const loadCustomerLang = async () => {
     }
     langArr.push(item)
   }
-  console.log('langArr: ', langArr)
+  console.debug('langArr: ', langArr)
   CustomerLangs.splice(0)
   for (const item of langArr) {
     CustomerLangs.push({

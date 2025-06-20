@@ -208,15 +208,15 @@ export default class Application extends EventEmitter {
   }
 
   async stop() {
-    logger.info('[PhpWebStudy] application stop !!!')
+    logger.info('🚨 [PhpWebStudy] Application stop')
     try {
       ScreenManager.destroy()
       SiteSuckerManager.destory()
       this.forkManager?.destory()
       this.trayManager?.destroy()
       await this.stopServer()
-    } catch (e) {
-      console.log('stop e: ', e)
+    } catch (err) {
+      console.error('stop e: ', err)
     }
   }
 
@@ -227,7 +227,7 @@ export default class Application extends EventEmitter {
     let all: PItem[] = []
     try {
       all = await ProcessPidList()
-    } catch (e) {}
+    } catch (err) {}
     for (const item of all) {
       if (!item.CommandLine || typeof item.CommandLine !== 'string') {
         continue
@@ -245,7 +245,7 @@ export default class Application extends EventEmitter {
       }
     }
     arr.unshift(...fpm)
-    console.log('_stopServer arr: ', arr)
+    console.info('_stopServer arr: ', arr)
     if (arr.length > 0) {
       arr.forEach((pid) => {
         this.hostServicePID.delete(pid)
@@ -253,8 +253,8 @@ export default class Application extends EventEmitter {
       const str = arr.map((s) => `/pid ${s}`).join(' ')
       try {
         await execPromise(`taskkill /f /t ${str}`)
-      } catch (e) {
-        console.log('taskkill e: ', e)
+      } catch (err) {
+        console.error('taskkill e: ', err)
       }
     }
   }
@@ -268,26 +268,27 @@ export default class Application extends EventEmitter {
       const str = all.map((s) => `/pid ${s}`).join(' ')
       try {
         await execPromise(`taskkill /f /t ${str}`)
-      } catch (e) {
-        console.log('taskkill e: ', e)
+      } catch (err) {
+        console.error('taskkill e: ', err)
       }
     }
   }
 
   async stopServer() {
+    console.info('[on stop server]')
     NodePTY.exitAllPty()
     try {
       await this.stopServerByPid()
-    } catch (e) {
-      console.log('stopServerByPid e: ', e)
+    } catch (err) {
+      console.error('stopServerByPid e: ', err)
     }
     try {
       await this.stopHostService()
-    } catch (e) {
-      console.log('stopHostService e: ', e)
+    } catch (err) {
+      console.error('stopHostService e: ', err)
     }
-    console.log('stopServer !!!')
-    const hostsFile = join('c:/windows/system32/drivers/etc', 'hosts')
+    console.info('🚨 stopServer')
+    const hostsFile = '%SYSTEMROOT%/system32/drivers/etc/hosts'
     try {
       let hosts = readFileSync(hostsFile, 'utf-8')
       const x = hosts.match(/(#X-HOSTS-BEGIN#)([\s\S]*?)(#X-HOSTS-END#)/g)
@@ -295,10 +296,9 @@ export default class Application extends EventEmitter {
         hosts = hosts.replace(x[0], '')
         writeFileSync(hostsFile, hosts)
       }
-    } catch (e) {
-      console.log('hostsFile clean e: ', e)
+    } catch (err) {
+      console.error('hostsFile clean error: ', err)
     }
-    console.log('stopServer End !!!')
   }
 
   sendCommand(command: string, ...args: any) {
@@ -330,8 +330,8 @@ export default class Application extends EventEmitter {
         app.relaunch()
         app.exit()
       })
-      .catch((e) => {
-        console.log('relaunch e: ', e)
+      .catch((err) => {
+        console.error('relaunch e: ', err)
         app.relaunch()
         app.exit()
       })
@@ -342,7 +342,7 @@ export default class Application extends EventEmitter {
       this.updateManager = new UpdateManager(true)
       this.handleUpdaterEvents()
     } catch (err) {
-      console.log('initUpdaterManager err: ', err)
+      console.error('initUpdaterManager err: ', err)
     }
   }
 
@@ -362,7 +362,7 @@ export default class Application extends EventEmitter {
 
   handleCommands() {
     this.on('application:save-preference', (config) => {
-      console.log('application:save-preference.config====>', config)
+      console.debug('application:save-preference.config====>', config)
       this.configManager.setConfig(config)
     })
 
@@ -371,16 +371,16 @@ export default class Application extends EventEmitter {
     })
 
     this.on('application:exit', () => {
-      console.log('application:exit !!!!!!')
+      console.info('🚨 application:exit')
       this.windowManager.hideAllWindow()
       this.stop()
         .then(() => {
-          console.log('application real exit !!!!!!')
+          console.info('🚨 application real exit')
           app.exit()
           process.exit(0)
         })
-        .catch((e) => {
-          console.log('application:exit e: ', e)
+        .catch((err) => {
+          console.error('application:exit e: ', err)
           app.exit()
           process.exit(0)
         })
@@ -402,14 +402,14 @@ export default class Application extends EventEmitter {
     this.on('application:change-menu-states', () => {})
 
     this.on('application:window-size-change', (size) => {
-      console.log('application:window-size-change: ', size)
+      console.info('application:window-size-change: ', size)
       this.windowManager
         ?.getFocusedWindow()
         ?.setSize(Math.round(size.width), Math.round(size.height), true)
     })
 
     this.on('application:window-open-new', (page) => {
-      console.log('application:window-open-new: ', page)
+      console.info('application:window-open-new: ', page)
     })
 
     this.on('application:check-for-updates', () => {})
@@ -436,7 +436,7 @@ export default class Application extends EventEmitter {
     this.emit(command, ...args)
     let window
     const callBack = (info: any) => {
-      console.log('callBack info: ', info)
+      console.info('callBack info: ', info)
       const win = this.mainWindow!
       this.windowManager.sendCommandTo(win, command, key, info)
       if (info?.data?.['APP-Service-Start-PID']) {
@@ -454,7 +454,7 @@ export default class Application extends EventEmitter {
           true
         )
       } else if (info?.msg?.['APP-Licenses-Code']) {
-        console.log('APP-Licenses-Code !!!')
+        console.info('APP-Licenses-Code')
         const code: string = info.msg['APP-Licenses-Code'] as any
         this.configManager?.setConfig('setup.license', code)
       } else if (info?.msg?.['APP-On-Log']) {
@@ -467,7 +467,7 @@ export default class Application extends EventEmitter {
       }
     }
     if (command.startsWith('app-fork:')) {
-      console.log('app main time: ', new Date().getTime())
+      console.info('app main time: ', new Date().getTime())
       const module = command.replace('app-fork:', '')
       const openApps: Record<string, string> = {
         VSCode: 'vscode://file/'
@@ -476,7 +476,7 @@ export default class Application extends EventEmitter {
       if (module === 'tools' && args?.[0] === 'openPathByApp' && !!openApps?.[args?.[2]]) {
         const appKey = args[2]
         const url = `${openApps[appKey]}${encodeURIComponent(args[1].replace(/\\/g, '/'))}`
-        console.log('openPathByApp ', args?.[2], url)
+        console.info('openPathByApp ', args?.[2], url)
         shell
           .openExternal(url)
           .then(() => {
@@ -520,7 +520,7 @@ export default class Application extends EventEmitter {
         }
         break
       case 'Application:tray-status-change':
-        console.log('Application:tray-status-change: ', args)
+        console.info('Application:tray-status-change: ', args)
         if (args && Array.isArray(args) && args.length > 0) {
           this.trayManager.iconChange(args[0])
         }
@@ -564,7 +564,7 @@ export default class Application extends EventEmitter {
             })
           })
           server.listen(0, () => {
-            console.log('server.address(): ', server.address())
+            console.info('server.address(): ', server.address())
             const port = server.address().port
             const host = [`http://localhost:${port}/`]
             const ip = IP.address()
@@ -588,7 +588,7 @@ export default class Application extends EventEmitter {
         if (args && Array.isArray(args) && args.length > 0) {
           const path1 = args[0]
           const httpServe1 = this.httpServes[path1]
-          console.log('httpServe1: ', httpServe1)
+          console.info('httpServe1: ', httpServe1)
           if (httpServe1) {
             httpServe1.server.close()
             delete this.httpServes[path1]
@@ -655,7 +655,7 @@ export default class Application extends EventEmitter {
       this.handleCommand(command, key, ...args)
     })
     ipcMain.on('event', (event, eventName, ...args) => {
-      console.log('receive event', eventName, ...args)
+      console.info('receive event', eventName, ...args)
       this.emit(eventName, ...args)
     })
   }

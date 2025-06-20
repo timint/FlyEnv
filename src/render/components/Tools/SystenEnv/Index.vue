@@ -140,7 +140,7 @@
       item: p,
       index
     }).then((res: any) => {
-      console.log('res: ', res)
+      console.debug('res: ', res)
       if (index < 0) {
         Setup.list.unshift(
           reactive({

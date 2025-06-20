@@ -100,7 +100,7 @@ export const Setup = (typeFlag: AllAppModule) => {
       case 'restart':
         action = startService(typeFlag, item)
         if (item.version !== currentItem?.version || item.path !== currentItem?.path) {
-          console.log('UPDATE_SERVER_CURRENT !!!: ', item)
+          console.debug('UPDATE_SERVER_CURRENT: ', item)
           appStore.UPDATE_SERVER_CURRENT({
             flag: typeFlag,
             data: JSON.parse(JSON.stringify(item))
@@ -145,7 +145,7 @@ export const Setup = (typeFlag: AllAppModule) => {
       flag: typeFlag
     }).then((res) => {
       if (res) {
-        console.log('showCustomDir chagned !!!')
+        console.debug('showCustomDir changed')
         resetData()
       }
     })

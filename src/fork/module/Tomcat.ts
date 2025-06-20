@@ -21,7 +21,7 @@ class Tomcat extends Base {
   }
 
   fetchAllOnLineVersion() {
-    console.log('Tomcat fetchAllOnLineVersion !!!')
+    console.info('Tomcat fetchAllOnLineVersion')
     return new ForkPromise(async (resolve) => {
       try {
         const all: OnlineVersionItem[] = await this._fetchOnlineVersion('tomcat')
@@ -35,8 +35,8 @@ class Tomcat extends Base {
           a.installed = existsSync(dir)
         })
         resolve(all)
-      } catch (e) {
-        console.log('Tomcat fetch version e: ', e)
+      } catch (err) {
+        console.error('Tomcat fetch version e: ', err)
         resolve([])
       }
     })
@@ -134,9 +134,9 @@ class Tomcat extends Base {
           500,
           false
         )
-      } catch (e: any) {
-        console.log('-k start err: ', e)
-        reject(e)
+      } catch (err: any) {
+        console.error('-k start err: ', err)
+        reject(err)
         return
       }
 

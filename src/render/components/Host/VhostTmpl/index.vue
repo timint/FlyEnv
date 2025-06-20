@@ -53,7 +53,7 @@
 
   const edit = (flag: 'apache' | 'apacheSSL' | 'nginx' | 'nginxSSL' | 'caddy' | 'caddySSL') => {
     visible.value = false
-    console.log('edit: ', flag)
+    console.debug('edit: ', flag)
 
     AsyncComponentShow(EditVM, {
       flag

@@ -26,7 +26,7 @@ class Manager extends Base {
     return new ForkPromise(async (resolve, reject, on) => {
       try {
         await this.initMongosh()
-      } catch (e) {}
+      } catch (err) {}
       const mongosh = join(global.Server.AppDir!, 'mongosh', this.mongoshVersion, 'bin/mongosh.exe')
       if (existsSync(mongosh)) {
         try {
@@ -34,8 +34,8 @@ class Manager extends Base {
             cwd: dirname(mongosh),
             shell: false
           })
-        } catch (e) {
-          console.log('mongosh shutdown error: ', e)
+        } catch (err) {
+          console.info('mongosh shutdown error: ', err)
         }
         const pids = new Set<string>()
         const appPidFile = join(global.Server.BaseDir!, `pid/${this.type}.pid`)
@@ -104,9 +104,9 @@ class Manager extends Base {
           on
         )
         resolve(res)
-      } catch (e: any) {
-        console.log('-k start err: ', e)
-        reject(e)
+      } catch (err: any) {
+        console.error('-k start err: ', err)
+        reject(err)
         return
       }
     })
@@ -130,7 +130,7 @@ class Manager extends Base {
             await zipUnPack(zip, appDir)
             await moveChildDirToParent(appDir)
             return existsSync(mongosh)
-          } catch (e) {
+          } catch (err) {
             await remove(zip)
           }
         }
@@ -189,7 +189,7 @@ class Manager extends Base {
           a.installed = existsSync(dir) || existsSync(dirOld)
         })
         resolve(all)
-      } catch (e) {
+      } catch (err) {
         resolve([])
       }
     })

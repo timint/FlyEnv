@@ -93,7 +93,7 @@
         if (this.flag0 === 0) {
           t = t * 1000
         }
-        console.log('t: ', t)
+        console.debug('t: ', t)
         let unixTimestamp = new Date(t)
         return unixTimestamp.toLocaleString()
       },
@@ -116,7 +116,7 @@
       }, 1000)
     },
     unmounted() {
-      console.log('timestamp destroyed !!!!!')
+      console.debug('timestamp destroyed')
       clearInterval(this.timer)
     },
     methods: {

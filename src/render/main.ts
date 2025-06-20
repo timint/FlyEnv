@@ -24,7 +24,7 @@ loadCustomerLang().then().catch()
 
 let inited = false
 IPC.on('APP-Ready-To-Show').then(() => {
-  console.log('APP-Ready-To-Show !!!!!!')
+  console.info('APP-Ready-To-Show')
   if (!inited) {
     inited = true
     const store = AppStore()
@@ -47,7 +47,7 @@ IPC.on('APP-Ready-To-Show').then(() => {
     AppLogStore.init().then().catch()
     store.chechAutoHide()
   } else {
-    console.log('has inited !!!!')
+    console.info('⚠️ APP-Ready-To-Show already inited')
   }
 })
 

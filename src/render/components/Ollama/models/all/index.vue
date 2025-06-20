@@ -110,7 +110,7 @@
 
   const onLoad = (row: any, treeNode: TreeNode, resolve: (data: any[]) => void) => {
     const child = OllamaAllModelsSetup.list[row.name]
-    console.log('onLoad: ', row, child)
+    console.info('onLoad: ', row, child)
     resolve(child)
   }
 </script>

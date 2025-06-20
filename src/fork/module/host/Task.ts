@@ -78,8 +78,8 @@ export function TaskAddRandaSite(this: any, version?: SoftInstalled, write = tru
         dir,
         version
       })
-    } catch (e) {
-      reject(e)
+    } catch (err) {
+      reject(err)
     }
   })
 }
@@ -91,7 +91,7 @@ export function TaskAddPhpMyAdminSite(this: any, phpVersion?: number, write = tr
     let hostList: Array<AppHost> = []
     try {
       hostList = await fetchHostList()
-    } catch (e) {}
+    } catch (err) {}
     const find = hostList.find((h) => h.name === 'phpmyadmin.test')
     if (find) {
       resolve(true)
@@ -118,8 +118,8 @@ export function TaskAddPhpMyAdminSite(this: any, phpVersion?: number, write = tr
             await waitTime(300)
             await remove(tmplDir)
           }
-        } catch (e) {
-          reject(e)
+        } catch (err) {
+          reject(err)
           return
         }
         if (readdirSync(siteDir).length === 0) {
@@ -181,8 +181,8 @@ export function TaskAddPhpMyAdminSite(this: any, phpVersion?: number, write = tr
         await this.writeHosts(write, ipv6)
         await setDirRole(siteDir)
         resolve(true)
-      } catch (e) {
-        reject(e)
+      } catch (err) {
+        reject(err)
       }
     }
     if (existsSync(zipFile)) {

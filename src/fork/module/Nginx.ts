@@ -24,7 +24,7 @@ class Nginx extends Base {
     let host: AppHost[] = []
     try {
       host = await fetchHostList()
-    } catch (e) {}
+    } catch (err) {}
     const all = new Set(host.map((h: any) => h.phpVersion).filter((h: number | undefined) => !!h))
     const tmplFile = join(global.Server.Static!, 'tmpl/enable-php.conf')
     let tmplContent = ''
@@ -73,7 +73,7 @@ class Nginx extends Base {
             on({
               'APP-On-Log': AppLog('error', I18nT('appLog.confInitFail', { error: err }))
             })
-            console.log('initConfig err: ', err)
+            console.error('initConfig err: ', err)
             resolve(true)
           })
         return
@@ -93,7 +93,7 @@ class Nginx extends Base {
       await this.initLocalApp(version, 'nginx').on(on)
       await this.#initConfig().on(on)
       await this.#handlePhpEnableConf()
-      console.log('_startServer: ', version)
+      console.info('_startServer: ', version)
       const bin = version.bin
       const p = global.Server.NginxDir!
 
@@ -112,9 +112,9 @@ class Nginx extends Base {
           on
         )
         resolve(res)
-      } catch (e: any) {
-        console.log('-k start err: ', e)
-        reject(e)
+      } catch (err: any) {
+        console.error('-k start err: ', err)
+        reject(err)
         return
       }
     })
@@ -139,7 +139,7 @@ class Nginx extends Base {
           a.installed = existsSync(dir)
         })
         resolve(all)
-      } catch (e) {
+      } catch (err) {
         resolve([])
       }
     })

@@ -34,7 +34,7 @@ class Minio extends Base {
   }
 
   fetchAllOnLineVersion() {
-    console.log('Tomcat fetchAllOnLineVersion !!!')
+    console.info('Tomcat fetchAllOnLineVersion')
     return new ForkPromise(async (resolve) => {
       const bin = join(global.Server.AppDir!, `minio`, 'minio.exe')
       const zip = join(global.Server.Cache!, 'minio.exe')
@@ -135,9 +135,9 @@ class Minio extends Base {
           false
         )
         resolve(res)
-      } catch (e: any) {
-        console.log('-k start err: ', e)
-        reject(e)
+      } catch (err: any) {
+        console.error('-k start err: ', err)
+        reject(err)
         return
       }
     })
@@ -199,7 +199,7 @@ class Minio extends Base {
             cwd: dirname(row.zip)
           })
           zipCheck = true
-        } catch (e) {
+        } catch (err) {
           zipCheck = false
         }
 
@@ -214,11 +214,11 @@ class Minio extends Base {
             await doHandleZip()
             success = true
             refresh()
-          } catch (e) {
+          } catch (err) {
             refresh()
-            console.log('ERROR: ', e)
+            console.error(err)
             on({
-              'APP-On-Log': AppLog('error', I18nT('appLog.installFromZipFail', { error: e }))
+              'APP-On-Log': AppLog('error', I18nT('appLog.installFromZipFail', { error: err }))
             })
           }
           if (success) {
@@ -271,13 +271,13 @@ class Minio extends Base {
             on({
               'APP-On-Log': AppLog('error', I18nT('appLog.downFail', { service, error: err }))
             })
-            console.log('stream error: ', err)
+            console.error('stream error: ', err)
             row.downState = 'exception'
             try {
               if (existsSync(row.zip)) {
                 unlinkSync(row.zip)
               }
-            } catch (e) {}
+            } catch (err) {}
             refresh()
             on(row)
             setTimeout(() => {
@@ -294,10 +294,10 @@ class Minio extends Base {
                 await doHandleZip()
               }
               refresh()
-            } catch (e) {
+            } catch (err) {
               refresh()
               on({
-                'APP-On-Log': AppLog('info', I18nT('appLog.installFail', { service, error: e }))
+                'APP-On-Log': AppLog('info', I18nT('appLog.installFail', { service, error: err }))
               })
             }
             on(row)
@@ -323,13 +323,13 @@ class Minio extends Base {
           on({
             'APP-On-Log': AppLog('error', I18nT('appLog.downFail', { service, error: err }))
           })
-          console.log('down error: ', err)
+          console.error('down error: ', err)
           row.downState = 'exception'
           try {
             if (existsSync(row.zip)) {
               unlinkSync(row.zip)
             }
-          } catch (e) {}
+          } catch (err) {}
           refresh()
           on(row)
           setTimeout(() => {

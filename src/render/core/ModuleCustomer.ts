@@ -147,10 +147,10 @@ class ModuleCustomer implements CustomerModuleItem {
         return
       }
       if (this.currentItemID !== item.id) {
-        console.log('this.currentItemID !== item.id !!', this.currentItemID, item.id)
+        console.debug('this.currentItemID !== item.id !!', this.currentItemID, item.id)
         this.currentItemID = item.id
         if (AppCustomerModule?.currentModule?.id === this.id) {
-          console.log('AppCustomerModule?.currentModule?.id === this.id', this.id)
+          console.debug('AppCustomerModule?.currentModule?.id === this.id', this.id)
           AppCustomerModule.currentModule!.currentItemID = item.id
         }
         await AppCustomerModule.saveModule()
@@ -178,8 +178,8 @@ class ModuleCustomer implements CustomerModuleItem {
               resolve(true)
             }
           })
-          .catch((e) => {
-            resolve(e.toString())
+          .catch((err) => {
+            resolve(err.toString())
           })
         return
       }
@@ -197,8 +197,8 @@ class ModuleCustomer implements CustomerModuleItem {
         .then((res) => {
           resolve(res)
         })
-        .catch((e) => {
-          resolve(e.toString())
+        .catch((err) => {
+          resolve(err.toString())
         })
     })
   }

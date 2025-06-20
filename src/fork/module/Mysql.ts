@@ -30,12 +30,12 @@ class Mysql extends Base {
         process.chdir(dirname(bin))
         try {
           await execPromise(`mysqladmin.exe -uroot password "root"`)
-        } catch (e) {
+        } catch (err) {
           on({
-            'APP-On-Log': AppLog('error', I18nT('appLog.initDBPassFail', { error: e }))
+            'APP-On-Log': AppLog('error', I18nT('appLog.initDBPassFail', { error: err }))
           })
-          console.log('_initPassword err: ', e)
-          reject(e)
+          console.error('_initPassword err: ', err)
+          reject(err)
           return
         }
         on({
@@ -110,7 +110,7 @@ class Mysql extends Base {
             '--user=mysql',
             '--slow-query-log=ON',
             `--slow-query-log-file="${s}"`,
-            `--log-error="${e}"`,
+            `--log-error="${err}"`,
             '--standalone'
           ]
 
@@ -130,9 +130,9 @@ class Mysql extends Base {
               1000
             )
             resolve(res)
-          } catch (e: any) {
-            console.log('-k start err: ', e)
-            reject(e)
+          } catch (err: any) {
+            console.error('-k start err: ', err)
+            reject(err)
             return
           }
         })
@@ -145,7 +145,7 @@ class Mysql extends Base {
         await mkdirp(dataDir)
         try {
           await chmod(dataDir, '0777')
-        } catch (e) {}
+        } catch (err) {}
 
         const params = [
           `--defaults-file="${m}"`,
@@ -153,22 +153,22 @@ class Mysql extends Base {
           '--user=mysql',
           '--slow-query-log=ON',
           `--slow-query-log-file="${s}"`,
-          `--log-error="${e}"`,
+          `--log-error="${err}"`,
           '--initialize-insecure'
         ]
 
         process.chdir(dirname(bin))
         command = `${basename(bin)} ${params.join(' ')}`
-        console.log('command: ', command)
+        console.debug('command: ', command)
         try {
           const res = await execPromise(command)
-          console.log('init res: ', res)
+          console.debug('init res: ', res)
           on(res.stdout)
-        } catch (e: any) {
+        } catch (err: any) {
           on({
-            'APP-On-Log': AppLog('error', I18nT('appLog.initDBDataDirFail', { error: e }))
+            'APP-On-Log': AppLog('error', I18nT('appLog.initDBDataDirFail', { error: err }))
           })
-          reject(e)
+          reject(err)
           return
         }
         on({
@@ -181,9 +181,9 @@ class Mysql extends Base {
           await this._initPassword(version).on(on)
           on(I18nT('fork.postgresqlInit', { dir: dataDir }))
           resolve(res)
-        } catch (e) {
+        } catch (err) {
           await unlinkDirOnFail()
-          reject(e)
+          reject(err)
         }
       } else {
         doStart().then(resolve).catch(reject)
@@ -192,7 +192,7 @@ class Mysql extends Base {
   }
 
   stopGroupService(version: MysqlGroupItem) {
-    console.log(version)
+    console.debug(version)
     return new ForkPromise(async (resolve) => {
       const id = version?.id ?? ''
       const conf =
@@ -202,7 +202,7 @@ class Mysql extends Base {
       let all: PItem[] = []
       try {
         all = await ProcessListSearch(conf, false)
-      } catch (e) {}
+      } catch (err) {}
 
       all.forEach((item) => arr.push(item.ProcessId))
 
@@ -255,7 +255,7 @@ class Mysql extends Base {
           if (existsSync(p)) {
             try {
               await remove(p)
-            } catch (e) {}
+            } catch (err) {}
           }
 
           const startLogFile = join(global.Server.MysqlDir!, `group/start.${id}.log`)
@@ -263,7 +263,7 @@ class Mysql extends Base {
           if (existsSync(startErrLogFile)) {
             try {
               await remove(startErrLogFile)
-            } catch (e) {}
+            } catch (err) {}
           }
           const params = [
             `--defaults-file="${m}"`,
@@ -286,7 +286,7 @@ class Mysql extends Base {
           ]
 
           command = commands.join(EOL)
-          console.log('command: ', command)
+          console.info('command: ', command)
 
           const cmdName = `start-${id}.cmd`
           const sh = join(global.Server.MysqlDir!, cmdName)
@@ -298,9 +298,9 @@ class Mysql extends Base {
               shell: 'cmd.exe',
               cwd: global.Server.MysqlDir!
             })
-          } catch (e: any) {
-            console.log('-k start err: ', e)
-            reject(e)
+          } catch (err: any) {
+            console.error('-k start err: ', err)
+            reject(err)
             return
           }
           const res = await this.waitPidFile(p)
@@ -329,9 +329,9 @@ class Mysql extends Base {
               await execPromise(
                 `${basename(bin)} -P${version.port} -S"${sock}" -uroot password "root"`
               )
-            } catch (e) {
-              console.log('_initPassword err: ', e)
-              reject(e)
+            } catch (err) {
+              console.error('_initPassword err: ', err)
+              reject(err)
               return
             }
           }
@@ -357,13 +357,13 @@ class Mysql extends Base {
         ]
         process.chdir(dirname(bin!))
         command = `${basename(bin!)} ${params.join(' ')}`
-        console.log('command: ', command)
+        console.debug('command: ', command)
         try {
           const res = await execPromise(command)
-          console.log('init res: ', res)
+          console.debug('init res: ', res)
           on(res.stdout)
-        } catch (e: any) {
-          reject(e)
+        } catch (err: any) {
+          reject(err)
           return
         }
         await waitTime(500)
@@ -373,9 +373,9 @@ class Mysql extends Base {
           await initPassword()
           on(I18nT('fork.postgresqlInit', { dir: dataDir }))
           resolve(true)
-        } catch (e) {
+        } catch (err) {
           await unlinkDirOnFail()
-          reject(e)
+          reject(err)
         }
       } else {
         doStart().then(resolve).catch(reject)
@@ -402,7 +402,7 @@ class Mysql extends Base {
           a.installed = existsSync(dir)
         })
         resolve(all)
-      } catch (e) {
+      } catch (err) {
         resolve([])
       }
     })

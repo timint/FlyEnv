@@ -27,7 +27,7 @@ export const Setup = (version: SoftInstalled) => {
     }
     LoadedSetup.fetching[version.bin] = true
     const bin = join(version?.path, 'php.exe')
-    console.log('macport bin: ', bin)
+    console.debug('macport bin: ', bin)
     exec('php.exe -m', {
       cwd: version?.path
     })
@@ -55,7 +55,7 @@ export const Setup = (version: SoftInstalled) => {
   }
 
   const reGetData = () => {
-    console.log('reGetData !!!')
+    console.info('reGetData')
     delete LoadedSetup?.list?.[version.bin]
     delete LoadedSetup.fetching?.[version.bin]
     fetchData()

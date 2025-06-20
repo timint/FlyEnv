@@ -65,7 +65,7 @@
         path: c.path
       })
     }
-    console.log('arr: ', arr)
+    console.debug('arr: ', arr)
     return arr
   })
 </script>

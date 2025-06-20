@@ -70,7 +70,7 @@
     },
     beforeCreate() {},
     unmounted() {
-      console.log('dialog unmounted !!!')
+      console.info('dialog unmounted')
     },
     mounted() {
       if (!this.component) {

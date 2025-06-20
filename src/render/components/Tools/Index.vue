@@ -386,7 +386,7 @@
   }
 
   const selectTool = (item: any) => {
-    console.log('selectTool: ', item)
+    console.debug('selectTool: ', item)
     if (item.id) {
       AppToolStore.id = item.id
     }
@@ -421,7 +421,7 @@
   watch(
     () => AppToolStore.id,
     (v) => {
-      console.log('AppToolStore.id: ', v, tree.value)
+      console.debug('AppToolStore.id: ', v, tree.value)
       tree?.value?.setCurrentKey(v)
       if (v === 'home') {
         if (tree?.value?.store?.currentNode) {

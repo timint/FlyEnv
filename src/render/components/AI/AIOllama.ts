@@ -110,7 +110,7 @@ export class AIOllama extends AIBase {
 
   sendImage() {
     fileSelect('image/*', true).then((files: FileList) => {
-      console.log('choosePath files: ', files)
+      console.debug('choosePath files: ', files)
       if (files.length > 0) {
         const all = Array.from(files).map((file) => useBase64(file).execute())
         Promise.all(all).then((images) => {

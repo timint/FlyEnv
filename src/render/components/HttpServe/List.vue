@@ -82,7 +82,7 @@
               })
             }
           }
-          console.log('this.service: ', this.service)
+          console.debug('this.service: ', this.service)
           const keys = Object.keys(this.service)
           for (const k of keys) {
             if (!arr.includes(k)) {
@@ -174,14 +174,14 @@
             })
             this.service[path] = item
           }
-          console.log(item)
+          console.debug(item)
           this.doRun(path, item)
         })
       },
       doRun(path: string, item: any) {
         IPC.send('app-http-serve-run', path).then((key: string, info: any) => {
           IPC.off(key)
-          console.log(info)
+          console.debug(info)
           if (info?.path && info.path === path) {
             item.run = true
             item.host = info.host

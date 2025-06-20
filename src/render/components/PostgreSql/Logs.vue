@@ -48,7 +48,7 @@
     } else {
       return ''
     }
-    console.log('dbPath: ', dbPath)
+    console.debug('dbPath: ', dbPath)
     return join(dbPath, 'pg.log')
   })
 </script>

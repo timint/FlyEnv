@@ -19,8 +19,8 @@ const store = reactive({
     try {
       new RegExp(this.regex)
       this.regexError = undefined
-    } catch (e) {
-      this.regexError = `${e}` as any
+    } catch (err) {
+      this.regexError = `${err}` as any
     }
   },
   computedResult() {

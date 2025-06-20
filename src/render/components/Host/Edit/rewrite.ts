@@ -41,7 +41,7 @@ export const HostNginxRewriteSetup: {
           recursive: true
         },
         (event: WatchEventType, filename: string) => {
-          console.log('event & filename: ', event, filename)
+          console.debug('event & filename: ', event, filename)
           if (filename) {
             const file = join(dir, filename)
             const k = filename.split('.').shift()!

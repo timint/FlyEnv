@@ -85,6 +85,6 @@
       }
     })
 
-    console.log(`Running: ${command}`)
+    console.debug(`Running: ${command}`)
   }
 </script>

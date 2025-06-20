@@ -77,7 +77,7 @@
 
         if (isScrolledToBottom) {
           // 已滚动到底部的处理逻辑
-          console.log('已滚动到底部')
+          console.info('已滚动到底部')
           isBottom = true
         } else {
           isBottom = false

@@ -54,7 +54,7 @@ class Caddy extends Base {
     const vhostDir = join(global.Server.BaseDir!, 'vhost/caddy')
     try {
       hostAll = await fetchHostList()
-    } catch (e) {}
+    } catch (err) {}
     await mkdirp(vhostDir)
     let tmplContent = ''
     let tmplSSLContent = ''
@@ -145,8 +145,8 @@ class Caddy extends Base {
         const res = await serviceStartExecCMD(version, this.pidPath, baseDir, bin, execArgs, '', on)
         resolve(res)
       } catch (e: any) {
-        console.log('-k start err: ', e)
-        reject(e)
+        console.debug('-k start err: ', err)
+        reject(err)
         return
       }
     })
@@ -166,7 +166,7 @@ class Caddy extends Base {
           a.installed = existsSync(dir)
         })
         resolve(all)
-      } catch (e) {
+      } catch (err) {
         resolve([])
       }
     })

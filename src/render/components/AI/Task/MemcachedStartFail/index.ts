@@ -30,7 +30,7 @@ export class MemcachedStartFail extends BaseTask {
               const port = new Set()
               let m
               while ((m = regex.exec(err)) !== null) {
-                console.log(m)
+                console.debug(m)
                 if (m && m.length > 1) {
                   port.add(m[1])
                 }
@@ -43,8 +43,8 @@ export class MemcachedStartFail extends BaseTask {
                 .then(() => {
                   resolve(true)
                 })
-                .catch((e) => {
-                  reject(e)
+                .catch((err) => {
+                  reject(err)
                 })
               return
             }

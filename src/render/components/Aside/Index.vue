@@ -98,7 +98,7 @@
     const customer: any = AppCustomerModule.module
       .filter((f) => f.moduleType === m)
       .filter((a) => appStore.config.setup.common.showItem?.[a.typeFlag] !== false)
-    console.log('customer: ', customer, m)
+    console.debug('customer: ', customer, m)
     sub.unshift(...customer)
     return sub.length
       ? {
@@ -162,7 +162,7 @@
       .map((m) => m.sub)
       .flat()
       .some((m) => `/${m.typeFlag}` === current)
-    console.log('isRouteCurrent: ', current, find)
+    console.debug('isRouteCurrent: ', current, find)
     return find
   })
 
@@ -176,7 +176,7 @@
   watch(
     routeWatchObj,
     (v) => {
-      console.log('isRouteCurrent watch: ', v)
+      console.debug('isRouteCurrent watch: ', v)
       if (!v.current && v.module > 0) {
         const item = allModule.value[0]
         if (item) {
@@ -184,7 +184,7 @@
           if (!sub) {
             return
           }
-          console.log('sub: ', sub)
+          console.debug('sub: ', sub)
           if (sub?.isCustomer) {
             const path = `/${sub.typeFlag}`
             AppCustomerModule.currentModule = AppCustomerModule.module.find(
@@ -299,7 +299,7 @@
       const current = JSON.stringify(v)
       if (lastTray !== current) {
         lastTray = current
-        console.log('trayStore changed: ', current)
+        console.debug('trayStore changed: ', current)
         IPC.send('APP:Tray-Store-Sync', JSON.parse(current)).then((key: string) => {
           IPC.off(key)
         })
@@ -384,7 +384,7 @@
   }
 
   IPC.on('APP:Tray-Command').then((key: string, fn: string, arg: any) => {
-    console.log('on APP:Tray-Command', key, fn, arg)
+    console.debug('on APP:Tray-Command', key, fn, arg)
     const find = AppCustomerModule.module.find((m) => m.id === arg)
     if (find) {
       const run = find.item.some((s) => s.run)

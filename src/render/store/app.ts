@@ -188,7 +188,7 @@ export const AppStore = defineStore('app', {
         }
         this.hosts.push(reactive(host))
       })
-      console.log('UPDATE_HOSTS: ', this.hosts)
+      console.debug('UPDATE_HOSTS: ', this.hosts)
     },
     INIT_CONFIG(obj: any) {
       this.config = reactive(obj)
@@ -249,7 +249,7 @@ export const AppStore = defineStore('app', {
       return new Promise((resolve) => {
         const config = application.configManager.getConfig()
         const showItem = config.setup.common.showItem
-        console.log('initConfig showItem: ', JSON.parse(JSON.stringify(showItem)))
+        console.debug('initConfig showItem: ', JSON.parse(JSON.stringify(showItem)))
         const fixed: { [key: string]: boolean } = {}
         const dict: any = {
           ftp: 'pure-ftpd'
@@ -276,7 +276,7 @@ export const AppStore = defineStore('app', {
       })
     },
     saveConfig() {
-      console.trace('saveConfig !!!')
+      console.trace('saveConfig')
       return new Promise((resolve) => {
         const args = JSON.parse(
           JSON.stringify({

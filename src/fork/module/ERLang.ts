@@ -26,8 +26,8 @@ class ERLang extends Base {
           a.type = 'erlang'
         })
         resolve(all)
-      } catch (e) {
-        console.log('fetchAllOnLineVersion error: ', e)
+      } catch (err) {
+        console.error('fetchAllOnLineVersion error: ', err)
         resolve([])
       }
     })

@@ -121,11 +121,11 @@
     shell.openPath(dir)
   }
   const doEdit = (data: any): void => {
-    console.log('doEdit: ', data)
+    console.info('doEdit: ', data)
     doAdd(data)
   }
   const doDel = (data: any): void => {
-    console.log('doEdit: ', data)
+    console.info('doEdit: ', data)
     Base._Confirm(I18nT('base.delAlertContent'), undefined, {
       customClass: 'confirm-del',
       type: 'warning'

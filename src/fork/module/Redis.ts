@@ -67,12 +67,12 @@ class Redis extends Base {
       all.forEach((item) => {
         arr.push(item.ProcessId)
       })
-      console.log('php arr: ', arr)
+      console.info('php arr: ', arr)
       if (arr.length > 0) {
         const str = arr.map((s) => `/pid ${s}`).join(' ')
         try {
           await execPromise(`taskkill /f /t ${str}`)
-        } catch (e) {}
+        } catch (err) {}
       }
       on({
         'APP-On-Log': AppLog('info', I18nT('appLog.stopServiceEnd', { service: this.type }))
@@ -116,9 +116,9 @@ class Redis extends Base {
           on
         )
         resolve(res)
-      } catch (e: any) {
-        console.log('-k start err: ', e)
-        reject(e)
+      } catch (err: any) {
+        console.error('-k start err: ', err)
+        reject(err)
         return
       }
     })
@@ -143,7 +143,7 @@ class Redis extends Base {
           a.installed = existsSync(dir)
         })
         resolve(all)
-      } catch (e) {
+      } catch (err) {
         resolve([])
       }
     })

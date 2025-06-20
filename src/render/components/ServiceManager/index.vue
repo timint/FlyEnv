@@ -485,7 +485,7 @@
       flag: props.typeFlag
     }).then((res) => {
       if (res) {
-        console.log('showCustomDir chagned !!!')
+        console.debug('showCustomDir changed')
         resetData()
       }
     })

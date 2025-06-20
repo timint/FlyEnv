@@ -30,8 +30,8 @@ class Java extends Base {
           a.name = `${a.type}${a.version}`
         })
         resolve(all)
-      } catch (e) {
-        console.log('Java fetch version e: ', e)
+      } catch (err) {
+        console.error('Java fetch version e: ', err)
         resolve([])
       }
     })

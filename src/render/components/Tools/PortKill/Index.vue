@@ -115,7 +115,7 @@
           .catch(() => {})
       },
       handleSelectionChange(select: Array<any>) {
-        console.log(...arguments)
+        console.debug(...arguments)
         this.select.splice(0)
         this.select.push(...select)
       },

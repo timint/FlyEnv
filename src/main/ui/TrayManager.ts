@@ -30,10 +30,10 @@ export default class TrayManager extends EventEmitter {
     this.tray.setImage(this.active ? this.activeIcon : this.normalIcon)
   }
 
-  handleTrayClick = (event: any) => {
-    event?.preventDefault && event?.preventDefault()
+  handleTrayClick = (e: any) => {
+    e?.preventDefault && e?.preventDefault()
     const bounds = this.tray.getBounds()
-    console.log('handleTrayClick: ', event, bounds)
+    console.info('handleTrayClick: ', e, bounds)
     const screenWidth = screen.getPrimaryDisplay().workAreaSize.width
     const x = Math.min(bounds.x - 150 + bounds.width * 0.5, screenWidth - 300)
     const y = bounds.y - 445

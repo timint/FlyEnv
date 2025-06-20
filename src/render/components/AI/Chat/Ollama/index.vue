@@ -194,7 +194,7 @@
   const bottom = ref()
 
   const onKeyDown = (e: KeyboardEvent) => {
-    console.log('onKeyDown, e: ', e)
+    console.debug('onKeyDown, e: ', e)
     if (AISetup.isComposing) {
       return
     }
@@ -255,7 +255,7 @@
           try {
             const content = await readFile(file, 'utf-8')
             currentChat.value!.content += `\n\`\`\`\n${content}\n\`\`\`\n`
-          } catch (e) {}
+          } catch (err) {}
         }
       })
   }

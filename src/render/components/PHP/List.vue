@@ -474,7 +474,7 @@
         }).then()
         break
       case 'extend':
-        console.log('extend: ', item, index)
+        console.debug('extend: ', item, index)
         AsyncComponentShow(ExtensionVM, {
           version: item
         }).then()
@@ -521,7 +521,7 @@
       flag: 'php'
     }).then((res) => {
       if (res) {
-        console.log('showCustomDir chagned !!!')
+        console.debug('showCustomDir changed')
         resetData()
       }
     })

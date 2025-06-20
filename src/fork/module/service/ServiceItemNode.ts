@@ -40,7 +40,7 @@ export class ServiceItemNode extends ServiceItem {
       if (existsSync(pid)) {
         try {
           await execPromiseRoot(`del -Force ${pid}`)
-        } catch (e) {}
+        } catch (err) {}
       }
 
       const opt = await getHostItemEnv(item)
@@ -59,7 +59,7 @@ export class ServiceItemNode extends ServiceItem {
       commands.push(`cd /d "${dirname(item.nodeDir!)}"`)
       commands.push(`start /B ${item.startCommand} > "${log}" 2>&1 &`)
       this.command = commands.join(EOL)
-      console.log('command: ', this.command)
+      console.debug('command: ', this.command)
       const sh = join(global.Server.Cache!, `service-${this.id}.cmd`)
       await writeFile(sh, this.command)
       process.chdir(global.Server.Cache!)
@@ -68,14 +68,14 @@ export class ServiceItemNode extends ServiceItem {
           `powershell.exe -Command "(Start-Process -FilePath ./service-${this.id}.cmd -PassThru -WindowStyle Hidden).Id" > "${pid}"`
         )
         const cpid = await this.checkPid()
-        console.log('cpid: ', cpid)
+        console.debug('cpid: ', cpid)
         this.daemon()
         resolve({
           'APP-Service-Start-PID': cpid
         })
-      } catch (e) {
-        console.log('start e: ', e)
-        reject(e)
+      } catch (err) {
+        console.debug('start e: ', err)
+        reject(err)
       }
     })
   }
@@ -92,8 +92,8 @@ export class ServiceItemNode extends ServiceItem {
     }
     const pid = (await readFile(pidFile, 'utf-8')).trim()
     const pids = await ProcessPidListByPid(pid)
-    console.log('checkState pid: ', pid)
-    console.log('checkState pids: ', pids)
+    console.debug('checkState pid: ', pid)
+    console.debug('checkState pids: ', pids)
     return pids
   }
 }

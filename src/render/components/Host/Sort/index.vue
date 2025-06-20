@@ -69,25 +69,27 @@
   let isShow = false
 
   const onShow = () => {
+    console.info('[on show]')
     isShow = true
     filterHosts.value = HostStore.tabList(HostStore.tab)
     hostBack = JSON.stringify(filterHosts.value)
     editHost.value = filterHosts.value.find((h) => h?.id === props?.hostId)
-    console.log('onShow: ', filterHosts.value, HostStore.tab)
+    console.debug('onShow: ', filterHosts.value, HostStore.tab)
   }
 
   const onHide = () => {
+    console.info('[on hide]')
     delete editHost.value?.isSorting
     closedFn && closedFn()
     const host = JSON.stringify(filterHosts.value)
     if (hostBack !== host) {
-      console.log('has changed !!!')
+      console.debug('Host has changed')
       HostStore.save()
     }
   }
 
   const onClickOut = () => {
-    console.log('onClickOut !!!', show.value, isShow)
+    console.info('[on click out]', show.value, isShow)
     if (isShow) {
       show.value = false
     }
@@ -143,7 +145,7 @@
       return Math.max(0, list.length - 1)
     }
     const list = filterHosts.value.filter((h) => !h?.isTop)
-    console.log('max list.length: ', list.length)
+    console.debug('max list.length: ', list.length)
     return Math.max(0, list.length - 1)
   })
 
@@ -186,7 +188,7 @@
   })
 
   const disabled = computed(() => {
-    console.log('disabled: ', editHost?.value, max.value, value?.value)
+    console.debug('disabled: ', editHost?.value, max.value, value?.value)
     return !editHost?.value || max.value === 0 || max.value < value?.value
   })
 

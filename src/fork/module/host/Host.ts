@@ -91,7 +91,7 @@ export const updateAutoSSL = async (host: AppHost, old: AppHost) => {
 }
 
 export const setDirRole = async (dir: string, depth = 0) => {
-  console.log('#setDirRole: ', dir, depth)
+  console.info('#setDirRole: ', dir, depth)
   if (!dir || dir === '/') {
     return
   }
@@ -100,9 +100,9 @@ export const setDirRole = async (dir: string, depth = 0) => {
       if (existsSync(dir)) {
         await chmod(dir, 0o755)
       }
-      console.log('#setDirRole success !!!')
-    } catch (e) {
-      console.log('#setDirRole err: ', e)
+      console.info('#setDirRole success')
+    } catch (err) {
+      console.errr('#setDirRole err: ', err)
     }
   }
 }

@@ -10,7 +10,7 @@
   const onClick = (e: MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
-    console.log(e.target)
+    console.debug(e.target)
     const dom: HTMLElement = e.target as any
     if (dom.tagName.toUpperCase() === 'A') {
       const url = dom.getAttribute('href')

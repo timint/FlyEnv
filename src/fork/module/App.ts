@@ -63,10 +63,10 @@ class App extends Base {
           ?.filter((s) => !!s.trim())
           ?.map((s) => s.trim()) ?? []
       allPath.push(...arr)
-    } catch (e) {
+    } catch (err) {
       const key = '[handleWindowsDefenderExclusionPath][Get-MpPreference][error]'
-      console.log(`${key}: `, e)
-      await appendFile(join(global.Server.BaseDir!, 'debug.log'), `${key}: ${e}\n`)
+      console.error(`${key}: `, e)
+      await appendFile(join(global.Server.BaseDir!, 'debug.log'), `${key}: ${err}\n`)
     }
     await remove(shFile)
     const needAdd: string[] = []
@@ -79,7 +79,7 @@ class App extends Base {
     if (needAdd.length > 0) {
       const str = needAdd.map((s) => `"${s}"`).join(',')
       const command = `Add-MpPreference -ExclusionPath ${str}`
-      console.log('Add-MpPreference command: ', command)
+      console.info('Add-MpPreference command: ', command)
       const shFile = join(global.Server.Cache!, `${uuid()}.ps1`)
       await writeFile(shFile, command)
       process.chdir(global.Server.Cache!)
@@ -87,11 +87,11 @@ class App extends Base {
         const res = await execPromise(
           `powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Unblock-File -LiteralPath '${shFile}'; & '${shFile}'"`
         )
-        console.log('Add-MpPreference res: ', res)
-      } catch (e) {
+        console.info('Add-MpPreference res: ', res)
+      } catch (err) {
         const key = '[handleWindowsDefenderExclusionPath][Add-MpPreference][error]'
-        console.log(`${key}: `, e)
-        await appendFile(join(global.Server.BaseDir!, 'debug.log'), `${key}: ${e}\n`)
+        console.error(`${key}: `, e)
+        await appendFile(join(global.Server.BaseDir!, 'debug.log'), `${key}: ${err}\n`)
       }
       await remove(shFile)
     }
@@ -116,7 +116,7 @@ class App extends Base {
         version
       }
 
-      console.log('data: ', data)
+      console.debug('data: ', data)
 
       const res = await axios({
         url: 'https://api.macphpstudy.com/api/app/start',
@@ -146,7 +146,7 @@ class App extends Base {
         ...info
       }
 
-      console.log('data: ', data)
+      console.debug('data: ', data)
 
       axios({
         url: 'https://api.macphpstudy.com/api/app/feedback_app',
@@ -157,8 +157,8 @@ class App extends Base {
         .then(() => {
           resolve(true)
         })
-        .catch((e) => {
-          reject(e)
+        .catch((err) => {
+          reject(err)
         })
     })
   }
@@ -173,7 +173,7 @@ class App extends Base {
       }
       if (!global.Server.Licenses) {
         const res: any = await this.licensesState()
-        console.log('licensesInit licensesState: ', res)
+        console.info('licensesInit licensesState: ', res)
         Object.assign(data, res)
       } else {
         data.activeCode = global.Server.Licenses
@@ -248,8 +248,8 @@ class App extends Base {
         .then(() => {
           resolve(true)
         })
-        .catch((e) => {
-          reject(e)
+        .catch((err) => {
+          reject(err)
         })
     })
   }

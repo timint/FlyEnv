@@ -56,7 +56,7 @@
       brewStore.brewSrc = ''
       IPC.send('app-fork:brew', 'currentSrc').then((key: string, info: any) => {
         IPC.off(key)
-        console.log('info: ', info)
+        console.debug('info: ', info)
         if (info.data) {
           this.currentBrewSrc = info.data
           brewStore.brewSrc = info.data
@@ -74,7 +74,7 @@
         IPC.send('app-fork:brew', 'changeSrc', this.currentBrewSrc).then(
           (key: string, info: any) => {
             IPC.off(key)
-            console.log('info: ', info)
+            console.debug('info: ', info)
             if (info.code === 0) {
               brewStore.brewSrc = this.currentBrewSrc
               MessageSuccess(this.$t('base.success'))

@@ -108,7 +108,7 @@
         '9000'
     }
     const url = `http://127.0.0.1:${port}/`
-    console.log('url: ', url)
+    console.debug('url: ', url)
     shell.openExternal(url).then().catch()
   }
 </script>

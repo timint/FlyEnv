@@ -226,7 +226,7 @@ export default class WindowManager extends EventEmitter {
 
   handleWindowClose(pageOptions: { [key: string]: any }, page: string, window: BrowserWindow) {
     window.on('close', (event: Event) => {
-      console.log('window close !!!', pageOptions.bindCloseToHide, this.willQuit)
+      console.info('[on window close]', pageOptions.bindCloseToHide, this.willQuit)
       if (pageOptions.bindCloseToHide && !this.willQuit) {
         event.preventDefault()
         window.hide()
@@ -278,7 +278,7 @@ export default class WindowManager extends EventEmitter {
 
   handleBeforeQuit() {
     app.on('before-quit', () => {
-      console.log('app before-quit !!!')
+      console.info('[on app before-quit]')
       this.setWillQuit(true)
     })
   }

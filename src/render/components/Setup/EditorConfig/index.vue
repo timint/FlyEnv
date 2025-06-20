@@ -123,7 +123,7 @@
   nativeTheme.on('updated', onNativeThemeUpdate)
 
   onUnmounted(() => {
-    console.log('EditorConfig onUnmounted !!!')
+    console.info('EditorConfig onUnmounted')
     nativeTheme.removeListener('updated', onNativeThemeUpdate)
   })
 </script>

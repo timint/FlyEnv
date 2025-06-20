@@ -399,7 +399,7 @@
   }
 
   const chooseRoot = (flag: 'root' | 'certkey' | 'cert', choosefile = false) => {
-    console.log('chooseRoot: ', flag, choosefile)
+    console.debug('chooseRoot: ', flag, choosefile)
     const options: any = {}
     let opt = ['openDirectory', 'createDirectory', 'showHiddenFiles']
     if (choosefile) {

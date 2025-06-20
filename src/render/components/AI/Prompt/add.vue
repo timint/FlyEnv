@@ -73,7 +73,7 @@
     await formRef.value.validate((valid) => {
       if (valid) {
         PromptSetup.addCustomPrompt(form.value as any)
-        console.log('submit!')
+        console.info('submit!')
         show.value = false
       } else {
         submiting = false

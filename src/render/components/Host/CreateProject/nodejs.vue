@@ -67,7 +67,7 @@
     }
     const keys = Array.from(new Set(allName.map((s) => s.slice(0, 1).toUpperCase())))
     keys.sort()
-    console.log('keys: ', keys)
+    console.debug('keys: ', keys)
     return keys.map((k) => {
       const names = allName.filter((a) => a.toUpperCase().startsWith(k))
       names.sort()
@@ -101,7 +101,7 @@
       : allName.map((n) => ({
           value: n
         }))
-    console.log('results: ', results)
+    console.debug('results: ', results)
     // call callback function to return suggestions
     cb(results)
   }
@@ -116,7 +116,7 @@
   })
 
   const toCreate = (item: any) => {
-    console.log('toCreate: ', item)
+    console.debug('toCreate: ', item)
     AsyncComponentShow(CreateVM, {
       type: item.name
     }).then()

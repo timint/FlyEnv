@@ -45,7 +45,7 @@
 
   const choosePath = () => {
     fileSelect().then((files: FileList) => {
-      console.log('choosePath files: ', files)
+      console.debug('choosePath files: ', files)
       files.length > 0 && (file.value = files[0])
       useBase64(file.value)
         .execute()

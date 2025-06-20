@@ -49,11 +49,11 @@ export const makeTomcatServerXML = (cnfDir: string, serverContent: string, hostA
       if (!Array.isArray(serverXML?.Server?.Service?.Connector)) {
         serverXML.Server.Service.Connector = [serverXML.Server.Service.Connector]
       }
-      console.log('serverXML.Server.Service.Connector: ', serverXML.Server.Service.Connector)
+      console.debug('serverXML.Server.Service.Connector: ', serverXML.Server.Service.Connector)
       const find: any = serverXML.Server.Service.Connector.find(
         (c: any) => `${c.port}` === `${port}`
       )
-      console.log('find: ', find)
+      console.debug('find: ', find)
       if (!find) {
         const arr = [
           `<Connector appFlag="PhpWebStudy" port="${port}" protocol="org.apache.coyote.http11.Http11NioProtocol"
@@ -222,7 +222,7 @@ export const makeTomcatServerXML = (cnfDir: string, serverContent: string, hostA
             continue
           }
           const name = c.hostName
-          console.log('SSLHostConfig c: ', c, name, allName.has(name), SSLHostConfig.indexOf(c))
+          console.debug('SSLHostConfig c: ', c, name, allName.has(name), SSLHostConfig.indexOf(c))
           if (!allName.has(name)) {
             dels.push(c)
           }
@@ -260,7 +260,7 @@ export const makeGlobalTomcatServerXML = async (version: SoftInstalled) => {
   let hostAll: Array<AppHost> = []
   try {
     hostAll = await fetchHostList()
-  } catch (e) {}
+  } catch (err) {}
   hostAll = hostAll.filter((h) => h.type === 'tomcat')
 
   const vhostDir = join(global.Server.BaseDir!, 'vhost/tomcat')
@@ -356,7 +356,7 @@ export class ServiceItemJavaTomcat extends ServiceItem {
       if (existsSync(pid)) {
         try {
           await execPromiseRoot(`del -Force ${pid}`)
-        } catch (e) {}
+        } catch (err) {}
       }
 
       const env = {
@@ -375,7 +375,7 @@ export class ServiceItemJavaTomcat extends ServiceItem {
       ]
 
       this.command = commands.join(EOL)
-      console.log('command: ', this.command)
+      console.debug('command: ', this.command)
       const sh = join(global.Server.Cache!, `service-${this.id}.cmd`)
       await writeFile(sh, this.command)
       process.chdir(global.Server.Cache!)
@@ -388,9 +388,9 @@ export class ServiceItemJavaTomcat extends ServiceItem {
         resolve({
           'APP-Service-Start-PID': cpid
         })
-      } catch (e) {
-        console.log('start e: ', e)
-        reject(e)
+      } catch (err) {
+        console.error('start e: ', err)
+        reject(err)
       }
     })
   }
@@ -422,7 +422,7 @@ export class ServiceItemJavaTomcat extends ServiceItem {
     let all: any[] = []
     try {
       all = await ProcessListSearch(key, false)
-    } catch (e) {}
+    } catch (err) {}
     return all.map((item) => item.ProcessId)
   }
 }

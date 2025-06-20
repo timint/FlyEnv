@@ -41,7 +41,7 @@ class MeiliSearch extends Base {
   }
 
   _startServer(version: SoftInstalled, lastVersion?: SoftInstalled, WORKING_DIR?: string) {
-    console.log('_startServer: ', version, WORKING_DIR)
+    console.info('_startServer: ', version, WORKING_DIR)
     return new ForkPromise(async (resolve, reject, on) => {
       on({
         'APP-On-Log': AppLog(
@@ -69,9 +69,9 @@ class MeiliSearch extends Base {
           on
         )
         resolve(res)
-      } catch (e: any) {
-        console.log('-k start err: ', e)
-        reject(e)
+      } catch (err: any) {
+        console.error('-k start err: ', err)
+        reject(err)
         return
       }
     })
@@ -91,7 +91,7 @@ class MeiliSearch extends Base {
           a.installed = existsSync(dir)
         })
         resolve(all)
-      } catch (e) {
+      } catch (err) {
         resolve({})
       }
     })

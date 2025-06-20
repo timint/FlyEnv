@@ -76,12 +76,12 @@ export class ServiceItem {
         const str = arr.map((s) => `/pid ${s}`).join(' ')
         try {
           await execPromiseRoot(`taskkill /f /t ${str}`)
-        } catch (e) {}
+        } catch (err) {}
       }
       if (this.pidFile && existsSync(this.pidFile)) {
         try {
           await execPromiseRoot(`del -Force ${this.pidFile}`)
-        } catch (e) {}
+        } catch (err) {}
       }
       resolve({
         'APP-Service-Stop-PID': arr
@@ -115,7 +115,7 @@ export class ServiceItem {
             this.start(this.host!)
               .then(() => {})
               .catch()
-          } catch (e) {}
+          } catch (err) {}
         }
       )
     }

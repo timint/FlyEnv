@@ -89,13 +89,13 @@
     closedFn && closedFn()
     const host = JSON.stringify(filterHosts.value)
     if (hostBack !== host) {
-      console.log('has changed !!!')
+      console.debug('has changed')
       project.saveProject()
     }
   }
 
   const onClickOut = () => {
-    console.log('onClickOut !!!', show.value, isShow)
+    console.debug('onClickOut', show.value, isShow)
     if (isShow) {
       show.value = false
     }
@@ -118,7 +118,7 @@
 
   const max = computed(() => {
     const list = filterHosts.value
-    console.log('max list.length: ', list.length)
+    console.debug('max list.length: ', list.length)
     return Math.max(0, list.length - 1)
   })
 
@@ -149,7 +149,7 @@
   })
 
   const disabled = computed(() => {
-    console.log('disabled: ', editHost?.value, max.value, value?.value)
+    console.debug('disabled: ', editHost?.value, max.value, value?.value)
     return !editHost?.value || max.value === 0 || max.value < value?.value
   })
 

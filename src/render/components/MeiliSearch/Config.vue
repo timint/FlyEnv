@@ -495,7 +495,7 @@
             v
           }
         }) ?? []
-      console.log('getCommonSetting: ', matchs, item.name)
+      console.info('getCommonSetting: ', matchs, item.name)
       const find = matchs?.find((m) => m.k === item.name)
       let value = find?.v ?? item.value
       if (item.isString) {
@@ -513,7 +513,7 @@
   }
 
   const onTypeChange = (type: 'default' | 'common', config: string) => {
-    console.log('onTypeChange: ', type, config)
+    console.info('onTypeChange: ', type, config)
     if (editConfig !== config || commonSetting.value.length === 0) {
       editConfig = config
       getCommonSetting()

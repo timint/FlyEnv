@@ -88,7 +88,7 @@
   watch(
     lang,
     (val) => {
-      console.log('lang has changed !!!', val)
+      console.info('lang has changed', val)
       const body = document.body
       body.className = `lang-${val}`
     },
@@ -100,7 +100,7 @@
   watch(
     () => JSON.stringify(showItem.value),
     (v, ov) => {
-      console.log('showItem has changed !!!', v, ov)
+      console.info('showItem has changed', v, ov)
       onShowItemChange()
     }
   )

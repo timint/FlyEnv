@@ -16,9 +16,9 @@ let electronProcess: ChildProcess | null
 async function killAllElectron() {
   const sh = _path.resolve(__dirname, '../scripts/electron-kill.ps1')
   const scriptDir = _path.dirname(sh)
-  console.log('sh: ', sh, scriptDir)
   const command = `powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Unblock-File -LiteralPath './electron-kill.ps1'; & './electron-kill.ps1'"`
   let res: any = null
+  console.info('ℹ️ Terminating all Electron processes...')
   try {
     res = await exec(command, {
       cwd: scriptDir
@@ -55,6 +55,7 @@ async function launchViteDevServer(openInBrowser = false) {
 }
 
 function buildMainProcess() {
+  console.info('ℹ️ Building Electron main process...')
   return new Promise((resolve, reject) => {
     Promise.all([killAllElectron(), build(esbuildConfig.dev), build(esbuildConfig.devFork)])
       .then(() => {
@@ -94,7 +95,7 @@ function runElectronApp() {
   })
 
   electronProcess.on('close', () => {
-    console.log('electronProcess close !!!')
+    console.info('⚠️ electronProcess closed')
     if (restart) {
       restart = false
       runElectronApp()
@@ -103,7 +104,6 @@ function runElectronApp() {
 }
 
 if (process.env.TEST === 'electron') {
-  console.log('process.env.TEST electron !!!!!!')
   Promise.all([launchViteDevServer(), buildMainProcess()])
     .then(() => {
       runElectronApp()
@@ -111,16 +111,17 @@ if (process.env.TEST === 'electron') {
     .catch((err) => {
       console.error(err)
     })
+  console.info('Starting Electron Dev Environment...')
 }
 
 if (process.env.TEST === 'browser') {
   launchViteDevServer(true).then(() => {
-    console.log('Vite Dev Server Start !!!')
+    console.info('✅ Vite Dev Server is started')
   })
 }
 
 process.on('SIGINT', async () => {
-  console.log('Catch SIGINT，Cleaning Electron Process...')
+  console.info('⚠️ Catch SIGINT, cleaning Electron process...')
   await killAllElectron()
   process.exit(0)
 })
@@ -137,7 +138,7 @@ const next = (base: string, file?: string | null) => {
     }
     fsWait = true
     previousMd5 = currentMd5
-    console.log(`File ${file} has been updated`)
+    console.info(`✅ File ${file} has been updated`)
     restart = true
     buildMainProcess()
       .then()

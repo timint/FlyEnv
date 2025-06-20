@@ -106,12 +106,12 @@
   })
 
   const onBeforEnter = () => {
-    console.log('onBeforEnter !!!')
+    console.info('onBeforEnter')
     ServiceActionStore.fetchPath()
   }
 
   const onShow = () => {
-    console.log('onShow !!!')
+    console.info('onShow')
   }
 
   const doChange = () => {

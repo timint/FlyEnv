@@ -113,7 +113,7 @@
       }
     },
     unmounted() {
-      console.log('about unmounted !!!')
+      console.info('[on about unmounted]')
     },
     methods: {
       openUrl(e, u) {

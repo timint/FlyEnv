@@ -35,7 +35,7 @@ const exec = (
     const taskStore = TaskStore()
     const task = taskStore.module(typeFlag)!
     task.log!.splice(0)
-    console.log('exec time: ', new Date().getTime())
+    console.debug('exec time: ', new Date().getTime())
     const brewStore = BrewStore()
     const handleResult = (run: boolean, pid?: string) => {
       if (lastVersion && lastVersion?.path) {
@@ -77,7 +77,7 @@ const exec = (
     if (ServiceActionExtParam?.[typeFlag]) {
       try {
         params = await ServiceActionExtParam[typeFlag]!(typeFlag, fn, version)
-      } catch (e) {
+      } catch (err) {
         handleResult(false)
         return resolve(true)
       }
@@ -111,7 +111,7 @@ const exec = (
     IPC.send(`app-fork:${typeFlag}`, fn, args, lastVersion, ...params).then(
       (key: string, res: any) => {
         if (res.code === 0) {
-          console.log('### key: ', key)
+          console.debug('### key: ', key)
           IPC.off(key)
           const pid = res?.data?.['APP-Service-Start-PID'] ?? ''
           handleResult(fn !== 'stopService', pid)
@@ -217,11 +217,11 @@ export const reloadWebServer = (hosts?: Array<AppHost>) => {
     }
 
     const host = [...hosts].pop()
-    console.log('reloadWebServer host: ', host, host?.phpVersion)
+    console.info('reloadWebServer host: ', host, host?.phpVersion)
     if (host?.phpVersion) {
       const phpVersions = brewStore.module('php')?.installed ?? []
       const php = phpVersions?.find((p) => p.num === host.phpVersion)
-      console.log('reloadWebServer php: ', php)
+      console.debug('reloadWebServer php: ', php)
       if (php) {
         startService('php', php).then()
       }

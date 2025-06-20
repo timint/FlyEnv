@@ -39,27 +39,27 @@ export const fetchHostList = async () => {
     if (content.length === 0) {
       return hostList
     }
-    console.log('fetchHostList content: ', content.startsWith('['), content.endsWith(']'))
+    console.debug('fetchHostList content: ', content.startsWith('['), content.endsWith(']'))
     if (content.startsWith('[') && content.endsWith(']')) {
       const key = new NodeRSA(RSAPrivateKey)
       const c = key.encryptPrivate(content, 'base64')
-      console.log('fetchHostList ccc: ', c)
+      console.debug('fetchHostList ccc: ', c)
       await writeFile(hostfile, c)
     } else {
       const key = new NodeRSA(RSAPublickKey)
       try {
         content = key.decryptPublic(content, 'utf8')
-      } catch (e) {}
+      } catch (err) {}
     }
     try {
       hostList = JSON.parse(content)
-    } catch (e) {
-      console.log(e)
+    } catch (err) {
+      console.error(err)
       if (content.length > 0) {
         const hostBackFile = join(global.Server.BaseDir!, 'host.back.json')
         await writeFile(hostBackFile, content)
       }
-      throw e
+      throw err
     }
   }
   return hostList

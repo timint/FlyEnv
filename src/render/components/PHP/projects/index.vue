@@ -281,12 +281,12 @@
   }
 
   const tbodyDblClick = (e: MouseEvent) => {
-    console.log('tbodyDblClick: ', e, e.target)
+    console.debug('tbodyDblClick: ', e, e.target)
     let node: HTMLElement = e.target as any
     while (node.nodeName.toLowerCase() !== 'tr') {
       node = node.parentNode as any
     }
-    console.log('tr: ', node)
+    console.debug('tr: ', node)
     const idDom: HTMLElement = node.querySelector('.project-list-cell-id') as any
     const id = idDom.getAttribute('data-project-id') ?? ''
     const item = project.project.find((h) => `${h.id}` === `${id}`)

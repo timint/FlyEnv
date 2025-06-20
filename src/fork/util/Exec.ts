@@ -46,7 +46,7 @@ export async function customerServiceStartExec(
   if (pidPath && existsSync(pidPath)) {
     try {
       await remove(pidPath)
-    } catch (e) {}
+    } catch (err) {}
   }
 
   const baseDir = join(global.Server.BaseDir!, 'module-customer')
@@ -87,10 +87,9 @@ export async function customerServiceStartExec(
         cwd: baseDir
       }
     )
-  } catch (e) {
-    error = e
+  } catch (err) {
     if (!version.pidPath) {
-      throw error
+      throw err
     }
   }
 

@@ -25,12 +25,12 @@ export type OllamaServerSetup = {
 
 const onCompositionstart = () => {
   AISetup.isComposing = true
-  console.log('开始中文输入')
+  console.info('开始中文输入')
 }
 
 const onCompositionend = () => {
   AISetup.isComposing = false
-  console.log('结束中文输入')
+  console.info('结束中文输入')
 }
 
 export const AISetup = reactive<{
@@ -99,8 +99,8 @@ export const AISetup = reactive<{
         )
       )
       .then()
-      .catch((e: any) => {
-        console.log('flyenv-ai-chat-list save err: ', e)
+      .catch((err: any) => {
+        console.error('flyenv-ai-chat-list save err: ', err)
       })
   },
   initCompositionEvent() {
@@ -132,7 +132,7 @@ export const Setup = () => {
       localForage
         .getItem('flyenv-ai-start-try-time')
         .then((res: number) => {
-          console.log('flyenv-ai-start-try-time: ', res)
+          console.info('flyenv-ai-start-try-time: ', res)
           if (res) {
             AISetup.trialStartTime = res
             AISetup.save()
@@ -140,7 +140,7 @@ export const Setup = () => {
             showTips()
           }
         })
-        .catch(() => {
+        .catch((err) => {
           showTips()
         })
     }

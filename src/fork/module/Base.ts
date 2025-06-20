@@ -27,7 +27,7 @@ export class Base {
 
   initLocalApp(version: SoftInstalled, flag: string) {
     return new ForkPromise((resolve, reject, on) => {
-      console.log('initLocalApp: ', version.bin, global.Server.AppDir)
+      console.info('initLocalApp: ', version.bin, global.Server.AppDir)
       if (
         !existsSync(version.bin) &&
         version.bin.includes(join(global.Server.AppDir!, `${flag}-${version.version}`))
@@ -53,11 +53,11 @@ export class Base {
               })
               resolve(true)
             })
-            .catch((e) => {
+            .catch((err) => {
               on({
                 'APP-On-Log': AppLog('error', I18nT('appLog.bundleUnzipFail', { error: e }))
               })
-              reject(e)
+              reject(err)
             })
           return
         }
@@ -67,8 +67,8 @@ export class Base {
   }
 
   _startServer(version: SoftInstalled, ...args: any): ForkPromise<any> {
-    console.log(version)
-    console.log(args)
+    console.debug(version)
+    console.debug(args)
     return new ForkPromise<any>((resolve) => {
       resolve(true)
     })
@@ -94,14 +94,14 @@ export class Base {
           await writeFile(appPidFile, `${pid}`.trim())
         }
         resolve(res)
-      } catch (e) {
-        reject(e)
+      } catch (err) {
+        reject(err)
       }
     })
   }
 
   _stopServer(version: SoftInstalled): ForkPromise<{ 'APP-Service-Stop-PID': number[] }> {
-    console.log(version)
+    console.debug(version)
     return new ForkPromise(async (resolve, reject, on) => {
       on({
         'APP-On-Log': AppLog('info', I18nT('appLog.stopServiceBegin', { service: this.type }))
@@ -110,12 +110,12 @@ export class Base {
       if (existsSync(appPidFile)) {
         const pid = (await readFile(appPidFile, 'utf-8')).trim()
         const pids = await ProcessPidListByPid(pid)
-        console.log('_stopServer 0 pid: ', pid, pids)
+        console.info('_stopServer 0 pid: ', pid, pids)
         if (pids.length > 0) {
           const str = pids.map((s) => `/pid ${s}`).join(' ')
           try {
             await execPromise(`taskkill /f /t ${str}`)
-          } catch (e) {}
+          } catch (err) {}
         }
         on({
           'APP-Service-Stop-Success': true
@@ -131,12 +131,12 @@ export class Base {
       }
       if (version?.pid) {
         const pids = await ProcessPidListByPid(`${version.pid}`.trim())
-        console.log('_stopServer 1 pid: ', version.pid, pids)
+        console.info('_stopServer 1 pid: ', version.pid, pids)
         if (pids.length > 0) {
           const str = pids.map((s) => `/pid ${s}`).join(' ')
           try {
             await execPromise(`taskkill /f /t ${str}`)
-          } catch (e) {}
+          } catch (err) {}
         }
         on({
           'APP-Service-Stop-Success': true
@@ -166,13 +166,13 @@ export class Base {
       }
       const serverName = dis[this.type]
       const pids = await ProcessListSearch(serverName, false)
-      console.log('_stopServer 2 pid: ', serverName, pids)
+      console.info('_stopServer 2 pid: ', serverName, pids)
       const all = pids.filter((item) => item.CommandLine.includes('PhpWebStudy-Data'))
       if (all.length > 0) {
         const str = all.map((s) => `/pid ${s.ProcessId}`).join(' ')
         try {
           await execPromise(`taskkill /f /t ${str}`)
-        } catch (e) {}
+        } catch (err) {}
       }
       on({
         'APP-On-Log': AppLog('info', I18nT('appLog.stopServiceEnd', { service: this.type }))
@@ -221,7 +221,7 @@ export class Base {
         res = false
       }
     }
-    console.log('waitPid: ', time, res)
+    console.debug('waitPid: ', time, res)
     return res
   }
 
@@ -235,7 +235,7 @@ export class Base {
         proxy.protocol = u.protocol.replace(':', '')
         proxy.host = u.hostname
         proxy.port = u.port
-      } catch (e) {
+      } catch (err) {
         proxy = undefined
       }
     } else {
@@ -258,7 +258,7 @@ export class Base {
         proxy: this.getAxiosProxy()
       })
       list = res?.data?.data ?? []
-    } catch (e) {}
+    } catch (err) {}
     return list
   }
 
@@ -304,8 +304,8 @@ export class Base {
           await execPromise(
             `powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Unblock-File -LiteralPath '${sh}'; & '${sh}'"`
           )
-        } catch (e) {
-          console.log('[python-install][error]: ', e)
+        } catch (err) {
+          console.error('[python-install][error]: ', err)
           await appendFile(
             join(global.Server.BaseDir!, 'debug.log'),
             `[python][python-install][error]: ${e}\n`
@@ -319,7 +319,7 @@ export class Base {
           const find = allProcess.find(
             (p) => p?.CommandLine?.includes('msiexec.exe') && p?.CommandLine?.includes(APPDIR)
           )
-          console.log('python checkState find: ', find)
+          console.info('python checkState find: ', find)
           const bin = row.bin
           if (existsSync(bin) && !find) {
             res = true
@@ -343,10 +343,10 @@ export class Base {
             await execPromise(
               `powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Unblock-File -LiteralPath '${sh}'; & '${sh}'"`
             )
-          } catch (e) {
+          } catch (err) {
             await appendFile(
               join(global.Server.BaseDir!, 'debug.log'),
-              `[python][pip-install][error]: ${e}\n`
+              `[python][pip-install][error]: ${err}\n`
             )
           }
           // await remove(sh)
@@ -358,7 +358,7 @@ export class Base {
             await waitTime(500)
             await remove(APPDIR)
             await remove(tmpDir)
-          } catch (e) {}
+          } catch (err) {}
         }
         throw new Error('Python Install Fail')
       }
@@ -502,9 +502,9 @@ export class Base {
           await doHandleZip()
           success = true
           refresh()
-        } catch (e) {
+        } catch (err) {
           refresh()
-          console.log('ERROR: ', e)
+          console.error('ERROR: ', err)
           on({
             'APP-On-Log': AppLog('error', I18nT('appLog.installFromZipFail', { error: e }))
           })
@@ -555,13 +555,13 @@ export class Base {
             on({
               'APP-On-Log': AppLog('error', I18nT('appLog.downFail', { service, error: err }))
             })
-            console.log('stream error: ', err)
+            console.error('stream error: ', err)
             row.downState = 'exception'
             try {
               if (existsSync(row.zip)) {
                 unlinkSync(row.zip)
               }
-            } catch (e) {}
+            } catch (err) {}
             refresh()
             on(row)
             setTimeout(() => {
@@ -578,10 +578,10 @@ export class Base {
                 await doHandleZip()
               }
               refresh()
-            } catch (e) {
+            } catch (err) {
               refresh()
               on({
-                'APP-On-Log': AppLog('info', I18nT('appLog.installFail', { service, error: e }))
+                'APP-On-Log': AppLog('info', I18nT('appLog.installFail', { service, error: err }))
               })
             }
             on(row)
@@ -607,13 +607,13 @@ export class Base {
           on({
             'APP-On-Log': AppLog('error', I18nT('appLog.downFail', { service, error: err }))
           })
-          console.log('down error: ', err)
+          console.error('down error: ', err)
           row.downState = 'exception'
           try {
             if (existsSync(row.zip)) {
               unlinkSync(row.zip)
             }
-          } catch (e) {}
+          } catch (err) {}
           refresh()
           on(row)
           setTimeout(() => {

@@ -323,7 +323,7 @@
       isEdit: !!i,
       edit: i
     }).then((res: any) => {
-      console.log('addExecItem res: ', res)
+      console.debug('addExecItem res: ', res)
       const save = reactive(new ModuleCustomerExecItem(res))
       save.pid = ''
       save.running = false
@@ -412,7 +412,7 @@
     if (!checkItem()) {
       return
     }
-    console.log('item.value: ', item.value)
+    console.debug('item.value: ', item.value)
     callback(JSON.parse(JSON.stringify(item.value)))
     show.value = false
   }

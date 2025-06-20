@@ -27,7 +27,7 @@ class Host extends Base {
       let host: AppHost[] = []
       try {
         host = await fetchHostList()
-      } catch (e) {}
+      } catch (err) {}
       resolve({
         host
       })
@@ -39,8 +39,8 @@ class Host extends Base {
       let hostList: Array<AppHost> = []
       try {
         hostList = await fetchHostList()
-      } catch (e) {
-        reject(e)
+      } catch (err) {
+        reject(err)
         return
       }
 
@@ -92,7 +92,7 @@ class Host extends Base {
       }
 
       const doPark = () => {
-        console.log('doPark !!!')
+        console.info('doPark')
         return new ForkPromise((resolve) => {
           if (!park || !host || !host.root) {
             resolve(0)
@@ -241,7 +241,7 @@ class Host extends Base {
         if (existsSync(f)) {
           try {
             await remove(f)
-          } catch (e) {}
+          } catch (err) {}
         }
       }
       resolve(true)
@@ -275,9 +275,9 @@ class Host extends Base {
           await setDirRole(host.root)
         }
         resolve(true)
-      } catch (e) {
-        console.log('_addVhost: ', e)
-        reject(e)
+      } catch (err) {
+        console.error('_addVhost: ', err)
+        reject(err)
       }
     })
   }
@@ -313,8 +313,8 @@ class Host extends Base {
       let content = ''
       try {
         content = await readFile(filePath, 'utf-8')
-      } catch (e) {
-        return reject(e)
+      } catch (err) {
+        return reject(err)
       }
       let x: any = content.match(/(#X-HOSTS-BEGIN#)([\s\S]*?)(#X-HOSTS-END#)/g)
       if (x && x[0]) {
@@ -346,24 +346,24 @@ class Host extends Base {
       let appHost: AppHost[] = []
       try {
         appHost = await fetchHostList()
-      } catch (e) {
-        reject(e)
+      } catch (err) {
+        reject(err)
         return
       }
-      console.log('writeHosts: ', write)
+      console.info('writeHosts: ', write)
       if (write) {
         try {
           this._initHost(appHost, true, ipv6)
-        } catch (e) {}
+        } catch (err) {}
       } else {
         let hasErr = false
         let hosts = ''
         try {
           hosts = await readFile(this.hostsFile, 'utf-8')
-        } catch (e) {
+        } catch (err) {
           await appendFile(
             join(global.Server.BaseDir!, 'debug.log'),
-            `[Host][writeHosts][readFile]: ${e}\n`
+            `[Host][writeHosts][readFile]: ${err}\n`
           )
           hasErr = true
         }
@@ -376,11 +376,11 @@ class Host extends Base {
         }
         try {
           this._initHost(appHost, false, ipv6)
-        } catch (e) {}
+        } catch (err) {}
       }
       try {
         await execPromise(`ipconfig /flushdns`)
-      } catch (e) {}
+      } catch (err) {}
       resolve(true)
     })
   }

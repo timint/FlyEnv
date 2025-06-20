@@ -90,22 +90,22 @@ export function handleCommand(item: any) {
 }
 
 function handleCommandBefore(item: any) {
-  console.log('handleCommandBefore==1=>', item)
+  console.debug('handleCommandBefore==1=>', item)
   if (!item['command-before']) {
     return
   }
   const [command, ...args] = item['command-before'].split(',')
-  console.log('handleCommandBefore==2=>', command, ...args)
+  console.debug('handleCommandBefore==2=>', command, ...args)
   global.application.handleCommand(command, command, ...args)
 }
 
 function handleCommandAfter(item: any) {
-  console.log('handleCommandAfter==1=>', item)
+  console.debug('handleCommandAfter==1=>', item)
   if (!item['command-after']) {
     return
   }
   const [command, ...args] = item['command-after'].split(',')
-  console.log('handleCommandAfter==2=>', command, ...args)
+  console.debug('handleCommandAfter==2=>', command, ...args)
   global.application.handleCommand(command, command, ...args)
 }
 

@@ -94,7 +94,7 @@
 
   const to = computed({
     get() {
-      console.log('JSONStore: ', JSONStore)
+      console.debug('JSONStore: ', JSONStore)
       return JSONStore.tabs[JSONStore.currentTab].to
     },
     set(v: string) {
@@ -227,7 +227,7 @@
         }
       })
       currentTab.value.editor = () => toEditor!
-      console.log('actions: ', toEditor?.getSupportedActions())
+      console.debug('actions: ', toEditor?.getSupportedActions())
     }
   }
 
@@ -339,7 +339,7 @@
   })
 
   const onToChange = (v: any) => {
-    console.log('onToChange !!!', v)
+    console.debug('onToChange', v)
     if (!tabChanging) {
       currentTab.value.transformTo()
     }
