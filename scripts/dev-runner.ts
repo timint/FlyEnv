@@ -91,14 +91,17 @@ function runElectronApp() {
 }
 
 if (process.env.TEST === 'electron') {
-  Promise.all([launchViteDevServer(), buildMainProcess()])
-    .then(() => {
-      runElectronApp()
-    })
-    .catch((err) => {
-      console.error(err)
-    })
   console.info('Starting Electron Dev Environment...')
+  Promise.all([
+    launchViteDevServer(),
+    buildMainProcess()
+  ])
+  .then(() => {
+    runElectronApp()
+  })
+  .catch((err) => {
+    console.error(err)
+  })
 }
 
 if (process.env.TEST === 'browser') {
@@ -155,21 +158,21 @@ fs.watch(forkPath, { recursive: true }, (e, filename) => {
 
 const staticPath = path.resolve(__dirname, '../static/')
 fs.watch(staticPath, { recursive: true }, (e, filename) => {
-  if (filename) {
-    if (fsWait) return
-    const from = path.join(staticPath, filename)
-    const currentMd5 = md5(fs.readFileSync(from)) as string
-    if (currentMd5 == previousMd5) {
-      return
-    }
-    fsWait = true
-    previousMd5 = currentMd5
-    const to = path.resolve(__dirname, '../dist/electron/static/', filename)
-    console.log(`File ${filename} has been updated`)
-    console.log('Copying file', from, to)
-    fs.copySync(from, to)
-    setTimeout(() => {
-      fsWait = false
-    }, 500)
+  if (!filename || !fs.existsSync(path.join(staticPath, filename)) || !fs.lstatSync(path.join(staticPath, filename)).isFile()) {
+    return
   }
+  if (fsWait) return
+  const from = path.join(staticPath, filename)
+  const currentMd5 = md5(fs.readFileSync(from)) as string
+  if (currentMd5 == previousMd5) {
+    return
+  }
+  fsWait = true
+  previousMd5 = currentMd5
+  const to = path.resolve(__dirname, '../dist/electron/static/', filename)
+  console.info('✅ Copying static files', from, to)
+  fs.copySync(from, to)
+  setTimeout(() => {
+    fsWait = false
+  }, 500)
 })

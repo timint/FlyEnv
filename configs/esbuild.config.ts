@@ -10,7 +10,6 @@ const external = [
   'aws-sdk',
   'nock',
   '7zip-min-electron',
-  'dohdec',
   'nodejieba',
   'os',
   'child_process',

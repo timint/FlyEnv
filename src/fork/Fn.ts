@@ -75,16 +75,12 @@ export function fixEnv(): { [k: string]: any } {
 export function execSyncFix(command: string, opt?: { [k: string]: any }): string | undefined {
   let res: any = undefined
   try {
-    res = execSync(
-      command,
-      merge(
-        {
-          env: fixEnv()
-        },
-        opt
-      )
-    ).toString()
-  } catch (e) {
+    res = execSync(command, {
+      encoding: 'utf-8',
+      env: fixEnv(),
+      ...opt
+    })
+  } catch (err) {
     res = undefined
   }
   return res
@@ -113,8 +109,8 @@ export function execPromiseRoot(command: string): ForkPromise<{
           }
         }
       )
-    } catch (e) {
-      reject(e)
+    } catch (err) {
+      reject(err)
     }
   })
 }
@@ -143,8 +139,8 @@ export function execPromise(
           }
         }
       )
-    } catch (e) {
-      reject(e)
+    } catch (err) {
+      reject(err)
     }
   })
 }
@@ -212,8 +208,8 @@ export function spawnPromiseMore(
       windowsHide: true,
       ...opt
     })
-  } catch (e) {
-    console.log('spawnPromiseMore err: ', e)
+  } catch (err) {
+    console.error('spawnPromiseMore err: ', err)
     return {
       promise: undefined,
       spawn: undefined
@@ -234,12 +230,12 @@ export function spawnPromiseMore(
       }
     }
     child?.stdout?.on('data', (data) => {
-      console.log('spawnPromiseMore stdout: ', data.toString())
+      console.info('spawnPromiseMore stdout: ', data.toString())
       stdout.push(data)
       on(data.toString(), stdinFn)
     })
     child?.stderr?.on('data', (err) => {
-      console.log('spawnPromiseMore stderr: ', err.toString())
+      console.info('spawnPromiseMore stderr: ', err.toString())
       stderr.push(err)
       on(err.toString(), stdinFn)
     })
@@ -328,7 +324,7 @@ export function downFile(url: string, savepath: string) {
         proxy.protocol = u.protocol.replace(':', '')
         proxy.host = u.hostname
         proxy.port = u.port
-      } catch (e) {
+      } catch (err) {
         proxy = undefined
       }
     } else {
@@ -382,7 +378,7 @@ export function getSubDir(fp: string, fullpath = true) {
           }
         }
       })
-    } catch (e) {}
+    } catch (err) {}
   }
   return arr
 }
@@ -456,7 +452,7 @@ export function versionFixed(version?: string | null) {
 
 export const versionCheckBin = (binPath: string) => {
   if (existsSync(binPath)) {
-    console.log('binPath: ', binPath)
+    console.debug('binPath: ', binPath)
     binPath = realpathSync(binPath)
     if (!existsSync(binPath)) {
       return false
@@ -464,7 +460,7 @@ export const versionCheckBin = (binPath: string) => {
     if (!statSync(binPath).isFile()) {
       return false
     }
-    console.log('binPath realpathSync: ', binPath)
+    console.info('binPath realpathSync: ', binPath)
     return binPath
   }
   return false
@@ -510,7 +506,7 @@ export const versionBinVersion = (
       try {
         version = reg?.exec(str)?.[2]?.trim()
         reg!.lastIndex = 0
-      } catch (e) {}
+      } catch (err) {}
       resolve({
         version
       })
@@ -519,11 +515,11 @@ export const versionBinVersion = (
       const res = await execPromise(command, {
         cwd: dirname(bin)
       })
-      console.log('versionBinVersion: ', command, reg, res)
+      console.info('versionBinVersion: ', command, reg, res)
       handleThen(res)
-    } catch (e) {
-      console.log('versionBinVersion err: ', e)
-      handleCatch(e)
+    } catch (err) {
+      console.error('versionBinVersion err: ', err)
+      handleCatch(err)
     }
   })
 }
@@ -658,13 +654,13 @@ export const fetchRawPATH = (): ForkPromise<string[]> => {
 
     let str = ''
     const stdout = res.trim()
-    console.log('fetchRawPATH stdout: ', stdout)
+    console.debug('fetchRawPATH stdout: ', stdout)
     const regex = /FlyEnv-PATH-GET([\s\S]*?)FlyEnv-PATH-GET/g
     const match = regex.exec(stdout)
     if (match) {
       str = match[1].trim()
     }
-    console.log('fetchRawPATH str: ', {
+    console.debug('fetchRawPATH str: ', {
       str
     })
     str = str.replace(new RegExp(`\r\n`, 'g'), '').replace(new RegExp(`\n`, 'g'), '')
@@ -674,7 +670,7 @@ export const fetchRawPATH = (): ForkPromise<string[]> => {
     const oldPath = Array.from(new Set(str.split(';') ?? []))
       .filter((s) => !!s.trim())
       .map((s) => s.trim())
-    console.log('_fetchRawPATH: ', str, oldPath)
+    console.debug('_fetchRawPATH: ', str, oldPath)
     resolve(oldPath)
   })
 }
@@ -692,7 +688,7 @@ export const handleWinPathArr = (paths: string[]) => {
 }
 
 export const writePath = async (path: string[], other: string = '') => {
-  console.log('writePath paths: ', path)
+  console.info('writePath paths: ', path)
   const sh = join(global.Server.Static!, 'sh/path-set.ps1')
   const copySh = join(global.Server.Cache!, 'path-set.ps1')
   if (existsSync(copySh)) {
