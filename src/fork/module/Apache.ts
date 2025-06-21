@@ -3,7 +3,7 @@ import { existsSync } from 'fs'
 import { Base } from './Base'
 import { I18nT } from '@lang/index'
 import type { AppHost, OnlineVersionItem, SoftInstalled } from '@shared/app'
-import { AppLog, execPromise, getAllFileAsync, versionBinVersion, versionFilterSame, versionFixed, versionInitedApp, versionLocalFetch, versionSort, serviceStartExecCMD } from '../Fn'
+import { AppLog, execPromise, getAllFileAsync, versionBinVersion, versionFilterSame, versionFixed, versionInitiatedApp, versionLocalFetch, versionSort, serviceStartExecCMD } from '../Fn'
 import { ForkPromise } from '@shared/ForkPromise'
 import { mkdirp, readFile, writeFile } from 'fs-extra'
 import TaskQueue from '../TaskQueue'
@@ -329,8 +329,8 @@ class Apache extends Base {
               error
             })
           })
-          const appInited = await versionInitedApp('apache', 'bin/httpd.exe')
-          versions.push(...appInited.filter((a) => !versions.find((v) => v.bin === a.bin)))
+          const appInitiated = await versionInitiatedApp('apache', 'bin/httpd.exe')
+          versions.push(...appInitiated.filter((a) => !versions.find((v) => v.bin === a.bin)))
           resolve(versionSort(versions))
         })
         .catch(() => {

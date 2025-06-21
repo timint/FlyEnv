@@ -17,7 +17,7 @@
   import { AppModules } from '@/core/App'
   import VueSvg from '@/components/VueSvgIcon/svg.vue'
 
-  const inited = ref(false)
+  const initiated = ref(false)
   const appStore = AppStore()
   const brewStore = BrewStore()
 
@@ -34,14 +34,14 @@
   const needFetch: number[] = []
 
   const onShowItemChange = () => {
-    if (!inited.value) {
+    if (!initiated.value) {
       needFetch.push(1)
       return
     }
     let k: AllAppModule
     for (k of allService) {
       const module = brewStore.module(k)
-      if (showItem?.value?.[k] !== false && !module.installedInited) {
+      if (showItem?.value?.[k] !== false && !module.installedInitiated) {
         const flags = [k]
         installedVersions.allInstalledVersions(flags)
       }
@@ -62,8 +62,8 @@
       (f: AllAppModule) => showItem?.value?.[f] !== false
     ) as Array<keyof typeof AppModuleEnum>
     if (flags.length === 0) {
-      appStore.versionInited = true
-      inited.value = true
+      appStore.versionInitiated = true
+      initiated.value = true
       if (needFetch.length > 0) {
         needFetch.pop()
         onShowItemChange()
@@ -71,8 +71,8 @@
       return
     }
     installedVersions.allInstalledVersions(flags).then(() => {
-      appStore.versionInited = true
-      inited.value = true
+      appStore.versionInitiated = true
+      initiated.value = true
       if (needFetch.length > 0) {
         needFetch.pop()
         onShowItemChange()

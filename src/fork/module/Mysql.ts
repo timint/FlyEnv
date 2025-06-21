@@ -3,7 +3,7 @@ import { existsSync, readdirSync } from 'fs'
 import { Base } from './Base'
 import { I18nT } from '@lang/index'
 import type { MysqlGroupItem, OnlineVersionItem, SoftInstalled } from '@shared/app'
-import { waitTime, versionLocalFetch, versionFilterSame, versionBinVersion, versionFixed, versionInitedApp, versionSort, AppLog, execPromise, serviceStartExecCMD, spawnPromise } from '../Fn'
+import { waitTime, versionLocalFetch, versionFilterSame, versionBinVersion, versionFixed, versionInitiatedApp, versionSort, AppLog, execPromise, serviceStartExecCMD, spawnPromise } from '../Fn'
 import { ForkPromise } from '@shared/ForkPromise'
 import { mkdirp, writeFile, chmod, remove, readFile } from 'fs-extra'
 import TaskQueue from '../TaskQueue'
@@ -435,8 +435,8 @@ class Mysql extends Base {
               error
             })
           })
-          const appInited = await versionInitedApp('mysql', 'bin/mysqld.exe')
-          versions.push(...appInited.filter((a) => !versions.find((v) => v.bin === a.bin)))
+          const appInitiated = await versionInitiatedApp('mysql', 'bin/mysqld.exe')
+          versions.push(...appInitiated.filter((a) => !versions.find((v) => v.bin === a.bin)))
           resolve(versionSort(versions))
         })
         .catch(() => {

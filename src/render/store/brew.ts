@@ -36,7 +36,7 @@ export interface OnlineVersionItem {
 
 export interface AppSoftInstalledItem {
   getListing: boolean
-  installedInited: boolean
+  installedInitiated: boolean
   installed: Array<SoftInstalled>
   list: OnlineVersionItem[]
   installing: Record<string, OnlineVersionItem>
@@ -70,7 +70,7 @@ export const BrewStore = defineStore('brew', {
       if (!this?.[flag]) {
         this[flag] = reactive({
           getListing: false,
-          installedInited: false,
+          installedInitiated: false,
           installed: [],
           list: [],
           installing: {}

@@ -234,7 +234,7 @@
     return (
       allDisabled ||
       running ||
-      !appStore.versionInited ||
+      !appStore.versionInitiated ||
       allCustomerServiceModuleExecItem.value.some((s) => s.running)
     )
   })
@@ -407,12 +407,12 @@
   })
 
   let autoStarted = false
-  let helperInited = false
+  let helperInitiated = false
   watch(
     groupDisabled,
     (v) => {
       if (!v) {
-        if (autoStarted || !helperInited) {
+        if (autoStarted || !helperInitiated) {
           return
         }
         if (appStore.config.setup?.autoStartService === true) {

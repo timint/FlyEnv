@@ -239,7 +239,7 @@ export const reGetInstalled = (type: AllAppModule) => {
     service.fetching = true
     const brewStore = BrewStore()
     const data = brewStore.module(type)
-    data.installedInited = false
+    data.installedInitiated = false
     installedVersions.allInstalledVersions([type]).then(() => {
       service.fetching = false
       resolve(true)

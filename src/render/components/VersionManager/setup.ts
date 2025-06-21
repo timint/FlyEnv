@@ -53,7 +53,7 @@ export const Setup = (typeFlag: AllAppModule) => {
     reGetData()
     brewStore.showInstallLog = false
     brewStore.brewRunning = false
-    brewStore.module(typeFlag).installedInited = false
+    brewStore.module(typeFlag).installedInitiated = false
     installedVersions.allInstalledVersions([typeFlag]).then()
   }
 

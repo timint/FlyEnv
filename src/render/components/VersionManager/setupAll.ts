@@ -66,7 +66,7 @@ export const SetupAll = (typeFlag: AllAppModule) => {
         console.debug('showCustomDir changed')
         LocalSetup.fetching[typeFlag] = true
         const data = brewStore.module(typeFlag)
-        data.installedInited = false
+        data.installedInitiated = false
         installedVersions.allInstalledVersions([typeFlag]).finally(() => {
           LocalSetup.fetching[typeFlag] = false
         })

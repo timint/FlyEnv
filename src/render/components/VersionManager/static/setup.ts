@@ -68,7 +68,7 @@ export const Setup = (typeFlag: AllAppModule) => {
 
   const fetchInstalled = () => {
     const data = brewStore.module(typeFlag)
-    data.installedInited = false
+    data.installedInitiated = false
     installedVersions.allInstalledVersions([typeFlag]).then().catch()
   }
 

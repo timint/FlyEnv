@@ -117,7 +117,7 @@ interface State {
     setup: StateBase
   }
   httpServe: Array<string>
-  versionInited: boolean
+  versionInitiated: boolean
   httpServeService: {
     [k: string]: {
       run: boolean
@@ -156,7 +156,7 @@ const state: State = {
     }
   },
   httpServe: [],
-  versionInited: false,
+  versionInitiated: false,
   httpServeService: {},
   currentPage: '/hosts'
 }

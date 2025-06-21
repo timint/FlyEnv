@@ -80,7 +80,7 @@
         handler() {
           const flag: keyof typeof AppSofts = this.typeFlag as any
           AppStore().saveConfig()
-          BrewStore()[flag].installedInited = false
+          BrewStore()[flag].installedInitiated = false
         },
         deep: true
       }

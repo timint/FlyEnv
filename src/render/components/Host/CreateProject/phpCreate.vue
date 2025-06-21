@@ -182,10 +182,10 @@
     return brewStore.module('composer').installed
   })
 
-  if (!brewStore.module('php').installedInited) {
+  if (!brewStore.module('php').installedInitiated) {
     installedVersions.allInstalledVersions(['php']).then().catch()
   }
-  if (!brewStore.module('composer').installedInited) {
+  if (!brewStore.module('composer').installedInitiated) {
     installedVersions.allInstalledVersions(['composer']).then().catch()
   }
 

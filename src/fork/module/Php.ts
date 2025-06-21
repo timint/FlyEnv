@@ -3,7 +3,7 @@ import { createWriteStream, existsSync } from 'fs'
 import { Base } from './Base'
 import { I18nT } from '@lang/index'
 import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
-import { AppLog, execPromise, serviceStartExec, versionBinVersion, versionFilterSame, versionFixed, versionInitedApp, versionLocalFetch, versionSort } from '../Fn'
+import { AppLog, execPromise, serviceStartExec, versionBinVersion, versionFilterSame, versionFixed, versionInitiatedApp, versionLocalFetch, versionSort } from '../Fn'
 import { ForkPromise } from '@shared/ForkPromise'
 import { writeFile, readFile, remove, mkdirp, copyFile, readdir } from 'fs-extra'
 import { zipUnPack } from '@shared/file'
@@ -336,8 +336,8 @@ class Php extends Base {
               error
             })
           })
-          const appInited = await versionInitedApp('php', 'php-cgi.exe')
-          versions.push(...appInited.filter((a) => !versions.find((v) => v.bin === a.bin)))
+          const appInitiated = await versionInitiatedApp('php', 'php-cgi.exe')
+          versions.push(...appInitiated.filter((a) => !versions.find((v) => v.bin === a.bin)))
           resolve(versionSort(versions))
         })
         .catch(() => {

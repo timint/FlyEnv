@@ -407,7 +407,7 @@
 
   const reinit = () => {
     const data = php.value
-    data.installedInited = false
+    data.installedInitiated = false
     init()
   }
 
@@ -497,7 +497,7 @@
     }
     service.value.fetching = true
     const data = brewStore.module('php')
-    data.installedInited = false
+    data.installedInitiated = false
     installedVersions.allInstalledVersions(['php']).then(() => {
       service.value.fetching = false
     })

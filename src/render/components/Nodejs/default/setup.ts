@@ -95,7 +95,7 @@ export const Setup = () => {
           if (res?.data?.setEnv) {
             versionChange(item)
           }
-          brewStore.module('node').installedInited = false
+          brewStore.module('node').installedInitiated = false
           installedVersions.allInstalledVersions(['node']).then()
           MessageSuccess(I18nT('base.success'))
         } else if (res?.code === 1) {

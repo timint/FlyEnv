@@ -314,7 +314,7 @@
   }
 
   if (pythons.value.length === 0) {
-    brewStore.module('python').installedInited = false
+    brewStore.module('python').installedInitiated = false
     installedVersions.allInstalledVersions(['python']).then(() => {
       if (!item.value.pythonDir && pythons.value.length > 0) {
         const jdk = pythons.value[0]

@@ -76,7 +76,7 @@ export const Setup = (typeFlag: AllAppModule) => {
     }
     service.value.fetching = true
     const data = brewStore.module(typeFlag)
-    data.installedInited = false
+    data.installedInitiated = false
     installedVersions.allInstalledVersions([typeFlag]).then(() => {
       service.value.fetching = false
     })
@@ -198,7 +198,7 @@ export const Setup = (typeFlag: AllAppModule) => {
 
   const fetchData = () => {
     const data = brewStore.module(typeFlag)
-    if (service?.value?.fetching || data.installedInited) {
+    if (service?.value?.fetching || data.installedInitiated) {
       return
     }
     service.value.fetching = true

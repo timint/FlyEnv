@@ -6,12 +6,12 @@ const { existsSync, readFile, writeFile, mkdirp } = require('fs-extra')
 const { join } = require('path')
 
 interface State {
-  inited: boolean
+  initiated: boolean
   all: Array<MysqlGroupItem>
 }
 
 const state: State = {
-  inited: false,
+  initiated: false,
   all: []
 }
 
@@ -20,10 +20,10 @@ export const MysqlStore = defineStore('mysqlGroup', {
   getters: {},
   actions: {
     async init() {
-      if (this.inited) {
+      if (this.initiated) {
         return
       }
-      this.inited = true
+      this.initiated = true
       const file = join(global.Server.MysqlDir, 'group/group.json')
       if (existsSync(file)) {
         const arr: Array<any> = []

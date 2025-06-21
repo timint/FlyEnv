@@ -2,7 +2,7 @@ import { join, dirname, basename } from 'path'
 import { existsSync } from 'fs'
 import { Base } from './Base'
 import type { AppHost, OnlineVersionItem, SoftInstalled } from '@shared/app'
-import { AppLog, serviceStartExecCMD, versionBinVersion, versionFilterSame, versionFixed, versionInitedApp, versionLocalFetch, versionSort } from '../Fn'
+import { AppLog, serviceStartExecCMD, versionBinVersion, versionFilterSame, versionFixed, versionInitiatedApp, versionLocalFetch, versionSort } from '../Fn'
 import { ForkPromise } from '@shared/ForkPromise'
 import { readFile, writeFile, mkdirp } from 'fs-extra'
 import { zipUnPack } from '@shared/file'
@@ -172,8 +172,8 @@ class Nginx extends Base {
               error
             })
           })
-          const appInited = await versionInitedApp('nginx', 'nginx.exe')
-          versions.push(...appInited.filter((a) => !versions.find((v) => v.bin === a.bin)))
+          const appInitiated = await versionInitiatedApp('nginx', 'nginx.exe')
+          versions.push(...appInitiated.filter((a) => !versions.find((v) => v.bin === a.bin)))
           resolve(versionSort(versions))
         })
         .catch(() => {

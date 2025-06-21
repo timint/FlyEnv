@@ -600,7 +600,7 @@ export const versionLocalFetch = async (
   return list
 }
 
-export const versionInitedApp = async (type: string, bin: string) => {
+export const versionInitiatedApp = async (type: string, bin: string) => {
   const versions: SoftInstalled[] = []
   const zipDir = join(global.Server.Static!, 'zip')
   const allZip = versionDirCache?.[zipDir] ?? (await getAllFileAsync(zipDir, false))

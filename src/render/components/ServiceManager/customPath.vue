@@ -86,7 +86,7 @@
         }
         setupItem[flag].dirs = reactive(v)
         appStore.saveConfig()
-        brewStore.module(flag).installedInited = false
+        brewStore.module(flag).installedInitiated = false
       })
     },
     {

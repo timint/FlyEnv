@@ -518,7 +518,7 @@
   }
 
   if (jdks.value.length === 0) {
-    brewStore.module('java').installedInited = false
+    brewStore.module('java').installedInitiated = false
     installedVersions.allInstalledVersions(['java']).then(() => {
       if (!item.value.jdkDir && jdks.value.length > 0) {
         const jdk = jdks.value[0]
@@ -531,7 +531,7 @@
   }
 
   if (tomcats.value.length === 0) {
-    brewStore.module('tomcat').installedInited = false
+    brewStore.module('tomcat').installedInitiated = false
     installedVersions.allInstalledVersions(['tomcat']).then(() => {
       if (!item.value.tomcatDir && tomcats.value.length > 0) {
         const tomcat = tomcats.value[0]

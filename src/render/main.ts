@@ -22,11 +22,11 @@ global.Server = getGlobal('Server')
 const app = VueExtend(App)
 loadCustomerLang().then().catch()
 
-let inited = false
+let initiated = false
 IPC.on('APP-Ready-To-Show').then(() => {
   console.info('APP-Ready-To-Show')
-  if (!inited) {
-    inited = true
+  if (!initiated) {
+    initiated = true
     const store = AppStore()
     AppCustomerModule.init()
     store
@@ -47,7 +47,7 @@ IPC.on('APP-Ready-To-Show').then(() => {
     AppLogStore.init().then().catch()
     store.chechAutoHide()
   } else {
-    console.info('⚠️ APP-Ready-To-Show already inited')
+    console.info('⚠️ APP-Ready-To-Show already initiated')
   }
 })
 

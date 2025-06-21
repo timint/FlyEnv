@@ -2,7 +2,7 @@ import { join, dirname, basename } from 'path'
 import { existsSync } from 'fs'
 import { Base } from './Base'
 import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
-import { AppLog, execPromise, serviceStartExecCMD, versionBinVersion, versionFilterSame, versionFixed, versionInitedApp, versionLocalFetch, versionSort } from '../Fn'
+import { AppLog, execPromise, serviceStartExecCMD, versionBinVersion, versionFilterSame, versionFixed, versionInitiatedApp, versionLocalFetch, versionSort } from '../Fn'
 import { ForkPromise } from '@shared/ForkPromise'
 import { readFile, writeFile, mkdirp, chmod, copyFile } from 'fs-extra'
 import TaskQueue from '../TaskQueue'
@@ -176,8 +176,8 @@ class Redis extends Base {
               error
             })
           })
-          const appInited = await versionInitedApp('redis', 'redis-server.exe')
-          versions.push(...appInited.filter((a) => !versions.find((v) => v.bin === a.bin)))
+          const appInitiated = await versionInitiatedApp('redis', 'redis-server.exe')
+          versions.push(...appInitiated.filter((a) => !versions.find((v) => v.bin === a.bin)))
           resolve(versionSort(versions))
         })
         .catch(() => {

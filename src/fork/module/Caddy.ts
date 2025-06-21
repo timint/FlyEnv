@@ -2,7 +2,7 @@ import { join, basename } from 'path'
 import { existsSync } from 'fs'
 import { Base } from './Base'
 import type { AppHost, OnlineVersionItem, SoftInstalled } from '@shared/app'
-import { AppLog, hostAlias, serviceStartExecCMD, versionBinVersion, versionFilterSame, versionFixed, versionInitedApp, versionLocalFetch, versionSort } from '../Fn'
+import { AppLog, hostAlias, serviceStartExecCMD, versionBinVersion, versionFilterSame, versionFixed, versionInitiatedApp, versionLocalFetch, versionSort } from '../Fn'
 import { ForkPromise } from '@shared/ForkPromise'
 import { readFile, writeFile, mkdirp } from 'fs-extra'
 import TaskQueue from '../TaskQueue'
@@ -199,8 +199,8 @@ class Caddy extends Base {
               error
             })
           })
-          const appInited = await versionInitedApp('caddy', 'caddy.exe')
-          versions.push(...appInited.filter((a) => !versions.find((v) => v.bin === a.bin)))
+          const appInitiated = await versionInitiatedApp('caddy', 'caddy.exe')
+          versions.push(...appInitiated.filter((a) => !versions.find((v) => v.bin === a.bin)))
           resolve(versionSort(versions))
         })
         .catch(() => {

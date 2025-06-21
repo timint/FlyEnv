@@ -36,7 +36,7 @@ class InstalledVersions {
     const brewStore = BrewStore()
     const appStore = AppStore()
     const setup = JSON.parse(JSON.stringify(AppStore().config.setup))
-    const arrs = flags.filter((f) => !brewStore.module(f).installedInited)
+    const arrs = flags.filter((f) => !brewStore.module(f).installedInitiated)
     if (arrs.length === 0) {
       setTimeout(() => {
         this.callBack()
@@ -68,7 +68,7 @@ class InstalledVersions {
           })
           data.installed.splice(0)
           data.installed.push(...installed)
-          data.installedInited = true
+          data.installedInitiated = true
           old.splice(0)
           const server = appStore.config.server[flag]
           if (flag !== 'php' && data.installed.length > 0) {
