@@ -234,7 +234,7 @@
     const execXTerm = ProjectSetup.execing.NodeJS
     execXTerm?.unmounted()
     if (created.value) {
-      execXTerm?.destory()
+      execXTerm?.destroy()
       created.value = false
       loading.value = false
       delete ProjectSetup.execing.NodeJS
@@ -248,7 +248,7 @@
     }
     const execXTerm = ProjectSetup.execing.NodeJS
     execXTerm?.stop()?.then(() => {
-      execXTerm?.destory()
+      execXTerm?.destroy()
       created.value = false
       loading.value = false
       delete ProjectSetup.execing.NodeJS

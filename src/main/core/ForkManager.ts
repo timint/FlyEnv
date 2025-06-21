@@ -8,8 +8,8 @@ import { cpus } from 'os'
 class ForkItem {
   forkFile: string
   child: ChildProcess
-  autoDestory: boolean
-  destoryTimer?: NodeJS.Timeout
+  autoDestroy: boolean
+  destroyTimer?: NodeJS.Timeout
   taskFlag: Array<number> = []
   _on: Function = () => {}
   callback: {
@@ -18,11 +18,11 @@ class ForkItem {
       on: Function
     }
   }
-  waitDestory() {
-    if (this.autoDestory && this.taskFlag.length === 0) {
-      this.destoryTimer = setTimeout(() => {
+  waitDestroy() {
+    if (this.autoDestroy && this.taskFlag.length === 0) {
+      this.destroyTimer = setTimeout(() => {
         if (this.taskFlag.length === 0) {
-          this.destory()
+          this.destroy()
         }
       }, 10000)
     }
@@ -38,7 +38,7 @@ class ForkItem {
         fn.resolve(info)
         delete this.callback?.[key]
         this.taskFlag.pop()
-        this.waitDestory()
+        this.waitDestroy()
       } else if (info?.code === 200) {
         fn.on(info)
       }
@@ -57,12 +57,12 @@ class ForkItem {
       delete this.callback?.[k]
     }
     this.taskFlag.pop()
-    this.waitDestory()
+    this.waitDestroy()
   }
 
-  constructor(file: string, autoDestory: boolean) {
+  constructor(file: string, autoDestroy: boolean) {
     this.forkFile = file
-    this.autoDestory = autoDestory
+    this.autoDestroy = autoDestroy
     this.callback = {}
     this.onMessage = this.onMessage.bind(this)
     this.onError = this.onError.bind(this)
@@ -79,7 +79,7 @@ class ForkItem {
 
   send(...args: any) {
     return new ForkPromise((resolve, reject, on) => {
-      this.destoryTimer && clearTimeout(this.destoryTimer)
+      this.destroyTimer && clearTimeout(this.destroyTimer)
       this.taskFlag.push(1)
       const thenKey = uuid()
       this.callback[thenKey] = {
@@ -98,7 +98,7 @@ class ForkItem {
     })
   }
 
-  destory() {
+  destroy() {
     try {
       const pid = this?.child?.pid
       if (this?.child?.connected) {
@@ -166,12 +166,12 @@ export class ForkManager {
     return find.send(...args)
   }
 
-  destory() {
-    this.serviceFork && this.serviceFork.destory()
-    this.ftpFork && this.ftpFork.destory()
-    this.dnsFork && this.dnsFork.destory()
+  destroy() {
+    this.serviceFork && this.serviceFork.destroy()
+    this.ftpFork && this.ftpFork.destroy()
+    this.dnsFork && this.dnsFork.destroy()
     this.forks.forEach((fork) => {
-      fork.destory()
+      fork.destroy()
     })
   }
 }

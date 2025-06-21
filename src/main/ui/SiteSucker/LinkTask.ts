@@ -8,7 +8,7 @@ import { createWriteStream, existsSync, mkdirp, removeSync, stat } from 'fs-extr
 import type { LinkItem } from './LinkItem'
 
 class LinkTaskItem {
-  isDestory?: boolean
+  isDestroy?: boolean
 
   constructor() {}
 
@@ -22,7 +22,7 @@ class LinkTaskItem {
   }
 
   async run() {
-    if (this.isDestory) {
+    if (this.isDestroy) {
       return
     }
     const link = Store.Links.shift()
@@ -144,8 +144,8 @@ class LinkTaskItem {
     }
   }
 
-  destory() {
-    this.isDestory = true
+  destroy() {
+    this.isDestroy = true
   }
 }
 
@@ -164,9 +164,9 @@ class LinkTask {
     }
   }
 
-  destory() {
+  destroy() {
     this.task.forEach((t) => {
-      t.isDestory = true
+      t.isDestroy = true
     })
     this.task.splice(0)
   }

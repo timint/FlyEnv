@@ -211,8 +211,8 @@ export default class Application extends EventEmitter {
     logger.info('🚨 [PhpWebStudy] Application stop')
     try {
       ScreenManager.destroy()
-      SiteSuckerManager.destory()
-      this.forkManager?.destory()
+      SiteSuckerManager.destroy()
+      this.forkManager?.destroy()
       this.trayManager?.destroy()
       await this.stopServer()
     } catch (err) {

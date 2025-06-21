@@ -287,6 +287,6 @@ class BaseManager {
     }
   }
 
-  async destory() {}
+  async destroy() {}
 }
 export default BaseManager
