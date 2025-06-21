@@ -57,14 +57,21 @@ async function launchViteDevServer(openInBrowser = false) {
 function buildMainProcess() {
   console.info('ℹ️ Building Electron main process...')
   return new Promise((resolve, reject) => {
-    Promise.all([killAllElectron(), build(esbuildConfig.dev), build(esbuildConfig.devFork)])
-      .then(() => {
-        resolve(true)
-      })
-      .catch((e) => {
-        console.log(e)
-        reject(e)
-      })
+    Promise.all([
+      killAllElectron(),
+      build(esbuildConfig.dev),
+      build(esbuildConfig.devFork)
+    ])
+    .then(() => {
+      console.info('✅ Electron main process built')
+      console.info('Copying static files...')
+      fs.copySync(path.resolve(__dirname, '../static/'), path.resolve(__dirname, '../dist/electron/static/'))
+      resolve(true)
+    })
+    .catch((err) => {
+      console.error(err)
+      reject(err)
+    })
   })
 }
 
