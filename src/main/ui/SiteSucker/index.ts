@@ -4,7 +4,7 @@ import LinkTask from './LinkTask'
 import { join } from 'path'
 import { Store } from './Store'
 import { urlToDir } from './Fn'
-import { CallBack, LinkItem, type PageLink } from './LinkItem'
+import { Callback, LinkItem, type PageLink } from './LinkItem'
 
 const os = require('os')
 
@@ -15,8 +15,8 @@ type RunParams = {
   config: RunConfig
 }
 class SiteSucker {
-  setCallBack(fn: Function) {
-    CallBack.fn = fn
+  setCallback(fn: Function) {
+    Callback.fn = fn
   }
   show(item: RunParams) {
     this.destroy()

@@ -72,7 +72,7 @@
     class="host-edit-drawer"
     :with-header="false"
   >
-    <Config :custom-config="item.config" @do-close="configCallBack"></Config>
+    <Config :custom-config="item.config" @do-close="configCallback"></Config>
   </el-drawer>
 </template>
 
@@ -135,7 +135,7 @@
     mounted() {},
     unmounted() {},
     methods: {
-      configCallBack(config?: string) {
+      configCallback(config?: string) {
         if (typeof config === 'string') {
           this.item.config = config
         }

@@ -6,7 +6,7 @@ interface TaskItem {
   state: 'wait' | 'running'
 }
 class TaskQueue {
-  private callBack: WeakMap<TaskItem, { resolve: Function; reject: Function }> = new WeakMap()
+  private callback: WeakMap<TaskItem, { resolve: Function; reject: Function }> = new WeakMap()
   #queue: Array<TaskItem> = []
   #runQueue: Array<TaskItem> = []
   #runSize = 4
@@ -39,7 +39,7 @@ class TaskQueue {
       if (taskItem.state === 'wait') {
         taskItem.state = 'running'
         const item = taskItem.item
-        const { resolve, reject } = this.callBack.get(taskItem)!
+        const { resolve, reject } = this.callback.get(taskItem)!
         item(...taskItem.param)
           .then((...args) => {
             resolve(...args)
@@ -52,7 +52,7 @@ class TaskQueue {
             if (index >= 0) {
               this.#runQueue.splice(index, 1)
             }
-            this.callBack.delete(taskItem)
+            this.callback.delete(taskItem)
             this.#_handle()
           })
       }
@@ -66,7 +66,7 @@ class TaskQueue {
         param: args ?? [],
         state: 'wait'
       }
-      this.callBack.set(obj, { resolve, reject })
+      this.callback.set(obj, { resolve, reject })
       if (this.#runQueue.length >= this.#runSize) {
         this.#queue.push(obj)
       } else {

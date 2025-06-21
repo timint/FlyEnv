@@ -19,7 +19,7 @@ export type PageLink = {
   retry?: number
 }
 
-export const CallBack: {
+export const Callback: {
   fn: Function
 } = {
   fn: () => {}
@@ -46,7 +46,7 @@ export class LinkItem implements PageLink {
     const noticeOrder = NoticeDict?.[this.url] ?? -1
     if (noticeOrder < order) {
       NoticeDict[this.url] = order
-      CallBack.fn({
+      Callback.fn({
         url: this.url,
         state: this._state,
         type: this.type,

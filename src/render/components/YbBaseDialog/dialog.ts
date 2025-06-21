@@ -101,7 +101,7 @@ class BaseDialog {
         vm.unmount()
         vm = null
       }
-      intance.callBack = (res: any, close = true) => {
+      intance.callback = (res: any, close = true) => {
         if (close) {
           intance.close()
         }
@@ -113,11 +113,11 @@ class BaseDialog {
 
   /**
    * 弹窗回调方法
-   * @param callBack
+   * @param callback
    * @returns {Dialog}
    */
-  then(callBack: Function) {
-    this._resolve = callBack
+  then(callback: Function) {
+    this._resolve = callback
     return this
   }
 }

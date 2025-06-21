@@ -15,7 +15,7 @@ class InstalledVersions {
     this.runningFlags = []
     this.taskRunning = false
   }
-  private callBack() {
+  private callback() {
     this._cb.forEach((cb) => {
       cb(true)
     })
@@ -39,7 +39,7 @@ class InstalledVersions {
     const arrs = flags.filter((f) => !brewStore.module(f).installedInitiated)
     if (arrs.length === 0) {
       setTimeout(() => {
-        this.callBack()
+        this.callback()
       }, 30)
       return new Promise((resolve) => {
         this._cb.push(resolve)
@@ -106,7 +106,7 @@ class InstalledVersions {
         } else {
           ServiceActionStore.cleanAlias()
         }
-        this.callBack()
+        this.callback()
       }
     )
     return new Promise((resolve) => {

@@ -59,7 +59,7 @@ export default class Application extends EventEmitter {
     this.handleCommands()
     this.handleIpcMessages()
     this.initForkManager()
-    SiteSuckerManager.setCallBack((link: any) => {
+    SiteSuckerManager.setCallback((link: any) => {
       if (link === 'window-close') {
         this.windowManager.sendCommandTo(
           this.mainWindow!,
@@ -435,8 +435,8 @@ export default class Application extends EventEmitter {
   handleCommand(command: string, key: string, ...args: any) {
     this.emit(command, ...args)
     let window
-    const callBack = (info: any) => {
-      console.info('callBack info: ', info)
+    const callback = (info: any) => {
+      console.info('callback info: ', info)
       const win = this.mainWindow!
       this.windowManager.sendCommandTo(win, command, key, info)
       if (info?.data?.['APP-Service-Start-PID']) {
@@ -503,8 +503,8 @@ export default class Application extends EventEmitter {
       }
       this.forkManager
         ?.send(module, ...args)
-        .on(callBack)
-        .then(callBack)
+        .on(callback)
+        .then(callback)
       return
     }
     switch (command) {
