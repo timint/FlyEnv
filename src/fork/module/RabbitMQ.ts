@@ -9,6 +9,7 @@ import { mkdirp, readdir, readFile, remove, writeFile } from 'fs-extra'
 import TaskQueue from '../TaskQueue'
 import { ProcessListSearch } from '../Process'
 import { EOL } from 'os'
+import { psCommand } from '@shared/powershell'
 
 class RabbitMQ extends Base {
   baseDir: string = ''
@@ -212,12 +213,7 @@ class RabbitMQ extends Base {
     let str = ''
     try {
       const stdout = (
-        await execPromise(
-          'Write-Host "##FlyEnv-ERLANG_HOME$($env:ERLANG_HOME)FlyEnv-ERLANG_HOME##"',
-          {
-            shell: 'powershell.exe'
-          }
-        )
+        await psCommand('Write-Host "##FlyEnv-ERLANG_HOME$($env:ERLANG_HOME)FlyEnv-ERLANG_HOME##"')
       ).stdout.trim()
       const regex = /FlyEnv-ERLANG_HOME(.*?)FlyEnv-ERLANG_HOME/g
       const match = regex.exec(stdout)

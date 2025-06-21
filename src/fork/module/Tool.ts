@@ -12,6 +12,7 @@ import { PItem, ProcessListSearch, ProcessPidList } from '../Process'
 import { AppServiceAliasItem } from '@shared/app'
 import { exec } from 'child-process-promise'
 import RequestTimer from '@shared/requestTimer'
+import { psCommand } from '@shared/powershell'
 
 class BomCleanTask implements TaskItem {
   path = ''
@@ -562,8 +563,8 @@ class Manager extends Base {
           await writeFile(f, `New-ItemProperty -Path "HKLM:\\SYSTEM\\CurrentControlSet\\Control\\FileSystem" -Name "LongPathsEnabled" -Value 1 -PropertyType DWORD -Force`)
           process.chdir(global.Server.Cache!)
           try {
-            await execPromise(`powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Unblock-File -LiteralPath '${f}'; & '${f}'"`)
-          } catch (e) {}
+            await psCommand(`Unblock-File -LiteralPath '${f}'; & '${f}'`)
+          } catch (err) {}
           await remove(f)
           break
         // add more cases as needed
@@ -738,9 +739,7 @@ class Manager extends Base {
       try {
         psRes =
           (
-            await exec(`$env:PATH`, {
-              shell: 'powershell.exe'
-            })
+            await psCommand('$env:PATH')
           )?.stdout?.trim() ?? ''
       } catch (err) {
         psRes = `${err}`

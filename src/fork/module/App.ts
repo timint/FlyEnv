@@ -3,11 +3,12 @@ import { getMac } from '@lzwme/get-physical-address'
 import { machineId } from 'node-machine-id'
 import { ForkPromise } from '@shared/ForkPromise'
 import { cpus, arch } from 'os'
-import { execPromise, md5, uuid } from '../Fn'
+import { md5, uuid } from '../Fn'
 import axios from 'axios'
 import { publicDecrypt } from 'crypto'
 import { join, resolve as PathResolve } from 'path'
 import { appendFile, remove, writeFile } from 'fs-extra'
+import { psCommand } from '@shared/powershell'
 
 class App extends Base {
   constructor() {
@@ -52,10 +53,8 @@ class App extends Base {
     await writeFile(shFile, command)
     process.chdir(global.Server.Cache!)
     try {
-      const res = await execPromise(
-        `powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Unblock-File -LiteralPath '${shFile}'; & '${shFile}'"`
-      )
-      console.log('Get-MpPreference res: ', res)
+      const res = await psCommand(`Unblock-File -LiteralPath '${shFile}'; & '${shFile}'`)
+      console.info('Get-MpPreference res: ', res)
       const arr =
         res?.stdout
           ?.trim()
@@ -84,9 +83,7 @@ class App extends Base {
       await writeFile(shFile, command)
       process.chdir(global.Server.Cache!)
       try {
-        const res = await execPromise(
-          `powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Unblock-File -LiteralPath '${shFile}'; & '${shFile}'"`
-        )
+        const res = await psCommand(`Unblock-File -LiteralPath '${shFile}'; & '${shFile}'`)
         console.info('Add-MpPreference res: ', res)
       } catch (err) {
         const key = '[handleWindowsDefenderExclusionPath][Add-MpPreference][error]'

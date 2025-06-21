@@ -10,6 +10,7 @@ import axios from 'axios'
 import { ProcessListSearch, ProcessPidList, ProcessPidListByPid } from '../Process'
 import TaskQueue from '../TaskQueue'
 import { spawn } from 'child-process-promise'
+import { psCommand } from '@shared/powershell'
 
 export class Base {
   type: string
@@ -301,9 +302,7 @@ export class Base {
 
         process.chdir(global.Server.Cache!)
         try {
-          await execPromise(
-            `powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Unblock-File -LiteralPath '${sh}'; & '${sh}'"`
-          )
+          await psCommand(`Unblock-File -LiteralPath '${sh}'; & '${sh}'`)
         } catch (err) {
           console.error('[python-install][error]: ', err)
           await appendFile(
@@ -340,9 +339,7 @@ export class Base {
           await writeFile(sh, content)
           process.chdir(global.Server.Cache!)
           try {
-            await execPromise(
-              `powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Unblock-File -LiteralPath '${sh}'; & '${sh}'"`
-            )
+            await psCommand(`Unblock-File -LiteralPath '${sh}'; & '${sh}'`)
           } catch (err) {
             await appendFile(
               join(global.Server.BaseDir!, 'debug.log'),

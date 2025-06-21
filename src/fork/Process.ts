@@ -1,9 +1,9 @@
 import { uuid } from './Fn'
 import { join } from 'path'
 import { readFile, remove } from 'fs-extra'
-import { exec } from 'child-process-promise'
 import { existsSync } from 'fs'
 import JSON5 from 'json5'
+import { psCommand } from '@shared/powershell'
 
 export type PItem = {
   ProcessId: number
@@ -16,9 +16,9 @@ export const ProcessPidList = async (): Promise<PItem[]> => {
   console.info('ProcessPidList')
   const all: PItem[] = []
   const json = join(global.Server.Cache!, `${uuid()}.json`)
-  const command = `powershell.exe -NoProfile -WindowStyle Hidden -command "[Console]::OutputEncoding = [System.Text.Encoding]::UTF8;[Console]::InputEncoding = [System.Text.Encoding]::UTF8;Get-CimInstance Win32_Process | Select-Object CommandLine,ProcessId,ParentProcessId | ConvertTo-Json | Out-File -FilePath '${json}' -Encoding utf8"`
+  const command = `[Console]::OutputEncoding = [System.Text.Encoding]::UTF8;[Console]::InputEncoding = [System.Text.Encoding]::UTF8;Get-CimInstance Win32_Process | Select-Object CommandLine,ProcessId,ParentProcessId | ConvertTo-Json | Out-File -FilePath '${json}' -Encoding utf8`
   try {
-    await exec(command)
+    await psCommand(command)
     const content = await readFile(json, 'utf8')
     const list = JSON5.parse(content)
     all.push(...list)

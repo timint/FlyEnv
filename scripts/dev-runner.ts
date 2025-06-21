@@ -4,8 +4,8 @@ import { build } from 'esbuild'
 import fs from 'fs-extra'
 import path from 'path'
 // @ts-ignore
-import { exec } from 'child-process-promise'
 import md5 from 'md5'
+import { psCommand } from '../src/shared/powershell'
 
 import viteConfig from '../configs/vite.config'
 import esbuildConfig from '../configs/esbuild.config'
@@ -14,34 +14,11 @@ let restart = false
 let electronProcess: ChildProcess | null
 
 async function killAllElectron() {
-  const sh = _path.resolve(__dirname, '../scripts/electron-kill.ps1')
-  const scriptDir = _path.dirname(sh)
-  const command = `powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Unblock-File -LiteralPath './electron-kill.ps1'; & './electron-kill.ps1'"`
-  let res: any = null
   console.info('ℹ️ Terminating all Electron processes...')
   try {
-    res = await exec(command, {
-      cwd: scriptDir
-    })
-  } catch (e) {
-    console.log('killAllElectron err: ', e)
-  }
-  let all: any = []
-  try {
-    all = JSON.parse(res?.stdout?.trim() ?? '[]')
-  } catch (e) {}
-  console.log('all: ', all)
-  const arr: Array<string> = []
-  if (all && !Array.isArray(all)) {
-    all = [all]
-  }
-  for (const item of all) {
-    arr.push(item.ProcessId)
-  }
-  console.log('_stopServer arr: ', arr)
-  if (arr.length > 0) {
-    const str = arr.map((s) => `/pid ${s}`).join(' ')
-    await exec(`taskkill /f /t ${str}`)
+    await psCommand('Get-Process Electron | Stop-Process -Force')
+  } catch (err) {
+    console.error('killAllElectron error:', err)
   }
 }
 
@@ -103,6 +80,9 @@ function runElectronApp() {
 
   electronProcess.on('close', () => {
     console.info('⚠️ electronProcess closed')
+    if (electronProcess && electronProcess.killed === false) {
+      electronProcess.kill('SIGTERM')
+    }
     if (restart) {
       restart = false
       runElectronApp()
@@ -129,6 +109,12 @@ if (process.env.TEST === 'browser') {
 
 process.on('SIGINT', async () => {
   console.info('⚠️ Catch SIGINT, cleaning Electron process...')
+  await killAllElectron()
+  process.exit(0)
+})
+
+process.on('SIGTERM', async () => {
+  console.info('⚠️ Catch SIGTERM, cleaning Electron process...')
   await killAllElectron()
   process.exit(0)
 })

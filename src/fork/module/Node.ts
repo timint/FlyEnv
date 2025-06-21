@@ -11,6 +11,7 @@ import axios from 'axios'
 import { SoftInstalled } from '@shared/app'
 import TaskQueue from '../TaskQueue'
 import ncu from 'npm-check-updates'
+import { psCommand } from '@shared/powershell'
 
 class Manager extends Base {
   constructor() {
@@ -33,8 +34,7 @@ class Manager extends Base {
       }
 
       try {
-        const command = `powershell.exe -command "$env:NVM_HOME"`
-        const res = await execPromise(command)
+        const res = await psCommand('$env:NVM_HOME')
         NVM_HOME = res?.stdout?.trim()?.replace('NVM_HOME=', '').trim()
       } catch (err) {}
       if (NVM_HOME && existsSync(NVM_HOME) && existsSync(join(NVM_HOME, 'nvm.exe'))) {
@@ -89,8 +89,7 @@ class Manager extends Base {
       }
 
       try {
-        const command = `powershell.exe -command "$env:FNM_HOME"`
-        const res = await execPromise(command)
+        const res = await psCommand('$env:FNM_HOME')
         FNM_HOME = res?.stdout?.trim()?.replace('FNM_HOME=', '').trim()
       } catch (err) {}
       if (FNM_HOME && existsSync(FNM_HOME) && existsSync(join(FNM_HOME, 'fnm.exe'))) {
@@ -111,7 +110,7 @@ class Manager extends Base {
       content = content
         .replace(new RegExp('##FNM_PATH##', 'g'), nvmDir)
         .replace(new RegExp('##FNM_SYMLINK##', 'g'), linkDir)
-      let profile: any = await exec('$profile', { shell: 'powershell.exe' })
+      let profile: any = await psCommand('$profile')
       profile = profile.stdout.trim()
       const profile_root = profile.replace('WindowsPowerShell', 'PowerShell')
       await mkdirp(dirname(profile))
@@ -564,9 +563,7 @@ class Manager extends Base {
       if (!fnmDir) {
         try {
           fnmDir = (
-            await exec(`$env:FNM_DIR`, {
-              shell: 'powershell.exe'
-            })
+            await psCommand('$env:FNM_DIR')
           ).stdout.trim()
         } catch (err) {}
       }

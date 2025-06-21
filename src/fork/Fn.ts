@@ -648,23 +648,12 @@ export const fetchRawPATH = (): ForkPromise<string[]> => {
     process.chdir(global.Server.Cache!)
     let res: any
     try {
-      res = await spawnPromise(
-        'powershell.exe',
-        [
-          '-NoProfile',
-          '-ExecutionPolicy',
-          'Bypass',
-          '-Command',
-          `"Unblock-File -LiteralPath './path-get.ps1'; & './path-get.ps1'"`
-        ],
-        {
-          shell: 'powershell.exe',
-          cwd: global.Server.Cache!
-        }
-      )
-    } catch (e) {
-      await appendFile(join(global.Server.BaseDir!, 'debug.log'), `[_fetchRawPATH][error]: ${e}\n`)
-      return reject(e)
+      res = await psCommand(`Unblock-File -LiteralPath './path-get.ps1'; & './path-get.ps1'`, {
+        cwd: global.Server.Cache!
+      })
+    } catch (err) {
+      await appendFile(join(global.Server.BaseDir!, 'debug.log'), `[_fetchRawPATH][error]: ${err}\n`)
+      return reject(err)
     }
 
     let str = ''
@@ -715,12 +704,10 @@ export const writePath = async (path: string[], other: string = '') => {
   await writeFile(copySh, content, 'utf-8')
   process.chdir(global.Server.Cache!)
   try {
-    await execPromise(
-      `powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Unblock-File -LiteralPath '${copySh}'; & '${copySh}'"`
-    )
-  } catch (e) {
-    console.log('writePath error: ', e)
-    await appendFile(join(global.Server.BaseDir!, 'debug.log'), `[writePath][error]: ${e}\n`)
+    await psCommand(`Unblock-File -LiteralPath '${copySh}'; & '${copySh}'`)
+  } catch (err) {
+    console.error('writePath error: ', err)
+    await appendFile(join(global.Server.BaseDir!, 'debug.log'), `[writePath][error]: ${err}\n`)
   }
 }
 
@@ -789,13 +776,10 @@ export async function isNTFS(fileOrDirPath: string) {
     return NTFS[driveLetter]
   }
   try {
-    const jsonResult =
-      (
-        await execPromise(
-          `powershell -command "Get-Volume -DriveLetter ${driveLetter} | ConvertTo-Json"`,
-          { encoding: 'utf-8' }
-        )
-      )?.stdout ?? ''
+    const command = `Get-Volume -DriveLetter ${driveLetter} | ConvertTo-Json`
+    const jsonResult = await psCommand(command, {
+      encoding: 'utf-8'
+    })?.stdout ?? ''
     const { FileSystem, FileSystemType } = JSON.parse(jsonResult)
     const is = FileSystem === 'NTFS' || FileSystemType === 'NTFS'
     NTFS[driveLetter] = is
@@ -992,26 +976,15 @@ export async function serviceStartExec(
   process.chdir(baseDir)
   let res: any
   try {
-    res = await spawnPromise(
-      'powershell.exe',
-      [
-        '-NoProfile',
-        '-ExecutionPolicy',
-        'Bypass',
-        '-Command',
-        `"Unblock-File -LiteralPath './${psName}'; & './${psName}'"`
-      ],
-      {
-        shell: 'powershell.exe',
-        cwd: baseDir
-      }
-    )
-  } catch (e) {
+    res = await psCommand(`Unblock-File -LiteralPath './${psName}'; & './${psName}'`, {
+      cwd: baseDir
+    })
+  } catch (err) {
     on({
       'APP-On-Log': AppLog(
         'error',
         I18nT('appLog.execStartCommandFail', {
-          error: e,
+          error: err,
           service: `${version.typeFlag}-${version.version}`
         })
       )
@@ -1242,20 +1215,9 @@ export async function serviceStartExecGetPID(
   process.chdir(baseDir)
   let res: any
   try {
-    res = await spawnPromise(
-      'powershell.exe',
-      [
-        '-NoProfile',
-        '-ExecutionPolicy',
-        'Bypass',
-        '-Command',
-        `"Unblock-File -LiteralPath './${psName}'; & './${psName}'"`
-      ],
-      {
-        shell: 'powershell.exe',
-        cwd: baseDir
-      }
-    )
+    res = await psCommand(`Unblock-File -LiteralPath './${psName}'; & './${psName}'`, {
+      cwd: baseDir
+    })
   } catch (err) {
     on({
       'APP-On-Log': AppLog(

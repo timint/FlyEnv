@@ -1,5 +1,6 @@
 import { uuid } from '@shared/utils'
 import TaskQueue from '../fork/TaskQueue'
+import { psStartProcess } from './powershell'
 
 export interface SudoConfig {
   name?: string
@@ -186,41 +187,30 @@ function Windows(instance: Sudo, callback: Function) {
 }
 
 function WindowsElevate(instance: Sudo, end: Function) {
-  // We used to use this for executing elevate.vbs:
-  // var command = 'cscript.exe //NoLogo "' + instance.pathElevate + '"';
-  let command: any = []
-  command.push('powershell.exe')
-  command.push('Start-Process')
-  command.push('-FilePath')
-  // Escape characters for cmd using double quotes:
-  // Escape characters for PowerShell using single quotes:
-  // Escape single quotes for PowerShell using backtick:
-  // See: https://ss64.com/ps/syntax-esc.html
-  command.push('"\'' + instance.pathExecute!.replace(/'/g, '`\'') + '\'"')
-  command.push('-WindowStyle hidden')
-  command.push('-Verb runAs')
-  command = command.join(' ')
-  const path = `C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\;%SYSTEMROOT%\\System32\\WindowsPowerShell\\v1.0\\;${process.env['PATH']}`
-  const child = Node.child.exec(
-    command,
-    {
-      encoding: 'utf-8',
-      env: {
-        ...process.env,
-        PATH: path
-      }
-    },
-    function (error: any, stdout: string, stderr: string) {
+  const pathEnv = [
+    '%SYSTEMROOT%\\System32\\WindowsPowerShell\\v1.0\\',
+    process.env['PATH']
+  ].filter(Boolean).join(';')
+
+  psStartProcess(instance.pathExecute, {
+    sudo: true,
+    encoding: 'utf-8',
+    env: {
+      ...process.env,
+      PATH: pathEnv
+    }
+  })
+    .then((stdout: string) => {
+      end(undefined, stdout)
+    })
+    .catch((error: any) => {
       // We used to return PERMISSION_DENIED only for error messages containing
       // the string 'canceled by the user'. However, Windows internationalizes
       // error messages (issue 96) so now we must assume all errors here are
       // permission errors. This seems reasonable, given that we already run the
       // user's command in a subshell.
-      if (error) return end(new Error(PERMISSION_DENIED), stdout, stderr)
-      end()
-    }
-  )
-  child.stdin.end() // Otherwise PowerShell waits indefinitely on Windows 7.
+      end(new Error(PERMISSION_DENIED))
+    })
 }
 
 function WindowsResult(instance: Sudo, end: Function) {
