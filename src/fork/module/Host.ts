@@ -6,7 +6,7 @@ import type { AppHost, SoftInstalled } from '@shared/app'
 import { getSubDir, hostAlias, uuid, execPromise } from '../Fn'
 import { ForkPromise } from '@shared/ForkPromise'
 import { readFile, writeFile, remove, appendFile } from 'fs-extra'
-import { TaskAddPhpMyAdminSite, TaskAddRandaSite } from './host/Task'
+import { TaskAddPhpMyAdminSite, TaskAddRandomSite } from './host/Task'
 import { setDirRole, updateAutoSSL, updateRootRule } from './host/Host'
 import { makeApacheConf, updateApacheConf } from './host/Apache'
 import { autoFillNginxRewrite, makeNginxConf, updateNginxConf } from './host/Nginx'
@@ -385,8 +385,8 @@ class Host extends Base {
     })
   }
 
-  addRandaSite(version?: SoftInstalled, write = true, ipv6 = true) {
-    return TaskAddRandaSite.call(this, version, write, ipv6)
+  addRandomSite(version?: SoftInstalled, write = true, ipv6 = true) {
+    return TaskAddRandomSite.call(this, version, write, ipv6)
   }
 
   addPhpMyAdminSite(phpVersion?: number, write = true, ipv6 = true) {

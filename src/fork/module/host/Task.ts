@@ -9,7 +9,7 @@ import { downFile, moveDirToDir, waitTime } from '../../Fn'
 import { zipUnPack } from '@shared/file'
 import { fetchHostList } from './HostFile'
 
-export function TaskAddRandaSite(this: any, version?: SoftInstalled, write = true, ipv6 = true) {
+export function TaskAddRandomSite(this: any, version?: SoftInstalled, write = true, ipv6 = true) {
   return new ForkPromise(async (resolve, reject) => {
     const baseName = join(global.Server.BaseDir!, 'www')
     let host = `www.test.com`
