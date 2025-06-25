@@ -1,16 +1,14 @@
 import { build as viteBuild } from 'vite'
-import { build as esbuild } from 'esbuild'
 import { build as electronBuild, Platform, CliOptions } from 'electron-builder'
-import esbuildConfig from '../configs/esbuild.config'
 import viteConfig from '../configs/vite.config'
 import electronBuilderConfig from '../configs/electron-builder'
 
 async function packMain() {
   try {
-    await esbuild(esbuildConfig.dist)
-    await esbuild(esbuildConfig.distFork)
+    await viteBuild(viteConfig.mainConfig)
+    await viteBuild(viteConfig.forkConfig)
   } catch (err) {
-    console.error('Failed to build main process', err)
+    console.error('Failed to build main/fork process', err)
     process.exit(1)
   }
 }

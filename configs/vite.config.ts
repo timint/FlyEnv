@@ -1,5 +1,6 @@
 import type { UserConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
+import fs from 'fs';
 import * as path from 'path'
 import { ViteDevPort } from './vite.port'
 import vueJsx from '@vitejs/plugin-vue-jsx'
@@ -10,9 +11,6 @@ const renderPath = path.resolve(__dirname, '../src/render/')
 const sharePath = path.resolve(__dirname, '../src/shared/')
 const helperPath = path.resolve(__dirname, '../src/helper/')
 const langPath = path.resolve(__dirname, '../src/lang/')
-
-console.debug('renderPath: ', renderPath)
-console.debug('sharePath: ', sharePath)
 
 const config: UserConfig = {
   base: './',
@@ -58,11 +56,11 @@ const config: UserConfig = {
     }
   },
   css: {
-    // css预处理器
+    // CSS preprocessor options
     preprocessorOptions: {
       scss: {
-        // 引入 var.scss 这样就可以在全局中使用 var.scss中预定义的变量了
-        // 给导入的路径最后加上 ;
+        // Import var.scss globally so predefined variables can be used everywhere
+        // Add ; at the end of the import path
         additionalData: '@import "@/components/Theme/Variables.scss";'
       }
     }
@@ -121,8 +119,124 @@ const buildConfig: UserConfig = {
   ...config
 }
 
+const mainConfig: UserConfig = {
+  mode: 'production',
+  build: {
+    outDir: path.resolve(__dirname, '../../dist/electron'),
+    emptyOutDir: false,
+    lib: {
+      entry: path.resolve(__dirname, '../src/main/index.ts'),
+      formats: ['cjs'],
+      fileName: () => 'main.js'
+    },
+    rollupOptions: {
+      external: [
+        'electron', 'path', 'fs', 'crypto', 'node:crypto', 'events', 'node:events', 'buffer', 'node:buffer', 'stream', 'node:stream', 'url', 'node:url', 'perf_hooks', 'node:perf_hooks', 'tls', 'node:tls', '@lydell/node-pty', 'fsevents', 'mock-aws-s3', 'aws-sdk', 'nock', '7zip-min-electron', 'nodejieba', 'os', 'child_process', 'child-process-promise', 'dtrace-provider', 'fs-extra', 'dns2', 'lodash', 'axios', 'iconv-lite', 'compressing', 'fast-xml-parser', 'source-map', 'source-map-js', 'entities', '@vue', 'vue', 'vue-i18n', 'estree-walker', 'serve-handler', 'electron-updater', 'js-yaml', '@lzwme/get-physical-address', '@electron/remote', 'electron-log', 'jszip', 'pako', 'electron-devtools-installer', 'punycode', 'p-timeout'
+      ],
+      output: {
+        entryFileNames: 'main.js',
+        format: 'cjs',
+        dir: path.resolve(__dirname, '../../dist/electron')
+      }
+    },
+    target: 'esnext',
+    minify: true
+  },
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, '../src'),
+      '@lang': path.resolve(__dirname, '../src/lang'),
+      '@shared': path.resolve(__dirname, '../src/shared')
+    }
+  }
+}
+
+const forkConfig: UserConfig = {
+  mode: 'production',
+  build: {
+    outDir: path.resolve(__dirname, '../../dist/electron'),
+    emptyOutDir: false,
+    lib: {
+      entry: path.resolve(__dirname, '../src/fork/index.ts'),
+      formats: ['cjs'],
+      fileName: () => 'fork.js'
+    },
+    rollupOptions: {
+      external: [
+        'electron', 'path', 'fs', 'crypto', 'node:crypto', 'events', 'node:events', 'buffer', 'node:buffer', 'stream', 'node:stream', 'url', 'node:url', 'perf_hooks', 'node:perf_hooks', 'tls', 'node:tls', '@lydell/node-pty', 'fsevents', 'mock-aws-s3', 'aws-sdk', 'nock', '7zip-min-electron', 'nodejieba', 'os', 'child_process', 'child-process-promise', 'dtrace-provider', 'fs-extra', 'dns2', 'lodash', 'axios', 'iconv-lite', 'compressing', 'fast-xml-parser', 'source-map', 'source-map-js', 'entities', '@vue', 'vue', 'vue-i18n', 'estree-walker', 'serve-handler', 'electron-updater', 'js-yaml', '@lzwme/get-physical-address', '@electron/remote', 'electron-log', 'jszip', 'pako', 'electron-devtools-installer', 'punycode', 'p-timeout'
+      ],
+      output: {
+        entryFileNames: 'fork.js',
+        format: 'cjs',
+        dir: path.resolve(__dirname, '../../dist/electron')
+      }
+    },
+    target: 'node16',
+    minify: true
+  },
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, '../src'),
+      '@lang': path.resolve(__dirname, '../src/lang'),
+      '@shared': path.resolve(__dirname, '../src/shared')
+    }
+  }
+}
+
+const mainDevConfig: UserConfig = {
+  mode: 'development',
+  build: {
+    outDir: path.resolve(__dirname, '../../dist/electron'),
+    emptyOutDir: false,
+    lib: {
+      entry: path.resolve(__dirname, '../src/main/index.dev.ts'),
+      formats: ['cjs'],
+      fileName: () => 'main.js'
+    },
+    rollupOptions: {
+      external: [
+        'electron', 'path', 'fs', 'crypto', 'node:crypto', 'events', 'node:events', 'buffer', 'node:buffer', 'stream', 'node:stream', 'url', 'node:url', 'perf_hooks', 'node:perf_hooks', 'tls', 'node:tls', '@lydell/node-pty', 'fsevents', 'mock-aws-s3', 'aws-sdk', 'nock', '7zip-min-electron', 'nodejieba', 'os', 'child_process', 'child-process-promise', 'dtrace-provider', 'fs-extra', 'dns2', 'lodash', 'axios', 'iconv-lite', 'compressing', 'fast-xml-parser', 'source-map', 'source-map-js', 'entities', '@vue', 'vue', 'vue-i18n', 'estree-walker', 'serve-handler', 'electron-updater', 'js-yaml', '@lzwme/get-physical-address', '@electron/remote', 'electron-log', 'jszip', 'pako', 'electron-devtools-installer', 'punycode', 'p-timeout'
+      ],
+      output: {
+        entryFileNames: 'main.js',
+        format: 'cjs',
+        dir: path.resolve(__dirname, '../../dist/electron')
+      }
+    },
+    target: 'esnext',
+    minify: false
+  },
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, '../src'),
+      '@lang': path.resolve(__dirname, '../src/lang'),
+      '@shared': path.resolve(__dirname, '../src/shared')
+    }
+  }
+}
+
+const watchConfig = {
+  build: {
+    watch: {
+      include: [
+        'src/main/**',
+        'src/fork/**',
+        'static/**'
+      ],
+      exclude: [
+        'node_modules/**',
+        'dist/**'
+      ]
+    }
+  }
+}
+
 export default {
   serveConfig,
   serverConfig,
-  buildConfig
+  buildConfig,
+  mainConfig,
+  forkConfig,
+  mainDevConfig,
+  watchConfig
 }
