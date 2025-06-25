@@ -110,10 +110,9 @@ function logPrinter(data: string[]) {
 }
 
 function runElectronApp() {
-  const args = ['--inspect=5858', 'dist/electron/main.mjs']
-  electronProcess = spawn('electron', args, {
+  electronProcess = spawn('electron --inspect=5858 dist/electron/main.mjs', {
     stdio: 'pipe',
-    shell: isWindows()
+    shell: isWindows(),
   })
   electronProcess?.stderr?.on('data', (data) => {
     // console.log('electronProcess error', data.toString())
