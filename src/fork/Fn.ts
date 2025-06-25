@@ -198,7 +198,6 @@ export async function setDir777ToCurrentUser(folderPath: string) {
   )
   try {
     await spawnPromise('icacls', args, {
-      shell: true,
       windowsHide: true
     })
   } catch (e) {
