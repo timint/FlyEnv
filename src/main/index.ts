@@ -1,5 +1,10 @@
-import path from 'path'
+import { resolve as pathResolve } from 'path'
 import Launcher from './Launcher'
+import { runMigrations } from './migrate'
 
-global.__static = path.resolve(__dirname, 'static/')
-global.launcher = new Launcher()
+global.__static = pathResolve(__dirname, 'static/')
+
+;(async () => {
+  await runMigrations()
+  global.launcher = new Launcher()
+})()
