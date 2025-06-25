@@ -3,7 +3,6 @@ import type { IPty } from '@lydell/node-pty'
 
 import { uuid } from '../utils'
 import { spawn } from '@lydell/node-pty'
-import { spawn } from 'node-pty'
 import { basename, join } from 'path'
 import { chmod, remove, writeFile } from '../utils'
 import { existsSync } from 'fs'
