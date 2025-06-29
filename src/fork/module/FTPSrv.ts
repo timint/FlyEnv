@@ -22,10 +22,12 @@ class Manager extends Base {
   constructor() {
     super()
     this.type = 'ftp-srv'
-    this.baseDir = join(global.Server.BaseDir!, 'ftp-srv')
+    // baseDir will be set in init() after global.Server is available
   }
 
-  init() {}
+  init() {
+    this.baseDir = join(global.Server.BaseDir!, 'ftp-srv')
+  }
 
   async fixJson() {
     await mkdirp(this.baseDir)

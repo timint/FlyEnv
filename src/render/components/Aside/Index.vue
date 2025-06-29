@@ -65,6 +65,7 @@
   import { computed, watch } from 'vue'
   import IPC from '@/util/IPC'
   import { AppStore } from '@/store/app'
+  import { BrewStore } from '@/store/brew'
   import { I18nT } from '@lang/index'
   import Router from '@/router/index'
   import { MessageError, MessageSuccess } from '@/util/Element'
