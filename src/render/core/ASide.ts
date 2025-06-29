@@ -2,7 +2,6 @@ import { computed } from 'vue'
 import { reactive } from 'vue'
 import Router from '@/router/index'
 import { BrewStore } from '@/store/brew'
-import { passwordCheck } from '@/util/Brew'
 import { MessageError } from '@/util/Element'
 import type { AllAppModule } from '@/core/type'
 import { AppStore } from '@/store/app'
@@ -56,9 +55,11 @@ export const AsideSetup = (flag: AllAppModule) => {
 
   const serviceDisabled = computed(() => {
     const a = !currentVersion?.value?.version
-    const b = brewStore.module(flag).installed.some((v) => v.running)
-    const c = !appStore.versionInitiated
-    return a || b || c
+    const installed = brewStore.module(flag).installed
+    const b = installed.length === 0
+    const c = installed.some((v) => v.running)
+    const d = !appStore.versionInited
+    return a || b || c || d
   })
 
   const serviceRunning = computed(() => {
@@ -93,7 +94,6 @@ export const AsideSetup = (flag: AllAppModule) => {
   }
 
   const switchChange = () => {
-    passwordCheck().then(() => {
       let promise: Promise<any> | null = null
       if (!currentVersion?.value?.version) return
       const module = brewStore.module(flag)
@@ -103,7 +103,6 @@ export const AsideSetup = (flag: AllAppModule) => {
           MessageError(res)
         }
       })
-    })
   }
 
   const stopNav = () => {}
