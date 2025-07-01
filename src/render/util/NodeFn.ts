@@ -98,11 +98,11 @@ export const md = {
 
 export const nodeForge = {
   rsaGenerateKeyPair: createIPCCall<{ privateKey: string; publicKey: string }>(
-    'node-forge',
+    'node_forge',
     'rsaGenerateKeyPair'
   ),
-  privateKeyToPem: createIPCCall<string>('node-forge', 'privateKeyToPem'),
-  publicKeyToPem: createIPCCall<string>('node-forge', 'publicKeyToPem')
+  privateKeyToPem: createIPCCall<string>('node_forge', 'privateKeyToPem'),
+  publicKeyToPem: createIPCCall<string>('node_forge', 'publicKeyToPem')
 }
 
 export const nativeTheme = {
@@ -163,5 +163,6 @@ export const fs = {
   existsSync: createIPCCall<boolean>('fs', 'existsSync'),
   readFile: createIPCCall<string>('fs', 'readFile'),
   writeFile: createIPCCall<void>('fs', 'writeFile'),
-  realpath: createIPCCall<string>('fs', 'realpath')
+  realpath: createIPCCall<string>('fs', 'realpath'),
+  getFileHash: createIPCCall<string>('fs', 'getFileHash')
 }

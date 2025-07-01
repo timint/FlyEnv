@@ -10,7 +10,7 @@
     @closed="closedFn"
   >
     <div class="host-edit">
-      <div class="nav">
+      <div class="nav pl-3 pr-5">
         <div class="left" @click="show = false">
           <yb-icon :svg="import('@/svg/delete.svg?raw')" class="top-back-icon" />
           <span class="ml-3">{{ isEdit ? I18nT('base.edit') : I18nT('base.add') }}</span>
@@ -21,8 +21,8 @@
       </div>
 
       <el-scrollbar class="flex-1">
-        <div class="main-wapper">
-          <div class="main">
+        <div class="main-wapper p-3">
+          <div class="main p-5">
             <input
               v-model.trim="item.name"
               type="text"
@@ -81,7 +81,7 @@
           </div>
 
           <div class="plant-title">{{ I18nT('base.phpVersion') }}</div>
-          <div class="main">
+          <div class="main p-5">
             <div class="port-set">
               <el-select
                 v-model="item.phpVersion"
@@ -97,7 +97,7 @@
           </div>
 
           <div class="plant-title">{{ I18nT('host.port') }}</div>
-          <div class="main">
+          <div class="main p-5">
             <div class="port-set mb-5">
               <div class="port-type"> Nginx </div>
               <input
@@ -129,7 +129,7 @@
             </div>
           </div>
           <div class="plant-title">{{ I18nT('host.hostSSL') }}</div>
-          <div class="main">
+          <div class="main p-5">
             <div class="ssl-switch">
               <span>SSL</span>
               <el-switch v-model="item.useSSL"></el-switch>
@@ -219,12 +219,12 @@
             <span>{{ I18nT('host.reverseProxy') }}</span>
             <el-button link :icon="Plus" @click.stop="addReverseProxy"></el-button>
           </div>
-          <div class="main flex flex-col gap-3">
+          <div class="main p-5 flex flex-col gap-3">
             <template v-if="item.reverseProxy.length === 0">
               <div class="flex justify-center">{{ I18nT('base.none') }}</div>
             </template>
             <template v-else>
-              <template v-for="(proxy, index) in item.reverseProxy" :key="_index">
+              <template v-for="(proxy, index) in item.reverseProxy" :key="index">
                 <div class="flex items-center justify-between gap-2">
                   <el-button link :icon="Delete" @click.stop="delReverseProxy(index)"></el-button>
                   <el-input v-model="proxy.path" class="w-28 ml-2"></el-input>
@@ -241,7 +241,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { computed, ref, watch, onMounted, onUnmounted, reactive } from 'vue'
+  import { computed, ref, watch, onUnmounted, reactive } from 'vue'
   import { handleHost } from '@/util/Host'
   import { AppHost, AppStore } from '@/store/app'
   import { BrewStore } from '@/store/brew'
@@ -312,7 +312,7 @@
   const appStore = AppStore()
   const brewStore = BrewStore()
   const hosts = computed(() => {
-    return appStore.hosts
+    return appStore.hosts.filter((h) => !h.type || h.type === 'php')
   })
   const php = computed(() => {
     return brewStore.module('php')
@@ -470,10 +470,19 @@
       errs.value['cert'] = item.value.ssl.cert.length === 0
       errs.value['certkey'] = item.value.ssl.key.length === 0
     }
-    for (const h of hosts.value) {
-      if (h.name === item.value.name && h.id !== item.value.id) {
-        errs.value['name'] = true
-        break
+    let u: URL | undefined
+    try {
+      u = new URL(item.value.name.includes('http') ? item.value.name : `https://${item.value.name}`)
+    } catch {}
+    if (!u) {
+      errs.value['name'] = true
+    } else {
+      const name = u.hostname
+      for (const h of hosts.value) {
+        if (h.name === name && h.id !== item.value.id) {
+          errs.value['name'] = true
+          break
+        }
       }
     }
     let k: keyof typeof errs.value
@@ -492,7 +501,9 @@
     const saveFn = () => {
       running.value = true
       const flag: 'edit' | 'add' = props.isEdit ? 'edit' : 'add'
-      handleHost(item.value, flag, props.edit as AppHost, park.value).then(() => {
+      const data = JSON.parse(JSON.stringify(item.value))
+      data.name = new URL(data.name.includes('http') ? data.name : `https://${data.name}`).hostname
+      handleHost(data, flag, props.edit as AppHost, park.value).then(() => {
         running.value = false
         show.value = false
       })
@@ -510,8 +521,11 @@
     }
   }
 
-  onMounted(() => {})
-  onUnmounted(() => {})
+  appStore.floatBtnShow = false
+
+  onUnmounted(() => {
+    appStore.floatBtnShow = true
+  })
 
   defineExpose({
     show,

@@ -10,7 +10,7 @@
     @closed="closedFn"
   >
     <div class="host-edit">
-      <div class="nav">
+      <div class="nav pl-3 pr-5">
         <div class="left" @click="show = false">
           <yb-icon :svg="import('@/svg/delete.svg?raw')" class="top-back-icon" />
           <span class="ml-3">{{ isEdit ? I18nT('base.edit') : I18nT('base.add') }}</span>
@@ -21,7 +21,7 @@
       </div>
 
       <el-scrollbar class="flex-1">
-        <div class="main-wapper">
+        <div class="main-wapper p-3">
           <div class="p-5 pt-2 flex items-center justify-center">
             <el-radio-group v-model="item.subType" :disabled="isEdit">
               <el-radio-button value="springboot" label="SpringBoot">
@@ -33,7 +33,7 @@
             </el-radio-group>
           </div>
           <templatev v-if="item.subType === 'springboot'">
-            <div class="main">
+            <div class="main p-5">
               <input
                 v-model.trim="item.projectName"
                 type="text"
@@ -48,7 +48,7 @@
               />
             </div>
             <div class="plant-title">{{ I18nT('host.jarPackagePath') }}</div>
-            <div class="main">
+            <div class="main p-5">
               <div class="path-choose pb-4">
                 <input
                   v-model.trim="item.jarDir"
@@ -68,7 +68,7 @@
             </div>
 
             <div class="plant-title">{{ I18nT('host.jdkPath') }}</div>
-            <div class="main">
+            <div class="main p-5">
               <el-select v-model="item.jdkDir" class="w-full">
                 <template v-for="(item, _index) in jdks" :key="_index">
                   <el-option
@@ -80,7 +80,7 @@
             </div>
 
             <div class="plant-title">{{ I18nT('host.tcpPort') }}</div>
-            <div class="main">
+            <div class="main p-5">
               <div class="port-set mb-5">
                 <input
                   v-model.number="item.projectPort"
@@ -92,7 +92,7 @@
             </div>
 
             <div class="plant-title">{{ I18nT('host.startCommand') }}</div>
-            <div class="main">
+            <div class="main p-5">
               <textarea
                 v-model.trim="item.startCommand"
                 type="text"
@@ -103,7 +103,7 @@
               ></textarea>
             </div>
 
-            <div class="main mt-5">
+            <div class="main mt-5 p-5">
               <div class="ssl-switch">
                 <span>{{ I18nT('host.envVar') }}</span>
                 <el-radio-group v-model="item.envVarType">
@@ -142,7 +142,7 @@
             </div>
           </templatev>
           <template v-else>
-            <div class="main">
+            <div class="main p-5">
               <input
                 v-model.trim="item.name"
                 type="text"
@@ -174,7 +174,7 @@
             </div>
 
             <div class="plant-title">{{ I18nT('host.customJDKAndTomcat') }}</div>
-            <div class="main">
+            <div class="main p-5">
               <div class="port-set port-ssl mb-5">
                 <div class="port-type"> Tomcat </div>
                 <el-select v-model="item.tomcatDir" class="w-full">
@@ -200,7 +200,7 @@
             </div>
 
             <div class="plant-title">{{ I18nT('host.port') }}</div>
-            <div class="main">
+            <div class="main p-5">
               <div class="port-set mb-4">
                 <div class="port-type"> Tomcat </div>
                 <input
@@ -213,7 +213,7 @@
             </div>
 
             <div class="plant-title">{{ I18nT('host.useSSL') }}</div>
-            <div class="main">
+            <div class="main p-5">
               <div class="ssl-switch">
                 <span>{{ I18nT('host.useSSL') }}</span>
                 <el-switch v-model="item.useSSL"></el-switch>
@@ -284,8 +284,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { computed, ref, watch } from 'vue'
-  import { passwordCheck } from '@/util/Brew'
+  import { computed, onUnmounted, ref, watch } from 'vue'
   import { handleHost } from '@/util/Host'
   import { AppHost, AppStore } from '@/store/app'
   import { BrewStore } from '@/store/brew'
@@ -349,7 +348,7 @@
   const appStore = AppStore()
   const brewStore = BrewStore()
   const hosts = computed(() => {
-    return appStore.hosts
+    return appStore.hosts.filter((h) => h?.type === 'java')
   })
 
   const jdks = computed(() => {
@@ -470,9 +469,19 @@
     } else if (item.value.subType === 'other') {
       errs.value['root'] = item.value.root.length === 0
       errs.value['name'] = item.value.name.length === 0
-      if (item.value.name) {
+
+      let u: URL | undefined
+      try {
+        u = new URL(
+          item.value.name.includes('http') ? item.value.name : `https://${item.value.name}`
+        )
+      } catch {}
+      if (!u) {
+        errs.value['name'] = true
+      } else {
+        const name = u.hostname
         for (const h of hosts.value) {
-          if (h.name === item.value.name && h.id !== item.value.id) {
+          if (h.name === name && h.id !== item.value.id) {
             errs.value['name'] = true
             break
           }
@@ -511,13 +520,16 @@
     }
     const saveFn = () => {
       running.value = true
-      passwordCheck().then(() => {
-        const flag: 'edit' | 'add' = props.isEdit ? 'edit' : 'add'
-        const data = JSON.parse(JSON.stringify(item.value))
-        handleHost(data, flag, props.edit as AppHost, park.value).then(() => {
-          running.value = false
-          show.value = false
-        })
+      const flag: 'edit' | 'add' = props.isEdit ? 'edit' : 'add'
+      const data = JSON.parse(JSON.stringify(item.value))
+      if (data.subType === 'other') {
+        data.name = new URL(
+          data.name.includes('http') ? data.name : `https://${data.name}`
+        ).hostname
+      }
+      handleHost(data, flag, props.edit as AppHost, park.value).then(() => {
+        running.value = false
+        show.value = false
       })
     }
     saveFn()
@@ -550,6 +562,12 @@
     const tomcat = tomcats.value[0]
     item.value.tomcatDir = tomcat.bin
   }
+
+  appStore.floatBtnShow = false
+
+  onUnmounted(() => {
+    appStore.floatBtnShow = true
+  })
 
   defineExpose({
     show,

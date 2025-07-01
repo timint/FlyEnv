@@ -3,7 +3,7 @@ import { BrowserWindow, clipboard, nativeTheme, app, dialog, shell } from 'elect
 import { createRequire } from 'node:module'
 import ConfigManager from './ConfigManager'
 import { exec } from 'node:child_process'
-import { type FSWatcher, rm, chmod, stat, existsSync, watch } from 'node:fs'
+import { type FSWatcher, rm, chmod, stat, existsSync, watch, createReadStream } from 'node:fs'
 import { join } from 'node:path'
 import { readdir } from 'node:fs/promises'
 import Helper from '../../fork/Helper'
@@ -12,20 +12,21 @@ import ZH from '@lang/zh'
 import EN from '@lang/en'
 import { AppAllLang, AppI18n } from '@lang/index'
 import { createMarkdownRenderer } from '@/util/markdown/markdown'
-import { isLinux, isMacOS } from '@shared/utils'
+import { isLinux, isMacOS, pathFixedToUnix } from '@shared/utils'
 import { realpath } from '@shared/fs-extra'
 import { parse as TOMLParse, stringify as TOMLStringify } from '@iarna/toml'
+import { copy, mkdirp, writeFile, readFile } from '@shared/fs-extra'
+import crypto from 'node:crypto'
 
 const require = createRequire(import.meta.url)
 
 const { pki } = require('node-forge')
-const { copy, mkdirp, writeFile, readFile } = require('fs-extra')
 
 async function readdirRecursive(dir: string): Promise<string[]> {
   const items = await readdir(dir, { withFileTypes: true })
   const results = []
   for (const item of items) {
-    const fullPath = join(dir, item.name)
+    const fullPath = pathFixedToUnix(join(dir, item.name))
     if (item.isDirectory()) {
       results.push(...(await readdirRecursive(fullPath))) // 递归子文件夹
     } else {
@@ -83,16 +84,21 @@ export class AppNodeFn {
     this?.mainWindow?.webContents.send('command', command, key, true)
   }
 
-  node_forge_rsaGenerateKeyPair(command: string, key: string, bits: number) {
+  node_forge_rsaGenerateKeyPair(command: string, key: string, opt: any) {
+    console.log('node_forge_rsaGenerateKeyPair: ', opt)
     pki.rsa.generateKeyPair(
-      { bits, workers: 2 },
+      { ...opt, workers: 4 },
       (err: any, keyPair: { privateKey: string; publicKey: string }) => {
-        console.log('generateRawPairs: ', bits, err, keyPair)
+        console.log('generateRawPairs: ', opt, err, keyPair)
         if (err) {
           this?.mainWindow?.webContents.send('command', command, key, undefined)
           return
         }
-        this?.mainWindow?.webContents.send('command', command, key, keyPair)
+        const keys = {
+          privateKey: pki.privateKeyToPem(keyPair.privateKey),
+          publicKey: pki.publicKeyToPem(keyPair.publicKey)
+        }
+        this?.mainWindow?.webContents.send('command', command, key, keys)
       }
     )
   }
@@ -244,7 +250,7 @@ export class AppNodeFn {
         return
       }
       const result = arr.map((file) => {
-        return file.replace(`${dir}/`, '')
+        return file.replace(`${pathFixedToUnix(dir)}/`, '')
       })
       this?.mainWindow?.webContents.send('command', command, key, result)
     })
@@ -297,6 +303,7 @@ export class AppNodeFn {
   }
 
   fs_readFile(command: string, key: string, path: string) {
+    path = pathFixedToUnix(path)
     readFile(path, 'utf-8')
       .then((data: string) => {
         this?.mainWindow?.webContents.send('command', command, key, data)
@@ -388,6 +395,29 @@ export class AppNodeFn {
       this.dirWatchers.delete(dirPath)
     }
     this?.mainWindow?.webContents.send('command', command, key, true)
+  }
+
+  fs_getFileHash(
+    command: string,
+    key: string,
+    file: string,
+    algorithm: 'sha1' | 'sha256' | 'md5' = 'sha256'
+  ) {
+    const hash = crypto.createHash(algorithm)
+    const stream = createReadStream(file)
+
+    stream.on('error', () => {
+      this?.mainWindow?.webContents.send('command', command, key, '')
+    })
+
+    stream.on('data', (chunk: any) => {
+      hash.update(chunk)
+    })
+
+    stream.on('end', () => {
+      const md5 = hash.digest('hex')
+      this?.mainWindow?.webContents.send('command', command, key, md5)
+    })
   }
 
   md_render(command: string, key: string, content: string) {

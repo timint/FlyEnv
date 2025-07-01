@@ -7,7 +7,7 @@
     @closed="closedFn"
   >
     <div class="host-vhost">
-      <div class="nav">
+      <div class="nav pl-3 pr-5">
         <div class="left" @click="show = false">
           <yb-icon :svg="import('@/svg/delete.svg?raw')" class="top-back-icon" />
           <span class="ml-3">{{ I18nT('base.hostsTitle') }}</span>
@@ -19,8 +19,18 @@
       </div>
 
       <div class="tool">
-        <el-button @click="openConfig">{{ I18nT('base.open') }}</el-button>
-        <el-button @click="saveConfig">{{ I18nT('base.save') }}</el-button>
+        <el-button-group>
+          <el-tooltip :show-after="600" :content="I18nT('conf.open')" placement="top">
+            <el-button @click="openConfig">
+              <FolderOpened class="w-5 h-5 p-0.5" />
+            </el-button>
+          </el-tooltip>
+          <el-tooltip :show-after="600" :content="I18nT('conf.save')" placement="top">
+            <el-button @click="saveConfig">
+              <yb-icon :svg="import('@/svg/save.svg?raw')" class="w-5 h-5 p-0.5" />
+            </el-button>
+          </el-tooltip>
+        </el-button-group>
       </div>
     </div>
   </el-drawer>
@@ -29,16 +39,24 @@
 <script setup lang="ts">
   import { ref, onMounted, onUnmounted, nextTick } from 'vue'
   import { KeyCode, KeyMod } from 'monaco-editor/esm/vs/editor/editor.api.js'
-  import { EditorConfigMake, EditorCreate } from '@/util/Editor'
+  import { EditorConfigMake, EditorCreate, EditorDestroy } from '@/util/Editor'
   import { MessageError, MessageSuccess } from '@/util/Element'
   import { shell, fs } from '@/util/NodeFn.js'
   import { I18nT } from '@lang/index'
   import { AsyncComponentSetup } from '@/util/AsyncComponent'
+  import type { editor } from 'monaco-editor/esm/vs/editor/editor.api.js'
+  import { HostsFileMacOS, HostsFileWindows } from '@shared/PlatFormConst'
+  import { FolderOpened } from '@element-plus/icons-vue'
 
   const config = ref('')
-  const configpath = '/private/etc/hosts'
+  let configpath = ''
+  if (window.Server.isMacOS) {
+    configpath = HostsFileMacOS
+  } else if (window.Server.isWindows) {
+    configpath = HostsFileWindows
+  }
   const input = ref<HTMLElement | null>(null)
-  const monacoInstance = ref<any>(null)
+  let monacoInstance: editor.IStandaloneCodeEditor | undefined
 
   const { show, onClosed, onSubmit, closedFn } = AsyncComponentSetup()
 
@@ -53,13 +71,13 @@
     }
   }
 
-  const initEditor = () => {
-    if (!monacoInstance.value) {
+  const initEditor = async () => {
+    if (!monacoInstance) {
       if (!input.value?.style) {
         return
       }
-      monacoInstance.value = EditorCreate(input.value, EditorConfigMake(config.value, false, 'off'))
-      monacoInstance.value.addAction({
+      monacoInstance = EditorCreate(input.value, await EditorConfigMake(config.value, false, 'off'))
+      monacoInstance.addAction({
         id: 'save',
         label: 'save',
         keybindings: [KeyMod.CtrlCmd | KeyCode.KeyS],
@@ -68,7 +86,7 @@
         }
       })
     } else {
-      monacoInstance.value.setValue(config.value)
+      monacoInstance.setValue(config.value)
     }
   }
 
@@ -78,7 +96,7 @@
 
   const saveConfig = async () => {
     try {
-      const content = monacoInstance.value.getValue()
+      const content = monacoInstance?.getValue() ?? ''
       await fs.writeFile(configpath, content)
       MessageSuccess(I18nT('base.success'))
     } catch {
@@ -93,8 +111,7 @@
   })
 
   onUnmounted(() => {
-    monacoInstance.value?.dispose()
-    monacoInstance.value = null
+    EditorDestroy(monacoInstance)
   })
 
   // Initialize config
