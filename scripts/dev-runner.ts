@@ -161,7 +161,15 @@ let fsWait = false
 const next = (base: string, file?: string | null) => {
   if (file) {
     if (fsWait) return
-    const currentMd5 = _md5(_fs.readFileSync(_path.join(base, file))) as string
+
+    const filePath = _path.join(base, file)
+
+    // Check if the path exists and is a file (not a directory)
+    if (!_fs.existsSync(filePath) || !_fs.statSync(filePath).isFile()) {
+      return
+    }
+
+    const currentMd5 = _md5(_fs.readFileSync(filePath)) as string
     if (currentMd5 == preveMd5) {
       return
     }
