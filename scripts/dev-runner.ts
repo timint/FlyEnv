@@ -80,7 +80,7 @@ function buildMainProcess() {
         resolve(true)
       })
       .catch((e) => {
-        console.log('buildMainProcess error', e)
+        console.log('[buildMainProcess] Error', e)
         building = false
         buildCallback.forEach((b: any) => {
           b.reject(e)
@@ -89,23 +89,6 @@ function buildMainProcess() {
         reject(e)
       })
   })
-}
-
-function logPrinter(data: string[]) {
-  let log = '\n'
-
-  data = data.toString().split(/\r?\n/)
-  data.forEach((line) => {
-    log += `  ${line}\n`
-  })
-
-  if (log.includes('EGL Driver message (Error) eglQueryDeviceAttribEXT: Bad attribute.')) {
-    return
-  }
-
-  if (/[0-9A-z]+/.test(log)) {
-    console.log(log)
-  }
 }
 
 function runElectronApp() {
@@ -118,21 +101,19 @@ function runElectronApp() {
     shell: isWindows()
   })
   electronProcess?.stderr?.on('data', (data) => {
-    console.error('electronProcess stderr:', data.toString())
-    logPrinter(data)
+    console.error('[electronProcess]', data.toString())
   })
 
   electronProcess?.stdout?.on('data', (data) => {
-    console.log('electronProcess stdout:', data.toString())
-    logPrinter(data)
+    console.log('[electronProcess]', data.toString())
   })
 
   electronProcess.on('error', (err) => {
-    console.error(`electronProcess spawn error: ${err.message}`)
+    console.error(`[electronProcess] spawn error: ${err.message}`)
   })
 
   electronProcess.on('close', (code) => {
-    console.log(`electronProcess closed with code: ${code}`)
+    console.log(`[electronProcess] closed with code: ${code}`)
     if (restart) {
       restart = false
       runElectronApp()
