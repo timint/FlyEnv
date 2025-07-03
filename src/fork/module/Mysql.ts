@@ -149,6 +149,8 @@ class Mysql extends Base {
           try {
             await execPromise(`taskkill /f /t ${str}`)
           } catch {}
+        } else {
+          await waitTime(1500)
         }
       }
 
@@ -389,7 +391,9 @@ datadir=${pathFixedToUnix(dataDir)}`
         try {
           const res = await doStart()
           await waitTime(500)
-          await this._initPassword(version, password).on(on)
+          if (!skipGrantTables) {
+            await this._initPassword(version, password).on(on)
+          }
           on(I18nT('fork.postgresqlInit', { dir: dataDir }))
           resolve(res)
         } catch (e) {
@@ -870,7 +874,10 @@ sql-mode=NO_ENGINE_SUBSTITUTION`
   rootPasswordChange(version: SoftInstalled, password: string) {
     return new ForkPromise(async (resolve, reject) => {
       try {
-        await this._startServer(version, true, password)
+        const res: any = await this._startServer(version, true, password)
+        console.log('rootPasswordChange _startServer res: ', res)
+        const pid = res?.['APP-Service-Start-PID']
+        version.pid = pid
       } catch (e) {
         console.log('rootPasswordChange _startServer e: ', e)
         return reject(e)
@@ -919,92 +926,53 @@ sql-mode=NO_ENGINE_SUBSTITUTION`
           }
         }
       } else {
-        const v = version?.version?.split('.')?.slice(0, 2)?.join('.') ?? ''
-        const m = join(global.Server.MysqlDir!, `my-${v}.cnf`)
-
-        const content = await readFile(m, 'utf8')
-        const config = iniParse(content)
-        const port = config?.mysqld?.port ?? 3306
-        console.log('rootPasswordChange port: ', port)
-        let connection: Connection | undefined
+        const bin = join(dirname(version.bin), 'mysql')
         const socket = `/tmp/mysql.${version.version}.sock`
-        try {
-          connection = await createConnection({
-            socketPath: socket,
-            // host: '127.0.0.1',
-            user: 'root'
-            // port
-          })
-        } catch (e) {
-          console.log('rootPasswordChange Connection err 0: ', e)
-        }
 
-        if (!connection) {
-          try {
-            connection = await createConnection({
-              host: 'localhost',
-              user: 'root',
-              port
-            })
-          } catch (e) {
-            console.log('rootPasswordChange Connection err 1: ', e)
-            return reject(e)
-          }
-        }
-        console.log('connection !!!!!!')
         if (compareVersions(version.version!, '8.0.0') === 1) {
           try {
-            await connection.query(`FLUSH PRIVILEGES;`)
-            await connection.query(
-              `ALTER USER 'root'@'localhost' IDENTIFIED WITH caching_sha2_password BY '${password}';`
+            await execPromise(
+              `"${bin}" -u root --protocol=socket --socket="${socket}" -e "FLUSH PRIVILEGES;ALTER USER 'root'@'localhost' IDENTIFIED WITH caching_sha2_password BY '${password}';FLUSH PRIVILEGES;"`
             )
-            await connection.query(`FLUSH PRIVILEGES;`)
           } catch (e) {
-            console.log('connection.query error0: ', e)
+            console.log('mysql.exe error0: ', e)
           }
           try {
-            await connection.query(`FLUSH PRIVILEGES;`)
-            await connection.query(
-              `ALTER USER 'root'@'127.0.0.1' IDENTIFIED WITH caching_sha2_password BY '${password}';`
+            await execPromise(
+              `"${bin}" -u root --protocol=socket --socket="${socket}" -e "FLUSH PRIVILEGES;ALTER USER 'root'@'127.0.0.1' IDENTIFIED WITH caching_sha2_password BY '${password}';FLUSH PRIVILEGES;"`
             )
-            await connection.query(`FLUSH PRIVILEGES;`)
           } catch (e) {
-            console.log('connection.query error1: ', e)
+            console.log('mysql.exe error1: ', e)
           }
         } else if (compareVersions(version.version!, '5.7.5') === 1) {
           try {
-            await connection.query(`FLUSH PRIVILEGES;`)
-            await connection.query(`ALTER USER 'root'@'localhost' IDENTIFIED BY '${password}';`)
-            await connection.query(`FLUSH PRIVILEGES;`)
+            await execPromise(
+              `"${bin}" -u root --protocol=socket --socket="${socket}" -e "FLUSH PRIVILEGES;ALTER USER 'root'@'localhost' IDENTIFIED BY '${password}';FLUSH PRIVILEGES;"`
+            )
           } catch (e) {
-            console.log('connection.query error2: ', e)
+            console.log('mysql.exe error2: ', e)
           }
           try {
-            await connection.query(`FLUSH PRIVILEGES;`)
-            await connection.query(`ALTER USER 'root'@'127.0.0.1' IDENTIFIED BY '${password}';`)
-            await connection.query(`FLUSH PRIVILEGES;`)
+            await execPromise(
+              `"${bin}" -u root --protocol=socket --socket="${socket}" -e "FLUSH PRIVILEGES;ALTER USER 'root'@'127.0.0.1' IDENTIFIED BY '${password}';FLUSH PRIVILEGES;"`
+            )
           } catch (e) {
-            console.log('connection.query error3: ', e)
+            console.log('mysql.exe error3: ', e)
           }
         } else {
           try {
-            await connection.query(`FLUSH PRIVILEGES;`)
-            await connection.query(
-              `UPDATE mysql.user SET Password=PASSWORD('${password}') WHERE User='root';`
+            await execPromise(
+              `"${bin}" -u root --protocol=socket --socket="${socket}" -e "FLUSH PRIVILEGES;UPDATE mysql.user SET Password=PASSWORD('${password}') WHERE User='root';FLUSH PRIVILEGES;"`
             )
-            await connection.query(`FLUSH PRIVILEGES;`)
           } catch (e) {
-            console.log('connection.query error4: ', e)
+            console.log('mysql.exe error2: ', e)
           }
         }
-        try {
-          await connection.end()
-        } catch {}
       }
 
       version.rootPassword = password
       try {
-        await this._stopServer(version)
+        await super._stopServer(version)
       } catch {}
 
       resolve(true)
@@ -1105,10 +1073,10 @@ sql-mode=NO_ENGINE_SUBSTITUTION`
           const dbName = db?.SCHEMA_NAME ?? db.schema_name
 
           const directUsers = dbPrivileges
-            .filter((priv: any) => priv.Db === dbName)
-            .map((priv: any) => `${priv.User}@${priv.Host}`)
+            .filter((priv: any) => priv.Db.replace(/[\\]+/g, '') === dbName)
+            .map((priv: any) => `${priv.User}`)
 
-          const globalUserList = globalUsers.map((u: any) => `${u.User}@${u.Host}`)
+          const globalUserList = globalUsers.map((u: any) => `${u.User}`)
 
           return {
             name: dbName,
@@ -1124,6 +1092,83 @@ sql-mode=NO_ENGINE_SUBSTITUTION`
       } finally {
         await connection.end()
       }
+    })
+  }
+
+  addDatabase(version: SoftInstalled, data: any) {
+    return new ForkPromise(async (resolve, reject) => {
+      const v = version?.version?.split('.')?.slice(0, 2)?.join('.') ?? ''
+      const m = join(global.Server.MysqlDir!, `my-${v}.cnf`)
+
+      const content = await readFile(m, 'utf8')
+      const config = iniParse(content)
+      const port = config?.mysqld?.port ?? 3306
+      console.log('rootPasswordChange port: ', port)
+      let connection: Connection | undefined
+      try {
+        connection = await createConnection({
+          host: '127.0.0.1',
+          user: 'root',
+          password: version?.rootPassword ?? 'root',
+          port
+        })
+      } catch (e) {
+        console.log('rootPasswordChange Connection err 0: ', e)
+      }
+
+      if (!connection) {
+        try {
+          connection = await createConnection({
+            host: 'localhost',
+            user: 'root',
+            port
+          })
+        } catch (e) {
+          console.log('rootPasswordChange Connection err 1: ', e)
+          return reject(e)
+        }
+      }
+
+      try {
+        await connection.query('FLUSH PRIVILEGES')
+        // 1. 创建数据库
+        await connection.query(
+          `CREATE DATABASE IF NOT EXISTS \`${data.database}\` CHARACTER SET ${data.charset}`
+        )
+
+        if (compareVersions(version.version!, '5.7.5') === 1) {
+          await connection.query(
+            `CREATE USER IF NOT EXISTS '${data.user}'@'localhost' IDENTIFIED WITH caching_sha2_password BY '${data.password}'`
+          )
+        } else {
+          const [users]: any = await connection.query(
+            `SELECT User FROM mysql.user WHERE User = ? AND Host = '%'`,
+            [data.user]
+          )
+          if (users.length === 0) {
+            // MySQL 5.7.5及以下版本
+            await connection.query(`CREATE USER ?@'localhost' IDENTIFIED BY ?`, [
+              data.user,
+              data.password
+            ])
+          }
+        }
+
+        // 3. 授予用户对数据库的所有权限
+        await connection.query(
+          `GRANT ALL PRIVILEGES ON \`${data.database}\`.* TO '${data.user}'@'localhost'`
+        )
+
+        // 4. 刷新权限
+        await connection.query('FLUSH PRIVILEGES')
+        await connection?.end()
+      } catch (e) {
+        console.log('addDatabase Error: ', e)
+        await connection?.end()
+        return reject(e)
+      }
+
+      resolve(true)
     })
   }
 }

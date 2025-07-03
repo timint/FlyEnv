@@ -53,7 +53,7 @@
                     </el-button>
                   </template>
                 </template>
-                <el-button>添加数据库</el-button>
+                <el-button @click.stop="showAddDatabase">添加数据库</el-button>
                 <el-button @click.stop="showRootPassword">{{
                   I18nT('mysql.rootPassword')
                 }}</el-button>
@@ -67,6 +67,9 @@
             <template v-if="!item.run">
               <el-empty :description="I18nT('mysql.mysqlNeedRunTips')"></el-empty>
             </template>
+            <template v-else>
+              <Database :item="item" />
+            </template>
           </template>
         </el-card>
       </div>
@@ -79,8 +82,9 @@
   import { AsyncComponentSetup, AsyncComponentShow } from '@/util/AsyncComponent'
   import type { ModuleInstalledItem } from '@/core/Module/ModuleInstalledItem'
   import { MySQLManage } from '@/components/Mysql/Manage/manage'
-  import { computed, watch } from 'vue'
+  import { computed, onUnmounted, watch } from 'vue'
   import { BrewStore } from '@/store/brew'
+  import Database from '@/components/Mysql/Manage/database.vue'
 
   const props = defineProps<{
     item: ModuleInstalledItem
@@ -103,22 +107,35 @@
     })
   }
 
-  if (props.item.run) {
+  const showAddDatabase = () => {
+    import('./addDatabase.vue').then((res) => {
+      AsyncComponentShow(res.default, {
+        item: props.item
+      }).then()
+    })
+  }
+
+  const isRun = computed(() => {
+    return props.item.run && !props.item.running
+  })
+
+  if (isRun.value) {
     MySQLManage.fetchDatabase(props.item)
       .then(() => {})
       .catch()
   }
 
-  watch(
-    () => props.item.run,
-    (v) => {
-      if (v) {
-        MySQLManage.fetchDatabase(props.item)
-          .then(() => {})
-          .catch()
-      }
+  watch(isRun, (v) => {
+    if (v) {
+      MySQLManage.fetchDatabase(props.item)
+        .then(() => {})
+        .catch()
     }
-  )
+  })
+
+  onUnmounted(() => {
+    MySQLManage.databaseRaw.splice(0)
+  })
 
   defineExpose({
     show,
