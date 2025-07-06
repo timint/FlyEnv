@@ -200,6 +200,12 @@ _fs.watch(
     if (filename) {
       if (fsWait) return
       const from = _path.join(staticPath, filename)
+
+      // Skip if the path doesn't exist or is not a file
+      if (!_fs.existsSync(from) || !_fs.statSync(from).isFile()) {
+        return
+      }
+
       const currentMd5 = _md5(_fs.readFileSync(from)) as string
       if (currentMd5 == preveMd5) {
         return
