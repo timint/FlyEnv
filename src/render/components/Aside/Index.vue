@@ -28,7 +28,7 @@
           </template>
           <template #reference>
             <li class="cursor-pointer" @click.stop="showLog()">
-              <yb-icon :svg="import('@/svg/log.svg?raw')" width="16" height="16" />
+              <Notebook class="w-5 h-5 p-0.5" />
             </li>
           </template>
         </el-popover>
@@ -44,7 +44,6 @@
           <template #reference>
             <li class="cursor-pointer" @click.stop="nav('/setup')">
               <yb-icon
-                class="fa-flip-h"
                 :svg="import('@/svg/settings.svg?raw')"
                 width="18"
                 height="18"
@@ -116,6 +115,7 @@
   import CustomerModule from '@/components/CustomerModule/aside.vue'
   import type { CallbackFn } from '@shared/app'
   import { ElMessageBox } from 'element-plus'
+  import { Notebook } from '@element-plus/icons-vue'
 
   let lastTray = ''
 

@@ -20,7 +20,7 @@
       <div class="tool">
         <el-tooltip :show-after="600" :content="I18nT('base.open')" placement="top">
           <el-button class="shrink0" :disabled="!fileExists" @click="AppLogStore.open()">
-            <FolderOpened class="w-5 h-5 p-0.5" style="margin-right: 1em;" />
+            <FolderOpened class="w-5 h-5 p-0.5" style="margin-right: .5em;" />
             <span>{{ I18nT('base.openFolder') }}</span>
           </el-button>
         </el-tooltip>
