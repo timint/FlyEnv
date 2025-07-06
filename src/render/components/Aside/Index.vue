@@ -9,16 +9,11 @@
           popper-class="app-popover-min-w-auto"
         >
           <template #default>
-            <span>{{ I18nT('aside.appExit') }}</span>
+            <span>{{ I18nT('aside.groupStart') }}</span>
           </template>
           <template #reference>
-            <li class="cursor-pointer" @click.stop="appExit()">
-              <yb-icon
-                class="fa-flip-h"
-                :svg="import('@/svg/exit.svg?raw')"
-                width="16"
-                height="16"
-              />
+            <li :class="groupClass" @click="groupDo">
+              <yb-icon :svg="import('@/svg/switch.svg?raw')" width="24" height="24" />
             </li>
           </template>
         </el-popover>
@@ -44,12 +39,36 @@
           popper-class="app-popover-min-w-auto"
         >
           <template #default>
-            <span>{{ I18nT('aside.groupStart') }}</span>
+            <span>{{ I18nT('base.settings') }}</span>
           </template>
           <template #reference>
-        <li :class="groupClass" @click="groupDo">
-          <yb-icon :svg="import('@/svg/switch.svg?raw')" width="24" height="24" />
-        </li>
+            <li class="cursor-pointer" @click.stop="nav('/setup')">
+              <yb-icon
+                class="fa-flip-h"
+                :svg="import('@/svg/settings.svg?raw')"
+                width="18"
+                height="18"
+              />
+            </li>
+          </template>
+        </el-popover>
+        <el-popover
+          width="auto"
+          :show-after="800"
+          placement="right"
+          popper-class="app-popover-min-w-auto"
+        >
+          <template #default>
+            <span>{{ I18nT('aside.appExit') }}</span>
+          </template>
+          <template #reference>
+            <li class="cursor-pointer" @click.stop="appExit()">
+              <yb-icon
+                :svg="import('@/svg/exit.svg?raw')"
+                width="16"
+                height="16"
+              />
+            </li>
           </template>
         </el-popover>
       </ul>
@@ -76,19 +95,6 @@
           </template>
         </ul>
       </el-scrollbar>
-      <ul class="menu setup-menu">
-        <li
-          :class="'non-draggable' + (currentPage === '/setup' ? ' active' : '')"
-          @click="nav('/setup')"
-        >
-          <div class="left">
-            <div class="icon-block">
-              <yb-icon :svg="import('@/svg/setup.svg?raw')" width="30" height="30" />
-            </div>
-            <span class="title">{{ I18nT('base.settings') }}</span>
-          </div>
-        </li>
-      </ul>
     </div>
   </el-aside>
 </template>
