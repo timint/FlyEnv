@@ -75,7 +75,7 @@
     return new Promise((resolve, reject) => {
       const path = `/${props.item.id}`
       if (appStore.currentPage === path) {
-        reject(new Error('Path Not Change'))
+        reject(new Error('Path not changed'))
         return
       }
       AppCustomerModule.currentModule = AppCustomerModule.module.find((f) => f.id === props.item.id)

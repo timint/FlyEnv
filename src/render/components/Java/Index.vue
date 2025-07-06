@@ -8,7 +8,7 @@
     <div class="main-block">
       <Service
         v-if="tab === 0"
-        title="JAVA"
+        title="Java"
         type-flag="java"
         :fetch-data-when-create="true"
       ></Service>
