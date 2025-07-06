@@ -14,7 +14,7 @@ async function packMain() {
       await viteBuild(config.distFork)
       await viteBuild(config.distHelper)
     } else if (isWindows()) {
-      console.log('isWindows !!!')
+      console.log('packMain isWindows !!!')
       const config = viteConfig.vite.win
       await viteBuild(config.dist)
       await viteBuild(config.distFork)
