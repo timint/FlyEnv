@@ -27,13 +27,13 @@
               v-model.trim="item.name"
               type="text"
               :class="'input' + (errs['name'] ? ' error' : '')"
-              :placeholder="I18nT('host.placeholderName')"
+              :placeholder="I18nT('host.placeholderHostname')"
             />
             <textarea
               v-model.trim="item.alias"
               type="text"
               class="input-textarea"
-              :placeholder="I18nT('host.placeholderAlias')"
+              :placeholder="I18nT('host.placeholderHostAliases')"
             ></textarea>
             <input
               v-model.trim="item.mark"
@@ -59,7 +59,7 @@
             </div>
             <div class="park">
               <div class="title">
-                <span>{{ I18nT('base.parkTitle') }}</span>
+                <span>{{ I18nT('base.resolveSubdomainsToSubfolders') }}</span>
                 <el-popover placement="top" trigger="hover" width="auto">
                   <template #reference>
                     <yb-icon
@@ -71,7 +71,7 @@
                   </template>
                   <template #default>
                     <p>
-                      {{ I18nT('base.parkTips') }}
+                      {{ I18nT('base.resolveSubdomainsToSubfoldersHint') }}
                     </p>
                   </template>
                 </el-popover>
@@ -128,7 +128,7 @@
               />
             </div>
           </div>
-          <div class="plant-title">{{ I18nT('host.hostSSL') }}</div>
+          <div class="plant-title">{{ I18nT('host.ssl') }}</div>
           <div class="main p-5">
             <div class="ssl-switch">
               <span>SSL</span>
@@ -394,7 +394,7 @@
 
   const onParkChange = () => {
     if (!park.value) {
-      return Base._Confirm(I18nT('base.parkConfirm'), undefined, {
+      return Base._Confirm(I18nT('base.confirmSubdomainResolving'), undefined, {
         customClass: 'confirm-del',
         type: 'warning'
       })

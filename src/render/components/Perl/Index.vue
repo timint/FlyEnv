@@ -38,5 +38,5 @@
   import ProjectIndex from '@/components/LanguageProjects/index.vue'
 
   const { tab } = AppModuleSetup('perl')
-  const tabs = [I18nT('base.service'), I18nT('base.versionManager'), I18nT('host.perlProjects')]
+  const tabs = [I18nT('base.installed'), I18nT('base.library'), I18nT('host.perlProjects')]
 </script>

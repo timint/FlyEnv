@@ -1,9 +1,9 @@
 {
   "rawFile": "Fichier brut",
-  "CommonSetting": "Paramètres communs",
+  "commonSettings": "Paramètres communs",
   "open": "Ouvrir le fichier",
   "save": "Enregistrer le fichier Ctrl + s",
   "loadDefault": "Charger le fichier par défaut",
-  "saveCustom": "Enregistrer comme fichier personnalisé",
-  "loadCustom": "Charger le fichier personnalisé"
+  "saveCustomFile": "Enregistrer comme fichier personnalisé",
+  "loadCustomFile": "Charger le fichier personnalisé"
 }

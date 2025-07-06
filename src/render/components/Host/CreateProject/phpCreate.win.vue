@@ -106,7 +106,7 @@
         <template v-else>
           <el-button @click="doCancel">{{ I18nT('base.confirm') }}</el-button>
           <el-button type="primary" @click="doCreateHost">{{
-            I18nT('host.toCreateHost')
+            I18nT('host.createHost')
           }}</el-button>
         </template>
       </div>

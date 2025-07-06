@@ -30,13 +30,13 @@
           </el-button>
         </el-tooltip>
         <el-button-group style="margin-left: 12px">
-          <el-tooltip :show-after="600" :content="I18nT('conf.loadCustom')" placement="top">
-            <el-button :disabled="disabled" @click="loadCustom">
+          <el-tooltip :show-after="600" :content="I18nT('load.loadCustomFile')" placement="top">
+            <el-button :disabled="disabled" @click="loadCustomFile">
               <yb-icon :svg="import('@/svg/custom.svg?raw')" class="w-5 h-5 p-0.5" />
             </el-button>
           </el-tooltip>
-          <el-tooltip :show-after="600" :content="I18nT('conf.saveCustom')" placement="top">
-            <el-button :disabled="disabled" @click="saveCustom">
+          <el-tooltip :show-after="600" :content="I18nT('load.saveCustomFile')" placement="top">
+            <el-button :disabled="disabled" @click="saveCustomFile">
               <yb-icon :svg="import('@/svg/saveas.svg?raw')" class="w-5 h-5 p-0.5" />
             </el-button>
           </el-tooltip>

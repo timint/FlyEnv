@@ -45,8 +45,8 @@
 
   const { tab } = AppModuleSetup('ruby')
   const tabs = [
-    I18nT('base.service'),
-    I18nT('base.versionManager'),
+    I18nT('base.installed'),
+    I18nT('base.available'),
     I18nT('host.rubyProjects')
   ]
 </script>

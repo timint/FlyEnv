@@ -63,8 +63,8 @@ class Minio extends Base {
             zip,
             downloaded: existsSync(zip),
             installed: existsSync(bin),
-            version: 'lasted',
-            name: `Minio-lasted`
+            version: 'last',
+            name: `Minio-last`
           }
         ]
         resolve(all)
@@ -79,8 +79,8 @@ class Minio extends Base {
             zip,
             downloaded: existsSync(zip),
             installed: existsSync(bin),
-            version: 'lasted',
-            name: `Minio-lasted`
+            version: 'last',
+            name: `Minio-last`
           }
         ]
         resolve(all)

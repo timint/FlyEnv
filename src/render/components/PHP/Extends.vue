@@ -50,12 +50,12 @@
                     }}</el-radio-button>
                     <el-radio-button
                       class="flex-1"
-                      :label="I18nT('versionmanager.Local')"
+                      :label="I18nT('base.installed')"
                       value="local"
                     ></el-radio-button>
                     <el-radio-button
                       class="flex-1"
-                      :label="I18nT('versionmanager.Library')"
+                      :label="I18nT('base.available')"
                       value="lib"
                     ></el-radio-button>
                   </el-radio-group>

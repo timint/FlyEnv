@@ -81,7 +81,7 @@
     const file = filePaths[0]
     const state = await fs.stat(file)
     if (state.size > 5 * 1024 * 1024) {
-      MessageError(I18nT('base.fileBigErr'))
+      MessageError(I18nT('base.errorLargeConfigFile'))
       return
     }
 

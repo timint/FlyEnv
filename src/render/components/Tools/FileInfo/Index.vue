@@ -11,7 +11,7 @@
       <div class="select-dir-wapper">
         <div id="selectDir" @click.stop="choosePath">
           <yb-icon :svg="import('@/svg/upload.svg?raw')" class="icon" />
-          <span>{{ I18nT('base.fileInfoTips') }}</span>
+          <span>{{ I18nT('base.fileInfoHint') }}</span>
         </div>
       </div>
       <ul v-if="path" class="info-wapper">

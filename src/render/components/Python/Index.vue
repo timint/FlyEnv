@@ -38,5 +38,5 @@
   import { Project } from '@/util/Project'
 
   const { tab } = AppModuleSetup('python')
-  const tabs = [I18nT('base.service'), I18nT('base.versionManager'), I18nT('host.pythonProjects')]
+  const tabs = [I18nT('base.installed'), I18nT('base.library'), I18nT('host.pythonProjects')]
 </script>

@@ -73,7 +73,7 @@ export class Base {
               .catch(() => {})
             resolve(true)
           } else {
-            resolve(I18nT('fork.versionError'))
+            resolve(I18nT('fork.failedFetchingVersion'))
           }
         } catch (e: any) {
           resolve(e.toString())

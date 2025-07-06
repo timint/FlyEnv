@@ -6,7 +6,7 @@
           <span> {{ title }} </span>
           <el-popover :show-after="600" placement="top" width="auto">
             <template #default>
-              <span>{{ I18nT('base.customVersionDirTips') }}</span>
+              <span>{{ I18nT('base.customVersionDirHint') }}</span>
             </template>
             <template #reference>
               <el-button
@@ -58,7 +58,7 @@
                 }}</span>
               </template>
               <template #default>
-                <span>{{ scope.row?.error ?? I18nT('base.versionErrorTips') }}</span>
+                <span>{{ scope.row?.error ?? I18nT('base.failedFetchingVersionHint') }}</span>
               </template>
             </el-popover>
           </template>

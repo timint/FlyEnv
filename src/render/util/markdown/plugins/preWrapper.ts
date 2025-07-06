@@ -22,7 +22,7 @@ export function preWrapperPlugin(md: MarkdownIt, options: Options) {
     return (
       `<div class="language-${lang}${getAdaptiveThemeMarker(options)}${active}">` +
       `<button title="${options.codeCopyButtonTitle}" class="copy"></button>` +
-      `<span class="lang">${lang}</span>` +
+      `<span class="language">${lang}</span>` +
       fence(...args) +
       '</div>'
     )

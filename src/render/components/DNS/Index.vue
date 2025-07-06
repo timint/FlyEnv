@@ -19,5 +19,5 @@
   import { I18nT } from '@lang/index'
 
   const { tab } = AppModuleSetup('dns')
-  const tabs = [I18nT('base.service'), I18nT('base.configFile')]
+  const tabs = [I18nT('base.installed'), I18nT('base.configuration')]
 </script>

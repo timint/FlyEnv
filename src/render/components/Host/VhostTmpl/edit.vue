@@ -45,12 +45,12 @@
 
   const title = computed(() => {
     const dict = {
-      apache: I18nT('host.vhostApacheEdit'),
-      apacheSSL: I18nT('host.vhostApacheSSLEdit'),
-      nginx: I18nT('host.vhostNginxEdit'),
-      nginxSSL: I18nT('host.vhostNginxSSLEdit'),
-      caddy: I18nT('host.vhostCaddyEdit'),
-      caddySSL: I18nT('host.vhostCaddySSLEdit')
+      apache: I18nT('host.apacheVhostTemplate'),
+      apacheSSL: I18nT('host.apacheVhostTemplateSSL'),
+      nginx: I18nT('host.nginxVhostTemplate'),
+      nginxSSL: I18nT('host.nginxVhostTemplateSSL'),
+      caddy: I18nT('host.caddyVhostTemplate'),
+      caddySSL: I18nT('host.caddyVhostTemplateSSL')
     }
     return dict?.[props.flag] ?? ''
   })

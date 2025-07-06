@@ -5,7 +5,7 @@
         <div class="left">
           <span class="break-keep flex-shrink-0"> {{ title }} </span>
           <template v-if="isLock">
-            <el-tooltip placement="right" :content="I18nT('host.licenseTips')">
+            <el-tooltip placement="right" :content="I18nT('host.licenseHint')">
               <el-button
                 class="custom-folder-add-btn"
                 :icon="Lock"
@@ -85,7 +85,7 @@
           <template v-else>
             <template v-if="!scope.row.comment">
               <span class="truncate row-hover-show text-yellow-500">
-                {{ I18nT('host.dbclickRowToEdit') }}
+                {{ I18nT('host.dblClickRowToEdit') }}
               </span>
             </template>
             <template v-else>
@@ -170,7 +170,7 @@
               </li>
               <li @click.stop="project.delProject(scope.$index)">
                 <yb-icon :svg="import('@/svg/trash.svg?raw')" width="13" height="13" />
-                <span class="ml-3">{{ I18nT('base.del') }}</span>
+                <span class="ml-3">{{ I18nT('base.delete') }}</span>
               </li>
             </ul>
             <template #reference>

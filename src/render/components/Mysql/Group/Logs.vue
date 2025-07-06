@@ -43,7 +43,7 @@
     if (props.flag === 'log') {
       return I18nT('base.log')
     }
-    return I18nT('base.slowLog')
+    return I18nT('base.performanceLog')
   })
 
   const filepath = computed(() => {

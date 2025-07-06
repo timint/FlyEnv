@@ -247,7 +247,7 @@ export const ConfSetup = (props: ComputedRef<ConfSetupProps>) => {
         const file = filePaths[0]
         const state: any = await fs.stat(file)
         if (state.size > 5 * 1024 * 1024) {
-          MessageError(I18nT('base.fileBigErr'))
+          MessageError(I18nT('base.errorLargeConfigFile'))
           return
         }
         fs.readFile(file).then((conf: string) => {

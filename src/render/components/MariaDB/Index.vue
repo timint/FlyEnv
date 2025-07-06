@@ -72,11 +72,11 @@
 
   const { tab, checkVersion } = AppModuleSetup('mariadb')
   const tabs = [
-    I18nT('base.service'),
-    I18nT('base.versionManager'),
-    I18nT('base.configFile'),
+    I18nT('base.installed'),
+    I18nT('base.available'),
+    I18nT('base.configuration'),
     I18nT('base.log'),
-    I18nT('base.slowLog')
+    I18nT('base.performanceLog')
   ]
   checkVersion()
 

@@ -27,7 +27,7 @@
               v-model.trim="item.name"
               type="text"
               :class="'input' + (errs['name'] ? ' error' : '')"
-              :placeholder="I18nT('host.placeholderName')"
+              :placeholder="I18nT('host.placeholderHostname')"
             />
             <input
               v-model.trim="item.mark"
@@ -65,7 +65,7 @@
               />
             </div>
           </div>
-          <div class="plant-title">{{ I18nT('host.hostSSL') }}</div>
+          <div class="plant-title">{{ I18nT('host.ssl') }}</div>
           <div class="main p-5">
             <div class="ssl-switch">
               <span>SSL</span>

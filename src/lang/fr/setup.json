@@ -4,7 +4,7 @@
   "tencent": "Source de téléchargement Tencent",
   "aliyun": "Source de téléchargement Alibaba",
   "ustc": "Source de téléchargement de l'Université des Sciences et Technologies de Chine",
-  "Licenses": "Licences",
+  "licenses": "Licences",
   "requestedTips": "La demande de licence a été envoyée, veuillez patienter. Si vous devez modifier les informations, vous pouvez renvoyer la demande.",
   "licenseActivated": "Licence activée",
   "autoStartService": "Démarrage automatique des services",
@@ -22,7 +22,7 @@
   "moduleAdd": "Ajouter un module",
   "moduleCateDelTips": "Les modules sous cette catégorie seront également supprimés. Confirmer la suppression?",
 
-  "moduleTitle": "Module",
+  "modules": "Module",
   "moduleName": "Nom du module",
   "moduleIcon": "Icône du module",
   "moduleIsService": "Le module est-il un service?",
@@ -41,7 +41,7 @@
     "logPath": "Fichier journal",
     "needPasswordToStart": "Droits d'administrateur requis. Entrez votre mot de passe (il sera enregistré pour une utilisation future). Sinon, entrez-le manuellement dans le terminal, mais cette invite peut réapparaître.",
     "hadOpenInTerminal": "Déjà en cours d'exécution dans le terminal — résultats indisponibles.",
-    "licenseTips": "Aucune licence trouvée. Seuls 3 modules/éléments d'exécution peuvent être créés.",
+    "licenseHint": "Aucune licence trouvée. Seuls 3 modules/éléments d'exécution peuvent être créés.",
     "outputLog": "Journal de sortie",
     "errorLog": "Journal des erreurs"
   }

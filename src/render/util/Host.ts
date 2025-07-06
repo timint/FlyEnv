@@ -54,9 +54,9 @@ export const handleHost = (
           handleHostEnd(res.data.host, flag === 'add')
           resolve(true)
         } else if (res?.data?.hostBackFile) {
-          MessageError(I18nT('base.hostParseErr'))
+          MessageError(I18nT('base.errorParsingHosts'))
           shell.showItemInFolder(res?.data?.hostBackFile)
-          resolve(I18nT('base.hostParseErr'))
+          resolve(I18nT('base.errorParsingHosts'))
         }
       } else if (res?.code === 1) {
         IPC.off(key)

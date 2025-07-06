@@ -137,7 +137,7 @@
                     <template v-if="scope.row.subType === 'other'">
                       <li @click.stop="showConfig(scope.row)">
                         <yb-icon :svg="import('@/svg/config.svg?raw')" width="13" height="13" />
-                        <span class="ml-3">{{ I18nT('base.configFile') }} - server.xml</span>
+                        <span class="ml-3">{{ I18nT('base.configuration') }} - server.xml</span>
                       </li>
                     </template>
                     <li @click.stop="action(scope.row, scope.$index, 'log')">
@@ -150,7 +150,7 @@
                     </li>
                     <li @click.stop="action(scope.row, scope.$index, 'del')">
                       <yb-icon :svg="import('@/svg/trash.svg?raw')" width="13" height="13" />
-                      <span class="ml-3">{{ I18nT('base.del') }}</span>
+                      <span class="ml-3">{{ I18nT('base.delete') }}</span>
                     </li>
                   </ul>
 

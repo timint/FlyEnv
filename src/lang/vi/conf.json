@@ -1,9 +1,9 @@
 {
   "rawFile": "Tệp thô",
-  "CommonSetting": "Cài đặt chung",
+  "commonSettings": "Cài đặt chung",
   "open": "Mở tệp",
   "save": "Lưu tệp Ctrl + s",
   "loadDefault": "Tải tệp mặc định",
-  "saveCustom": "Lưu thành tệp tùy chỉnh",
-  "loadCustom": "Tải tệp tùy chỉnh"
+  "saveCustomFile": "Lưu thành tệp tùy chỉnh",
+  "loadCustomFile": "Tải tệp tùy chỉnh"
 }

@@ -61,7 +61,7 @@
           </template>
           <el-popover :show-after="600" placement="top" width="auto">
             <template #default>
-              <span>{{ I18nT('base.del') }}</span>
+              <span>{{ I18nT('base.delete') }}</span>
             </template>
             <template #reference>
               <el-button type="primary" link :icon="Delete" @click="doDel(scope.row)"></el-button>

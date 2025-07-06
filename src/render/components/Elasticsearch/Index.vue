@@ -34,8 +34,8 @@
 
   const { tab, checkVersion } = AppModuleSetup('elasticsearch')
   const tabs = [
-    I18nT('base.service'),
-    I18nT('base.versionManager'),
+    I18nT('base.installed'),
+    I18nT('base.available'),
     'elasticsearch.yml',
     'jvm.options',
     'log4j2.properties',

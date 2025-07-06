@@ -1,5 +1,5 @@
 {
-  "setaliase": "Atur Alias",
+  "setAlias": "Atur Alias",
   "env": "Lingkungan",
   "alias": "Alias",
   "envTips": "Apakah path telah ditambahkan ke variabel lingkungan",

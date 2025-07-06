@@ -2,7 +2,7 @@
   "binNotFound": "启动文件不存在,操作失败",
   "confNotFound": "配置文件不存在,服务器启动失败",
   "apacheLogPathErr": "配置文件日志路径有误, 切换失败",
-  "versionError": "版本有误,请重新选择",
+  "failedFetchingVersion": "版本有误,请重新选择",
   "hostsFileNotFound": "hosts文件不存在",
   "startFail": "启动失败,请查看日志文件",
   "versionNotFound": "未获取到软件版本,操作失败",

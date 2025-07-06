@@ -48,7 +48,7 @@
                 }}</span>
               </template>
               <template #default>
-                <span>{{ scope.row?.error ?? I18nT('base.versionErrorTips') }}</span>
+                <span>{{ scope.row?.error ?? I18nT('base.failedFetchingVersionHint') }}</span>
               </template>
             </el-popover>
           </template>
@@ -193,7 +193,7 @@
               </li>
               <li @click.stop="action(scope.row, scope.$index, 'log-slow')">
                 <yb-icon :svg="import('@/svg/log.svg?raw')" width="17" height="17" />
-                <span class="ml-3">{{ I18nT('base.slowLog') }}</span>
+                <span class="ml-3">{{ I18nT('base.performanceLog') }}</span>
               </li>
             </template>
             <li @click.stop="action(scope.row, scope.$index, 'extend')">

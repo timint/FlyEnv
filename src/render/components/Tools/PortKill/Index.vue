@@ -95,7 +95,7 @@
   }
 
   const cleanSelect = () => {
-    Base._Confirm(I18nT('base.killProcessConfirm'), undefined, {
+    Base._Confirm(I18nT('base.confirmTerminateProcess'), undefined, {
       customClass: 'confirm-del',
       type: 'warning'
     })
@@ -112,7 +112,7 @@
   }
 
   const cleanAll = () => {
-    Base._Confirm(I18nT('base.killAllProcessConfirm'), undefined, {
+    Base._Confirm(I18nT('base.confirmTerminateAllProcesses'), undefined, {
       customClass: 'confirm-del',
       type: 'warning'
     })

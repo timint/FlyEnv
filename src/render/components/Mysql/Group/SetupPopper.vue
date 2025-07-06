@@ -14,16 +14,16 @@
         <span class="ml-3"> {{ I18nT('util.mysqlPopperSocket') }} </span>
       </li>
       <li @click.stop="action('cnf')">
-        <span class="ml-3">{{ I18nT('base.configFile') }}</span>
+        <span class="ml-3">{{ I18nT('base.configuration') }}</span>
       </li>
       <li @click.stop="action('log')">
         <span class="ml-3">{{ I18nT('base.log') }}</span>
       </li>
       <li @click.stop="action('log-slow')">
-        <span class="ml-3">{{ I18nT('base.slowLog') }}</span>
+        <span class="ml-3">{{ I18nT('base.performanceLog') }}</span>
       </li>
       <li @click.stop="action('del')">
-        <span class="ml-3">{{ I18nT('base.del') }}</span>
+        <span class="ml-3">{{ I18nT('base.delete') }}</span>
       </li>
     </ul>
     <template #reference>

@@ -10,7 +10,7 @@
     </template>
     <template #default>
       <div>
-        <pre class="break-words whitespace-pre-wrap" v-html="I18nT('host.sslTips')"></pre>
+        <pre class="break-words whitespace-pre-wrap" v-html="I18nT('host.sslHint')"></pre>
         <div class="mt-4">
           <el-button size="small" @click.stop="copyCommand">{{
             I18nT('host.copyCommand')

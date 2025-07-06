@@ -4,7 +4,7 @@ import { I18nT } from '@lang/index'
 
 const module: AppModuleItem = {
   typeFlag: 'tools',
-  label: () => I18nT('base.leftTools'),
+  label: () => I18nT('base.tools'),
   index: defineAsyncComponent(() => import('./Index.vue')),
   aside: defineAsyncComponent(() => import('./aside.vue')),
   asideIndex: 21

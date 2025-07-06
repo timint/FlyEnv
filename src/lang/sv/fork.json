@@ -2,7 +2,7 @@
   "binNotFound": "Startfilen finns inte, åtgärden misslyckades.",
   "confNotFound": "Konfigurationsfilen finns inte, servern kunde inte starta.",
   "apacheLogPathErr": "Loggsökvägen i konfigurationsfilen är felaktig, växlingen misslyckades.",
-  "versionError": "Versionen är felaktig, välj igen.",
+  "failedFetchingVersion": "Versionen är felaktig, välj igen.",
   "hostsFileNotFound": "hosts-filen finns inte.",
   "startFail": "Starten misslyckades, kontrollera loggfilen.",
   "versionNotFound": "Misslyckades med att hämta programvaruversion, åtgärden misslyckades.",

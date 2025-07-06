@@ -114,7 +114,7 @@ class Base {
   }
 
   Alert(content: string, title?: string) {
-    title = title ?? I18nT('base.delAlertTitle')
+    title = title ?? I18nT('base.warning')
     return MessageBox.alert(content, title, {
       confirmButtonText: I18nT('base.confirm'),
       dangerouslyUseHTMLString: true
@@ -122,7 +122,7 @@ class Base {
   }
 
   _Confirm(content: string, title?: string, param = {}) {
-    title = title ?? I18nT('base.delAlertTitle')
+    title = title ?? I18nT('base.warning')
     // @ts-ignore
     return MessageBox.confirm(
       content,

@@ -12,7 +12,7 @@
               style="margin-left: 5px"
             ></yb-icon>
           </template>
-          <p>{{ I18nT('base.nginxRewriteTips') }}</p>
+          <p>{{ I18nT('base.nginxRewriteHint') }}</p>
         </el-popover>
       </div>
       <template v-if="nginxRewriteFile">

@@ -54,7 +54,7 @@
                 }}</span>
               </template>
               <template #default>
-                <span>{{ scope.row?.error ?? I18nT('base.versionErrorTips') }}</span>
+                <span>{{ scope.row?.error ?? I18nT('base.failedFetchingVersionHint') }}</span>
               </template>
             </el-popover>
           </template>

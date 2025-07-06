@@ -20,7 +20,7 @@
 
     <div class="inline-flex items-center gap-4">
       <template v-if="isLock">
-        <el-tooltip placement="left" :content="I18nT('setup.module.licenseTips')">
+        <el-tooltip placement="left" :content="I18nT('setup.module.licenseHint')">
           <el-button size="small" link @click="toLicense">
             <Lock class="w-[17px] h-[17px]" />
           </el-button>

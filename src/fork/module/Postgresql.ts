@@ -250,7 +250,7 @@ export LANG="${global.Server.Local!}"
     })
   }
 
-  fetchLastedTag() {
+  fetchLastTag() {
     return new ForkPromise(async (resolve) => {
       try {
         const url = 'https://api.github.com/repos/pgvector/pgvector/tags?page=1&per_page=1'

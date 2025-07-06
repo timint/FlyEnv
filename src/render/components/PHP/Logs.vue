@@ -40,7 +40,7 @@
   const log = ref()
 
   const title = computed(() => {
-    return props.type === 'php-fpm-slow' ? I18nT('base.slowLog') : I18nT('php.fpmLog')
+    return props.type === 'php-fpm-slow' ? I18nT('base.performanceLog') : I18nT('php.fpmLog')
   })
 
   const filepath = computed(() => {

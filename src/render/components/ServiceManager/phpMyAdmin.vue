@@ -8,7 +8,7 @@
   >
     <div class="main-wapper">
       <template v-if="!phpMyAdminStore.fetching">
-        <span>{{ I18nT('host.phpMyAdminInstallTips') }}</span>
+        <span>{{ I18nT('host.phpMyAdminInstallHint') }}</span>
       </template>
       <template v-else>
         <div style="display: flex; align-items: center; justify-content: center; padding: 15px">

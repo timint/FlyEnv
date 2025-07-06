@@ -2,7 +2,7 @@
   "binNotFound": "Il file di avvio non esiste, operazione fallita.",
   "confNotFound": "Il file di configurazione non esiste, avvio del server fallito",
   "apacheLogPathErr": "Il percorso del log nel file di configurazione è errato, cambio fallito",
-  "versionError": "Versione errata, seleziona di nuovo",
+  "failedFetchingVersion": "Versione errata, seleziona di nuovo",
   "hostsFileNotFound": "Il file hosts non esiste",
   "startFail": "Avvio fallito, controlla il file di log",
   "versionNotFound": "Recupero della versione del software fallito, operazione non riuscita.",

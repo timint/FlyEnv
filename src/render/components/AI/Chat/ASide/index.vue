@@ -66,7 +66,7 @@
                         :icon="Delete"
                         divided
                         @click.stop="delChat(citem as any)"
-                        >{{ I18nT('base.del') }}</el-dropdown-item
+                        >{{ I18nT('base.delete') }}</el-dropdown-item
                       >
                     </el-dropdown-menu>
                   </template>

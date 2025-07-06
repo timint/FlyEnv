@@ -59,7 +59,7 @@ class Project {
     const setupStore = SetupStore()
     const isLock = !setupStore.isActive && this.project.length > 2
     if (isLock) {
-      MessageError(I18nT('host.licenseTips'))
+      MessageError(I18nT('host.licenseHint'))
       return
     }
     dialog
@@ -114,7 +114,7 @@ class Project {
     return localForage.setItem('flyenv-projects-dirs', JSON.parse(JSON.stringify(this.allDirs)))
   }
   delProject(index: number) {
-    Base._Confirm(I18nT('base.delAlertContent'), undefined, {
+    Base._Confirm(I18nT('base.confirmDeletion'), undefined, {
       customClass: 'confirm-del',
       type: 'warning'
     })

@@ -51,8 +51,8 @@
 
   const { tab } = AppModuleSetup('java')
   const tabs = [
-    I18nT('base.service'),
-    I18nT('base.versionManager'),
+    I18nT('base.installed'),
+    I18nT('base.available'),
     'Maven',
     I18nT('host.javaProjects')
   ]

@@ -1,9 +1,9 @@
 {
   "rawFile": "Raw File",
-  "CommonSetting": "Common Settings",
+  "commonSettings": "Common Settings",
   "open": "Open File",
-  "save": "Save File Ctrl + s",
+  "save": "Save File (Ctrl + S)",
   "loadDefault": "Load Default File",
-  "saveCustom": "Save As Custom File",
-  "loadCustom": "Load Custom File"
+  "saveCustomFile": "Save Custom File",
+  "loadCustomFile": "Load Custom File"
 }

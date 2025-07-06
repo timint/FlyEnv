@@ -24,6 +24,6 @@
   import { I18nT } from '@lang/index'
 
   const { tab, checkVersion } = AppModuleSetup('memcached')
-  const tabs = [I18nT('base.service'), I18nT('base.versionManager')]
+  const tabs = [I18nT('base.installed'), I18nT('base.available')]
   checkVersion()
 </script>

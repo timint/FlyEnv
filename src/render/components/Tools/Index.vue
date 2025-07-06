@@ -10,7 +10,7 @@
             <div
               class="flex justify-center p-6 text-3xl pt-4 font-bold text-slate-500 dark:text-gray-400"
             >
-              <span>{{ I18nT('base.leftTools').toUpperCase() }}</span>
+              <span>{{ I18nT('base.tools').toUpperCase() }}</span>
             </div>
             <el-tree
               ref="tree"
@@ -117,7 +117,7 @@
                                 >
                                 <el-dropdown-item :command="{ action: 'del', item }"
                                   ><Delete class="w-4 h-4 mr-2" /><span>{{
-                                    I18nT('base.del')
+                                    I18nT('base.delete')
                                   }}</span></el-dropdown-item
                                 >
                               </el-dropdown-menu>
@@ -177,7 +177,7 @@
                               >
                               <el-dropdown-item :command="{ action: 'del', item }"
                                 ><Delete class="w-4 h-4 mr-2" /><span>{{
-                                  I18nT('base.del')
+                                  I18nT('base.delete')
                                 }}</span></el-dropdown-item
                               >
                             </el-dropdown-menu>

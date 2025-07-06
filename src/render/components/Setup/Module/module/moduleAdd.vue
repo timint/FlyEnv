@@ -58,7 +58,7 @@
         <div class="plant-title flex items-center justify-between">
           <span>{{ I18nT('setup.moduleExecItem') }}</span>
           <template v-if="isLock">
-            <el-tooltip placement="left" :content="I18nT('setup.module.licenseTips')">
+            <el-tooltip placement="left" :content="I18nT('setup.module.licenseHint')">
               <el-button link @click="toLicense">
                 <Lock class="w-[17px] h-[17px]" />
               </el-button>

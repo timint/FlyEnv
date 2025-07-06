@@ -83,7 +83,7 @@
                       @click.stop="toEdit(scope.row.path, scope.$index)"
                     ></el-button>
                     <el-popconfirm
-                      :title="I18nT('base.delAlertContent')"
+                      :title="I18nT('base.confirmDeletion')"
                       @confirm="doDel(scope.row, scope.$index)"
                     >
                       <template #reference>

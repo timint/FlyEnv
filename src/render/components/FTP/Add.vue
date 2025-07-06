@@ -201,7 +201,7 @@
     }
     const exists = fs.existsSync(form.value.dir)
     if (form.value.dir && !exists) {
-      MessageError(I18nT('base.ftpDirNotExists'))
+      MessageError(I18nT('base.errorMissingFtpRoot'))
       errs.value.dir = true
       return
     }

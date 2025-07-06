@@ -142,7 +142,7 @@ export const Setup = (version: SoftInstalled) => {
   const xtermDom = ref<HTMLElement>()
 
   const fetchTagVersion = () => {
-    let saved: any = localStorage.getItem(`pgvector-lasted-tag`)
+    let saved: any = localStorage.getItem(`pgvector-last-tag`)
     if (saved) {
       saved = JSON.parse(saved)
       const time = Math.round(new Date().getTime() / 1000)
@@ -151,12 +151,12 @@ export const Setup = (version: SoftInstalled) => {
         return
       }
     }
-    IPC.send('app-fork:postgresql', 'fetchLastedTag').then((key: string, res: any) => {
+    IPC.send('app-fork:postgresql', 'fetchLastTag').then((key: string, res: any) => {
       IPC.off(key)
       if (res?.code === 0) {
         PgsqlExtensionSetup.tagVersion = res.data
         localStorage.setItem(
-          `pgvector-lasted-tag`,
+          `pgvector-last-tag`,
           JSON.stringify({
             expire: Math.round(new Date().getTime() / 1000) + 24 * 60 * 60,
             data: PgsqlExtensionSetup.tagVersion

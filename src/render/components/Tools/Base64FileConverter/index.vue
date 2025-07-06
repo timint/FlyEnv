@@ -123,7 +123,7 @@
               @click.stop="choosePath"
             >
               <yb-icon :svg="import('@/svg/upload.svg?raw')" class="icon w-12 h-12" />
-              <span>{{ I18nT('base.fileInfoTips') }}</span>
+              <span>{{ I18nT('base.fileInfoHint') }}</span>
             </div>
             <el-input
               readonly

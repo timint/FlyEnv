@@ -2,7 +2,7 @@
   "binNotFound": "Tệp khởi động không tồn tại, thao tác không thành công.",
   "confNotFound": "Tệp cấu hình không tồn tại, máy chủ không khởi động được",
   "apacheLogPathErr": "Đường dẫn nhật ký của tệp cấu hình không đúng, và việc chuyển đổi không thành công",
-  "versionError": "Phiên bản không đúng, vui lòng chọn lại",
+  "failedFetchingVersion": "Phiên bản không đúng, vui lòng chọn lại",
   "hostsFileNotFound": "Tệp hosts không tồn tại",
   "startFail": "Khởi động không thành công, vui lòng kiểm tra tệp nhật ký",
   "versionNotFound": "Không lấy được phiên bản phần mềm, thao tác không thành công.",

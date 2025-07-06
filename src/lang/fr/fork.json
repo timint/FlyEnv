@@ -2,7 +2,7 @@
   "binNotFound": "Le fichier de démarrage n'existe pas, opération échouée.",
   "confNotFound": "Le fichier de configuration n'existe pas, le serveur n'a pas pu démarrer",
   "apacheLogPathErr": "Le chemin du journal du fichier de configuration est incorrect, et le changement a échoué",
-  "versionError": "La version est incorrecte, veuillez sélectionner à nouveau",
+  "failedFetchingVersion": "La version est incorrecte, veuillez sélectionner à nouveau",
   "hostsFileNotFound": "Le fichier hosts n'existe pas",
   "startFail": "Échec du démarrage, veuillez vérifier le fichier journal",
   "versionNotFound": "Échec de l'obtention de la version du logiciel, opération échouée.",

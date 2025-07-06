@@ -4,7 +4,7 @@
   "tencent": "Tencent indirme kaynağı",
   "aliyun": "Alibaba indirme kaynağı",
   "ustc": "Çin Bilim ve Teknoloji Üniversitesi indirme kaynağı",
-  "Licenses": "Lisans",
+  "licenses": "Lisans",
   "requestedTips": "Lisans isteği gönderildi, lütfen sabırlı olun. Bilgileri değiştirmeniz gerekirse tekrar gönderebilirsiniz.",
   "licenseActivated": "Lisans Etkinleştirildi",
   "autoStartService": "Servisleri Otomatik Başlat",
@@ -22,7 +22,7 @@
   "moduleAdd": "Modül Ekle",
   "moduleCateDelTips": "Bu kategorideki modüller de silinecek. Silmeyi onaylıyor musunuz?",
 
-  "moduleTitle": "Modül",
+  "modules": "Modül",
   "moduleName": "Modül Adı",
   "moduleIcon": "Modül Simgesi",
   "moduleIsService": "Modül bir servis mi?",
@@ -41,7 +41,7 @@
     "logPath": "Günlük Dosyası",
     "needPasswordToStart": "Yönetici hakları gerekiyor. Şifrenizi girin (ileride kullanılmak üzere kaydedilecektir). Alternatif olarak terminalde manuel girebilirsiniz, ancak bu uyarı tekrar görünebilir.",
     "hadOpenInTerminal": "Terminalde zaten çalışıyor—sonuçlar görüntülenemiyor.",
-    "licenseTips": "Lisans bulunamadı. Yalnızca 3 modül/çalıştırma öğesi oluşturulabilir.",
+    "licenseHint": "Lisans bulunamadı. Yalnızca 3 modül/çalıştırma öğesi oluşturulabilir.",
 
     "outputLog": "Output Log",
     "errorLog": "Error Log"

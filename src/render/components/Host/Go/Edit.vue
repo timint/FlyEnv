@@ -118,7 +118,7 @@
                 type="text"
                 class="input-textarea w-full"
                 style="margin-top: 12px"
-                :placeholder="I18nT('host.envVarTips')"
+                :placeholder="I18nT('host.envVarHint')"
               ></textarea>
             </div>
             <div v-else-if="item.envVarType === 'file'" class="path-choose pb-4">
@@ -126,7 +126,7 @@
                 v-model.trim="item.envFile"
                 type="text"
                 class="mt-4 input"
-                :placeholder="I18nT('host.fileVarTips')"
+                :placeholder="I18nT('host.fileVarHint')"
               />
               <div class="icon-block" @click="chooseRoot('envFile')">
                 <yb-icon

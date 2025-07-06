@@ -33,13 +33,13 @@
               <template v-if="!item?.version">
                 <el-popover popper-class="version-error-tips" width="auto" placement="top">
                   <template #default>
-                    <span>{{ item?.error ?? $t('base.versionErrorTips') }}</span>
+                    <span>{{ item?.error ?? $t('base.failedFetchingVersionHint') }}</span>
                   </template>
                   <template #reference>
                     <el-option
                       :disabled="true"
-                      :label="$t('base.versionError') + ' - ' + item.path"
-                      :value="$t('base.versionError') + ' - ' + item.path"
+                      :label="$t('base.failedFetchingVersion') + ' - ' + item.path"
+                      :value="$t('base.failedFetchingVersion') + ' - ' + item.path"
                     >
                     </el-option>
                   </template>

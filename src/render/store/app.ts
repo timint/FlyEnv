@@ -249,7 +249,7 @@ export const AppStore = defineStore('app', {
           IPC.off(key)
           if (res?.code === 0) {
             if (res?.data?.hostBackFile) {
-              MessageError(I18nT('base.hostParseErr'))
+              MessageError(I18nT('base.errorParsingHosts'))
               shell.showItemInFolder(res?.data?.hostBackFile)
             } else if (res?.data?.host) {
               this.UPDATE_HOSTS(res?.data?.host)

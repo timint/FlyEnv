@@ -20,12 +20,14 @@
       <div class="tool">
         <el-tooltip :show-after="600" :content="I18nT('base.open')" placement="top">
           <el-button class="shrink0" :disabled="!fileExists" @click="AppLogStore.open()">
-            <FolderOpened class="w-5 h-5 p-0.5" />
+            <FolderOpened class="w-5 h-5 p-0.5" style="margin-right: 1em;" />
+            <span>{{ I18nT('base.openFolder') }}</span>
           </el-button>
         </el-tooltip>
         <el-tooltip :show-after="600" :content="I18nT('base.clean')" placement="top">
           <el-button class="shrink0" :disabled="!fileExists" @click="AppLogStore.clean()">
-            <Notebook class="w-5 h-5 p-0.5" />
+            <yb-icon :svg="import('@/svg/erase.svg?raw')" width="16" height="16" style="margin-right: .5em;" />
+            <span>{{ I18nT('base.clean') }}</span>
           </el-button>
         </el-tooltip>
       </div>
@@ -36,7 +38,7 @@
   import { ref, computed, onMounted, nextTick, onUnmounted, watch } from 'vue'
   import { I18nT } from '@lang/index'
   import { AsyncComponentSetup } from '@/util/AsyncComponent'
-  import { FolderOpened, Notebook } from '@element-plus/icons-vue'
+  import { FolderOpened } from '@element-plus/icons-vue'
   import { AppLogStore } from '@/components/AppLog/store'
   import { EditorConfigMake, EditorCreate, EditorDestroy } from '@/util/Editor'
   import type { editor } from 'monaco-editor/esm/vs/editor/editor.api.js'

@@ -41,10 +41,10 @@ export async function readFileAsUTF8(filePath: string): Promise<string> {
 
     try {
       return iconv.decode(buffer, detectedEncoding)
-    } catch (conversionError: any) {
+    } catch (confailedFetchingVersion: any) {
       console.error(
         `Error converting from ${detectedEncoding} to UTF-8 for file: ${filePath}`,
-        conversionError
+        confailedFetchingVersion
       )
       return buffer.toString('utf-8')
     }

@@ -17,5 +17,5 @@
   import { I18nT } from '@lang/index'
 
   const { tab } = AppModuleSetup('ftp-srv')
-  const tabs = [I18nT('base.service')]
+  const tabs = [I18nT('base.installed')]
 </script>

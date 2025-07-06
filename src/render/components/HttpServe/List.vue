@@ -4,7 +4,7 @@
       <li class="empty" @click.stop="choosePath">
         <div class="wapper" :class="{ ondrop: ondrop }">
           <yb-icon :svg="import('../../svg/upload.svg?raw')" class="icon" />
-          <span>{{ $t('base.httpServerTips') }}</span>
+          <span>{{ $t('base.httpServerHint') }}</span>
         </div>
       </li>
     </template>
@@ -40,7 +40,7 @@
             <div v-else class="status">
               <yb-icon :svg="import('@/svg/play.svg?raw')" @click.stop="doRun(_key as any, item)" />
             </div>
-            <div class="del">
+            <div class="delete">
               <yb-icon :svg="import('@/svg/delete.svg?raw')" @click.stop="doDel(_key as any)" />
             </div>
           </div>

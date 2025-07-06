@@ -6,7 +6,7 @@
           <span> {{ title }} </span>
           <el-popover :show-after="600" placement="top" width="auto">
             <template #default>
-              <span>{{ I18nT('base.customVersionDirTips') }}</span>
+              <span>{{ I18nT('base.customVersionDirHint') }}</span>
             </template>
             <template #reference>
               <el-button
@@ -27,7 +27,7 @@
             <el-radio-group v-model="libSrc" size="small" class="ml-6">
               <el-radio-button
                 class="flex-1"
-                :label="I18nT('versionmanager.Local')"
+                :label="I18nT('base.installed')"
                 value="local"
               ></el-radio-button>
               <template v-if="hasStatic">
@@ -45,12 +45,12 @@
             <el-radio-group v-model="libSrc" size="small" class="ml-6">
               <el-radio-button
                 class="flex-1"
-                :label="I18nT('versionmanager.Local')"
+                :label="I18nT('base.installed')"
                 value="local"
               ></el-radio-button>
               <el-radio-button
                 class="flex-1"
-                :label="I18nT('versionmanager.Library')"
+                :label="I18nT('base.available')"
                 value="static"
               ></el-radio-button>
             </el-radio-group>

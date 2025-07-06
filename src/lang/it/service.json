@@ -1,5 +1,5 @@
 {
-  "setaliase": "Imposta Alias",
+  "setAlias": "Imposta Alias",
   "env": "Ambiente",
   "alias": "Alias",
   "envTips": "Il percorso è stato aggiunto alla variabile d’ambiente?",

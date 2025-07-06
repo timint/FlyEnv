@@ -31,11 +31,11 @@
     return [
       {
         value: 'base',
-        label: I18nT('base.setupBase')
+        label: I18nT('base.settings')
       },
       {
         value: 'module',
-        label: I18nT('setup.moduleTitle')
+        label: I18nT('setup.modules')
       },
       {
         value: 'editor',
@@ -43,7 +43,7 @@
       },
       {
         value: 'licenses',
-        label: I18nT('setup.Licenses')
+        label: I18nT('setup.licenses')
       },
       {
         value: 'about',

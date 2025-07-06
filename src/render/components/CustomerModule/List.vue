@@ -99,7 +99,7 @@
               </template>
               <li @click.stop="action(scope.row, scope.$index, 'del')">
                 <yb-icon :svg="import('@/svg/trash.svg?raw')" width="13" height="13" />
-                <span class="ml-3">{{ I18nT('base.del') }}</span>
+                <span class="ml-3">{{ I18nT('base.delete') }}</span>
               </li>
             </ul>
             <template #reference>

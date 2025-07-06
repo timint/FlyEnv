@@ -1,6 +1,6 @@
 <template>
   <div class="plant-title flex items-center gap-1">
-    <span>{{ I18nT('base.lang') }}</span>
+    <span>{{ I18nT('base.language') }}</span>
     <div class="w-7 flex items-center justify-center">
       <template v-if="LangSetup.loading">
         <el-button :loading="true" link></el-button>
@@ -24,7 +24,7 @@
       v-model="appLang"
       :loading="running"
       :disabled="running"
-      :placeholder="$t('base.changeLang')"
+      :placeholder="$t('base.changeLanguage')"
     >
       <template v-for="(label, value) in AppAllLang" :key="value">
         <el-option :label="label" :value="value"></el-option>

@@ -13,12 +13,12 @@
           <el-radio-group v-model="OllamaModelsSetup.tab" size="small" class="ml-6">
             <el-radio-button
               class="flex-1"
-              :label="I18nT('versionmanager.Local')"
+              :label="I18nT('base.installed')"
               value="local"
             ></el-radio-button>
             <el-radio-button
               class="flex-1"
-              :label="I18nT('base.Library')"
+              :label="I18nT('base.available')"
               value="all"
             ></el-radio-button>
           </el-radio-group>

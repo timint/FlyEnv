@@ -80,7 +80,7 @@
             <template v-else>
               <template v-if="!scope.row.mark">
                 <span class="truncate row-hover-show text-yellow-500">
-                  {{ I18nT('host.dbclickRowToEdit') }}
+                  {{ I18nT('host.dblClickRowToEdit') }}
                 </span>
               </template>
               <template v-else>
@@ -128,15 +128,15 @@
                     </li>
                     <li @click.stop="showConfig({ flag: 'nginx', item: scope.row })">
                       <yb-icon :svg="import('@/svg/config.svg?raw')" width="13" height="13" />
-                      <span class="ml-3">{{ I18nT('base.configFile') }} - Nginx</span>
+                      <span class="ml-3">{{ I18nT('base.configuration') }} - Nginx</span>
                     </li>
                     <li @click.stop="showConfig({ flag: 'caddy', item: scope.row })">
                       <yb-icon :svg="import('@/svg/config.svg?raw')" width="13" height="13" />
-                      <span class="ml-3">{{ I18nT('base.configFile') }} - Caddy</span>
+                      <span class="ml-3">{{ I18nT('base.configuration') }} - Caddy</span>
                     </li>
                     <li @click.stop="showConfig({ flag: 'apache', item: scope.row })">
                       <yb-icon :svg="import('@/svg/config.svg?raw')" width="13" height="13" />
-                      <span class="ml-3">{{ I18nT('base.configFile') }} - Apache</span>
+                      <span class="ml-3">{{ I18nT('base.configuration') }} - Apache</span>
                     </li>
                     <li @click.stop="action(scope.row, scope.$index, 'log')">
                       <yb-icon :svg="import('@/svg/log.svg?raw')" width="13" height="13" />
@@ -148,7 +148,7 @@
                     </li>
                     <li @click.stop="action(scope.row, scope.$index, 'del')">
                       <yb-icon :svg="import('@/svg/trash.svg?raw')" width="13" height="13" />
-                      <span class="ml-3">{{ I18nT('base.del') }}</span>
+                      <span class="ml-3">{{ I18nT('base.delete') }}</span>
                     </li>
                   </ul>
 
@@ -390,7 +390,7 @@
         break
       case 'park':
         console.log('item: ', item)
-        Base._Confirm(I18nT('host.parkConfirm'), undefined, {
+        Base._Confirm(I18nT('host.confirmSubdomainResolving'), undefined, {
           customClass: 'confirm-del',
           type: 'warning'
         })

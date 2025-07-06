@@ -2,7 +2,7 @@
   "binNotFound": "The startup file does not exist, operation failed.",
   "confNotFound": "The configuration file does not exist, the server failed to start",
   "apacheLogPathErr": "The log path of the configuration file is wrong, and the switch fails",
-  "versionError": "The version is wrong, please select again",
+  "failedFetchingVersion": "The version is wrong, please select again",
   "hostsFileNotFound": "The hosts file does not exist",
   "startFail": "Failed to start, please check the log file",
   "versionNotFound": "Failed to get software version, operation failed.",

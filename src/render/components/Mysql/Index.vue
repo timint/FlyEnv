@@ -84,11 +84,11 @@
   const mysqlStore = MysqlStore()
   const { tab, checkVersion } = AppModuleSetup('mysql')
   const tabs = [
-    I18nT('base.service'),
-    I18nT('base.versionManager'),
-    I18nT('base.configFile'),
+    I18nT('base.installed'),
+    I18nT('base.available'),
+    I18nT('base.configuration'),
     I18nT('base.log'),
-    I18nT('base.slowLog'),
+    I18nT('base.performanceLog'),
     I18nT('base.group')
   ]
   const groupRun = computed(() => {

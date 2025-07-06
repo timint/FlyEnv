@@ -21,6 +21,6 @@
   import { I18nT } from '@lang/index'
 
   const { tab, checkVersion } = AppModuleSetup('pure-ftpd')
-  const tabs = [I18nT('base.service'), I18nT('base.versionManager'), I18nT('base.configFile')]
+  const tabs = [I18nT('base.installed'), I18nT('base.available'), I18nT('base.configuration')]
   checkVersion()
 </script>

@@ -2,7 +2,7 @@
   "binNotFound": "起動ファイルが存在しません。操作に失敗しました。",
   "confNotFound": "設定ファイルが存在しません。サーバーの起動に失敗しました",
   "apacheLogPathErr": "設定ファイルのログパスが間違っています。切り替えに失敗しました",
-  "versionError": "バージョンが間違っています。再選択してください",
+  "failedFetchingVersion": "バージョンが間違っています。再選択してください",
   "hostsFileNotFound": "hostsファイルが存在しません",
   "startFail": "起動に失敗しました。ログファイルを確認してください",
   "versionNotFound": "ソフトウェアバージョンの取得に失敗しました。操作に失敗しました。",

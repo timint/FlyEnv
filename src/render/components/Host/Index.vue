@@ -20,7 +20,7 @@
       </el-dropdown>
       <el-button-group>
         <template v-if="isLock">
-          <el-tooltip placement="right" :content="I18nT('host.licenseTips')">
+          <el-tooltip placement="right" :content="I18nT('host.licenseHint')">
             <el-button
               :icon="Lock"
               style="padding-left: 30px; padding-right: 30px"
@@ -51,10 +51,10 @@
                 I18nT('base.export')
               }}</el-dropdown-item>
               <el-dropdown-item command="import">{{ I18nT('base.import') }}</el-dropdown-item>
-              <el-dropdown-item divided command="hostsCopy">{{
-                I18nT('host.hostsCopy')
+              <el-dropdown-item divided command="copyHostsFile">{{
+                I18nT('host.copyHostsFile')
               }}</el-dropdown-item>
-              <el-dropdown-item command="hostsOpen">{{ I18nT('host.hostsOpen') }}</el-dropdown-item>
+              <el-dropdown-item command="openHostsFile">{{ I18nT('host.openHostsFile') }}</el-dropdown-item>
               <el-dropdown-item divided>
                 <VhostTmpl />
               </el-dropdown-item>
@@ -64,7 +64,7 @@
                     <span>{{ I18nT('host.newProject') }}</span>
                   </template>
                   <template #default>
-                    <p>{{ I18nT('host.newProjectTips') }}</p>
+                    <p>{{ I18nT('host.newProjectHint') }}</p>
                   </template>
                 </el-popover>
               </el-dropdown-item>
@@ -81,7 +81,7 @@
           </div>
         </template>
         <template #default>
-          <p>{{ I18nT('host.hostsWriteTips') }}</p>
+          <p>{{ I18nT('host.hostsWriteHint') }}</p>
         </template>
       </el-popover>
       <template v-if="hostsSet.write">
@@ -306,7 +306,7 @@
         const file = filePaths[0]
         const state: any = await fs.stat(file)
         if (state.size > 5 * 1024 * 1024) {
-          MessageError(I18nT('base.fileBigErr'))
+          MessageError(I18nT('base.errorLargeConfigFile'))
           return
         }
         fs.readFile(file).then(async (conf) => {

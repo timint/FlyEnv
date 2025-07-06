@@ -1,5 +1,5 @@
 {
-  "setaliase": "Définir un alias",
+  "setAlias": "Définir un alias",
   "env": "Env",
   "alias": "Alias",
   "envTips": "Le chemin a-t-il été ajouté à la variable d'environnement",

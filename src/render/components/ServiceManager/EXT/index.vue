@@ -31,7 +31,7 @@
       </li>
       <li @click.stop="doSetAlias">
         <yb-icon class="current" :svg="import('@/svg/aliase.svg?raw')" width="17" height="17" />
-        <span class="ml-3">{{ I18nT('service.setaliase') }}</span>
+        <span class="ml-3">{{ I18nT('service.setAlias') }}</span>
       </li>
       <template v-if="isMacOS">
         <template v-if="type === 'postgresql'">
@@ -41,7 +41,7 @@
       <template v-if="isWindows">
         <li @click.stop="ServiceActionStore.delVersion(item, type)">
           <yb-icon :svg="import('@/svg/trash.svg?raw')" width="17" height="17" />
-          <span class="ml-3">{{ I18nT('base.del') }}</span>
+          <span class="ml-3">{{ I18nT('base.delete') }}</span>
         </li>
       </template>
     </ul>

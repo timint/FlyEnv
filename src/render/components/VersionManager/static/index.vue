@@ -10,7 +10,7 @@
     </template>
     <el-table-column prop="name">
       <template #header>
-        <span style="padding: 2px 12px 2px 24px; display: block">{{ I18nT('base.Library') }}</span>
+        <span style="padding: 2px 12px 2px 24px; display: block">{{ I18nT('base.library') }}</span>
       </template>
       <template #default="scope">
         <el-tooltip :show-after="600" placement="top">

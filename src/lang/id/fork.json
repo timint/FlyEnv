@@ -2,7 +2,7 @@
   "binNotFound": "File startup tidak ada, operasi gagal.",
   "confNotFound": "File konfigurasi tidak ada, server gagal untuk dimulai.",
   "apacheLogPathErr": "Path log pada file konfigurasi salah, dan pengalihan gagal.",
-  "versionError": "Versi salah, silakan pilih lagi.",
+  "failedFetchingVersion": "Versi salah, silakan pilih lagi.",
   "hostsFileNotFound": "File hosts tidak ditemukan.",
   "startFail": "Gagal untuk memulai, silakan periksa file log.",
   "versionNotFound": "Gagal mendapatkan versi perangkat lunak, operasi gagal.",

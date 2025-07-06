@@ -163,7 +163,7 @@ export class Host extends Base {
         isLock = uid !== uuid
       }
       if (flag === 'add' && isLock) {
-        reject(new Error(I18nT('host.licenseTips')))
+        reject(new Error(I18nT('host.licenseHint')))
         return
       }
 

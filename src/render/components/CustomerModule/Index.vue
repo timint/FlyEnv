@@ -43,7 +43,7 @@
   const tabs = computed(() => {
     const arr: any = [
       {
-        label: I18nT('base.service')
+        label: I18nT('base.installed')
       }
     ]
     let index = 0

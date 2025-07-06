@@ -27,8 +27,8 @@
 
   const { tab } = AppModuleSetup('node')
   const tabs = [
-    I18nT('base.service'),
-    I18nT('base.versionManager'),
+    I18nT('base.installed'),
+    I18nT('base.available'),
     '.npmrc',
     I18nT('host.newProject'),
     I18nT('host.nodeProjects')

@@ -7,28 +7,28 @@
   >
     <template #reference>
       <div class="w-full" @mouseenter.stop="visible = true" @click.stop="visible = true">{{
-        $t('host.vhostEdit')
+        $t('host.editVhostTemplate')
       }}</div>
     </template>
     <template #default>
       <el-dropdown-menu v-click-outside="onClickOut">
         <el-dropdown-item @click.stop="edit('apache')">{{
-          $t('host.vhostApacheEdit')
+          $t('host.apacheVhostTemplate')
         }}</el-dropdown-item>
         <el-dropdown-item @click.stop="edit('apacheSSL')">{{
-          $t('host.vhostApacheSSLEdit')
+          $t('host.apacheVhostTemplateSSL')
         }}</el-dropdown-item>
         <el-dropdown-item @click.stop="edit('nginx')">{{
-          $t('host.vhostNginxEdit')
+          $t('host.nginxVhostTemplate')
         }}</el-dropdown-item>
         <el-dropdown-item @click.stop="edit('nginxSSL')">{{
-          $t('host.vhostNginxSSLEdit')
+          $t('host.nginxVhostTemplateSSL')
         }}</el-dropdown-item>
         <el-dropdown-item @click.stop="edit('caddy')">{{
-          $t('host.vhostCaddyEdit')
+          $t('host.caddyVhostTemplate')
         }}</el-dropdown-item>
         <el-dropdown-item @click.stop="edit('caddySSL')">{{
-          $t('host.vhostCaddySSLEdit')
+          $t('host.caddyVhostTemplateSSL')
         }}</el-dropdown-item>
       </el-dropdown-menu>
     </template>
