@@ -419,7 +419,7 @@ export const AIKeysEN: () => Array<AIKeyItem> = () => {
           ['start', 'service', 'open', 'turn on'],
           ['exception', 'error', 'failed', 'issues']
         ],
-        txt: 'Mariadb Startup Failed',
+        txt: 'MariaDB Startup Failed',
         task: 'StartMariaDB'
       },
       {
