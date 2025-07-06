@@ -21,7 +21,7 @@
       ></Manager>
       <ProjectIndex
         v-else-if="tab === 2"
-        :title="`Ruby ${I18nT('base.projects')}`"
+        :title="I18nT('host.rubyProjects')"
         :type-flag="'ruby'"
       >
         <template #openin="{ row }">
@@ -47,6 +47,6 @@
   const tabs = [
     I18nT('base.service'),
     I18nT('base.versionManager'),
-    `Ruby ${I18nT('base.projects')}`
+    I18nT('host.rubyProjects')
   ]
 </script>

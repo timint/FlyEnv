@@ -31,6 +31,6 @@
     I18nT('base.versionManager'),
     '.npmrc',
     I18nT('host.newProject'),
-    I18nT('host.projectNode')
+    I18nT('host.nodeProjects')
   ]
 </script>

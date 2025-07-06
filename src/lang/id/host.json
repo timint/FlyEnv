@@ -25,12 +25,12 @@
   "noPhpWarning": "Periksa bahwa tidak ada versi PHP yang dipilih, situs statis akan dibuat, dan file PHP tidak dapat dijalankan. Apakah Anda yakin ingin melanjutkan?",
   "hostsWriteTips": "Aktifkan / Nonaktifkan semua hosts dalam daftar ini",
   "sort": "Urutkan",
-  "projectPhp": "Proyek PHP",
-  "projectJava": "Proyek Java",
-  "projectNode": "Proyek Node",
-  "projectGo": "Proyek Go",
-  "projectPython": "Proyek Python",
-  "projectTomcat": "Proyek Tomcat",
+  "phpProjects": "Proyek PHP",
+  "javaProjects": "Proyek Java",
+  "nodeProjects": "Proyek Node",
+  "goProjects": "Proyek Go",
+  "pythonProjects": "Proyek Python",
+  "tomcatProjects": "Proyek Tomcat",
   "jarPackagePath": "Path Paket JAR",
   "jdkPath": "Path JDK",
   "pythonPath": "Path Python",
@@ -66,7 +66,7 @@
   "sticky": "Tegak (Sticky)",
   "dbclickRowToEdit": "Klik dua kali baris ini untuk mengedit",
 
-  "projectDeno": "Deno Projects",
-  "projectBun": "Bun Projects",
-  "projectPerl": "Perl Projects"
+  "denoProjects": "Deno Projects",
+  "bunProjects": "Bun Projects",
+  "perlProjects": "Perl Projects"
 }

@@ -1,5 +1,5 @@
 <template>
-  <ProjectIndex :type-flag="'node'" :title="I18nT('host.projectNode')">
+  <ProjectIndex :type-flag="'node'" :title="I18nT('host.nodeProjects')">
     <template #operation="{ row }">
       <li @click.stop="showPackage(row)">
         <Reading width="13" height="13" />

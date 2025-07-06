@@ -135,18 +135,18 @@
         label: I18nT('host.projectAGroup'),
         value: 'a',
         sub: {
-          php: I18nT('host.projectPhp'),
-          tomcat: I18nT('host.projectTomcat')
+          php: I18nT('host.phpProjects'),
+          tomcat: I18nT('host.tomcatProjects')
         }
       },
       {
         label: I18nT('host.projectBGroup'),
         value: 'b',
         sub: {
-          java: I18nT('host.projectJava'),
-          node: I18nT('host.projectNode'),
-          go: I18nT('host.projectGo'),
-          python: I18nT('host.projectPython')
+          java: I18nT('host.javaProjects'),
+          node: I18nT('host.nodeProjects'),
+          go: I18nT('host.goProjects'),
+          python: I18nT('host.pythonProjects')
         }
       }
     ]

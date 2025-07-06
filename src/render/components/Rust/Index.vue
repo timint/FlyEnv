@@ -22,7 +22,7 @@
       ></Manager>
       <ProjectIndex
         v-else-if="tab === 2"
-        :title="`Rust ${I18nT('base.projects')}`"
+        :title="I18nT('host.rustProjects')"
         :type-flag="'rust'"
       >
         <template #openin="{ row }">
@@ -48,6 +48,6 @@
   const tabs = [
     I18nT('base.service'),
     I18nT('base.versionManager'),
-    `Rust ${I18nT('base.projects')}`
+    I18nT('host.rustProjects')
   ]
 </script>

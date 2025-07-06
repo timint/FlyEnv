@@ -25,12 +25,12 @@
   "noPhpWarning": "Hiçbir PHP sürümü seçilmedi, bir statik site oluşturulacak ve PHP dosyaları çalıştırılamayacaktır. Devam etmek istediğinizden emin misiniz?",
   "hostsWriteTips": "Bu listedeki tüm hostları etkinleştir/devre dışı bırak",
   "sort": "Sırala",
-  "projectPhp": "PHP Projeleri",
-  "projectJava": "Java Projeleri",
-  "projectNode": "Node Projeleri",
-  "projectGo": "Go Projeleri",
-  "projectPython": "Python Projeleri",
-  "projectTomcat": "Tomcat Projeleri",
+  "phpProjects": "PHP Projeleri",
+  "javaProjects": "Java Projeleri",
+  "nodeProjects": "Node Projeleri",
+  "goProjects": "Go Projeleri",
+  "pythonProjects": "Python Projeleri",
+  "tomcatProjects": "Tomcat Projeleri",
   "jarPackagePath": "JAR Paket Yolu",
   "jdkPath": "JDK Yolu",
   "pythonPath": "Python Yolu",
@@ -66,7 +66,7 @@
   "sticky": "Sabit",
   "dbclickRowToEdit": "Düzenlemek için satıra çift tıklayın",
 
-  "projectDeno": "Deno Projects",
-  "projectBun": "Bun Projects",
-  "projectPerl": "Perl Projects"
+  "denoProjects": "Deno Projects",
+  "bunProjects": "Bun Projects",
+  "perlProjects": "Perl Projects"
 }

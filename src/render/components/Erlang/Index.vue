@@ -21,7 +21,7 @@
       ></Manager>
       <ProjectIndex
         v-else-if="tab === 2"
-        :title="`Erlang ${I18nT('base.projects')}`"
+        :title="I18nT('host.erlangProjects')"
         :type-flag="'erlang'"
       >
       </ProjectIndex>
@@ -40,6 +40,6 @@
   const tabs = [
     I18nT('base.service'),
     I18nT('base.versionManager'),
-    `Erlang ${I18nT('base.projects')}`
+    I18nT('host.erlangProjects')
   ]
 </script>

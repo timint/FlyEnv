@@ -20,12 +20,12 @@
   "noPhpWarning": "Kiểm tra xem không có phiên bản PHP nào được chọn, một trang web tĩnh sẽ được tạo và các tệp PHP sẽ không thể thực thi. Bạn có chắc chắn muốn tiếp tục?",
   "hostsWriteTips": "Bật / Tắt tất cả các host trong danh sách này",
   "sort": "Sắp xếp",
-  "projectPhp": "Dự án PHP",
-  "projectJava": "Dự án Java",
-  "projectNode": "Dự án Node",
-  "projectGo": "Dự án Go",
-  "projectPython": "Dự án Python",
-  "projectTomcat": "Dự án Tomcat",
+  "phpProjects": "Dự án PHP",
+  "javaProjects": "Dự án Java",
+  "nodeProjects": "Dự án Node",
+  "goProjects": "Dự án Go",
+  "pythonProjects": "Dự án Python",
+  "tomcatProjects": "Dự án Tomcat",
   "jarPackagePath": "Đường dẫn gói JAR",
   "jdkPath": "Đường dẫn JDK",
   "pythonPath": "Đường dẫn Python",
@@ -67,7 +67,7 @@
   "placeholderComment": "Bình luận",
   "tcpPort": "Cổng TCP",
 
-  "projectDeno": "Deno Projects",
-  "projectBun": "Bun Projects",
-  "projectPerl": "Perl Projects"
+  "denoProjects": "Deno Projects",
+  "bunProjects": "Bun Projects",
+  "perlProjects": "Perl Projects"
 }

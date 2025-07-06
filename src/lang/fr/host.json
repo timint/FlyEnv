@@ -25,12 +25,12 @@
   "noPhpWarning": "Vérifiez qu'aucune version PHP n'est sélectionnée, un site statique sera créé, et les fichiers PHP ne pourront pas être exécutés. Voulez vous continuer ?",
   "hostsWriteTips": "Activer / Désactiver tous les hosts dans cette liste",
   "sort": "Trier",
-  "projectPhp": "Projets PHP",
-  "projectJava": "Projets Java",
-  "projectNode": "Projets Node",
-  "projectGo": "Projets Go",
-  "projectPython": "Projets Python",
-  "projectTomcat": "Projets Tomcat",
+  "phpProjects": "Projets PHP",
+  "javaProjects": "Projets Java",
+  "nodeProjects": "Projets Node",
+  "goProjects": "Projets Go",
+  "pythonProjects": "Projets Python",
+  "tomcatProjects": "Projets Tomcat",
   "jarPackagePath": "Chemin du package JAR",
   "jdkPath": "Chemin JDK",
   "pythonPath": "Chemin Python",
@@ -66,7 +66,7 @@
   "sticky": "Épinglé",
   "dbclickRowToEdit": "Double-cliquez sur cette ligne pour modifier",
 
-  "projectDeno": "Deno Projects",
-  "projectBun": "Bun Projects",
-  "projectPerl": "Perl Projects"
+  "denoProjects": "Deno Projects",
+  "bunProjects": "Bun Projects",
+  "perlProjects": "Perl Projects"
 }

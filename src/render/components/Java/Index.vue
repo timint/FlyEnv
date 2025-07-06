@@ -28,7 +28,7 @@
         :has-static="true"
         :show-port-lib="true"
       />
-      <ProjectIndex v-else-if="tab === 3" :title="I18nT('host.projectJava')" :type-flag="'java'">
+      <ProjectIndex v-else-if="tab === 3" :title="I18nT('host.javaProjects')" :type-flag="'java'">
         <template #openin="{ row }">
           <li @click.stop="Project.openPath(row.path, 'IntelliJ')">
             <yb-icon :svg="import('@/svg/idea.svg?raw')" width="13" height="13" />
@@ -54,6 +54,6 @@
     I18nT('base.service'),
     I18nT('base.versionManager'),
     'Maven',
-    I18nT('host.projectJava')
+    I18nT('host.javaProjects')
   ]
 </script>

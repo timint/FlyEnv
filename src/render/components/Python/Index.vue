@@ -15,7 +15,7 @@
       <Manager v-else-if="tab === 1" type-flag="python" title="Python"></Manager>
       <ProjectIndex
         v-else-if="tab === 2"
-        :title="I18nT('host.projectPython')"
+        :title="I18nT('host.pythonProjects')"
         :type-flag="'python'"
       >
         <template #openin="{ row }">
@@ -38,5 +38,5 @@
   import { Project } from '@/util/Project'
 
   const { tab } = AppModuleSetup('python')
-  const tabs = [I18nT('base.service'), I18nT('base.versionManager'), I18nT('host.projectPython')]
+  const tabs = [I18nT('base.service'), I18nT('base.versionManager'), I18nT('host.pythonProjects')]
 </script>

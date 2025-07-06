@@ -25,7 +25,7 @@
       >
       </Composer>
       <Create v-else-if="tab === 3" />
-      <ProjectIndex v-else-if="tab === 4" :title="I18nT('host.projectPhp')" :type-flag="'php'" />
+      <ProjectIndex v-else-if="tab === 4" :title="I18nT('host.phpProjects')" :type-flag="'php'" />
     </div>
   </div>
 </template>
@@ -45,6 +45,6 @@
     I18nT('base.versionManager'),
     'Composer',
     I18nT('host.newProject'),
-    I18nT('host.projectPhp')
+    I18nT('host.phpProjects')
   ]
 </script>

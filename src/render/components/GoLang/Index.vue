@@ -19,7 +19,7 @@
         url="https://go.dev/dl/"
         :has-static="true"
       ></Manager>
-      <ProjectIndex v-else-if="tab === 2" :title="I18nT('host.projectGo')" :type-flag="'golang'">
+      <ProjectIndex v-else-if="tab === 2" :title="I18nT('host.goProjects')" :type-flag="'golang'">
         <template #openin="{ row }">
           <li @click.stop="Project.openPath(row.path, 'GoLand')">
             <yb-icon :svg="import('@/svg/goland.svg?raw')" width="13" height="13" />
@@ -40,5 +40,5 @@
   import { Project } from '@/util/Project'
 
   const { tab } = AppModuleSetup('golang')
-  const tabs = [I18nT('base.service'), I18nT('base.versionManager'), I18nT('host.projectGo')]
+  const tabs = [I18nT('base.service'), I18nT('base.versionManager'), I18nT('host.goProjects')]
 </script>
