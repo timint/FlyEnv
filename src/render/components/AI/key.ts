@@ -410,7 +410,7 @@ export const AIKeysEN: () => Array<AIKeyItem> = () => {
           ['start', 'service', 'open', 'turn on'],
           ['exception', 'error', 'failed', 'issues']
         ],
-        txt: 'Mysql Startup Failed',
+        txt: 'MySQL Startup Failed',
         task: 'StartMysql'
       },
       {

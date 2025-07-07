@@ -54,7 +54,7 @@
         v-else-if="tab === 1"
         type-flag="mysql"
         url="https://dev.mysql.com/downloads/mysql/"
-        title="Mysql"
+        title="MySQL"
       ></Manager>
       <Config v-if="tab === 2"></Config>
       <Logs v-if="tab === 3" type="error"></Logs>

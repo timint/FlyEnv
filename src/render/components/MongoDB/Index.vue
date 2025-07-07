@@ -11,7 +11,7 @@
         v-else-if="tab === 1"
         type-flag="mongodb"
         url="https://www.mongodb.com/try/download/community"
-        title="Mongodb"
+        title="MongoDB"
       ></Manager>
       <Config v-if="tab === 2"></Config>
       <Logs v-if="tab === 3"></Logs>

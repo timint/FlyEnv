@@ -43,7 +43,7 @@
       },
       {
         value: 'licenses',
-        label: I18nT('setup.licenses')
+        label: I18nT('setup.license')
       },
       {
         value: 'about',

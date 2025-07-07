@@ -3,7 +3,7 @@
     <el-card class="w-96">
       <template #header>
         <div class="card-header">
-          <span>Mysql Connect</span>
+          <span>MySQL Connect</span>
         </div>
       </template>
       <el-form label-position="top">
