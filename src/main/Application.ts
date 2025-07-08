@@ -25,7 +25,7 @@ import { fileURLToPath } from 'node:url'
 import { dirname, join, resolve } from 'node:path'
 import AppNodeFnManager, { type AppNodeFn } from './core/AppNodeFn'
 import { isLinux, isMacOS, isWindows } from '@shared/utils'
-import { HostsFileMacOS, HostsFileWindows } from '@shared/PlatFormConst'
+import { HostsFileMacOS, HostsFileWindows } from '@shared/PlatformConst'
 import ServiceProcessManager from './core/ServiceProcess'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))

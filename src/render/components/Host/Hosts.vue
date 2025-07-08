@@ -45,7 +45,7 @@
   import { I18nT } from '@lang/index'
   import { AsyncComponentSetup } from '@/util/AsyncComponent'
   import type { editor } from 'monaco-editor/esm/vs/editor/editor.api.js'
-  import { HostsFileMacOS, HostsFileWindows } from '@shared/PlatFormConst'
+  import { HostsFileMacOS, HostsFileWindows } from '@shared/PlatformConst'
   import { FolderOpened } from '@element-plus/icons-vue'
 
   const config = ref('')
