@@ -88,7 +88,7 @@
   "failedFetchingVersion": "Sürüm alınamadı",
   "failedFetchingVersionHint": "Sürüm yüklendi ancak çalıştırılamamasına neden olan bir hata var. Genellikle eksik bağımlılıklardan veya hatalı sürümlerden kaynaklanır. \"brew update && brew upgrade\" komutlarıyla düzeltmeyi deneyin",
   "errorLargeConfigFile": "Dosya çok büyük, lütfen doğru yapılandırma dosyasını seçin",
-  "errorParsingHosts": "Site yüklenemedi, orijinal site verisi host.back.json olarak yedeklendi. Lütfen açılan klasörde dosyayı kontrol edin ve düzeltin",
+  "errorParsingHosts": "Site yüklenemedi, orijinal site verisi hosts-backup.json olarak yedeklendi. Lütfen açılan klasörde dosyayı kontrol edin ve düzeltin",
   "export": "Dışa Aktar",
   "import": "İçe Aktar",
   "autoUpdate": "Otomatik Güncelleme",

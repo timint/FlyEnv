@@ -88,7 +88,7 @@
   "failedFetchingVersion": "バージョンの取得に失敗しました",
   "failedFetchingVersionHint": "バージョンはインストールされていますが、実行を妨げるエラーがあります。この問題は基本的にソフトウェアドependencyが不足しているか、dependencyのバージョンが正しくないことが原因です。コマンド \"brew update && brew upgrade\" を実行して修正してみてください",
   "errorLargeConfigFile": "ファイルが大きすぎます。正しい設定ファイルを選択してください",
-  "errorParsingHosts": "サイトの読み込みに失敗しました。元のサイトデータはhost.back.jsonにバックアップされています。開いたフォルダでファイルを確認して修正してください",
+  "errorParsingHosts": "サイトの読み込みに失敗しました。元のサイトデータはhosts-backup.jsonにバックアップされています。開いたフォルダでファイルを確認して修正してください",
   "export": "エクスポート",
   "import": "インポート",
   "autoUpdate": "自動更新",

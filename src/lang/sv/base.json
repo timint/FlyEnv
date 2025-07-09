@@ -86,7 +86,7 @@
   "failedFetchingVersion": "Versionshämtning misslyckades.",
   "failedFetchingVersionHint": "Versionen har installerats, men det finns ett fel som förhindrar att den körs. Detta problem beror i princip på saknade programvaruberoenden eller felaktig beroendeversion. Försök att köra kommandot \"brew update && brew upgrade\" för att åtgärda det.",
   "errorLargeConfigFile": "Filen är för stor, vänligen välj rätt konfigurationsfil.",
-  "errorParsingHosts": "Webbplatsen kunde inte laddas, den ursprungliga webbplatsdatan har säkerhetskopierats till host.back.json, vänligen kontrollera och reparera filen i den öppnade mappen.",
+  "errorParsingHosts": "Webbplatsen kunde inte laddas, den ursprungliga webbplatsdatan har säkerhetskopierats till hosts-backup.json, vänligen kontrollera och reparera filen i den öppnade mappen.",
   "export": "Exportera",
   "import": "Importera",
   "autoUpdate": "Automatisk uppdatering",

@@ -88,7 +88,7 @@
   "failedFetchingVersion": "Échec de la récupération de la version",
   "failedFetchingVersionHint": "La version a été installée, mais il y a une erreur qui empêche son exécution, ce problème est généralement dû à des dépendances logicielles manquantes ou à une version de dépendance incorrecte, essayez d'exécuter la commande \"brew update && brew upgrade\" pour le corriger",
   "errorLargeConfigFile": "Le fichier est trop volumineux, veuillez sélectionner le fichier de configuration correct",
-  "errorParsingHosts": "Le site a échoué à se charger, les données du site d'origine ont été sauvegardées dans host.back.json, veuillez vérifier et réparer le fichier dans le dossier ouvert",
+  "errorParsingHosts": "Le site a échoué à se charger, les données du site d'origine ont été sauvegardées dans hosts-backup.json, veuillez vérifier et réparer le fichier dans le dossier ouvert",
   "export": "Exporter",
   "import": "Importer",
   "autoUpdate": "Mise à jour automatique",

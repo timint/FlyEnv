@@ -88,7 +88,7 @@
   "failedFetchingVersion": "Gagal mengambil versi",
   "failedFetchingVersionHint": "Versi sudah terpasang tapi gagal dijalankan. Biasanya karena ketergantungan software yang hilang atau salah versi. Coba jalankan perintah \"brew update && brew upgrade\" untuk memperbaiki",
   "errorLargeConfigFile": "File terlalu besar, pilih file konfigurasi yang benar",
-  "errorParsingHosts": "Gagal memuat situs, data situs lama telah dicadangkan ke host.back.json, silakan periksa dan perbaiki file tersebut",
+  "errorParsingHosts": "Gagal memuat situs, data situs lama telah dicadangkan ke hosts-backup.json, silakan periksa dan perbaiki file tersebut",
   "export": "Ekspor",
   "import": "Impor",
   "autoUpdate": "Pembaruan Otomatis",

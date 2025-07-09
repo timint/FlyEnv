@@ -88,7 +88,7 @@
   "failedFetchingVersion": "Recupero versione fallito",
   "failedFetchingVersionHint": "La versione è installata, ma presenta errori all'avvio. Di solito è causato da dipendenze mancanti o versioni errate. Prova il comando \"brew update && brew upgrade\" per risolvere.",
   "errorLargeConfigFile": "Il file è troppo grande. Seleziona un file di configurazione corretto.",
-  "errorParsingHosts": "Errore nel caricamento del sito. I dati originali sono stati salvati in host.back.json. Controlla e correggi il file nella cartella aperta.",
+  "errorParsingHosts": "Errore nel caricamento del sito. I dati originali sono stati salvati in hosts-backup.json. Controlla e correggi il file nella cartella aperta.",
   "export": "Esporta",
   "import": "Importa",
   "autoUpdate": "Aggiornamento automatico",

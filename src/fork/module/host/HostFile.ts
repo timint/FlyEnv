@@ -56,7 +56,7 @@ export const fetchHostList = async () => {
     } catch (e) {
       console.log(e)
       if (content.length > 0) {
-        const hostBackFile = join(global.Server.BaseDir!, 'host.back.json')
+        const hostBackFile = join(global.Server.BaseDir!, 'hosts-backup.json')
         await writeFile(hostBackFile, content)
       }
       throw e

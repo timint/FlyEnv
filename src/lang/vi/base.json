@@ -85,7 +85,7 @@
   "failedFetchingVersion": "Lỗi tìm nạp phiên bản",
   "failedFetchingVersionHint": "Phiên bản đã được cài đặt, nhưng có một lỗi ngăn nó chạy, vấn đề này về cơ bản là do thiếu phần mềm phụ thuộc hoặc phiên bản phụ thuộc không chính xác, hãy thử chạy lệnh \"brew update && brew upgrade\" để khắc phục nó",
   "errorLargeConfigFile": "Tệp quá lớn, vui lòng chọn tệp cấu hình chính xác",
-  "errorParsingHosts": "Không tải được trang web, dữ liệu trang web ban đầu đã được sao lưu vào host.back.json, vui lòng kiểm tra và sửa chữa tệp trong thư mục đã mở",
+  "errorParsingHosts": "Không tải được trang web, dữ liệu trang web ban đầu đã được sao lưu vào hosts-backup.json, vui lòng kiểm tra và sửa chữa tệp trong thư mục đã mở",
   "export": "Xuất",
   "import": "Nhập",
   "autoUpdate": "Tự động cập nhật",
