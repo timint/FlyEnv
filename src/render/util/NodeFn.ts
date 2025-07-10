@@ -1,5 +1,5 @@
 import IPC from '@/util/IPC'
-import { CustomerLangs } from '@lang/customer'
+import { CustomLangs } from '@lang/custom'
 import { AppI18n } from '@lang/index'
 
 // Helper function to create consistent IPC calls with proper typing
@@ -55,21 +55,21 @@ export class DirWatcher {
   }
 }
 
-type CustomerLangItem = {
+type CustomLangItem = {
   label: string
   key: string
   lang: any
 }
 
 export const lang = {
-  initCustomerLang: createIPCCall<any>('lang', 'initCustomerLang'),
-  loadCustomerLang: () => {
+  initCustomLang: createIPCCall<any>('lang', 'initCustomLang'),
+  loadCustomLang: () => {
     return new Promise((resolve) => {
-      createIPCCall<CustomerLangItem[]>('lang', 'loadCustomerLang')()
+      createIPCCall<CustomLangItem[]>('lang', 'loadCustomLang')()
         .then((langArr) => {
-          CustomerLangs.splice(0)
+          CustomLangs.splice(0)
           for (const item of langArr) {
-            CustomerLangs.push({
+            CustomLangs.push({
               label: item.label,
               lang: item.key
             })

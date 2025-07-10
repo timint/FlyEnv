@@ -65,7 +65,7 @@
   "enterTips": "[Enter] invia, [Shift+Enter] va a capo, [Ctrl+Enter] invia senza generare",
   "noLiencesTips": "Attualmente senza licenza, puoi provarlo per tre giorni",
   "alert": "Avviso",
-  "customer": "I miei Copilot",
+  "myCopilots": "I miei Copilot",
 
   "siteDirectoryError": "Site Directory Error",
   "domainError": "Domain Error"

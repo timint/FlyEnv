@@ -16,8 +16,8 @@
     </ul>
     <ul class="menu top-menu">
       <el-scrollbar>
-        <template v-for="(item, _index) in customerModule" :key="_index">
-          <CustomerItem :item="item" />
+        <template v-for="(item, _index) in customModule" :key="_index">
+          <CustomItem :item="item" />
         </template>
         <template v-for="(item, _index) in allService" :key="_index">
           <li v-if="store[item.typeFlag] && store[item.typeFlag].show" class="non-draggable">
@@ -56,7 +56,7 @@
   import { AppModules } from '@/core/App'
   import { I18nT } from '@lang/index'
   import VueSvg from '@/components/VueSvgIcon/svg.vue'
-  import CustomerItem from './CustomerItem.vue'
+  import CustomItem from './CustomItem.vue'
 
   const allService = AppModules.filter((m) => m.isTray).map((m) => {
     return {
@@ -74,8 +74,8 @@
     return store.groupDisabled
   })
 
-  const customerModule = computed(() => {
-    return store.customerModule
+  const customModule = computed(() => {
+    return store.customModule
   })
 
   const left: Ref<string | null> = ref(null)

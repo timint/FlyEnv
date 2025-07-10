@@ -10,7 +10,7 @@
   "MINIO_STORAGE_CLASS_STANDARD": "đặt số parity cho lớp lưu trữ tiêu chuẩn, ví dụ \"EC:4\"",
   "MINIO_STORAGE_CLASS_RRS": "đặt số parity cho lớp lưu trữ dự phòng giảm, ví dụ \"EC:2\"",
   "MINIO_ETCD_ENDPOINTS": "danh sách endpoint etcd (phân cách bằng dấu phẩy), ví dụ \"http://localhost:2379\"",
-  "MINIO_ETCD_PATH_PREFIX": "tiền tố không gian tên để cô lập tenant, ví dụ \"customer1/\"",
+  "MINIO_ETCD_PATH_PREFIX": "tiền tố không gian tên để cô lập tenant, ví dụ \"custom1/\"",
   "MINIO_API_REQUESTS_MAX": "đặt số lượng yêu cầu đồng thời tối đa (mặc định: 'auto')",
   "MINIO_API_CLUSTER_DEADLINE": "đặt thời hạn kiểm tra sẵn sàng cụm (mặc định: '10s')",
   "MINIO_API_CORS_ALLOW_ORIGIN": "đặt danh sách nguồn được phép cho yêu cầu CORS (phân cách bằng dấu phẩy, mặc định: '*')",

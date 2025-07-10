@@ -42,7 +42,7 @@ type WatcherItem = {
   key: string
 }
 
-type CustomerLangItem = {
+type CustomLangItem = {
   label: string
   key: string
   lang: any
@@ -70,7 +70,7 @@ export class AppNodeFn {
   mainWindow?: BrowserWindow
   trayWindow?: BrowserWindow
   configManager?: ConfigManager
-  customerLang: Record<string, any> = {}
+  customLang: Record<string, any> = {}
   private fileWatchers: Map<string, WatcherItem> = new Map()
   private dirWatchers: Map<string, WatcherItem> = new Map()
 
@@ -435,7 +435,7 @@ export class AppNodeFn {
       })
   }
 
-  async lang_initCustomerLang(command: string, key: string) {
+  async lang_initCustomLang(command: string, key: string) {
     const langDir = resolve(global.Server.BaseDir!, '../lang')
     await mkdirp(langDir)
     const currentLang = global.Server.Lang!
@@ -463,7 +463,7 @@ export class AppNodeFn {
     this?.mainWindow?.webContents.send('command', command, key, true)
   }
 
-  async lang_loadCustomerLang(command: string, key: string) {
+  async lang_loadCustomLang(command: string, key: string) {
     const langDir = resolve(global.Server.BaseDir!, '../lang')
     if (!existsSync(langDir)) {
       return
@@ -472,7 +472,7 @@ export class AppNodeFn {
     if (!dir.length) {
       return
     }
-    const langArr: CustomerLangItem[] = []
+    const langArr: CustomLangItem[] = []
     for (const d of dir) {
       const f = join(langDir, d, 'index.json')
       if (!existsSync(f)) {
@@ -497,7 +497,7 @@ export class AppNodeFn {
       if (!langFiles.length) {
         continue
       }
-      const item: CustomerLangItem = {
+      const item: CustomLangItem = {
         label: json.label,
         key: json.lang,
         lang: {}
@@ -524,7 +524,7 @@ export class AppNodeFn {
     this?.mainWindow?.webContents.send('command', command, key, langArr)
 
     for (const item of langArr) {
-      this.customerLang[item.key] = item.lang
+      this.customLang[item.key] = item.lang
       AppI18n().global.setLocaleMessage(item.key, item.lang)
     }
   }

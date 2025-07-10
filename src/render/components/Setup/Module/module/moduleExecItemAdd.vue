@@ -217,7 +217,7 @@
   import { AsyncComponentSetup } from '@/util/AsyncComponent'
   import { merge } from 'lodash-es'
   import { uuid } from '@/util/Index'
-  import type { CustomerModuleExecItem } from '@/core/Module'
+  import type { CustomModuleExecItem } from '@/core/Module'
   import { Delete, Plus } from '@element-plus/icons-vue'
   import { dialog } from '@/util/NodeFn'
 
@@ -237,7 +237,7 @@
     isEdit: boolean
     edit: any
   }>()
-  const item = ref<CustomerModuleExecItem>({
+  const item = ref<CustomModuleExecItem>({
     id: uuid(),
     name: '',
     comment: '',

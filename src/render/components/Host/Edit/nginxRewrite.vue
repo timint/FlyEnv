@@ -47,7 +47,7 @@
         class="flex-1"
         @change="rewriteChange"
       >
-        <template v-if="isEmptyCustomerRewrites">
+        <template v-if="isEmptyCustomRewrites">
           <el-option v-for="(_v, _k) in rewriteDefault" :key="_k" :label="_v.name" :value="_k">
           </el-option>
         </template>
@@ -104,7 +104,7 @@
     return HostNginxRewriteSetup.nginxRewriteCustom
   })
 
-  const isEmptyCustomerRewrites = computed(() => {
+  const isEmptyCustomRewrites = computed(() => {
     return Object.keys(rewriteCustom).length === 0
   })
 

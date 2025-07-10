@@ -16,7 +16,7 @@
   import type { AllAppModule } from '@/core/type'
   import { AppModules } from '@/core/App'
   import { BrewStore } from '@/store/brew'
-  import { AppCustomerModule } from '@/core/Module'
+  import { AppCustomModule } from '@/core/Module'
 
   type StringFn = () => string
 
@@ -40,11 +40,11 @@
       appStore.saveConfig()
       // Stop Service when hide module
       if (!v) {
-        const customer = AppCustomerModule.module.find(
+        const custom = AppCustomModule.module.find(
           (v) => v.typeFlag === v.typeFlag && v.isService
         )
-        if (customer) {
-          customer.stop().catch()
+        if (custom) {
+          custom.stop().catch()
         }
       }
     }

@@ -14,13 +14,13 @@ import { AppToolStore } from '@/components/Tools/store'
 import { SetupStore } from '@/components/Setup/store'
 import { AppLogStore } from '@/components/AppLog/store'
 import { EventBus } from '@/global'
-import { AppCustomerModule } from '@/core/Module'
+import { AppCustomModule } from '@/core/Module'
 import { lang, nativeTheme } from '@/util/NodeFn'
 
 window.Server = reactive({}) as any
 
 const app = VueExtend(App)
-lang.loadCustomerLang().then().catch()
+lang.loadCustomLang().then().catch()
 
 let inited = false
 IPC.on('APP-Ready-To-Show').then((key: string, res: any) => {
@@ -30,7 +30,7 @@ IPC.on('APP-Ready-To-Show').then((key: string, res: any) => {
     inited = true
     const store = AppStore()
     store.envIndex += 1
-    AppCustomerModule.init()
+    AppCustomModule.init()
     store
       .initConfig()
       .then(() => {

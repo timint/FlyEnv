@@ -143,11 +143,11 @@ export async function serviceStartExec(
   throw new Error(msg)
 }
 
-export async function customerServiceStartExec(
+export async function customServiceStartExec(
   version: ModuleExecItem,
   isService: boolean
 ): Promise<{ 'APP-Service-Start-PID': string }> {
-  console.log('customerServiceStartExec: ', version, isService)
+  console.log('customServiceStartExec: ', version, isService)
 
   const pidPath = version?.pidPath ?? ''
   if (pidPath && existsSync(pidPath)) {
@@ -156,7 +156,7 @@ export async function customerServiceStartExec(
     } catch {}
   }
 
-  const baseDir = join(global.Server.BaseDir!, 'module-customer')
+  const baseDir = join(global.Server.BaseDir!, 'module-custom')
   await mkdirp(baseDir)
 
   const outFile = join(baseDir, `${version.id}-out.log`)

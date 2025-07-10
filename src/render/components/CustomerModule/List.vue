@@ -118,44 +118,44 @@
   import { computed, reactive } from 'vue'
   import { I18nT } from '@lang/index'
   import { AsyncComponentShow } from '@/util/AsyncComponent'
-  import { AppCustomerModule } from '@/core/Module'
-  import { ModuleCustomerExecItem } from '@/core/ModuleCustomer'
+  import { AppCustomModule } from '@/core/Module'
+  import { CustomModuleExecItem } from '@/core/CustomModule'
   import { FolderAdd } from '@element-plus/icons-vue'
   import Base from '@/core/Base'
   import { join } from '@/util/path-browserify'
 
   const title = computed(() => {
-    return AppCustomerModule.currentModule?.label ?? ''
+    return AppCustomModule.currentModule?.label ?? ''
   })
 
   const moduleExecItems = computed(() => {
-    return AppCustomerModule.currentModule?.item ?? []
+    return AppCustomModule.currentModule?.item ?? []
   })
 
   const currentItem = computed(() => {
-    if (AppCustomerModule.index < 0) {
+    if (AppCustomModule.index < 0) {
       return ''
     }
     if (
-      !AppCustomerModule.currentModule?.isService ||
-      !AppCustomerModule.currentModule?.isOnlyRunOne
+      !AppCustomModule.currentModule?.isService ||
+      !AppCustomModule.currentModule?.isOnlyRunOne
     ) {
       console.log('currentItem 0000 !!!')
       return ''
     }
-    console.log('currentItem v: ', AppCustomerModule.currentModule)
-    return AppCustomerModule.currentModule?.currentItemID ?? ''
+    console.log('currentItem v: ', AppCustomModule.currentModule)
+    return AppCustomModule.currentModule?.currentItemID ?? ''
   })
 
-  const logs = (item: ModuleCustomerExecItem) => {
+  const logs = (item: CustomModuleExecItem) => {
     return [
       {
         label: I18nT('setup.module.outputLog'),
-        path: join(window.Server.BaseDir!, 'module-customer', `${item.id}.out.log`)
+        path: join(window.Server.BaseDir!, 'module-custom', `${item.id}.out.log`)
       },
       {
         label: I18nT('setup.module.errorLog'),
-        path: join(window.Server.BaseDir!, 'module-customer', `${item.id}.error.log`)
+        path: join(window.Server.BaseDir!, 'module-custom', `${item.id}.error.log`)
       }
     ]
   }
@@ -192,18 +192,18 @@
           edit: item,
           isEdit: true
         }).then((res) => {
-          const find = AppCustomerModule.currentModule!.item[index]
+          const find = AppCustomModule.currentModule!.item[index]
           find.stop().then().catch()
-          const save = reactive(new ModuleCustomerExecItem(res))
+          const save = reactive(new CustomModuleExecItem(res))
           save.pid = ''
           save.running = false
           save.run = false
-          const onStart = AppCustomerModule.currentModule!.onExecStart.bind(
-            AppCustomerModule.currentModule!
+          const onStart = AppCustomModule.currentModule!.onExecStart.bind(
+            AppCustomModule.currentModule!
           )
           save.onStart(onStart)
-          AppCustomerModule.currentModule!.item.splice(index, 1, save)
-          AppCustomerModule.saveModule()
+          AppCustomModule.currentModule!.item.splice(index, 1, save)
+          AppCustomModule.saveModule()
         })
         break
       case 'del':
@@ -213,12 +213,12 @@
         })
           .then(() => {
             const findIndex =
-              AppCustomerModule.currentModule?.item?.findIndex((f) => f.id === item.id) ?? -1
+              AppCustomModule.currentModule?.item?.findIndex((f) => f.id === item.id) ?? -1
             if (findIndex >= 0) {
-              const find: ModuleCustomerExecItem = AppCustomerModule.currentModule!.item[findIndex]
+              const find: CustomModuleExecItem = AppCustomModule.currentModule!.item[findIndex]
               find.stop().then().catch()
-              AppCustomerModule.currentModule!.item.splice(findIndex, 1)
-              AppCustomerModule.saveModule()
+              AppCustomModule.currentModule!.item.splice(findIndex, 1)
+              AppCustomModule.saveModule()
             }
           })
           .catch()
@@ -226,7 +226,7 @@
     }
   }
 
-  const serviceDo = (fn: 'start' | 'stop' | 'restart', item: ModuleCustomerExecItem) => {
+  const serviceDo = (fn: 'start' | 'stop' | 'restart', item: CustomModuleExecItem) => {
     if (fn === 'start') {
       item.start().then().catch()
     } else if (fn === 'stop') {

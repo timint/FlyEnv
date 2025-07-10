@@ -65,7 +65,7 @@
   "enterTips": "[Entrée] envoyer, [Shift+Entrée] saut de ligne, [Ctrl+Entrée] envoyer sans générer",
   "noLiencesTips": "Actuellement sans licence, vous pouvez essayer pendant trois jours",
   "alert": "Alerte",
-  "customer": "Mes Copilots",
+  "myCopilots": "Mes Copilots",
 
   "siteDirectoryError": "Site Directory Error",
   "domainError": "Domain Error"

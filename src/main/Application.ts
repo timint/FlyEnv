@@ -42,11 +42,11 @@ export default class Application extends EventEmitter {
   forkManager?: ForkManager
   helpCheckSuccessNoticed: boolean = false
   pty: Partial<Record<string, PtyItem>> = {}
-  customerLang: Record<string, any> = {}
+  customLang: Record<string, any> = {}
 
   constructor() {
     super()
-    AppNodeFnManager.customerLang = this.customerLang
+    AppNodeFnManager.customLang = this.customLang
     AppNodeFnManager.nativeTheme_watch()
     global.Server = {
       Local: `${app.getLocale().split('-').join('_')}.UTF-8`
@@ -615,7 +615,7 @@ export default class Application extends EventEmitter {
         global.Server.ForceStart = this.configManager?.getConfig('setup.forceStart')
         global.Server.Licenses = this.configManager?.getConfig('setup.license')
         if (!Object.keys(AppAllLang).includes(global.Server.Lang!)) {
-          global.Server.LangCustomer = this.customerLang[global.Server.Lang!]
+          global.Server.CustomLang = this.customLang[global.Server.Lang!]
         }
         this.forkManager
           ?.send(module, ...args)
@@ -829,11 +829,11 @@ export default class Application extends EventEmitter {
         this.windowManager.sendCommandTo(this.mainWindow!, command, key, true)
         SiteSuckerManager.updateConfig(args[0])
         return
-      case 'app-customer-lang-update':
+      case 'app-custom-lang-update':
         {
           const langKey = args[0]
           const langValue = args[1]
-          this.customerLang[langKey] = langValue
+          this.customLang[langKey] = langValue
           AppI18n().global.setLocaleMessage(langKey, langValue)
         }
         return

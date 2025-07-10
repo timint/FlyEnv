@@ -65,7 +65,7 @@
   "enterTips": "[Enter] gönder, [Shift+Enter] satır başı, [Ctrl+Enter] üretmeden gönder",
   "noLiencesTips": "Şu anda lisans yok, 3 gün boyunca deneyebilirsiniz",
   "alert": "Uyarı",
-  "customer": "Benim Yardımcılarım",
+  "myCopilots": "Benim Yardımcılarım",
 
   "siteDirectoryError": "Site Directory Error",
   "domainError": "Domain Error"

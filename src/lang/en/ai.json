@@ -67,5 +67,5 @@
   "enterTips": "[Enter] send, [Shift+Enter] line break, [Ctrl+Enter] send without generating",
   "noLiencesTips": "Currently without a license, you can try for three days",
   "alert": "Alert",
-  "customer": "My Copilots"
+  "myCopilots": "My Copilots"
 }

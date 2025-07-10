@@ -304,7 +304,7 @@ export async function serviceStartExecCMD(
   throw new Error(msg)
 }
 
-export async function customerServiceStartExec(
+export async function customServiceStartExec(
   version: ModuleExecItem,
   isService: boolean
 ): Promise<{ 'APP-Service-Start-PID': string }> {
@@ -315,13 +315,13 @@ export async function customerServiceStartExec(
     } catch {}
   }
 
-  const baseDir = join(global.Server.BaseDir!, 'module-customer')
+  const baseDir = join(global.Server.BaseDir!, 'module-custom')
   await mkdirp(baseDir)
 
   const outFile = join(baseDir, `${version.id}.out.log`)
   const errFile = join(baseDir, `${version.id}.error.log`)
 
-  let psScript = await readFile(join(global.Server.Static!, 'sh/flyenv-customer-exec.ps1'), 'utf8')
+  let psScript = await readFile(join(global.Server.Static!, 'sh/flyenv-custom-exec.ps1'), 'utf8')
 
   let bin = ''
   if (version.commandType === 'file') {

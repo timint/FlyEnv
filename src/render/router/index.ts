@@ -15,8 +15,8 @@ const routes = [
         component: defineAsyncComponent(() => import('@/components/Setup/Index.vue'))
       },
       {
-        path: '/customer-module',
-        component: defineAsyncComponent(() => import('@/components/CustomerModule/Index.vue'))
+        path: '/custom-module',
+        component: defineAsyncComponent(() => import('@/components/CustomModule/Index.vue'))
       },
       ...AppModules.map((item) => {
         return {

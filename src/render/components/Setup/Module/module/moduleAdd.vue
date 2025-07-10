@@ -203,8 +203,8 @@
   import { merge } from 'lodash-es'
   import { Close, Delete, Edit, FolderOpened, Lock, Plus } from '@element-plus/icons-vue'
   import { uuid } from '@/util/Index'
-  import { ModuleCustomerExecItem, ModuleDefaultIcon } from '@/core/ModuleCustomer'
-  import { AppCustomerModule, type CustomerModuleItem } from '@/core/Module'
+  import { CustomModuleExecItem, ModuleDefaultIcon } from '@/core/CustomModule'
+  import { AppCustomModule, type CustomModuleItem } from '@/core/Module'
   import { getExtractedSVG } from 'svg-inline-loader'
   import Base from '@/core/Base'
   import { SetupStore } from '@/components/Setup/store'
@@ -220,9 +220,9 @@
   }>()
   const iconKey = ref(uuid())
   const running = ref(false)
-  const item = ref<CustomerModuleItem>({
+  const item = ref<CustomModuleItem>({
     configPath: [],
-    isCustomer: true,
+    isCustom: true,
     logPath: [],
     typeFlag: '',
     id: uuid(),
@@ -322,14 +322,14 @@
       edit: i
     }).then((res: any) => {
       console.log('addExecItem res: ', res)
-      const save = reactive(new ModuleCustomerExecItem(res))
+      const save = reactive(new CustomModuleExecItem(res))
       save.pid = ''
       save.running = false
       save.run = false
       if (!i) {
         item.value.item.push(save)
       } else {
-        const find = AppCustomerModule.module
+        const find = AppCustomModule.module
           .map((m) => m.item)
           .flat()
           .find((f) => f.id === i.id)
@@ -351,7 +351,7 @@
     })
       .then(() => {
         const i = item.value.item[index]
-        const find = AppCustomerModule.module
+        const find = AppCustomModule.module
           .map((m) => m.item)
           .flat()
           .find((f) => f.id === i.id)

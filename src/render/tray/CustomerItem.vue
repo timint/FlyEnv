@@ -19,12 +19,12 @@
 
 <script lang="ts" setup>
   import { computed, ref, watch } from 'vue'
-  import { type CustomerModuleItem } from './store/app'
+  import { type CustomModuleItem } from './store/app'
   import { uuid } from '@/util/Index'
   import IPC from '@/util/IPC'
 
   const props = defineProps<{
-    item: CustomerModuleItem
+    item: CustomModuleItem
   }>()
 
   const run = computed({
@@ -32,7 +32,7 @@
       return props.item.run
     },
     set() {
-      const item: CustomerModuleItem = props.item
+      const item: CustomModuleItem = props.item
       item.running = true
     }
   })

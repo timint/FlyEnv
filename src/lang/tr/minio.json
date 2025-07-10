@@ -10,7 +10,7 @@
   "MINIO_STORAGE_CLASS_STANDARD": "standart depolama sınıfı için parite sayısını ayarlayın, örneğin \"EC:4\"",
   "MINIO_STORAGE_CLASS_RRS": "azaltılmış yedeklilik depolama sınıfı için parite sayısını ayarlayın, örneğin \"EC:2\"",
   "MINIO_ETCD_ENDPOINTS": "virgülle ayrılmış etcd uç noktaları listesi, örneğin \"http://localhost:2379\"",
-  "MINIO_ETCD_PATH_PREFIX": "kiracıları izole etmek için ad alanı öneki, örneğin \"customer1/\"",
+  "MINIO_ETCD_PATH_PREFIX": "kiracıları izole etmek için ad alanı öneki, örneğin \"custom1/\"",
   "MINIO_API_REQUESTS_MAX": "maksimum eşzamanlı istek sayısını ayarlayın (varsayılan: 'auto')",
   "MINIO_API_CLUSTER_DEADLINE": "küme hazırlık kontrolü için son tarihi ayarlayın (varsayılan: '10s')",
   "MINIO_API_CORS_ALLOW_ORIGIN": "CORS istekleri için izin verilen kaynakların virgülle ayrılmış listesini ayarlayın (varsayılan: '*')",

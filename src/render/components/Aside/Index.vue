@@ -84,8 +84,8 @@
               >{{ item.label }}</div
             >
             <template v-for="(i, _j) in item.sub" :key="_j">
-              <template v-if="i?.isCustomer">
-                <CustomerModule :item="i as any" />
+              <template v-if="i?.isCustom">
+                <CustomModule :item="i as any" />
               </template>
               <template v-else>
                 <component :is="i.aside"></component>
@@ -111,8 +111,8 @@
   import { type AllAppModule, AppModuleTypeList } from '@/core/type'
   import { AsyncComponentShow } from '@/util/AsyncComponent'
   import { EventBus } from '@/global'
-  import { AppCustomerModule } from '@/core/Module'
-  import CustomerModule from '@/components/CustomerModule/aside.vue'
+  import { AppCustomModule } from '@/core/Module'
+  import CustomModule from '@/components/CustomModule/aside.vue'
   import type { CallbackFn } from '@shared/app'
   import { ElMessageBox } from 'element-plus'
   import { Notebook } from '@element-plus/icons-vue'
@@ -166,11 +166,11 @@
       if (lowerA > lowerB) return 1
       return 0
     })
-    const customer: any = AppCustomerModule.module
+    const custom: any = AppCustomModule.module
       .filter((f) => f.moduleType === m)
       .filter((a) => showItem.value?.[a.typeFlag] !== false)
-    console.log('customer: ', customer, m)
-    sub.unshift(...customer)
+    console.log('custom: ', custom, m)
+    sub.unshift(...custom)
     return sub.length
       ? {
           label: I18nT(`aside.site`),
@@ -192,10 +192,10 @@
           if (lowerA > lowerB) return 1
           return 0
         })
-        const customer: any = AppCustomerModule.module
+        const custom: any = AppCustomModule.module
           .filter((f) => f.moduleType === m)
           .filter((a) => showItem.value?.[a.typeFlag] !== false)
-        sub.unshift(...customer)
+        sub.unshift(...custom)
         return {
           label: I18nT(`aside.${m}`),
           sub
@@ -204,10 +204,10 @@
       .filter((s) => s.sub.length > 0)
   })
 
-  const customerList = computed(() => {
-    return AppCustomerModule.moduleCate
+  const customList = computed(() => {
+    return AppCustomModule.moduleCate
       .map((m) => {
-        const sub = AppCustomerModule.module
+        const sub = AppCustomModule.module
           .filter((s) => {
             return s.moduleType === m.moduleType
           })
@@ -221,7 +221,7 @@
   })
 
   const allModule = computed(() => {
-    return [firstItem.value, ...customerList.value, ...allList.value].filter((f) => !!f)
+    return [firstItem.value, ...customList.value, ...allList.value].filter((f) => !!f)
   })
 
   const isRouteCurrent = computed(() => {
@@ -256,13 +256,13 @@
             return
           }
           console.log('sub: ', sub)
-          if (sub?.isCustomer) {
+          if (sub?.isCustom) {
             const path = `/${sub.typeFlag}`
-            AppCustomerModule.currentModule = AppCustomerModule.module.find(
+            AppCustomModule.currentModule = AppCustomModule.module.find(
               (f) => f.id === sub.typeFlag
             )
             Router.push({
-              path: '/customer-module'
+              path: '/custom-module'
             })
               .then()
               .catch()
@@ -304,15 +304,15 @@
       .flat()
   })
 
-  const serviceShowCustomer = computed(() => {
-    return AppCustomerModule.module
+  const serviceShowCustom = computed(() => {
+    return AppCustomModule.module
       .filter((f) => f.isService && showItem.value?.[f.typeFlag] !== false)
       .map((f) => f.item)
       .flat()
   })
 
   /**
-   * All Aside service is set not group start. And no customer service exists
+   * All Aside service is set not group start. And no custom service exists
    */
   const noGroupStart = computed(() => {
     const a = allShowTypeFlag.value.every((typeFlag) => {
@@ -322,7 +322,7 @@
       }
       return appStore.phpGroupStart?.[v.bin] === false
     })
-    const b = serviceShowCustomer.value.length === 0
+    const b = serviceShowCustom.value.length === 0
     return a && b
   })
 
@@ -330,7 +330,7 @@
     return (
       asideServiceShowModule.value.some((m) => !!m?.serviceRunning) ||
       serviceShowSystem.value.some((m) => m.run) ||
-      serviceShowCustomer.value.some((s) => s.run)
+      serviceShowCustom.value.some((s) => s.run)
     )
   })
 
@@ -344,7 +344,7 @@
       running ||
       !appStore.versionInitiated ||
       noGroupStart.value ||
-      serviceShowCustomer.value.some((s) => s.running)
+      serviceShowCustom.value.some((s) => s.running)
     )
   })
 
@@ -357,8 +357,8 @@
     }
   })
 
-  const customerModule = computed(() => {
-    return AppCustomerModule.module
+  const customModule = computed(() => {
+    return AppCustomModule.module
       .filter((f) => f.isService)
       .filter((a) => showItem.value?.[a.typeFlag] !== false)
       .map((m) => {
@@ -393,7 +393,7 @@
       theme: appStore?.config?.setup?.theme,
       groupDisabled: groupDisabled.value,
       groupIsRunning: groupIsRunning.value,
-      customerModule: customerModule.value
+      customModule: customModule.value
     }
   })
 
@@ -454,12 +454,12 @@
       const arr = m?.groupDo(isRun) ?? []
       all.push(...arr)
     })
-    const customerModule = AppCustomerModule.module
+    const customModule = AppCustomModule.module
       .filter((a) => a.isService && showItem.value?.[a.typeFlag] !== false)
       .map((m) => {
         return isRun ? m.stop() : m.start()
       })
-    all.push(...customerModule)
+    all.push(...customModule)
     if (all.length > 0) {
       const err: Array<string> = []
       const run = () => {
@@ -508,7 +508,7 @@
 
   IPC.on('APP:Tray-Command').then((key: string, fn: string, arg: any) => {
     console.log('on APP:Tray-Command', key, fn, arg)
-    const find = AppCustomerModule.module.find((m) => m.id === arg)
+    const find = AppCustomModule.module.find((m) => m.id === arg)
     if (find) {
       const run = find.item.some((s) => s.run)
       if (run) {

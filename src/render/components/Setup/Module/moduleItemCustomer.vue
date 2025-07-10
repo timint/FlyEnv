@@ -73,9 +73,9 @@
   import { AppStore } from '@/store/app'
   import { I18nT } from '@lang/index'
   import { ElMessageBox } from 'element-plus'
-  import { AppCustomerModule } from '@/core/Module'
+  import { AppCustomModule } from '@/core/Module'
   import { AsyncComponentShow } from '@/util/AsyncComponent'
-  import { ModuleCustomer } from '@/core/ModuleCustomer'
+  import { CustomModule } from '@/core/CustomModule'
   import Base from '@/core/Base'
   import { SetupStore } from '@/components/Setup/store'
   import Router from '@/router'
@@ -85,7 +85,7 @@
     item: {
       label: string
       moduleType: string
-      sub: ModuleCustomer[]
+      sub: CustomModule[]
     }
   }>()
 
@@ -120,10 +120,10 @@
       inputValue: item.label
     })
       .then(({ value }) => {
-        const find = AppCustomerModule.moduleCate.find((f) => f.id === item.id)
+        const find = AppCustomModule.moduleCate.find((f) => f.id === item.id)
         if (find) {
           find.label = value
-          AppCustomerModule.saveModuleCate()
+          AppCustomModule.saveModuleCate()
         }
       })
       .catch()
@@ -135,7 +135,7 @@
       cancelButtonText: I18nT('base.cancel')
     })
       .then(() => {
-        AppCustomerModule.delModuleCate(props.item as any)
+        AppCustomModule.delModuleCate(props.item as any)
       })
       .catch()
   }
@@ -150,7 +150,7 @@
       isEdit: !!edit
     }).then((res) => {
       console.log('res: ', res)
-      const save = reactive(new ModuleCustomer(res))
+      const save = reactive(new CustomModule(res))
       save.moduleType = props.item.moduleType
       save.onExecStart = save.onExecStart.bind(module)
       save.start = save.start.bind(module)
@@ -159,31 +159,31 @@
       save.watchShowHide()
 
       if (!edit) {
-        AppCustomerModule.module.unshift(save)
+        AppCustomModule.module.unshift(save)
       } else {
-        const index = AppCustomerModule.module.findIndex((f) => f.id === edit.id)
+        const index = AppCustomModule.module.findIndex((f) => f.id === edit.id)
         if (index >= 0) {
-          const find = AppCustomerModule.module[index]
+          const find = AppCustomModule.module[index]
           find.destroy()
-          AppCustomerModule.module.splice(index, 1, save)
+          AppCustomModule.module.splice(index, 1, save)
         }
       }
-      AppCustomerModule.saveModule()
+      AppCustomModule.saveModule()
     })
   }
 
-  const doDelModule = (item: ModuleCustomer) => {
+  const doDelModule = (item: CustomModule) => {
     Base._Confirm(I18nT('base.areYouSure'), undefined, {
       customClass: 'confirm-del',
       type: 'warning'
     })
       .then(() => {
-        const findIndex = AppCustomerModule.module.findIndex((f) => f.id === item.id)
+        const findIndex = AppCustomModule.module.findIndex((f) => f.id === item.id)
         if (findIndex >= 0) {
-          const find = AppCustomerModule.module[findIndex]
+          const find = AppCustomModule.module[findIndex]
           find.destroy()
-          AppCustomerModule.module.splice(findIndex, 1)
-          AppCustomerModule.saveModule()
+          AppCustomModule.module.splice(findIndex, 1)
+          AppCustomModule.saveModule()
         }
       })
       .catch()
@@ -192,7 +192,7 @@
   const setupStore = SetupStore()
 
   const isLock = computed(() => {
-    return !setupStore.isActive && AppCustomerModule.module.length > 2
+    return !setupStore.isActive && AppCustomModule.module.length > 2
   })
 
   const toLicense = () => {

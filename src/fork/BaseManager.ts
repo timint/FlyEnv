@@ -37,7 +37,7 @@ class BaseManager {
   Minio: any
   Rust: any
   MeiliSearch: any
-  ModuleCustomer: any
+  CustomModule: any
   FTPSrv: any
   ETCD: any
   Deno: any
@@ -298,12 +298,12 @@ class BaseManager {
         this.MeiliSearch = res.default
       }
       doRun(this.MeiliSearch)
-    } else if (module === 'module-customer') {
-      if (!this.ModuleCustomer) {
-        const res = await import('./module/ModuleCustomer')
-        this.ModuleCustomer = res.default
+    } else if (module === 'module-custom') {
+      if (!this.CustomModule) {
+        const res = await import('./module/CustomModule')
+        this.CustomModule = res.default
       }
-      doRun(this.ModuleCustomer)
+      doRun(this.CustomModule)
     } else if (module === 'ftp-srv') {
       if (!this.FTPSrv) {
         const res = await import('./module/FTPSrv')

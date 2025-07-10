@@ -10,7 +10,7 @@
   "MINIO_STORAGE_CLASS_STANDARD": "set the parity count for default standard storage class e.g. \"EC:4\"",
   "MINIO_STORAGE_CLASS_RRS": "set the parity count for reduced redundancy storage class e.g. \"EC:2\"",
   "MINIO_ETCD_ENDPOINTS": "comma separated list of etcd endpoints e.g. \"http://localhost:2379\"",
-  "MINIO_ETCD_PATH_PREFIX": "namespace prefix to isolate tenants e.g. \"customer1/\"",
+  "MINIO_ETCD_PATH_PREFIX": "namespace prefix to isolate tenants e.g. \"custom1/\"",
   "MINIO_API_REQUESTS_MAX": "set the maximum number of concurrent requests (default: 'auto')",
   "MINIO_API_CLUSTER_DEADLINE": "set the deadline for cluster readiness check (default: '10s')",
   "MINIO_API_CORS_ALLOW_ORIGIN": "set comma separated list of origins allowed for CORS requests (default: '*')",

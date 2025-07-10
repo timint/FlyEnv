@@ -20,7 +20,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { AppCustomerModule, AppModuleSetup } from '@/core/Module'
+  import { AppCustomModule, AppModuleSetup } from '@/core/Module'
   import { I18nT } from '@lang/index'
   import { computed } from 'vue'
   import ListVM from './List.vue'
@@ -28,7 +28,7 @@
   import LogsVM from './Logs.vue'
 
   const current = computed(() => {
-    return AppCustomerModule.currentModule!
+    return AppCustomModule.currentModule!
   })
 
   const tab = computed({

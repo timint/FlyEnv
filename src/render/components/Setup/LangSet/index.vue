@@ -42,7 +42,7 @@
   import { AppStore } from '@/store/app'
   import { AppAllLang, AppI18n, I18nT } from '@lang/index'
   import { LangSetup } from '@/components/Setup/LangSet/setup'
-  import { CustomerLangs } from '@lang/customer'
+  import { CustomLangs } from '@lang/custom'
 
   const appStore = AppStore()
   const running = ref(false)
@@ -62,6 +62,6 @@
   })
 
   const otherLang = computed(() => {
-    return CustomerLangs.filter((c) => !Object.keys(AppAllLang).includes(c.lang))
+    return CustomLangs.filter((c) => !Object.keys(AppAllLang).includes(c.lang))
   })
 </script>

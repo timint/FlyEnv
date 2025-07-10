@@ -1,6 +1,6 @@
 import { basename, join } from 'path'
-import { customerServiceStartExec } from '../util/ServiceStart'
-import { customerServiceStartExec as customerServiceStartExecWin } from '../util/ServiceStart.win'
+import { customServiceStartExec } from '../util/ServiceStart'
+import { customServiceStartExec as customServiceStartExecWin } from '../util/ServiceStart.win'
 import { execPromise } from '@shared/child-process'
 import { chmod, mkdirp, remove, writeFile } from '@shared/fs-extra'
 import { uuid, waitPidFile, waitTime } from '../Fn'
@@ -13,7 +13,7 @@ import type { ModuleExecItem } from '@shared/app'
 import { isMacOS, isWindows } from '@shared/utils'
 import { ProcessPidListByPid } from '@shared/Process.win'
 
-class ModuleCustomer {
+class CustomModule {
   constructor() {}
 
   exec(fnName: string, ...args: any) {
@@ -78,7 +78,7 @@ class ModuleCustomer {
           command = version.commandFile
         } else {
           command = version.command
-          const baseDir = join(global.Server.BaseDir!, 'module-customer')
+          const baseDir = join(global.Server.BaseDir!, 'module-custom')
           await mkdirp(baseDir)
           command = join(baseDir, `${version.id}.sh`)
           await writeFile(command, version.command)
@@ -136,10 +136,10 @@ class ModuleCustomer {
 
       try {
         if (isMacOS()) {
-          const res = await customerServiceStartExec(version, isService)
+          const res = await customServiceStartExec(version, isService)
           resolve(res)
         } else if (isWindows()) {
-          const res = await customerServiceStartExecWin(version, isService)
+          const res = await customServiceStartExecWin(version, isService)
           resolve(res)
         }
       } catch (e: any) {
@@ -150,4 +150,4 @@ class ModuleCustomer {
     })
   }
 }
-export default new ModuleCustomer()
+export default new CustomModule()

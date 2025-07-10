@@ -19,7 +19,7 @@
           <div
             class="flex justify-center items-center w-[120px] border-b-2 border-blue-500 border-solid py-2"
           >
-            {{ I18nT('ai.customer') }}
+            {{ I18nT('ai.myCopilots') }}
           </div>
           <div class="mt-4 grid grid-cols-4 gap-4">
             <div

@@ -27,14 +27,14 @@
 
 <script lang="ts" setup>
   import { computed, ref, watch } from 'vue'
-  import { ModuleCustomer } from '@/core/ModuleCustomer'
+  import { CustomModule } from '@/core/CustomModule'
   import Router from '@/router'
-  import { AppCustomerModule } from '@/core/Module'
+  import { AppCustomModule } from '@/core/Module'
   import { AppStore } from '@/store/app'
   import { uuid } from '@/util/Index'
 
   const props = defineProps<{
-    item: ModuleCustomer
+    item: CustomModule
   }>()
 
   const appStore = AppStore()
@@ -44,7 +44,7 @@
   const iconKey = ref(uuid())
 
   const itemIcon = computed(() => {
-    return AppCustomerModule.module.find((f) => f.id === props.item.id)?.icon ?? ''
+    return AppCustomModule.module.find((f) => f.id === props.item.id)?.icon ?? ''
   })
 
   watch(itemIcon, () => {
@@ -78,9 +78,9 @@
         reject(new Error('Path not changed'))
         return
       }
-      AppCustomerModule.currentModule = AppCustomerModule.module.find((f) => f.id === props.item.id)
+      AppCustomModule.currentModule = AppCustomModule.module.find((f) => f.id === props.item.id)
       Router.push({
-        path: '/customer-module'
+        path: '/custom-module'
       })
         .then()
         .catch()

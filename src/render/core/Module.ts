@@ -2,7 +2,7 @@ import { computed, reactive } from 'vue'
 import { AppStore } from '@/store/app'
 import type { AllAppModule } from '@/core/type'
 import localForage from 'localforage'
-import { ModuleCustomer, ModuleCustomerExecItem } from '@/core/ModuleCustomer'
+import { CustomModule, CustomModuleExecItem } from '@/core/CustomModule'
 
 export const AppModuleTab: Record<AllAppModule, number> = reactive({}) as any
 
@@ -38,13 +38,13 @@ export const AppModuleSetup = (flag: AllAppModule) => {
   }
 }
 
-export type CustomerModuleCateItem = {
+export type CustomModuleCateItem = {
   id: string
   label: string
   moduleType: string
 }
 
-export type CustomerModuleExecItem = {
+export type CustomModuleExecItem = {
   id: string
   name: string
   comment: string
@@ -63,8 +63,8 @@ export type CustomerModuleExecItem = {
   }>
 }
 
-export type CustomerModuleItem = {
-  isCustomer: boolean
+export type CustomModuleItem = {
+  isCustom: boolean
   id: string
   typeFlag: string
   label: string
@@ -80,22 +80,22 @@ export type CustomerModuleItem = {
     name: string
     path: string
   }>
-  item: ModuleCustomerExecItem[]
+  item: CustomModuleExecItem[]
 }
 
-const APPCustomerModuleCateKey = 'flyenv-customer-module-cate'
-const APPCustomerModuleKey = 'flyenv-customer-module'
+const APPCustomModuleCateKey = 'flyenv-custom-module-cate'
+const APPCustomModuleKey = 'flyenv-custom-module'
 
-export const AppCustomerModule: {
+export const AppCustomModule: {
   index: number
-  moduleCate: CustomerModuleCateItem[]
-  module: ModuleCustomer[]
+  moduleCate: CustomModuleCateItem[]
+  module: CustomModule[]
   init: () => void
   saveModuleCate: () => void
   saveModule: () => Promise<any>
-  addModuleCate: (item: CustomerModuleCateItem) => void
-  delModuleCate: (item: CustomerModuleCateItem) => void
-  currentModule?: ModuleCustomer
+  addModuleCate: (item: CustomModuleCateItem) => void
+  delModuleCate: (item: CustomModuleCateItem) => void
+  currentModule?: CustomModule
 } = reactive({
   index: 1,
   currentModule: undefined,
@@ -103,20 +103,20 @@ export const AppCustomerModule: {
   module: [],
   init() {
     localForage
-      .getItem(APPCustomerModuleCateKey)
-      .then((res: CustomerModuleCateItem[]) => {
+      .getItem(APPCustomModuleCateKey)
+      .then((res: CustomModuleCateItem[]) => {
         if (res) {
-          AppCustomerModule.moduleCate = reactive(res)
+          AppCustomModule.moduleCate = reactive(res)
         }
       })
       .catch()
     localForage
-      .getItem(APPCustomerModuleKey)
-      .then((res: CustomerModuleItem[]) => {
+      .getItem(APPCustomModuleKey)
+      .then((res: CustomModuleItem[]) => {
         if (res) {
           const list = reactive(
             res.map((r) => {
-              const module = reactive(new ModuleCustomer(r))
+              const module = reactive(new CustomModule(r))
               module.onExecStart = module.onExecStart.bind(module)
               module.start = module.start.bind(module)
               module.stop = module.stop.bind(module)
@@ -125,35 +125,35 @@ export const AppCustomerModule: {
               return module
             })
           )
-          AppCustomerModule.module = reactive(list)
+          AppCustomModule.module = reactive(list)
         }
       })
       .catch()
   },
   saveModuleCate() {
     localForage
-      .setItem(APPCustomerModuleCateKey, JSON.parse(JSON.stringify(AppCustomerModule.moduleCate)))
+      .setItem(APPCustomModuleCateKey, JSON.parse(JSON.stringify(AppCustomModule.moduleCate)))
       .then()
       .catch()
   },
   saveModule() {
     return localForage.setItem(
-      APPCustomerModuleKey,
-      JSON.parse(JSON.stringify(AppCustomerModule.module))
+      APPCustomModuleKey,
+      JSON.parse(JSON.stringify(AppCustomModule.module))
     )
   },
-  addModuleCate(item: CustomerModuleCateItem) {
-    AppCustomerModule.moduleCate.unshift(item)
-    AppCustomerModule.saveModuleCate()
+  addModuleCate(item: CustomModuleCateItem) {
+    AppCustomModule.moduleCate.unshift(item)
+    AppCustomModule.saveModuleCate()
   },
-  delModuleCate(item: CustomerModuleCateItem) {
-    const service = AppCustomerModule.module.filter((f) => f.moduleType !== item.moduleType)
-    AppCustomerModule.module = reactive(service)
-    const findIndex = AppCustomerModule.moduleCate.findIndex((f) => f.id === item.id)
+  delModuleCate(item: CustomModuleCateItem) {
+    const service = AppCustomModule.module.filter((f) => f.moduleType !== item.moduleType)
+    AppCustomModule.module = reactive(service)
+    const findIndex = AppCustomModule.moduleCate.findIndex((f) => f.id === item.id)
     if (findIndex >= 0) {
-      AppCustomerModule.moduleCate.splice(findIndex, 1)
+      AppCustomModule.moduleCate.splice(findIndex, 1)
     }
-    AppCustomerModule.saveModuleCate()
-    AppCustomerModule.saveModule().then().catch()
+    AppCustomModule.saveModuleCate()
+    AppCustomModule.saveModule().then().catch()
   }
 })

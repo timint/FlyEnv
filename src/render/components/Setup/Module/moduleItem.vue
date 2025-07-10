@@ -40,7 +40,7 @@
     </div>
   </div>
   <div class="grid grid-cols-3 2xl:grid-cols-4 gap-4">
-    <template v-for="(i, _j) in customerModule" :key="i.id">
+    <template v-for="(i, _j) in customModule" :key="i.id">
       <div class="flex items-center justify-center w-full">
         <ModuleShowHide :label="i.label" :type-flag="i.typeFlag">
           <template #default>
@@ -71,10 +71,10 @@
   import { AppStore } from '@/store/app'
   import { I18nT } from '@lang/index'
   import { ElMessageBox } from 'element-plus'
-  import { AppCustomerModule, type CustomerModuleCateItem } from '@/core/Module'
+  import { AppCustomModule, type CustomModuleCateItem } from '@/core/Module'
   import { uuid } from '@/util/Index'
   import { AsyncComponentShow } from '@/util/AsyncComponent'
-  import { ModuleCustomer } from '@/core/ModuleCustomer'
+  import { CustomModule } from '@/core/CustomModule'
   import Base from '@/core/Base'
   import { SetupStore } from '@/components/Setup/store'
   import Router from '@/router'
@@ -88,8 +88,8 @@
     }
   }>()
 
-  const customerModule = computed(() => {
-    return AppCustomerModule.module.filter((m) => m.moduleType === props.item.moduleType)
+  const customModule = computed(() => {
+    return AppCustomModule.module.filter((m) => m.moduleType === props.item.moduleType)
   })
 
   const appStore = AppStore()
@@ -122,12 +122,12 @@
     })
       .then(({ value }) => {
         const id = uuid()
-        const item: CustomerModuleCateItem = {
+        const item: CustomModuleCateItem = {
           id,
           label: value,
           moduleType: id
         }
-        AppCustomerModule.addModuleCate(item)
+        AppCustomModule.addModuleCate(item)
       })
       .catch()
   }
@@ -142,7 +142,7 @@
       isEdit: !!edit
     }).then((res) => {
       console.log('res: ', res)
-      const save = reactive(new ModuleCustomer(res))
+      const save = reactive(new CustomModule(res))
       save.moduleType = props.item.moduleType
       save.onExecStart = save.onExecStart.bind(module)
       save.start = save.start.bind(module)
@@ -152,31 +152,31 @@
 
       console.log('save: ', save, props.item, props.item.moduleType)
       if (!edit) {
-        AppCustomerModule.module.unshift(save)
+        AppCustomModule.module.unshift(save)
       } else {
-        const index = AppCustomerModule.module.findIndex((f) => f.id === edit.id)
+        const index = AppCustomModule.module.findIndex((f) => f.id === edit.id)
         if (index >= 0) {
-          const find = AppCustomerModule.module[index]
+          const find = AppCustomModule.module[index]
           find.destroy()
-          AppCustomerModule.module.splice(index, 1, save)
+          AppCustomModule.module.splice(index, 1, save)
         }
       }
-      AppCustomerModule.saveModule()
+      AppCustomModule.saveModule()
     })
   }
 
-  const doDelModule = (item: ModuleCustomer) => {
+  const doDelModule = (item: CustomModule) => {
     Base._Confirm(I18nT('base.areYouSure'), undefined, {
       customClass: 'confirm-del',
       type: 'warning'
     })
       .then(() => {
-        const findIndex = AppCustomerModule.module.findIndex((f) => f.id === item.id)
+        const findIndex = AppCustomModule.module.findIndex((f) => f.id === item.id)
         if (findIndex >= 0) {
-          const find = AppCustomerModule.module[findIndex]
+          const find = AppCustomModule.module[findIndex]
           find.destroy()
-          AppCustomerModule.module.splice(findIndex, 1)
-          AppCustomerModule.saveModule()
+          AppCustomModule.module.splice(findIndex, 1)
+          AppCustomModule.saveModule()
         }
       })
       .catch()
@@ -185,7 +185,7 @@
   const setupStore = SetupStore()
 
   const isLock = computed(() => {
-    return !setupStore.isActive && AppCustomerModule.module.length > 2
+    return !setupStore.isActive && AppCustomModule.module.length > 2
   })
 
   const toLicense = () => {

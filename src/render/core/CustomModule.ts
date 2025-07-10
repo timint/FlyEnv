@@ -1,8 +1,8 @@
-import type { CustomerModuleExecItem, CustomerModuleItem } from '@/core/Module'
+import type { CustomModuleExecItem, CustomModuleItem } from '@/core/Module'
 import { computed, reactive, watch } from 'vue'
 import IPC from '@/util/IPC'
 import { MessageError, MessageSuccess } from '@/util/Element'
-import { AppCustomerModule } from '@/core/Module'
+import { AppCustomModule } from '@/core/Module'
 import { ElMessageBox } from 'element-plus'
 import { I18nT } from '@lang/index'
 import { AppStore } from '@/store/app'
@@ -20,7 +20,7 @@ const ModuleDefaultIcon = `<svg viewBox="0 0 1024 1024" version="1.1" xmlns="htt
   ></path>
 </svg>`
 
-class ModuleCustomerExecItem implements CustomerModuleExecItem {
+class CustomModuleExecItem implements CustomModuleExecItem {
   command: string = ''
   comment: string = ''
   commandFile: string = ''
@@ -37,7 +37,7 @@ class ModuleCustomerExecItem implements CustomerModuleExecItem {
   run = false
   pid = ''
 
-  _onStart!: (item: ModuleCustomerExecItem) => Promise<ModuleCustomer>
+  _onStart!: (item: CustomModuleExecItem) => Promise<CustomModule>
 
   constructor(item: any) {
     Object.assign(this, item)
@@ -53,7 +53,7 @@ class ModuleCustomerExecItem implements CustomerModuleExecItem {
       }
       this.running = true
       this.run = false
-      IPC.send('app-fork:module-customer', 'stopService', this.pid).then((key: string) => {
+      IPC.send('app-fork:module-custom', 'stopService', this.pid).then((key: string) => {
         IPC.off(key)
         this.run = false
         this.pid = ''
@@ -79,7 +79,7 @@ class ModuleCustomerExecItem implements CustomerModuleExecItem {
         }
         hadRun = true
         IPC.send(
-          'app-fork:module-customer',
+          'app-fork:module-custom',
           'startService',
           JSON.parse(JSON.stringify(this)),
           module.isService,
@@ -163,14 +163,14 @@ class ModuleCustomerExecItem implements CustomerModuleExecItem {
   }
 }
 
-class ModuleCustomer implements CustomerModuleItem {
-  isCustomer = true
+class CustomModule implements CustomModuleItem {
+  isCustom = true
   icon: string = ModuleDefaultIcon
   id: string = ''
   typeFlag = ''
   isOnlyRunOne: boolean = false
   isService: boolean = false
-  item: ModuleCustomerExecItem[] = []
+  item: CustomModuleExecItem[] = []
   label: string = ''
   moduleType: string = ''
   currentItemID = ''
@@ -182,18 +182,18 @@ class ModuleCustomer implements CustomerModuleItem {
   constructor(item: any) {
     Object.assign(this, item)
     this.typeFlag = this.id
-    const list: ModuleCustomerExecItem[] = []
-    const arr: CustomerModuleExecItem[] = item?.item ?? []
+    const list: CustomModuleExecItem[] = []
+    const arr: CustomModuleExecItem[] = item?.item ?? []
     const onStart = this.onExecStart.bind(this)
     for (const i of arr) {
-      const execItem = reactive(new ModuleCustomerExecItem(i))
+      const execItem = reactive(new CustomModuleExecItem(i))
       execItem.onStart(onStart)
       list.push(execItem)
     }
     this.item = reactive(list)
   }
 
-  onExecStart(item: ModuleCustomerExecItem) {
+  onExecStart(item: CustomModuleExecItem) {
     return new Promise(async (resolve) => {
       if (!this.isOnlyRunOne || !this.isService) {
         resolve(this)
@@ -202,12 +202,12 @@ class ModuleCustomer implements CustomerModuleItem {
       if (this.currentItemID !== item.id) {
         console.log('this.currentItemID !== item.id !!', this.currentItemID, item.id)
         this.currentItemID = item.id
-        if (AppCustomerModule?.currentModule?.id === this.id) {
-          console.log('AppCustomerModule?.currentModule?.id === this.id', this.id)
-          AppCustomerModule.currentModule!.currentItemID = item.id
+        if (AppCustomModule?.currentModule?.id === this.id) {
+          console.log('AppCustomModule?.currentModule?.id === this.id', this.id)
+          AppCustomModule.currentModule!.currentItemID = item.id
         }
-        await AppCustomerModule.saveModule()
-        AppCustomerModule.index += 1
+        await AppCustomModule.saveModule()
+        AppCustomModule.index += 1
       }
       Promise.all(this.item.map((a) => a.stop()))
         .then(() => {
@@ -291,4 +291,4 @@ class ModuleCustomer implements CustomerModuleItem {
   }
 }
 
-export { ModuleDefaultIcon, ModuleCustomer, ModuleCustomerExecItem }
+export { ModuleDefaultIcon, CustomModule, CustomModuleExecItem }

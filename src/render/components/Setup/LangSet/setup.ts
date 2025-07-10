@@ -10,11 +10,11 @@ export const LangSetup = reactive({
       return
     }
     this.loading = true
-    await lang.loadCustomerLang()
+    await lang.loadCustomLang()
     this.loading = false
   },
   async openLangDir() {
-    await lang.initCustomerLang()
+    await lang.initCustomLang()
     const langDir = resolve(window.Server.BaseDir!, '../lang')
     shell.openPath(langDir).then().catch()
   }
