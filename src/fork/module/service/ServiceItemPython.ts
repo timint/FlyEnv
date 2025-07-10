@@ -1,16 +1,16 @@
 import type { AppHost } from '@shared/app'
 import { dirname, join } from 'path'
 import { chmod, mkdirp, readFile, remove, writeFile } from '@shared/fs-extra'
-import { existsSync } from 'fs'
+import { existsSync, realpathSync } from 'fs'
 import { execPromiseWithEnv } from '@shared/child-process'
 import { getHostItemEnv, ServiceItem } from './ServiceItem'
 import { ForkPromise } from '@shared/ForkPromise'
-import { realpathSync } from 'fs'
 import Helper from '../../Helper'
 import { ProcessPidsByPid } from '@shared/Process'
 import { isMacOS, isWindows } from '@shared/utils'
 import { ProcessPidListByPid } from '@shared/Process.win'
 import { EOL } from 'os'
+import { powershellCmd } from '../../util/Powershell'
 
 export class ServiceItemPython extends ServiceItem {
   start(item: AppHost) {
@@ -108,9 +108,11 @@ export class ServiceItemPython extends ServiceItem {
         if (isMacOS()) {
           await execPromiseWithEnv(`zsh "${sh}"`, opt)
         } else if (isWindows()) {
-          await execPromiseWithEnv(
-            `powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "(Start-Process -FilePath ./service-${this.id}.cmd -PassThru -WindowStyle Hidden).Id" > "${pid}"`
+          const pidResult = await powershellCmd(
+            `(Start-Process -FilePath ./service-${this.id}.cmd -PassThru -WindowStyle Hidden).Id`
           )
+          const pid = pidResult.trim()
+          await writeFile(pid, pidResult)
         }
 
         const resPid = await this.checkPid()

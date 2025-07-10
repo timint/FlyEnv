@@ -1,8 +1,9 @@
 import { isAbsolute, join } from 'path'
+import { existsSync } from 'fs'
+import { copyFile, readFile, remove, writeFile } from '@shared/fs-extra'
 import { ForkPromise } from '@shared/ForkPromise'
-import { execPromise, spawnPromise } from '@shared/child-process'
-import { copyFile, existsSync, readFile, remove, writeFile } from '@shared/fs-extra'
 import { appDebugLog } from '@shared/utils'
+import { powershellExecWithUnblock } from './Powershell'
 
 export const fetchRawPATH = (): ForkPromise<string[]> => {
   return new ForkPromise(async (resolve, reject) => {
@@ -16,20 +17,7 @@ export const fetchRawPATH = (): ForkPromise<string[]> => {
     process.chdir(global.Server.Cache!)
     let res: any
     try {
-      res = await spawnPromise(
-        'powershell.exe',
-        [
-          '-NoProfile',
-          '-ExecutionPolicy',
-          'Bypass',
-          '-Command',
-          `"Unblock-File -LiteralPath './path-get.ps1'; & './path-get.ps1'"`
-        ],
-        {
-          shell: 'powershell.exe',
-          cwd: global.Server.Cache!
-        }
-      )
+      res = await powershellExecWithUnblock(copySh)
     } catch (e) {
       console.log('fetchRawPATH error: ', e)
       appDebugLog('[_fetchRawPATH][error]', `${e}`).catch()
@@ -37,7 +25,7 @@ export const fetchRawPATH = (): ForkPromise<string[]> => {
     }
 
     let str = ''
-    const stdout = res.stdout.trim() + '\n' + res.stderr.trim()
+    const stdout = res.trim()
     console.log('fetchRawPATH stdout: ', stdout)
     const regex = /FlyEnv-PATH-GET([\s\S]*?)FlyEnv-PATH-GET/g
     const match = regex.exec(stdout)
@@ -105,9 +93,7 @@ export const writePath = async (path: string[], other: string = '') => {
   await writeFile(copySh, content, 'utf-8')
   process.chdir(global.Server.Cache!)
   try {
-    await execPromise(
-      `powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Unblock-File -LiteralPath '${copySh}'; & '${copySh}'"`
-    )
+    await powershellExecWithUnblock(copySh)
   } catch (e) {
     console.log('writePath error: ', e)
     appDebugLog('[writePath][error]', `${e}`)

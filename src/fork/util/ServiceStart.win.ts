@@ -7,6 +7,7 @@ import chardet from 'chardet'
 import iconv from 'iconv-lite'
 import { ServiceStartParams } from './ServiceStart'
 import type { ModuleExecItem } from '@shared/app'
+import { powershellExecFile } from './Powershell'
 
 export async function readFileAsUTF8(filePath: string): Promise<string> {
   try {
@@ -94,20 +95,7 @@ export async function serviceStartExec(
   process.chdir(baseDir)
   let res: any
   try {
-    res = await spawnPromiseWithEnv(
-      'powershell.exe',
-      [
-        '-NoProfile',
-        '-ExecutionPolicy',
-        'Bypass',
-        '-Command',
-        `"Unblock-File -LiteralPath './${psName}'; & './${psName}'"`
-      ],
-      {
-        shell: 'powershell.exe',
-        cwd: baseDir
-      }
-    )
+    res = await powershellExecFile(psPath, [], { cwd: baseDir })
   } catch (e) {
     on({
       'APP-On-Log': AppLog(
@@ -130,7 +118,7 @@ export async function serviceStartExec(
 
   if (!checkPidFile) {
     let pid = ''
-    const stdout = res.stdout.trim() + '\n' + res.stderr.trim()
+    const stdout = res.trim()
     const regex = /FlyEnv-Process-ID(.*?)FlyEnv-Process-ID/g
     const match = regex.exec(stdout)
     if (match) {
@@ -345,14 +333,7 @@ export async function customServiceStartExec(
   let res: any
   let error: any
   try {
-    res = await spawnPromiseWithEnv(
-      'powershell.exe',
-      ['-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', `\`"${psPath}\`"`],
-      {
-        shell: 'powershell.exe',
-        cwd: baseDir
-      }
-    )
+    res = await powershellExecFile(psPath, [], { cwd: baseDir })
   } catch (e) {
     error = e
     if (!isService || !version.pidPath) {
@@ -377,7 +358,7 @@ export async function customServiceStartExec(
 
   if (!version.pidPath) {
     let pid = ''
-    const stdout = res.stdout.trim() + '\n' + res.stderr.trim()
+    const stdout = res.trim()
     const regex = /FlyEnv-Process-ID(.*?)FlyEnv-Process-ID/g
     const match = regex.exec(stdout)
     if (match) {
