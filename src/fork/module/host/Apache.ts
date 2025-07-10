@@ -1,11 +1,11 @@
 import type { AppHost } from '@shared/app'
 import { join } from 'path'
 import { chmod, copyFile, mkdirp, readFile, remove, writeFile } from '@shared/fs-extra'
-import { hostAlias } from '../Fn'
+import { hostAlias } from '../../Fn'
 import { vhostTmpl } from './Host'
 import { existsSync } from 'fs'
 import { isEqual } from 'lodash-es'
-import Helper from '../Helper'
+import Helper from '../../Helper'
 import { isWindows, pathFixedToUnix } from '@shared/utils'
 
 const handleReverseProxy = (host: AppHost, content: string) => {

@@ -8,7 +8,7 @@ import compressing from 'compressing'
 import { moveDirToDir } from '../../util/Dir'
 import { execPromise } from '@shared/child-process'
 import { mkdirp, readdir, remove, writeFile } from '@shared/fs-extra'
-import { downloadFile, waitTime } from '../Fn'
+import { downloadFile, waitTime } from '../../Fn'
 import { fetchHostList } from './HostFile'
 import { isWindows } from '@shared/utils'
 

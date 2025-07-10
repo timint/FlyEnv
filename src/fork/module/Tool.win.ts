@@ -585,7 +585,7 @@ php "%~dp0composer.phar" %*`
       }
 
       if (typeFlag === 'php') {
-        const phpModule = (await import('../../module/Php.win')).default
+        const phpModule = (await import('./Php.win')).default
         try {
           await phpModule.getIniPath(item)
         } catch {}

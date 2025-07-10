@@ -1,13 +1,13 @@
 import { ForkPromise } from '@shared/ForkPromise'
 import { execPromise } from '@shared/child-process'
 import { copyFile, mkdirp, remove, writeFile } from '@shared/fs-extra'
-import { hostAlias } from '../Fn'
+import { hostAlias } from '../../Fn'
 import { zipUnpack } from '../../util/Zip'
 import { dirname, join } from 'path'
 import { existsSync } from 'fs'
 import { EOL } from 'os'
 import type { AppHost } from '@shared/app'
-import Helper from '../Helper'
+import Helper from '../../Helper'
 import { appDebugLog, isWindows } from '@shared/utils'
 
 const initCARoot = () => {
