@@ -3,16 +3,8 @@ import { existsSync } from 'fs'
 import { Base } from './Base'
 import { ForkPromise } from '@shared/ForkPromise'
 import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
-import {
-  brewInfoJson,
-  brewSearch,
-  portSearch,
-  versionBinVersion,
-  versionFilterSame,
-  versionFixed,
-  versionLocalFetch,
-  versionSort
-} from '../Fn'
+import { versionBinVersion, versionFilterSame, versionFixed, versionLocalFetch, versionSort } from '../util/Version'
+import { brewInfoJson, brewSearch, portSearch } from '../util/Brew'
 import TaskQueue from '../TaskQueue'
 import { isMacOS, isWindows } from '@shared/utils'
 import Helper from '../Helper'

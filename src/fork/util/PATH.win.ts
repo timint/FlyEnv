@@ -1,6 +1,7 @@
 import { isAbsolute, join } from 'path'
 import { ForkPromise } from '@shared/ForkPromise'
-import { copyFile, execPromise, existsSync, readFile, remove, spawnPromise, writeFile } from '../Fn'
+import { execPromise, spawnPromise } from '@shared/child-process'
+import { copyFile, existsSync, readFile, remove, writeFile } from '@shared/fs-extra'
 import { appDebugLog } from '@shared/utils'
 
 export const fetchRawPATH = (): ForkPromise<string[]> => {

@@ -1,27 +1,11 @@
-import { statSync } from 'fs'
+import { statSync, realpathSync } from 'fs'
 import { Base } from './Base'
-import {
-  addPath,
-  execPromise,
-  fetchRawPATH,
-  getAllFileAsync,
-  handleWinPathArr,
-  isNTFS,
-  setDir777ToCurrentUser,
-  uuid,
-  writePath,
-  copyFile,
-  existsSync,
-  mkdirp,
-  readdir,
-  readFile,
-  realpathSync,
-  remove,
-  writeFile,
-  zipUnpack,
-  stat,
-  execPromiseWithEnv
-} from '../Fn'
+import { execPromise, execPromiseWithEnv } from '@shared/child-process'
+import { copyFile, existsSync, mkdirp, readdir, readFile, remove, writeFile, stat } from '@shared/fs-extra'
+import { addPath, fetchRawPATH, handleWinPathArr, writePath } from '../util/PATH.win'
+import { getAllFileAsync } from '../util/Dir'
+import { zipUnpack } from '../util/Zip'
+import { isNTFS, setDir777ToCurrentUser, uuid } from '../Fn'
 import { ForkPromise } from '@shared/ForkPromise'
 import { TaskQueue, TaskQueueProgress } from '@shared/TaskQueue'
 import { basename, dirname, isAbsolute, join, resolve as PathResolve } from 'path'
@@ -601,7 +585,7 @@ php "%~dp0composer.phar" %*`
       }
 
       if (typeFlag === 'php') {
-        const phpModule = (await import('./Php.win')).default
+        const phpModule = (await import('../../module/Php.win')).default
         try {
           await phpModule.getIniPath(item)
         } catch {}

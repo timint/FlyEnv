@@ -3,26 +3,13 @@ import { createWriteStream, existsSync, statSync, unlinkSync } from 'fs'
 import { Base } from './Base'
 import { I18nT } from '@lang/index'
 import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
-import {
-  execPromise,
-  getAllFileAsync,
-  versionLocalFetch,
-  versionMacportsFetch,
-  versionBinVersion,
-  versionFixed,
-  versionSort,
-  brewSearch,
-  brewInfoJson,
-  portSearch,
-  versionFilterSame,
-  AppLog,
-  serviceStartExec,
-  writeFile,
-  readFile,
-  copyFile,
-  mkdirp,
-  remove
-} from '../Fn'
+import { execPromise } from '@shared/child-process'
+import { getAllFileAsync } from '../util/Dir'
+import { writeFile, readFile, copyFile, mkdirp, remove } from '@shared/fs-extra'
+import { serviceStartExec } from '../util/ServiceStart'
+import { AppLog } from '../Fn'
+import { versionLocalFetch, versionMacportsFetch, versionBinVersion, versionFilterSame, versionFixed, versionSort } from '../util/Version'
+import { brewSearch, brewInfoJson, portSearch } from '../util/Brew'
 import { ForkPromise } from '@shared/ForkPromise'
 import compressing from 'compressing'
 import axios from 'axios'

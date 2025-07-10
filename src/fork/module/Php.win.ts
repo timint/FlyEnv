@@ -3,23 +3,12 @@ import { createWriteStream, existsSync } from 'fs'
 import { Base } from './Base'
 import { I18nT } from '@lang/index'
 import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
-import {
-  AppLog,
-  execPromise,
-  versionBinVersion,
-  versionFilterSame,
-  versionFixed,
-  versionSort,
-  writeFile,
-  readFile,
-  remove,
-  mkdirp,
-  copyFile,
-  readdir,
-  zipUnpack,
-  versionLocalFetch,
-  serviceStartExecWin
-} from '../Fn'
+import { execPromise } from '@shared/child-process'
+import { copyFile, mkdirp, readdir, readFile, remove, writeFile } from '@shared/fs-extra'
+import { versionBinVersion, versionFilterSame, versionFixed, versionLocalFetch, versionSort } from '../util/Version'
+import { zipUnpack } from '../util/Zip'
+import { serviceStartExec as serviceStartExecWin } from '../util/ServiceStart.win'
+import { AppLog } from '../Fn'
 import { ForkPromise } from '@shared/ForkPromise'
 import TaskQueue from '../TaskQueue'
 import axios from 'axios'

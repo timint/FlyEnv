@@ -5,17 +5,10 @@ import { existsSync, readdirSync } from 'fs'
 import { setDirRole } from './Host'
 import { I18nT } from '@lang/index'
 import compressing from 'compressing'
-import {
-  downloadFile,
-  execPromise,
-  waitTime,
-  copy,
-  mkdirp,
-  readdir,
-  remove,
-  writeFile,
-  moveDirToDir
-} from '../../Fn'
+import { moveDirToDir } from '../../util/Dir'
+import { execPromise } from '@shared/child-process'
+import { mkdirp, readdir, remove, writeFile } from '@shared/fs-extra'
+import { downloadFile, waitTime } from '../Fn'
 import { fetchHostList } from './HostFile'
 import { isWindows } from '@shared/utils'
 

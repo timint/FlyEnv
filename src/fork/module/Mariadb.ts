@@ -3,30 +3,17 @@ import { existsSync, readdirSync } from 'fs'
 import { Base } from './Base'
 import { I18nT } from '@lang/index'
 import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
-import {
-  execPromise,
-  waitTime,
-  versionLocalFetch,
-  versionMacportsFetch,
-  versionFixed,
-  versionSort,
-  getSubDirAsync,
-  versionBinVersion,
-  brewInfoJson,
-  brewSearch,
-  portSearch,
-  versionFilterSame,
-  AppLog,
-  serviceStartExec,
-  writeFile,
-  mkdirp,
-  chmod,
-  remove,
-  serviceStartExecCMD,
-  zipUnpack,
-  moveChildDirToParent,
-  readFile
-} from '../Fn'
+import { execPromise } from '@shared/child-process'
+import { waitTime } from '../Fn'
+import { versionLocalFetch, versionMacportsFetch, versionFixed, versionSort, versionBinVersion, versionFilterSame } from '../util/Version'
+import { getSubDirAsync } from '../util/Dir'
+import { brewInfoJson, brewSearch, portSearch } from '../util/Brew'
+import { serviceStartExec } from '../util/ServiceStart'
+import { serviceStartExecCMD } from '../util/ServiceStart.win'
+import { AppLog } from '../Fn'
+import { chmod, mkdirp, readFile, remove, writeFile } from '@shared/fs-extra'
+import { moveChildDirToParent } from '../util/Dir'
+import { zipUnpack } from '../util/Zip'
 import { ForkPromise } from '@shared/ForkPromise'
 import TaskQueue from '../TaskQueue'
 import Helper from '../Helper'

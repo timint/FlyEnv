@@ -1,31 +1,16 @@
 import { join, dirname } from 'node:path'
-import { existsSync } from 'node:fs'
+import { existsSync, createWriteStream } from 'node:fs'
 import { Base } from './Base'
 import { I18nT } from '@lang/index'
 import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
-import {
-  AppLog,
-  brewInfoJson,
-  brewSearch,
-  portSearch,
-  serviceStartExec,
-  versionBinVersion,
-  versionFilterSame,
-  versionFixed,
-  versionLocalFetch,
-  versionMacportsFetch,
-  versionSort,
-  readFile,
-  writeFile,
-  mkdirp,
-  chmod,
-  remove,
-  zipUnpack,
-  moveChildDirToParent,
-  createWriteStream,
-  serviceStartExecCMD,
-  waitTime
-} from '../Fn'
+import { brewInfoJson, brewSearch, portSearch } from '../util/Brew'
+import { versionBinVersion, versionFilterSame, versionFixed, versionLocalFetch, versionMacportsFetch, versionSort } from '../util/Version'
+import { readFile, writeFile, mkdirp, chmod, remove } from '@shared/fs-extra'
+import { moveChildDirToParent } from '../util/Dir'
+import { zipUnpack } from '../util/Zip'
+import { serviceStartExec } from '../util/ServiceStart'
+import { serviceStartExecCMD } from '../util/ServiceStart.win'
+import { AppLog, waitTime } from '../Fn'
 import { ForkPromise } from '@shared/ForkPromise'
 import TaskQueue from '../TaskQueue'
 import axios from 'axios'

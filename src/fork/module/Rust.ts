@@ -1,22 +1,13 @@
 import { Base } from './Base'
 import { ForkPromise } from '@shared/ForkPromise'
 import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
-import {
-  brewInfoJson,
-  execPromise,
-  mkdirp,
-  moveChildDirToParent,
-  readdir,
-  remove,
-  uuid,
-  versionBinVersion,
-  versionFilterSame,
-  versionFixed,
-  versionLocalFetch,
-  versionSort,
-  waitTime,
-  zipUnpack
-} from '../Fn'
+import { execPromise } from '@shared/child-process'
+import { mkdirp, readdir, remove } from '@shared/fs-extra'
+import { moveChildDirToParent } from '../util/Dir'
+import { brewInfoJson } from '../util/Brew'
+import { versionBinVersion, versionFilterSame, versionFixed, versionLocalFetch, versionSort } from '../util/Version'
+import { zipUnpack } from '../util/Zip'
+import { uuid, waitTime } from '../Fn'
 import TaskQueue from '../TaskQueue'
 import { basename, join } from 'path'
 import { existsSync } from 'fs'

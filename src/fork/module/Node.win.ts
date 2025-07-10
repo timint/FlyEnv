@@ -1,21 +1,11 @@
 import { Base } from './Base'
-import {
-  execPromise,
-  fetchPathByBin,
-  moveChildDirToParent,
-  versionBinVersion,
-  versionFilterSame,
-  versionFixed,
-  versionSort,
-  mkdirp,
-  readdir,
-  remove,
-  realpath,
-  zipUnpack,
-  execPromiseWithEnv,
-  fetchRawPATH,
-  versionLocalFetch
-} from '../Fn'
+import { fetchRawPATH } from '../util/PATH.win'
+import { versionBinVersion, versionFilterSame, versionFixed, versionSort, versionLocalFetch } from '../util/Version'
+import { mkdirp, readdir, remove, realpath } from '@shared/fs-extra'
+import { execPromise, execPromiseWithEnv } from '@shared/child-process'
+import { moveChildDirToParent } from '../util/Dir'
+import { zipUnpack } from '../util/Zip'
+import { fetchPathByBin } from '../Fn'
 import { ForkPromise } from '@shared/ForkPromise'
 import { dirname, join } from 'path'
 import { compareVersions } from 'compare-versions'

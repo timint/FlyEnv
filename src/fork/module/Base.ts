@@ -2,17 +2,10 @@ import { I18nT } from '@lang/index'
 import { createWriteStream, existsSync } from 'fs'
 import { dirname, join } from 'path'
 import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
-import {
-  AppLog,
-  execPromise,
-  execPromiseWithEnv,
-  waitTime,
-  readFile,
-  writeFile,
-  remove,
-  mkdirp,
-  zipUnpack
-} from '../Fn'
+import { execPromise, execPromiseWithEnv } from '@shared/child-process'
+import { readFile, writeFile, remove, mkdirp } from '@shared/fs-extra'
+import { zipUnpack } from '../util/Zip'
+import { AppLog, waitTime } from '../Fn'
 import { ForkPromise } from '@shared/ForkPromise'
 import axios from 'axios'
 import * as http from 'http'

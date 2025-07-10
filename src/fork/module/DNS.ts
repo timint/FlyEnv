@@ -6,7 +6,7 @@ import { address } from 'neoip'
 import { createRequire } from 'node:module'
 import Helper from '../Helper'
 import { isLinux, isMacOS, isWindows } from '@shared/utils'
-import { mkdirp, existsSync, writeFile, readFile } from '../Fn'
+import { mkdirp, existsSync, writeFile, readFile } from '@shared/fs-extra'
 import { dirname, join } from 'node:path'
 import { HostsFileMacOS, HostsFileWindows } from '@shared/PlatformConst'
 

@@ -1,4 +1,4 @@
-import { appendFile, existsSync, copyFile } from '../Fn'
+import { appendFile, existsSync, copyFile } from '@shared/fs-extra'
 import { join, basename } from 'node:path'
 import { createRequire } from 'node:module'
 import { pathFixedToUnix } from '@shared/utils'

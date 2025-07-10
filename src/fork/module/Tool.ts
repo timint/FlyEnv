@@ -1,22 +1,9 @@
 import { realpathSync, statSync } from 'fs'
 import { Base } from './Base'
-import {
-  getAllFileAsync,
-  uuid,
-  systemProxyGet,
-  writeFileByRoot,
-  readFileByRoot,
-  execPromise,
-  appendFile,
-  chmod,
-  copyFile,
-  existsSync,
-  mkdirp,
-  readdir,
-  readFile,
-  remove,
-  writeFile
-} from '../Fn'
+import { getAllFileAsync } from '../util/Dir'
+import { execPromise } from '@shared/child-process'
+import { appendFile, chmod, copyFile, existsSync, mkdirp, readdir, readFile, remove, writeFile } from '@shared/fs-extra'
+import { uuid, systemProxyGet, writeFileByRoot, readFileByRoot } from '../Fn'
 import { ForkPromise } from '@shared/ForkPromise'
 import { TaskQueue, TaskQueueProgress } from '@shared/TaskQueue'
 import { join, dirname, resolve as PathResolve, basename } from 'path'

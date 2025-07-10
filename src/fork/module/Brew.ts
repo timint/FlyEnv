@@ -1,7 +1,8 @@
 import { join } from 'path'
 import { existsSync } from 'fs'
 import { Base } from './Base'
-import { execPromiseWithEnv, spawnPromiseWithEnv, copyFile, unlink, chmod } from '../Fn'
+import { execPromiseWithEnv, spawnPromiseWithEnv } from '@shared/child-process'
+import { copyFile, unlink, chmod } from '@shared/fs-extra'
 import { ForkPromise } from '@shared/ForkPromise'
 
 class Brew extends Base {

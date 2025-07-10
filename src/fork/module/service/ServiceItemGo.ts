@@ -1,17 +1,11 @@
 import type { AppHost } from '@shared/app'
 import { join } from 'path'
-import {
-  chmod,
-  existsSync,
-  mkdirp,
-  readFile,
-  remove,
-  writeFile,
-  execPromiseWithEnv
-} from '../../Fn'
+import { chmod, mkdirp, readFile, remove, writeFile } from '@shared/fs-extra'
+import { existsSync } from 'fs'
+import { execPromiseWithEnv } from '@shared/child-process'
 import { getHostItemEnv, ServiceItem } from './ServiceItem'
 import { ForkPromise } from '@shared/ForkPromise'
-import Helper from '../../Helper'
+import Helper from '../Helper'
 import { ProcessPidsByPid } from '@shared/Process'
 import { isMacOS, isWindows } from '@shared/utils'
 import { EOL } from 'os'

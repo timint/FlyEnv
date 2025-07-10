@@ -3,17 +3,9 @@ import { dirname, join } from 'path'
 import { I18nT } from '@lang/index'
 import Helper from '../Helper'
 import { userInfo } from 'os'
-import {
-  AppLog,
-  spawnPromiseWithEnv,
-  waitPidFile,
-  existsSync,
-  remove,
-  mkdirp,
-  readFile,
-  writeFile,
-  execPromiseSudo
-} from '../Fn'
+import { spawnPromiseWithEnv, execPromiseSudo } from '@shared/child-process'
+import { existsSync, remove, mkdirp, readFile, writeFile } from '@shared/fs-extra'
+import { AppLog, waitPidFile } from '../Fn'
 
 export type ServiceStartParams = {
   version: SoftInstalled

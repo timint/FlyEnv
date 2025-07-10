@@ -1,23 +1,8 @@
 import { Base } from './Base'
-import {
-  execPromise,
-  readFileByRoot,
-  versionBinVersion,
-  versionFilterSame,
-  versionFixed,
-  versionLocalFetch,
-  versionSort,
-  writeFileByRoot,
-  chmod,
-  copyFile,
-  unlink,
-  readdir,
-  writeFile,
-  realpath,
-  remove,
-  mkdirp,
-  fetchPathByBin
-} from '../Fn'
+import { readFileByRoot, writeFileByRoot, fetchPathByBin } from '../Fn'
+import { execPromise } from '@shared/child-process'
+import { chmod, copyFile, unlink, readdir, writeFile, realpath, remove, mkdirp } from '@shared/fs-extra'
+import { versionBinVersion, versionFilterSame, versionFixed, versionLocalFetch, versionSort } from '../util/Version'
 import { ForkPromise } from '@shared/ForkPromise'
 import { basename, dirname, join } from 'path'
 import { compareVersions } from 'compare-versions'

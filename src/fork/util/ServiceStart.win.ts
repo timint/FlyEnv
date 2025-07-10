@@ -1,15 +1,8 @@
 import { basename, dirname, join } from 'path'
 import { I18nT } from '@lang/index'
-import {
-  AppLog,
-  spawnPromiseWithEnv,
-  waitPidFile,
-  existsSync,
-  remove,
-  readFile,
-  writeFile,
-  mkdirp
-} from '../Fn'
+import { spawnPromiseWithEnv } from '@shared/child-process'
+import { existsSync, remove, readFile, writeFile, mkdirp } from '@shared/fs-extra'
+import { AppLog, waitPidFile } from '../Fn'
 import chardet from 'chardet'
 import iconv from 'iconv-lite'
 import { ServiceStartParams } from './ServiceStart'

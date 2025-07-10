@@ -3,23 +3,12 @@ import { existsSync } from 'fs'
 import { Base } from './Base'
 import { ForkPromise } from '@shared/ForkPromise'
 import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
-import {
-  brewInfoJson,
-  brewSearch,
-  execPromise,
-  portSearch,
-  readFile,
-  remove,
-  uuid,
-  versionBinVersion,
-  versionFilterSame,
-  versionFixed,
-  versionLocalFetch,
-  versionSort,
-  waitTime,
-  writeFile,
-  zipUnpack
-} from '../Fn'
+import { execPromise } from '@shared/child-process'
+import { readFile, remove, writeFile } from '@shared/fs-extra'
+import { brewInfoJson, brewSearch, portSearch } from '../util/Brew'
+import { versionBinVersion, versionFilterSame, versionFixed, versionLocalFetch, versionSort } from '../util/Version'
+import { zipUnpack } from '../util/Zip'
+import { uuid, waitTime } from '../Fn'
 import TaskQueue from '../TaskQueue'
 import { appDebugLog, isMacOS, isWindows } from '@shared/utils'
 import { ProcessPidList } from '@shared/Process.win'

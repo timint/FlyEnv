@@ -3,31 +3,14 @@ import { existsSync, readdirSync } from 'fs'
 import { Base } from './Base'
 import { I18nT } from '@lang/index'
 import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
-import {
-  AppLog,
-  brewInfoJson,
-  brewSearch,
-  execPromise,
-  getSubDirAsync,
-  portSearch,
-  serviceStartExec,
-  versionBinVersion,
-  versionFilterSame,
-  versionFixed,
-  versionLocalFetch,
-  versionMacportsFetch,
-  versionSort,
-  waitTime,
-  chmod,
-  copyFile,
-  readFile,
-  unlink,
-  writeFile,
-  remove,
-  serviceStartExecCMD,
-  mkdirp,
-  execPromiseWithEnv
-} from '../Fn'
+import { getSubDirAsync } from '../util/Dir'
+import { versionBinVersion, versionFilterSame, versionFixed, versionLocalFetch, versionMacportsFetch, versionSort } from '../util/Version'
+import { brewInfoJson, brewSearch, portSearch } from '../util/Brew'
+import { execPromise, execPromiseWithEnv } from '@shared/child-process'
+import { chmod, copyFile, readFile, unlink, writeFile, remove, mkdirp } from '@shared/fs-extra'
+import { serviceStartExec } from '../util/ServiceStart'
+import { serviceStartExecCMD } from '../util/ServiceStart.win'
+import { AppLog, waitTime } from '../Fn'
 import { ForkPromise } from '@shared/ForkPromise'
 import axios from 'axios'
 import TaskQueue from '../TaskQueue'

@@ -5,7 +5,7 @@ import type { FtpItem } from '@shared/app'
 import { ForkPromise } from '@shared/ForkPromise'
 import FtpServer from 'ftp-srv'
 import { address } from 'neoip'
-import { readFile, writeFile, mkdirp, copy, remove } from '../Fn'
+import { readFile, writeFile, mkdirp, copyFile, remove } from '@shared/fs-extra'
 import { isWindows } from '@shared/utils'
 
 class Manager extends Base {

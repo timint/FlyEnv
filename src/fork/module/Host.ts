@@ -3,16 +3,9 @@ import { existsSync } from 'fs'
 import { Base } from './Base'
 import { I18nT } from '@lang/index'
 import type { AppHost, SoftInstalled } from '@shared/app'
-import {
-  hostAlias,
-  uuid,
-  remove,
-  writeFile,
-  machineId,
-  readdir,
-  readFile,
-  execPromise
-} from '../Fn'
+import { hostAlias, uuid, machineId } from '../Fn'
+import { remove, writeFile, readdir, readFile } from '@shared/fs-extra'
+import { execPromise } from '@shared/child-process'
 import { ForkPromise } from '@shared/ForkPromise'
 import { makeCaddyConf, updateCaddyConf } from './host/Caddy'
 import { makeApacheConf, updateApacheConf } from './host/Apache'
@@ -23,7 +16,7 @@ import { publicDecrypt } from 'crypto'
 import { fetchHostList, saveHostList } from './host/HostFile'
 import Helper from '../Helper'
 import { appDebugLog, isMacOS, isWindows } from '@shared/utils'
-import { HostsFileMacOS, HostsFileWindows } from '@shared/PlatFormConst'
+import { HostsFileMacOS, HostsFileWindows } from '@shared/PlatformConst'
 
 export class Host extends Base {
   hostsFile = ''

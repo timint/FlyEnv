@@ -2,26 +2,13 @@ import { basename, dirname, join } from 'path'
 import { existsSync } from 'fs'
 import { Base } from './Base'
 import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
-import {
-  AppLog,
-  brewInfoJson,
-  spawnPromise,
-  versionBinVersion,
-  versionFilterSame,
-  versionFixed,
-  versionLocalFetch,
-  versionSort,
-  mkdirp,
-  readFile,
-  remove,
-  writeFile,
-  serviceStartExec,
-  copyFile,
-  chmod,
-  waitTime,
-  execPromise,
-  serviceStartExecWin
-} from '../Fn'
+import { AppLog, waitTime } from '../Fn'
+import { spawnPromise, execPromise } from '@shared/child-process'
+import { mkdirp, readFile, remove, writeFile, copyFile, chmod } from '@shared/fs-extra'
+import { serviceStartExec } from '../util/ServiceStart'
+import { serviceStartExec as serviceStartExecWin } from '../util/ServiceStart.win'
+import { versionBinVersion, versionFilterSame, versionFixed, versionLocalFetch, versionSort } from '../util/Version'
+import { brewInfoJson } from '../util/Brew'
 import { ForkPromise } from '@shared/ForkPromise'
 import { I18nT } from '@lang/index'
 import TaskQueue from '../TaskQueue'

@@ -1,22 +1,14 @@
 import type { AppHost, SoftInstalled } from '@shared/app'
 import { basename, dirname, join, resolve as pathResolve } from 'path'
-import {
-  hostAlias,
-  copyFile,
-  existsSync,
-  mkdirp,
-  readFile,
-  writeFile,
-  realpathSync,
-  remove,
-  chmod,
-  execPromiseWithEnv
-} from '../../Fn'
+import { realpathSync } from 'node:fs'
+import { copyFile, existsSync, mkdirp, readFile, writeFile, remove, chmod } from '@shared/fs-extra'
+import { execPromiseWithEnv } from '@shared/child-process'
+import { hostAlias } from '../Fn'
 import { XMLBuilder, XMLParser } from 'fast-xml-parser'
 import { ServiceItem } from './ServiceItem'
 import { ForkPromise } from '@shared/ForkPromise'
 import { fetchHostList } from '../host/HostFile'
-import Helper from '../../Helper'
+import Helper from '../Helper'
 import { ProcessPidsByPid } from '@shared/Process'
 import { isMacOS, isWindows } from '@shared/utils'
 import { ProcessPidListByPid } from '@shared/Process.win'

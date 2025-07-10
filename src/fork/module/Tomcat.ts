@@ -3,29 +3,15 @@ import { existsSync } from 'fs'
 import { Base } from './Base'
 import { ForkPromise } from '@shared/ForkPromise'
 import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
-import {
-  AppLog,
-  brewInfoJson,
-  brewSearch,
-  serviceStartExec,
-  versionBinVersion,
-  versionFilterSame,
-  versionFixed,
-  versionLocalFetch,
-  versionSort,
-  chmod,
-  copyFile,
-  mkdirp,
-  readFile,
-  writeFile,
-  serviceStartExecCMD,
-  waitTime,
-  readdir,
-  execPromise,
-  remove,
-  zipUnpack,
-  moveChildDirToParent
-} from '../Fn'
+import { execPromise } from '@shared/child-process'
+import { chmod, copyFile, mkdirp, readFile, readdir, remove, writeFile } from '@shared/fs-extra'
+import { moveChildDirToParent } from '../util/Dir'
+import { brewInfoJson, brewSearch } from '../util/Brew'
+import { versionBinVersion, versionFilterSame, versionFixed, versionLocalFetch, versionSort } from '../util/Version'
+import { zipUnpack } from '../util/Zip'
+import { serviceStartExec } from '../util/ServiceStart'
+import { serviceStartExecCMD } from '../util/ServiceStart.win'
+import { AppLog, waitTime } from '../Fn'
 import TaskQueue from '../TaskQueue'
 import { makeGlobalTomcatServerXML } from './service/ServiceItemJavaTomcat'
 import { I18nT } from '@lang/index'

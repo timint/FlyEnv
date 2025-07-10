@@ -1,16 +1,9 @@
 import { basename, join } from 'path'
-import {
-  customerServiceStartExec,
-  execPromise,
-  uuid,
-  waitPidFile,
-  waitTime,
-  chmod,
-  mkdirp,
-  remove,
-  writeFile,
-  customerServiceStartExecWin
-} from '../Fn'
+import { customerServiceStartExec } from '../util/ServiceStart'
+import { customerServiceStartExec as customerServiceStartExecWin } from '../util/ServiceStart.win'
+import { execPromise } from '@shared/child-process'
+import { chmod, mkdirp, remove, writeFile } from '@shared/fs-extra'
+import { uuid, waitPidFile, waitTime } from '../Fn'
 import { ForkPromise } from '@shared/ForkPromise'
 import Helper from '../Helper'
 import { existsSync } from 'fs'

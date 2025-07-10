@@ -3,22 +3,13 @@ import { existsSync } from 'fs'
 import { Base } from './Base'
 import { ForkPromise } from '@shared/ForkPromise'
 import type { SoftInstalled } from '@shared/app'
-import {
-  AppLog,
-  brewInfoJson,
-  serviceStartExec,
-  spawnPromise,
-  versionBinVersion,
-  versionFilterSame,
-  versionLocalFetch,
-  versionSort,
-  chmod,
-  copyFile,
-  mkdirp,
-  readFile,
-  writeFile,
-  serviceStartExecWin
-} from '../Fn'
+import { AppLog } from '../Fn'
+import { spawnPromise } from '@shared/child-process'
+import { chmod, copyFile, mkdirp, readFile, writeFile } from '@shared/fs-extra'
+import { serviceStartExec } from '../util/ServiceStart'
+import { serviceStartExec as serviceStartExecWin } from '../util/ServiceStart.win'
+import { versionBinVersion, versionFilterSame, versionLocalFetch, versionSort } from '../util/Version'
+import { brewInfoJson } from '../util/Brew'
 import TaskQueue from '../TaskQueue'
 import { I18nT } from '@lang/index'
 import Helper from '../Helper'

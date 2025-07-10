@@ -3,29 +3,15 @@ import { existsSync, readdirSync } from 'fs'
 import { Base } from './Base'
 import { I18nT } from '@lang/index'
 import type { MysqlGroupItem, OnlineVersionItem, SoftInstalled } from '@shared/app'
-import {
-  execPromise,
-  waitTime,
-  versionLocalFetch,
-  versionMacportsFetch,
-  versionBinVersion,
-  versionFixed,
-  versionSort,
-  getSubDirAsync,
-  brewSearch,
-  brewInfoJson,
-  portSearch,
-  versionFilterSame,
-  AppLog,
-  serviceStartExec,
-  mkdirp,
-  writeFile,
-  chmod,
-  remove,
-  serviceStartExecCMD,
-  spawnPromise,
-  readFile
-} from '../Fn'
+import { AppLog, waitTime } from '../Fn'
+import { getSubDirAsync } from '../util/Dir'
+import { execPromise } from '@shared/child-process'
+import { mkdirp, writeFile, chmod, remove, readFile } from '@shared/fs-extra'
+import { serviceStartExec } from '../util/ServiceStart'
+import { serviceStartExec as serviceStartExecCMD } from '../util/ServiceStart.win'
+import { spawnPromise } from '@shared/child-process'
+import { versionLocalFetch, versionMacportsFetch, versionBinVersion, versionFixed, versionSort, versionFilterSame } from '../util/Version'
+import { brewSearch, brewInfoJson, portSearch } from '../util/Brew'
 import { ForkPromise } from '@shared/ForkPromise'
 import TaskQueue from '../TaskQueue'
 import Helper from '../Helper'

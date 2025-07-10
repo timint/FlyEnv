@@ -1,6 +1,6 @@
 import type { TaskItem } from '@shared/TaskQueue'
 import { createReadStream } from 'fs'
-import { readFile, writeFile } from '../Fn'
+import { readFile, writeFile } from '@shared/fs-extra'
 
 export class BomCleanTask implements TaskItem {
   path = ''

@@ -1,5 +1,5 @@
 import { join } from 'node:path'
-import { readdir, mkdirp, rename, remove } from '../Fn'
+import { readdir, mkdirp, rename, remove } from '@shared/fs-extra'
 import path from 'path'
 import { statSync, existsSync, realpathSync } from 'fs'
 /**

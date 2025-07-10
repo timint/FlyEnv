@@ -3,20 +3,11 @@ import { existsSync } from 'fs'
 import { Base } from './Base'
 import { ForkPromise } from '@shared/ForkPromise'
 import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
-import {
-  brewInfoJson,
-  brewSearch,
-  mkdirp,
-  moveChildDirToParent,
-  portSearch,
-  remove,
-  versionBinVersion,
-  versionFilterSame,
-  versionFixed,
-  versionLocalFetch,
-  versionSort,
-  zipUnpack
-} from '../Fn'
+import { mkdirp, remove } from '@shared/fs-extra'
+import { moveChildDirToParent } from '../util/Dir'
+import { brewInfoJson, brewSearch, portSearch } from '../util/Brew'
+import { versionBinVersion, versionFilterSame, versionFixed, versionLocalFetch, versionSort } from '../util/Version'
+import { zipUnpack } from '../util/Zip'
 import TaskQueue from '../TaskQueue'
 import { isMacOS, isWindows } from '@shared/utils'
 

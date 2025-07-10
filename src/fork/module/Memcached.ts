@@ -3,23 +3,14 @@ import { existsSync } from 'fs'
 import { Base } from './Base'
 import { I18nT } from '@lang/index'
 import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
-import {
-  AppLog,
-  brewInfoJson,
-  copyFile,
-  getAllFileAsync,
-  mkdirp,
-  portSearch,
-  remove,
-  serviceStartExec,
-  serviceStartExecWin,
-  versionBinVersion,
-  versionFilterSame,
-  versionFixed,
-  versionLocalFetch,
-  versionSort,
-  zipUnpack
-} from '../Fn'
+import { copyFile, mkdirp, remove } from '@shared/fs-extra'
+import { getAllFileAsync } from '../util/Dir'
+import { brewInfoJson, portSearch } from '../util/Brew'
+import { versionBinVersion, versionFilterSame, versionFixed, versionLocalFetch, versionSort } from '../util/Version'
+import { zipUnpack } from '../util/Zip'
+import { serviceStartExec } from '../util/ServiceStart'
+import { serviceStartExec as serviceStartExecWin } from '../util/ServiceStart.win'
+import { AppLog } from '../Fn'
 import { ForkPromise } from '@shared/ForkPromise'
 import TaskQueue from '../TaskQueue'
 import { isMacOS, isWindows } from '@shared/utils'

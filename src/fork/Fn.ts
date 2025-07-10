@@ -1,126 +1,19 @@
-import { createWriteStream, realpathSync } from 'node:fs'
-import type { FSWatcher } from 'node:fs'
+import { createWriteStream, existsSync } from 'node:fs'
 import { dirname, join, normalize, parse } from 'path'
 import { ForkPromise } from '@shared/ForkPromise'
-import crypto from 'crypto'
 import axios from 'axios'
 import type { AppHost } from '@shared/app'
 import Helper from './Helper'
 import { format } from 'date-fns'
 import { hostname, userInfo } from 'os'
 import _node_machine_id from 'node-machine-id'
-import { zipUnpack } from './util/Zip'
-import { moveDirToDir, getSubDirAsync, getAllFileAsync, moveChildDirToParent } from './util/Dir'
-import { serviceStartExec, customerServiceStartExec } from './util/ServiceStart'
-import {
-  serviceStartExec as serviceStartExecWin,
-  serviceStartExecCMD,
-  readFileAsUTF8,
-  customerServiceStartExec as customerServiceStartExecWin
-} from './util/ServiceStart.win'
-import {
-  execPromise,
-  execPromiseSudo,
-  execPromiseWithEnv,
-  spawnPromiseWithEnv,
-  spawnPromise,
-  spawnPromiseWithStdin
-} from '@shared/child-process'
-import {
-  versionBinVersion,
-  versionCheckBin,
-  brewInfoJson,
-  brewSearch,
-  portSearch,
-  versionFixed,
-  versionDirCache,
-  versionFilterSame,
-  versionLocalFetch,
-  versionMacportsFetch,
-  versionSort
-} from './util/Version'
-import {
-  watch,
-  copy,
-  chmod,
-  copyFile,
-  unlink,
-  readdir,
-  writeFile,
-  realpath,
-  remove,
-  mkdirp,
-  readFile,
-  existsSync,
-  appendFile,
-  rename,
-  stat
-} from '@shared/fs-extra'
-import { addPath, fetchRawPATH, handleWinPathArr, writePath } from './util/PATH.win'
+import { appendFile, mkdirp, readFile } from '@shared/fs-extra'
+import { spawnPromise, execPromise } from '@shared/child-process'
 import { isWindows } from '@shared/utils'
-
-export { addPath, fetchRawPATH, handleWinPathArr, writePath }
-
-export {
-  versionBinVersion,
-  versionCheckBin,
-  brewInfoJson,
-  brewSearch,
-  portSearch,
-  versionFixed,
-  versionDirCache,
-  versionFilterSame,
-  versionLocalFetch,
-  versionMacportsFetch,
-  versionSort
-}
 
 const { machineId } = _node_machine_id
 
-export {
-  machineId,
-  zipUnpack,
-  moveDirToDir,
-  getSubDirAsync,
-  getAllFileAsync,
-  moveChildDirToParent,
-  serviceStartExec,
-  customerServiceStartExec,
-  serviceStartExecWin,
-  serviceStartExecCMD,
-  readFileAsUTF8,
-  customerServiceStartExecWin
-}
-
-export {
-  createWriteStream,
-  realpathSync,
-  FSWatcher,
-  watch,
-  copy,
-  chmod,
-  copyFile,
-  unlink,
-  readdir,
-  writeFile,
-  realpath,
-  remove,
-  mkdirp,
-  readFile,
-  existsSync,
-  appendFile,
-  rename,
-  stat
-}
-
-export {
-  execPromise,
-  execPromiseSudo,
-  execPromiseWithEnv,
-  spawnPromiseWithEnv,
-  spawnPromise,
-  spawnPromiseWithStdin
-}
+export { machineId }
 
 export const ProcessSendSuccess = (key: string, data: any, on?: boolean) => {
   process?.send?.({
@@ -208,10 +101,7 @@ export async function setDir777ToCurrentUser(folderPath: string) {
   }
 }
 
-export function md5(str: string) {
-  const md5 = crypto.createHash('md5')
-  return md5.update(str).digest('hex')
-}
+
 
 export function downloadFile(url: string, savepath: string) {
   return new ForkPromise((resolve, reject, on) => {

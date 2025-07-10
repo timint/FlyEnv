@@ -1,10 +1,13 @@
 import { ForkPromise } from '@shared/ForkPromise'
-import { copyFile, execPromise, hostAlias, mkdirp, remove, writeFile, zipUnpack } from '../../Fn'
+import { execPromise } from '@shared/child-process'
+import { copyFile, mkdirp, remove, writeFile } from '@shared/fs-extra'
+import { hostAlias } from '../Fn'
+import { zipUnpack } from '../../util/Zip'
 import { dirname, join } from 'path'
 import { existsSync } from 'fs'
 import { EOL } from 'os'
 import type { AppHost } from '@shared/app'
-import Helper from '../../Helper'
+import Helper from '../Helper'
 import { appDebugLog, isWindows } from '@shared/utils'
 
 const initCARoot = () => {
@@ -29,7 +32,7 @@ export const makeAutoSSL = (host: AppHost): ForkPromise<{ crt: string; key: stri
       if (isWindows()) {
         const openssl = join(global.Server.AppDir!, 'openssl/bin/openssl.exe')
         if (!existsSync(openssl)) {
-          await zipUnPack(join(global.Server.Static!, `zip/openssl.7z`), global.Server.AppDir!)
+          await zipUnpack(join(global.Server.Static!, `zip/openssl.7z`), global.Server.AppDir!)
         }
         const opensslCnf = join(global.Server.AppDir!, 'openssl/openssl.cnf')
         if (!existsSync(opensslCnf)) {

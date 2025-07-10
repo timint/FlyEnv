@@ -1,7 +1,7 @@
 import { join } from 'path'
 import type { AppHost } from '@shared/app'
 import { existsSync } from 'fs'
-import { readFile, writeFile } from '../../Fn'
+import { readFile, writeFile } from '@shared/fs-extra'
 import { createRequire } from 'node:module'
 const require = createRequire(import.meta.url)
 

@@ -1,7 +1,9 @@
 import type { AppHost } from '@shared/app'
 import { ForkPromise } from '@shared/ForkPromise'
-import { waitTime, watch, existsSync, type FSWatcher, readFile } from '../../Fn'
-import Helper from '../../Helper'
+import { watch, existsSync, readFile } from '@shared/fs-extra'
+import type { FSWatcher } from 'node:fs'
+import { waitTime } from '../Fn'
+import Helper from '../Helper'
 import { isWindows } from '@shared/utils'
 import { execPromise } from '@shared/child-process'
 
