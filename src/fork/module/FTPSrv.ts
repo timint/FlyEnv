@@ -3,7 +3,7 @@ import { existsSync } from 'fs'
 import { Base } from './Base'
 import type { FtpItem } from '@shared/app'
 import { ForkPromise } from '@shared/ForkPromise'
-import FtpServer from 'ftp-srv'
+import FtpServer from 'ftp-srv-esm'
 import { address } from 'neoip'
 import { readFile, writeFile, mkdirp, copyFile, remove } from '@shared/fs-extra'
 import { isWindows } from '@shared/utils'
@@ -61,7 +61,7 @@ class Manager extends Base {
       this.server = new FtpServer({
         url: `ftp://0.0.0.0:${port}/`,
         anonymous: true,
-        pasv_url: resolverFunction as any,
+        pasv_hostname: resolverFunction as any,
         pasv_min: 49152,
         pasv_max: 65535
       })
