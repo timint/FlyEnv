@@ -12,17 +12,11 @@ class EnvSync {
       return this.AppEnv
     }
     if (isWindows()) {
-      let path = `${process.env['PATH']};C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\;%SYSTEMROOT%\\System32\\WindowsPowerShell\\v1.0\\`
-      path = Array.from(new Set(path.split(';')))
-        .filter((s) => !!s)
-        .join(';')
-      const env: any = { ...process.env, PATH: path }
-      if (global.Server.Proxy) {
-        for (const k in global.Server.Proxy) {
-          env[k] = global.Server.Proxy[k]
-        }
-      }
-      this.AppEnv = env
+      const path = [
+        process.env['PATH'],
+        '%SYSTEMROOT%\\System32\\WindowsPowerShell\\v1.0\\'
+      ].filter(Boolean).join(';')
+      this.AppEnv = { ...process.env, PATH: path, ...(global.Server.Proxy || {}) }
       return this.AppEnv
     }
     const file = join(global.Server.Cache!, 'env.sh')
@@ -52,8 +46,18 @@ class EnvSync {
           this.AppEnv![k] = v
         }
       })
-    const PATH = `${this.AppEnv!['PATH']}:/opt:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/Homebrew/bin:/opt/local/bin:/opt/local/sbin:/usr/local/bin:/usr/bin:/usr/sbin`
-    this.AppEnv!['PATH'] = Array.from(new Set(PATH.split(':'))).join(':')
+    this.AppEnv!['PATH'] = [
+      this.AppEnv!['PATH'],
+      '/opt',
+      '/opt/homebrew/bin',
+      '/opt/homebrew/sbin',
+      '/usr/local/Homebrew/bin',
+      '/opt/local/bin',
+      '/opt/local/sbin',
+      '/usr/local/bin',
+      '/usr/bin',
+      '/usr/sbin'
+    ].filter(Boolean).join(':')
     if (global.Server.Proxy) {
       for (const k in global.Server.Proxy) {
         this.AppEnv![k] = global.Server.Proxy[k]
