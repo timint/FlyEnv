@@ -202,7 +202,7 @@ export function TaskAddPhpMyAdminSite(this: any, phpVersion?: number, write = tr
     downloadFile(url, zipTmpFile)
       .on(on)
       .then(async () => {
-        return copy(zipTmpFile, zipFile)
+        return copyFile(zipTmpFile, zipFile)
       })
       .then(() => {
         if (existsSync(zipFile)) {

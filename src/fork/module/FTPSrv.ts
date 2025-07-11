@@ -34,7 +34,7 @@ class Manager extends Base {
     if (isWindows()) {
       const json = join(global.Server.FTPDir!, 'pureftpd.json')
       if (existsSync(json)) {
-        await copy(json, join(this.baseDir, 'ftp-srv.json'))
+        await copyFile(json, join(this.baseDir, 'ftp-srv.json'))
         await remove(json)
       }
     }

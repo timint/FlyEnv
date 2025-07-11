@@ -1,4 +1,3 @@
-import _path from 'path-browserify'
-const { join, basename, dirname, extname, resolve } = _path
+import { join, basename, dirname, extname, resolve, isAbsolute, normalize } from 'pathe'
 
-export { join, basename, dirname, extname, resolve }
+export { join, basename, dirname, extname, resolve, isAbsolute, normalize }

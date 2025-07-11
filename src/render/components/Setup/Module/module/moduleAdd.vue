@@ -20,8 +20,9 @@
         }}</el-button>
       </div>
 
-      <div class="main-wapper">
-        <div class="main">
+      <el-scrollbar class="flex-1">
+        <div class="main-wapper p-3">
+          <div class="main p-5">
           <input
             v-model.trim="item.label"
             type="text"
@@ -68,7 +69,7 @@
             <el-button link :icon="Plus" @click.stop="addExecItem(undefined)"></el-button>
           </template>
         </div>
-        <div class="main flex flex-col gap-3">
+          <div class="main p-5 flex flex-col gap-3">
           <template v-if="item.item.length === 0">
             <div class="flex justify-center">{{ I18nT('base.none') }}</div>
           </template>
@@ -98,7 +99,7 @@
           <span>{{ I18nT('setup.module.configPath') }}</span>
           <el-button link :icon="Plus" @click.stop="addConfigPath"></el-button>
         </div>
-        <div class="main">
+          <div class="main p-5">
           <template v-if="!item?.configPath?.length">
             <div class="flex justify-center">{{ I18nT('base.none') }}</div>
           </template>
@@ -146,7 +147,7 @@
           <span>{{ I18nT('setup.module.logPath') }}</span>
           <el-button link :icon="Plus" @click.stop="addLogPath"></el-button>
         </div>
-        <div class="main">
+          <div class="main p-5">
           <template v-if="!item?.logPath?.length">
             <div class="flex justify-center">{{ I18nT('base.none') }}</div>
           </template>
@@ -192,6 +193,7 @@
 
         <div class="py-5"></div>
       </div>
+      </el-scrollbar>
     </div>
   </el-drawer>
 </template>
@@ -323,6 +325,10 @@
     }).then((res: any) => {
       console.log('addExecItem res: ', res)
       const save = reactive(new CustomModuleExecItem(res))
+      save.stop = save.stop.bind(save)
+      save.start = save.start.bind(save)
+      save.onStart = save.onStart.bind(save)
+
       save.pid = ''
       save.running = false
       save.run = false

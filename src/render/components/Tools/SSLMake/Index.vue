@@ -10,6 +10,7 @@
       }}</el-button>
     </div>
 
+    <el-scrollbar class="flex-1">
     <div class="main-wapper">
       <div class="main flex flex-col gap-7 pt-7">
         <el-input
@@ -48,6 +49,7 @@
         </el-input>
       </div>
     </div>
+    </el-scrollbar>
   </div>
 </template>
 

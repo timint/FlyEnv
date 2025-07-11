@@ -62,7 +62,7 @@
   const onDrop = (e: DragEvent) => {
     e.preventDefault()
     e.stopPropagation()
-    let files = e?.dataTransfer?.files ?? []
+    const files = e?.dataTransfer?.files ?? []
     if (!files.length) {
       return
     }
@@ -88,11 +88,15 @@
       </div>
     </div>
 
+    <el-scrollbar class="flex-1">
     <div class="main-wapper pb-0">
       <div class="grid grid-cols-1 xl:grid-cols-2 gap-3">
         <div>
           <el-card header="Base64 to file">
-            <el-form-item label-position="top" :error="textError ? 'Invalid base 64 string' : null">
+              <el-form-item
+                label-position="top"
+                :error="textError ? 'Invalid base 64 string' : null"
+              >
               <el-input
                 v-model="base64Text"
                 type="textarea"
@@ -139,5 +143,6 @@
         </div>
       </div>
     </div>
+    </el-scrollbar>
   </div>
 </template>
