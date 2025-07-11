@@ -16,36 +16,15 @@ const { machineId } = _node_machine_id
 export { machineId }
 
 export const ProcessSendSuccess = (key: string, data: any, on?: boolean) => {
-  process?.send?.({
-    on,
-    key,
-    info: {
-      code: 0,
-      data
-    }
-  })
+  process?.send?.({ on, key, info: { code: 0, data } })
 }
 
 export const ProcessSendError = (key: string, msg: any, on?: boolean) => {
-  process?.send?.({
-    on,
-    key,
-    info: {
-      code: 1,
-      msg
-    }
-  })
+  process?.send?.({ on, key, info: { code: 1, msg } })
 }
 
 export const ProcessSendLog = (key: string, msg: any, on?: boolean) => {
-  process?.send?.({
-    on,
-    key,
-    info: {
-      code: 200,
-      msg
-    }
-  })
+  process?.send?.({ on, key, info: { code: 200, msg } })
 }
 
 export const AppLog = (type: 'info' | 'error' | 'debug', msg: string) => {
