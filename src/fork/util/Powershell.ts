@@ -28,8 +28,11 @@ export function powershellCmd(cmd: string, options: any = {}): ForkPromise<strin
   return new ForkPromise(async (resolve, reject) => {
     try {
       const escapedArg = escapeShellArg(cmd)
-      const result = await execPromise(`powershell.exe -NoProfile -WindowStyle Hidden -ExecutionPolicy Bypass -Command ${escapedArg}`, options)
-      resolve(result.stdout.toString())
+      const result: any = await (execPromise as any)(
+        `powershell.exe -NoProfile -WindowStyle Hidden -ExecutionPolicy Bypass -Command ${escapedArg}`,
+        options
+      )
+      resolve(result.stdout?.toString() || '')
     } catch (error) {
       reject(error)
     }
@@ -55,8 +58,8 @@ export function powershellExecProcess(file: string, args: string[] = [], options
         cmd = `powershell.exe -NoProfile -WindowStyle Hidden -ExecutionPolicy Bypass -Command "Start-Process ${escapedFile} -PassThru | Select-Object -ExpandProperty Id"`
       }
 
-      const result = await execPromise(cmd, options)
-      resolve(result.stdout.toString())
+      const result: any = await (execPromise as any)(cmd, options)
+      resolve(result.stdout?.toString() || '')
     } catch (error) {
       reject(error)
     }
@@ -82,8 +85,8 @@ export function powershellExecScript(file: string, args: string[] = [], options:
         cmd = `powershell.exe -NoProfile -WindowStyle Hidden -ExecutionPolicy Bypass -Command "Unblock-File -LiteralPath ${escapedFile}; & ${escapedFile}"`
       }
 
-      const result = await execPromise(cmd, options)
-      resolve(result.stdout.toString())
+      const result: any = await (execPromise as any)(cmd, options)
+      resolve(result.stdout?.toString() || '')
     } catch (error) {
       reject(error)
     }
@@ -109,8 +112,8 @@ export function powershellExecFile(file: string, args: string[] = [], options: a
         cmd = `powershell.exe -NoProfile -WindowStyle Hidden -ExecutionPolicy Bypass -File ${escapedFile}`
       }
 
-      const result = await execPromise(cmd, options)
-      resolve(result.stdout.toString())
+      const result: any = await (execPromise as any)(cmd, options)
+      resolve(result.stdout?.toString() || '')
     } catch (error) {
       reject(error)
     }
@@ -129,8 +132,8 @@ export function powershellExecWithUnblock(file: string, options: any = {}): Fork
     try {
       const escapedFile = escapePowershellArg(file)
       const cmd = `powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Unblock-File -LiteralPath ${escapedFile}; & ${escapedFile}"`
-      const result = await execPromise(cmd, options)
-      resolve(result.stdout.toString())
+      const result: any = await (execPromise as any)(cmd, options)
+      resolve(result.stdout?.toString() || '')
     } catch (error) {
       reject(error)
     }
