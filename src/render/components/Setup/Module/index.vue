@@ -4,7 +4,7 @@
       <ul class="menu top-menu">
         <ModuleItem :item="firstItem" :index="0" />
         <template v-for="(item, _index) in customList" :key="item.id">
-          <ModuleItemCustom :is-custom="true" :item="item" :index="_index + 1" />
+          <CustomModuleItem:is-custom="true" :item="item" :index="_index + 1" />
         </template>
         <template v-for="(item, _index) in allList" :key="_index">
           <ModuleItem :item="item" :index="_index + 1" />
@@ -20,7 +20,7 @@
   import { I18nT } from '@lang/index'
   import ModuleItem from './moduleItem.vue'
   import { AppCustomModule } from '@/core/Module'
-  import ModuleItemCustom from './moduleItemCustom.vue'
+  import CustomModuleItem from './customModuleItem.vue'
 
   const platformAppModules = computed(() => {
     let platform: any = ''
