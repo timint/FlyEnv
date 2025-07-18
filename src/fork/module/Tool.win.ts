@@ -32,6 +32,7 @@ import { BomCleanTask } from '../util/BomCleanTask'
 import { ProcessListSearch, ProcessPidList, ProcessPidListByPids } from '@shared/Process.win'
 import type { PItem } from '@shared/Process'
 import RequestTimer from '@shared/requestTimer'
+import powershell from '../util/Powershell'
 
 class Manager extends Base {
   constructor() {
@@ -591,9 +592,7 @@ php "%~dp0composer.phar" %*`
         )
         process.chdir(global.Server.Cache!)
         try {
-          await execPromise(
-            `powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Unblock-File -LiteralPath '${f}'; & '${f}'"`
-          )
+          await powershell.execFile(f, [], { unblockFile: true })
         } catch {}
         await remove(f)
       }
@@ -1094,11 +1093,10 @@ chcp 65001>nul
         }
       }
       try {
-        await execPromiseWithEnv(
+        await powershell.execCommand(
           `if ((Get-ExecutionPolicy -Scope CurrentUser) -eq 'Restricted') {
   Set-ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
-}`,
-          { shell: 'powershell.exe' }
+}`
         )
       } catch {}
 

@@ -384,13 +384,9 @@ export async function isNTFS(fileOrDirPath: string) {
     return NTFS[driveLetter]
   }
   try {
-    const jsonResult =
-      (
-        await execPromise(
-          `powershell -command "Get-Volume -DriveLetter ${driveLetter} | ConvertTo-Json"`,
-          { encoding: 'utf-8' }
-        )
-      )?.stdout ?? ''
+    const jsonResult = await powershell.execCommand(`Get-Volume -DriveLetter ${driveLetter} | ConvertTo-Json`, {
+      encoding: 'utf-8'
+    })
     const { FileSystem, FileSystemType } = JSON.parse(jsonResult)
     const is = FileSystem === 'NTFS' || FileSystemType === 'NTFS'
     NTFS[driveLetter] = is
