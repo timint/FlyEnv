@@ -1,5 +1,5 @@
 import { join, dirname, basename, isAbsolute } from 'path'
-import { createWriteStream, existsSync } from 'fs'
+import { existsSync } from 'fs'
 import { Base } from './Base'
 import { I18nT } from '@lang/index'
 import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
@@ -8,7 +8,7 @@ import { copyFile, mkdirp, readdir, readFile, remove, writeFile } from '@shared/
 import { versionBinVersion, versionFilterSame, versionFixed, versionLocalFetch, versionSort } from '../util/Version'
 import { zipUnpack } from '../util/Zip'
 import { serviceStartExec as serviceStartExecWin } from '../util/ServiceStart.win'
-import { AppLog } from '../Fn'
+import { AppLog, downloadFile } from '../Fn'
 import { ForkPromise } from '@shared/ForkPromise'
 import TaskQueue from '../TaskQueue'
 import axios from 'axios'
@@ -513,123 +513,86 @@ xdebug.output_dir = "${output_dir}"
   libExec(item: any, version: SoftInstalled) {
     return new ForkPromise(async (resolve, reject, on) => {
       const ini = await this.getIniPath(version)
-      let content: string = await readFile(ini, 'utf-8')
-      content = content.trim()
+      let content: string = (await readFile(ini, 'utf-8')).trim()
 
       const name = `php_${item.name.toLowerCase()}`
       const zend = ['php_opcache', 'php_xdebug']
       const type = zend.includes(name) ? 'zend_extension' : 'extension'
+
+      // Helper to install extension DLL if missing
+      const installExtension = async () => {
+        const dir: string = await this.fetchExtensionDir(version)
+        const file = join(dir, `${name}.dll`)
+        if (existsSync(file)) return true
+
+        const handleImagick = async (cacheDir: string) => {
+          if (name !== 'php_imagick') return
+          const allFile = await readdir(cacheDir)
+          const allDLL = allFile.filter((a) => a.toLowerCase().endsWith('.dll'))
+          const destDir = version.path
+          await Promise.all(allDLL.map((a) => copyFile(join(cacheDir, a), join(destDir, a))))
+        }
+
+        const phpVersion = version.version ? version.version.split('.').slice(0, 2).join('.') : ''
+        if (!phpVersion) throw new Error('PHP version is missing')
+        const zipFile = join(global.Server.Cache!, `${name}-php${phpVersion}.zip`)
+        const cacheDir = join(global.Server.Cache!, `${name}-php${phpVersion}-cache`)
+        const dll = join(cacheDir, `${name}.dll`)
+
+        if (existsSync(zipFile)) {
+          try { await zipUnpack(zipFile, cacheDir) } catch {}
+          if (existsSync(dll)) {
+            await copyFile(dll, file)
+            await handleImagick(cacheDir)
+            await remove(cacheDir)
+            if (existsSync(file)) return true
+            throw new Error(`${name}.dll not found after unpack`)
+          }
+          await remove(cacheDir)
+          await remove(zipFile)
+        }
+
+        let url: string | undefined
+        if (item.versions && item.versions[phpVersion]?.[0]?.url) {
+          url = item.versions[phpVersion][0].url
+        }
+        if (!url) {
+          throw new Error(`No download URL found for ${name} and PHP version ${phpVersion}`)
+        }
+
+        await downloadFile(url, zipFile, (progress) => {
+          if (typeof on === 'function') on({ 'APP-On-Progress': progress })
+        })
+
+        if (existsSync(zipFile)) {
+          await zipUnpack(zipFile, cacheDir)
+        }
+
+        if (existsSync(dll)) {
+          await copyFile(dll, file)
+          await handleImagick(cacheDir)
+          await remove(cacheDir)
+          if (existsSync(file)) return true
+        }
+        throw new Error(`${name}.dll not found after download`)
+      }
+
+      // Remove extension if already installed
       if (item.installed) {
         const regex: RegExp = new RegExp(
           `^(?!\\s*;)\\s*${type}\\s*=\\s*"?(${name})(\\.dll)?"?`,
           'gm'
         )
-        content = content.replace(regex, ``).trim()
+        content = content.replace(regex, '').trim()
         if (name === 'php_xdebug') {
-          content = content
-            .replace(/;\[FlyEnv-xdebug-ini-begin\]([\s\S]*?);\[FlyEnv-xdebug-ini-end\]/g, ``)
-            .trim()
+          content = content.replace(/;\[FlyEnv-xdebug-ini-begin\]([\s\S]*?);\[FlyEnv-xdebug-ini-end\]/g, '').trim()
         }
       } else {
-        const dir: string = await this.fetchExtensionDir(version)
-        const file = join(dir, `${name}.dll`)
-        if (!existsSync(file)) {
-          const handleImagick = async (cacheDir: string) => {
-            if (name !== 'php_imagick') {
-              return
-            }
-            const allFile = await readdir(cacheDir)
-            const allDLL = allFile.filter((a) => a.toLowerCase().endsWith('.dll'))
-            const destDir = version.path
-            await Promise.all(allDLL.map((a) => copyFile(join(cacheDir, a), join(destDir, a))))
-          }
-          const install = () => {
-            return new Promise(async (resolve, reject) => {
-              const phpVersion = version.version!.split('.').slice(0, 2).join('.')
-              const zipFile = join(global.Server.Cache!, `${name}-php${phpVersion}.zip`)
-              const cacheDir = join(global.Server.Cache!, `${name}-php${phpVersion}-cache`)
-              const dll = join(cacheDir, `${name}.dll`)
-
-              if (existsSync(zipFile)) {
-                try {
-                  await zipUnpack(zipFile, cacheDir)
-                } catch {}
-                if (existsSync(dll)) {
-                  await copyFile(dll, file)
-                  await handleImagick(cacheDir)
-                  await remove(cacheDir)
-                  if (existsSync(file)) {
-                    resolve(true)
-                    return
-                  } else {
-                    reject(new Error(`${name}.dll no found`))
-                    return
-                  }
-                }
-                await remove(cacheDir)
-                await remove(zipFile)
-              }
-              const url = item.versions[phpVersion][0].url
-              axios({
-                method: 'get',
-                url,
-                proxy: this.getAxiosProxy(),
-                responseType: 'stream',
-                onDownloadProgress: (progress) => {
-                  if (progress.total) {
-                    const percent = Math.round((progress.loaded * 100.0) / progress.total)
-                    on({
-                      percent,
-                      state: 'downing'
-                    })
-                  }
-                }
-              })
-                .then(function (response) {
-                  const stream = createWriteStream(zipFile)
-                  response.data.pipe(stream)
-                  stream.on('error', async (e: any) => {
-                    try {
-                      if (existsSync(zipFile)) {
-                        await remove(zipFile)
-                      }
-                    } catch {}
-                    reject(e)
-                  })
-                  stream.on('finish', async () => {
-                    on({
-                      percent: 100,
-                      state: 'downing'
-                    })
-                    try {
-                      if (existsSync(zipFile)) {
-                        await zipUnpack(zipFile, cacheDir)
-                      }
-                    } catch (e) {
-                      reject(e)
-                      return
-                    }
-                    if (existsSync(dll)) {
-                      await copyFile(dll, file)
-                      await handleImagick(cacheDir)
-                      await remove(cacheDir)
-                      if (existsSync(file)) {
-                        resolve(true)
-                        return
-                      }
-                    }
-                    reject(new Error(`${name}.dll no found`))
-                  })
-                })
-                .catch(reject)
-            })
-          }
-          try {
-            await install()
-          } catch (e) {
-            reject(e)
-            return
-          }
+        try {
+          await installExtension()
+        } catch (e) {
+          reject(e)
+          return
         }
         content += `\n${type}=${name}.dll`
         if (name === 'php_xdebug') {

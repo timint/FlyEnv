@@ -1,11 +1,11 @@
 import { I18nT } from '@lang/index'
-import { createWriteStream, existsSync } from 'fs'
+import { existsSync } from 'fs'
 import { dirname, join } from 'path'
 import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
 import { execPromise, execPromiseWithEnv } from '@shared/child-process'
 import { readFile, writeFile, remove, mkdirp } from '@shared/fs-extra'
 import { zipUnpack } from '../util/Zip'
-import { AppLog, waitTime } from '../Fn'
+import { AppLog, downloadFile, waitTime } from '../Fn'
 import { ForkPromise } from '@shared/ForkPromise'
 import axios from 'axios'
 import * as http from 'http'
@@ -344,86 +344,53 @@ export class Base {
         row.downloaded = existsSync(row.zip)
         row.installed = existsSync(row.bin)
       }
-      const end = () => {
-        refresh()
-        if (row.installed) {
-          row.downState = 'success'
-          row.progress = 100
-          on(row)
-          resolve(true)
-        } else {
-          row.downState = 'exception'
-          on(row)
-          resolve(false)
-        }
-      }
 
-      const fail = async () => {
+      const cleanup = async () => {
         try {
           await remove(row.zip)
           await remove(row.appDir)
         } catch {}
       }
 
-      if (existsSync(row.zip)) {
-        row.progress = 100
+      const finish = (success: boolean) => {
+        refresh()
+        row.downState = success ? 'success' : 'exception'
+        row.progress = success ? 100 : row.progress
         on(row)
-        let success = false
-        try {
-          await this._installSoftHandle(row)
-          success = true
-          refresh()
-        } catch {
-          refresh()
-        }
-        if (success) {
-          row.downState = 'success'
-          row.progress = 100
-          resolve(true)
-          return
-        }
-        await fail()
+        resolve(success)
       }
 
-      axios({
-        method: 'get',
-        url: row.url,
-        proxy: this.getAxiosProxy(),
-        responseType: 'stream',
-        onDownloadProgress: (progress) => {
-          if (progress.total) {
-            row.progress = Math.round((progress.loaded * 100.0) / progress.total)
+      // Try install if zip already exists
+      if (existsSync(row.zip)) {
+        try {
+          await this._installSoftHandle(row)
+          return finish(true)
+        } catch {
+          await cleanup()
+          return finish(false)
+        }
+      }
+
+      // Download and install
+      try {
+        await downloadFile(row.url, row.zip, (progress) => {
+          if (progress && typeof progress.percent === 'number') {
+            row.progress = Math.round(progress.percent)
             on(row)
           }
-        }
-      })
-        .then((response) => {
-          const stream = createWriteStream(row.zip)
-          response.data.pipe(stream)
-          stream.on('error', async (err: any) => {
-            console.log('stream error: ', err)
-            await fail()
-            end()
-          })
-          stream.on('finish', async () => {
-            row.downState = 'success'
-            try {
-              if (existsSync(row.zip)) {
-                await this._installSoftHandle(row)
-              }
-              refresh()
-            } catch {
-              refresh()
-            }
-            on(row)
-            end()
-          })
         })
-        .catch(async (err) => {
-          console.log('down error: ', err)
-          await fail()
-          end()
-        })
+        try {
+          if (existsSync(row.zip)) {
+            await this._installSoftHandle(row)
+            return finish(true)
+          }
+        } catch {}
+        finish(false)
+      } catch (err) {
+        console.log('down error: ', err)
+        await cleanup()
+        finish(false)
+      }
     })
   }
 }

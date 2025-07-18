@@ -1,5 +1,5 @@
 import { join, dirname } from 'path'
-import { createWriteStream, existsSync, statSync, unlinkSync } from 'fs'
+import { existsSync, statSync, unlinkSync } from 'fs'
 import { Base } from './Base'
 import { I18nT } from '@lang/index'
 import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
@@ -7,12 +7,11 @@ import { execPromise } from '@shared/child-process'
 import { getAllFileAsync } from '../util/Dir'
 import { writeFile, readFile, copyFile, mkdirp, remove } from '@shared/fs-extra'
 import { serviceStartExec } from '../util/ServiceStart'
-import { AppLog } from '../Fn'
+import { AppLog, downloadFile } from '../Fn'
 import { versionLocalFetch, versionMacportsFetch, versionBinVersion, versionFilterSame, versionFixed, versionSort } from '../util/Version'
 import { brewSearch, brewInfoJson, portSearch } from '../util/Brew'
 import { ForkPromise } from '@shared/ForkPromise'
 import compressing from 'compressing'
-import axios from 'axios'
 import TaskQueue from '../TaskQueue'
 import { ProcessPidsByPid } from '@shared/Process'
 import Helper from '../Helper'
@@ -382,103 +381,49 @@ xdebug.output_dir = "${output_dir}"
       let p0 = 0
       let p1 = 0
       const downFPM = (): Promise<boolean> => {
-        return new Promise((resolve) => {
-          axios({
-            method: 'get',
-            url: row.url,
-            proxy,
-            responseType: 'stream',
-            onDownloadProgress: (progress) => {
-              if (progress.total) {
-                p0 = (progress.loaded * 100.0) / progress.total
-                row.progress = Math.round(((p0 + p1) / 200.0) * 100.0)
-                on(row)
+        return downloadFile(row.url, row.zip)
+          .then(async () => {
+            try {
+              if (existsSync(row.zip)) {
+                const sbin = join(row.appDir, 'sbin')
+                await mkdirp(sbin)
+                await execPromise(`tar -xzf ${row.zip} -C ${sbin}`)
               }
-            }
+            } catch {}
+            return true
           })
-            .then(function (response) {
-              const stream = createWriteStream(row.zip)
-              response.data.pipe(stream)
-              stream.on('error', (err: any) => {
-                console.log('stream error: ', err)
-                try {
-                  if (existsSync(row.zip)) {
-                    unlinkSync(row.zip)
-                  }
-                } catch {}
-                resolve(false)
-              })
-              stream.on('finish', async () => {
-                try {
-                  if (existsSync(row.zip)) {
-                    const sbin = join(row.appDir, 'sbin')
-                    await mkdirp(sbin)
-                    await execPromise(`tar -xzf ${row.zip} -C ${sbin}`)
-                  }
-                } catch {}
-                resolve(true)
-              })
-            })
-            .catch((err) => {
-              console.log('down error: ', err)
-              try {
-                if (existsSync(row.zip)) {
-                  unlinkSync(row.zip)
-                }
-              } catch {}
-              resolve(false)
-            })
-        })
+          .catch((err) => {
+            console.log('down error: ', err)
+            try {
+              if (existsSync(row.zip)) {
+                unlinkSync(row.zip)
+              }
+            } catch {}
+            return false
+          })
       }
       const downCLI = (): Promise<boolean> => {
-        return new Promise((resolve) => {
-          const url = row.url.replace('-fpm-', '-cli-')
-          axios({
-            method: 'get',
-            url,
-            proxy,
-            responseType: 'stream',
-            onDownloadProgress: (progress) => {
-              if (progress.total) {
-                p1 = (progress.loaded * 100.0) / progress.total
-                row.progress = Math.round(((p0 + p1) / 200.0) * 100.0)
-                on(row)
+        const url = row.url.replace('-fpm-', '-cli-')
+        return downloadFile(url, cliZIP)
+          .then(async () => {
+            try {
+              if (existsSync(cliZIP)) {
+                const bin = join(row.appDir, 'bin')
+                await mkdirp(bin)
+                await execPromise(`tar -xzf ${cliZIP} -C ${bin}`)
               }
-            }
+            } catch {}
+            return true
           })
-            .then(function (response) {
-              const stream = createWriteStream(cliZIP)
-              response.data.pipe(stream)
-              stream.on('error', (err: any) => {
-                console.log('stream error: ', err)
-                try {
-                  if (existsSync(cliZIP)) {
-                    unlinkSync(cliZIP)
-                  }
-                } catch {}
-                resolve(false)
-              })
-              stream.on('finish', async () => {
-                try {
-                  if (existsSync(cliZIP)) {
-                    const bin = join(row.appDir, 'bin')
-                    await mkdirp(bin)
-                    await execPromise(`tar -xzf ${cliZIP} -C ${bin}`)
-                  }
-                } catch {}
-                resolve(true)
-              })
-            })
-            .catch((err) => {
-              console.log('down error: ', err)
-              try {
-                if (existsSync(cliZIP)) {
-                  unlinkSync(cliZIP)
-                }
-              } catch {}
-              resolve(false)
-            })
-        })
+          .catch((err) => {
+            console.log('down error: ', err)
+            try {
+              if (existsSync(cliZIP)) {
+                unlinkSync(cliZIP)
+              }
+            } catch {}
+            return false
+          })
       }
 
       Promise.all([downFPM(), downCLI()]).then(async ([res0, res1]: [boolean, boolean]) => {

@@ -1,5 +1,5 @@
 import { join, dirname } from 'node:path'
-import { existsSync, createWriteStream } from 'node:fs'
+import { existsSync } from 'node:fs'
 import { Base } from './Base'
 import { I18nT } from '@lang/index'
 import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
@@ -10,10 +10,9 @@ import { moveChildDirToParent } from '../util/Dir'
 import { zipUnpack } from '../util/Zip'
 import { serviceStartExec } from '../util/ServiceStart'
 import { serviceStartExecCMD } from '../util/ServiceStart.win'
-import { AppLog, waitTime } from '../Fn'
+import { AppLog, downloadFile, waitTime } from '../Fn'
 import { ForkPromise } from '@shared/ForkPromise'
 import TaskQueue from '../TaskQueue'
-import axios from 'axios'
 import { isMacOS, isWindows, pathFixedToUnix } from '@shared/utils'
 import { spawnPromise } from '@shared/child-process'
 
@@ -60,24 +59,12 @@ class Manager extends Base {
       }
 
       try {
-        const response = await axios({
-          method: 'get',
-          url: url,
-          responseType: 'stream'
-        })
-
-        const writer = createWriteStream(zip)
-        response.data.pipe(writer)
-        writer.on('finish', async () => {
-          const installRes = await doInstall()
-          if (installRes) {
-            return resolve(true)
-          }
-          return resolve(false)
-        })
-        writer.on('error', () => {
-          resolve(false)
-        })
+        await downloadFile(url, zip)
+        const installRes = await doInstall()
+        if (installRes) {
+          return resolve(true)
+        }
+        return resolve(false)
       } catch {
         resolve(false)
       }
