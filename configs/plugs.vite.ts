@@ -1,13 +1,10 @@
 import type { Plugin } from 'vite'
-import { resolve as pathResolve, join } from 'path'
-import _fs from 'fs-extra'
+import path from 'path'
+import fs from 'fs-extra'
 import { fileURLToPath } from 'node:url'
 import { dirname } from 'node:path'
-import { isMacOS, isWindows } from '../src/shared/utils'
-import { moveChildDirToParent } from '../src/fork/util/Dir'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
-const { copy, remove } = _fs
 
 let hasCopyed = false
 
@@ -19,36 +16,32 @@ export const ViteStaticCopyPlugin: () => Plugin = () => {
         return
       }
 
-      console.log('Copying static files...')
-      const base = pathResolve(__dirname, '../dist/electron/static/')
-      await copy(pathResolve(__dirname, '../static/'), base)
+      const fromDir = path.resolve(__dirname, '../static/')
+      const targetDir = path.resolve(__dirname, '../dist/electron/static/')
+      fs.mkdirSync(targetDir, { recursive: true })
 
-      if (isMacOS()) {
-        await remove(join(base, 'sh/Windows'))
-        await remove(join(base, 'sh/Linux'))
+      switch (process.platform) {
 
-        await remove(join(base, 'tmpl/Windows'))
-        await remove(join(base, 'tmpl/Linux'))
+        case 'darwin':
+          fs.cpSync(path.join(fromDir, 'sh/MacOs'), path.join(targetDir, 'sh'), { recursive: true })
+          fs.cpSync(path.join(fromDir, 'tmpl/MacOs'), path.join(targetDir, 'tmpl'), { recursive: true })
+          fs.cpSync(path.join(fromDir, 'zip/MacOs'), path.join(targetDir, 'zip'), { recursive: true })
+          break
 
-        await remove(join(base, 'zip/Windows'))
-        await remove(join(base, 'zip/Linux'))
+        case 'win32':
+          fs.cpSync(path.join(fromDir, 'sh/Windows'), path.join(targetDir, 'sh'), { recursive: true })
+          fs.cpSync(path.join(fromDir, 'tmpl/Windows'), path.join(targetDir, 'tmpl'), { recursive: true })
+          fs.cpSync(path.join(fromDir, 'zip/Windows'), path.join(targetDir, 'zip'), { recursive: true })
+          break
 
-        await moveChildDirToParent(join(base, 'sh'))
-        await moveChildDirToParent(join(base, 'tmpl'))
-        await moveChildDirToParent(join(base, 'zip'))
-      } else if (isWindows()) {
-        await remove(join(base, 'sh/macOS'))
-        await remove(join(base, 'sh/Linux'))
+        case 'linux':
+          fs.cpSync(path.join(fromDir, 'sh/Linux'), path.join(targetDir, 'sh'), { recursive: true })
+          fs.cpSync(path.join(fromDir, 'tmpl/Linux'), path.join(targetDir, 'tmpl'), { recursive: true })
+          fs.cpSync(path.join(fromDir, 'zip/Linux'), path.join(targetDir, 'zip'), { recursive: true })
+          break
 
-        await remove(join(base, 'tmpl/macOS'))
-        await remove(join(base, 'tmpl/Linux'))
-
-        await remove(join(base, 'zip/macOS'))
-        await remove(join(base, 'zip/Linux'))
-
-        await moveChildDirToParent(join(base, 'sh'))
-        await moveChildDirToParent(join(base, 'tmpl'))
-        await moveChildDirToParent(join(base, 'zip'))
+        default:
+          throw new Error(`Unsupported platform: ${process.platform}`)
       }
 
       hasCopyed = true
