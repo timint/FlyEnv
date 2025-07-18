@@ -8,7 +8,7 @@ import { fileURLToPath } from 'node:url'
 import { dirname } from 'node:path'
 import { createRequire } from 'node:module'
 import { ViteStaticCopyPlugin } from './plugs.vite'
-const require = createRequire(import.meta.url)
+import monacoEditorPlugin from 'vite-plugin-monaco-editor'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
@@ -16,12 +16,10 @@ const renderPath = path.resolve(__dirname, '../src/render/')
 const sharePath = path.resolve(__dirname, '../src/shared/')
 const langPath = path.resolve(__dirname, '../src/lang/')
 
-const monacoEditorPlugin = require('vite-plugin-monaco-editor').default
-
 const config: UserConfig = {
   base: './',
   plugins: [
-    monacoEditorPlugin({}),
+    monacoEditorPlugin,
     wasm(),
     vue({
       include: [/\.vue$/, /\.md$/] // <-- allows Vue to compile Markdown files
