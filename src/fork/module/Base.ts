@@ -7,13 +7,12 @@ import { readFile, writeFile, remove, mkdirp } from '@shared/fs-extra'
 import { zipUnpack } from '../util/Zip'
 import { AppLog, downloadFile, waitTime } from '../Fn'
 import { ForkPromise } from '@shared/ForkPromise'
-import axios from 'axios'
-import * as http from 'http'
-import * as https from 'https'
 import { type PItem, ProcessSearch } from '@shared/Process'
 import Helper from '../Helper'
 import { isMacOS, isWindows } from '@shared/utils'
 import { ProcessPidList } from '@shared/Process.win'
+import { apiRequest } from '../util/WebApi'
+
 
 export class Base {
   type: string
@@ -308,17 +307,8 @@ export class Base {
           arch: 'x86'
         }
       }
-      const res = await axios({
-        url: 'https://api.one-env.com/api/version/fetch',
-        method: 'post',
-        data,
-        timeout: 30000,
-        withCredentials: false,
-        httpAgent: new http.Agent({ keepAlive: false }),
-        httpsAgent: new https.Agent({ keepAlive: false }),
-        proxy: this.getAxiosProxy()
-      })
-      list = res?.data?.data ?? []
+      const res = await apiRequest('POST', '/version/fetch', data)
+      list = res ?? []
     } catch (e) {
       console.log('_fetchOnlineVersion: err', e)
     }

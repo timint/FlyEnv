@@ -271,21 +271,12 @@ class Ollama extends Base {
     return new ForkPromise(async (resolve) => {
       let list: any = []
       try {
-        const res = await axios({
-          url: 'https://api.one-env.com/api/version/fetch',
-          method: 'post',
-          data: {
-            app: 'ollama_models',
-            os: 'mac',
-            arch: global.Server.Arch === 'x86_64' ? 'x86' : 'arm'
-          },
-          timeout: 30000,
-          withCredentials: false,
-          httpAgent: new http.Agent({ keepAlive: false }),
-          httpsAgent: new https.Agent({ keepAlive: false }),
-          proxy: this.getAxiosProxy()
+        const res = await apiRequest('POST', '/version/fetch', {
+          app: 'ollama_models',
+          os: 'mac',
+          arch: global.Server.Arch === 'x86_64' ? 'x86' : 'arm'
         })
-        list = res?.data?.data ?? []
+        list = res ?? []
       } catch {}
       return resolve(list)
     })

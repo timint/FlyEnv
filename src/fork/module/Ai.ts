@@ -1,8 +1,6 @@
 import { Base } from './Base'
 import { ForkPromise } from '@shared/ForkPromise'
-import axios from 'axios'
-import http from 'http'
-import https from 'https'
+import { apiRequest } from '../util/WebApi'
 
 class Ai extends Base {
   constructor() {
@@ -14,16 +12,8 @@ class Ai extends Base {
     return new ForkPromise(async (resolve) => {
       let list: any = []
       try {
-        const res = await axios({
-          url: 'https://api.one-env.com/api/ai/lang_list_all',
-          method: 'post',
-          timeout: 30000,
-          withCredentials: false,
-          httpAgent: new http.Agent({ keepAlive: false }),
-          httpsAgent: new https.Agent({ keepAlive: false }),
-          proxy: this.getAxiosProxy()
-        })
-        list = res?.data?.data?.[0] ?? []
+        const res = await apiRequest('POST', '/ai/lang_list_all')
+        list = res?.[0] ?? []
       } catch (e) {
         console.log('allPrompt: err', e)
       }
@@ -35,16 +25,8 @@ class Ai extends Base {
     return new ForkPromise(async (resolve) => {
       let list: any = []
       try {
-        const res = await axios({
-          url: 'https://api.one-env.com/api/ai/prompt_list_all',
-          method: 'post',
-          timeout: 30000,
-          withCredentials: false,
-          httpAgent: new http.Agent({ keepAlive: false }),
-          httpsAgent: new https.Agent({ keepAlive: false }),
-          proxy: this.getAxiosProxy()
-        })
-        list = res?.data?.data?.[0] ?? []
+        const res = await apiRequest('POST', '/ai/prompt_list_all')
+        list = res?.[0] ?? []
       } catch (e) {
         console.log('allPrompt: err', e)
       }

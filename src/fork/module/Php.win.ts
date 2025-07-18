@@ -11,8 +11,8 @@ import { serviceStartExec as serviceStartExecWin } from '../util/ServiceStart.wi
 import { AppLog, downloadFile } from '../Fn'
 import { ForkPromise } from '@shared/ForkPromise'
 import TaskQueue from '../TaskQueue'
-import axios from 'axios'
 import { ProcessListSearch } from '@shared/Process.win'
+import { apiRequest } from '../util/WebApi'
 
 class Php extends Base {
   constructor() {
@@ -499,12 +499,8 @@ xdebug.output_dir = "${output_dir}"
     return new ForkPromise(async (resolve) => {
       let list: any = []
       try {
-        const res = await axios({
-          url: 'https://api.macphpstudy.com/api/version/php_extension',
-          method: 'post',
-          proxy: this.getAxiosProxy()
-        })
-        list = res?.data?.data ?? []
+        const res = await apiRequest('POST', '/version/php_extension')
+        list = res ?? []
       } catch {}
       resolve(list)
     })
