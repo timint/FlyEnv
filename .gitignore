@@ -27,7 +27,6 @@ latest-mac.yml
 /test.js
 /static/brew
 yarn-error.log
-/test
 .vscode/settings.json
 src/main/lang/index.ts
 /data
