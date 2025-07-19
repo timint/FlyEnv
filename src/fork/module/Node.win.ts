@@ -14,7 +14,7 @@ import { httpRequest } from '../util/Http'
 import type { SoftInstalled } from '@shared/app'
 import TaskQueue from '../TaskQueue'
 import ncu from 'npm-check-updates'
-import { powershellCmd } from '../util/Powershell'
+import powershell from '../util/Powershell'
 
 class Manager extends Base {
   constructor() {
@@ -36,7 +36,7 @@ class Manager extends Base {
       }
 
       try {
-        const res = await powershellCmd('$env:NVM_HOME')
+        const res = await powershell.execCommand('$env:NVM_HOME')
         NVM_HOME = res.trim()
       } catch {}
       if (NVM_HOME && existsSync(NVM_HOME) && existsSync(join(NVM_HOME, 'nvm.exe'))) {
@@ -63,7 +63,7 @@ class Manager extends Base {
       }
 
       try {
-        const res = await powershellCmd('$env:FNM_HOME')
+        const res = await powershell.execCommand('$env:FNM_HOME')
         FNM_HOME = res.trim()
       } catch {}
       if (FNM_HOME && existsSync(FNM_HOME) && existsSync(join(FNM_HOME, 'fnm.exe'))) {

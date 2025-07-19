@@ -12,7 +12,7 @@ import { uuid, waitTime } from '../Fn'
 import TaskQueue from '../TaskQueue'
 import { appDebugLog, isMacOS, isWindows } from '@shared/utils'
 import { ProcessPidList } from '@shared/Process.win'
-import { powershellExecWithUnblock } from '../util/Powershell'
+import powershell from '../util/Powershell'
 
 class Python extends Base {
   constructor() {
@@ -122,7 +122,7 @@ class Python extends Base {
 
       process.chdir(global.Server.Cache!)
       try {
-        await powershellExecWithUnblock(sh)
+        await powershell.execFile(sh, [], { unblockFile: true })
       } catch (e: any) {
         console.log('[python-install][error]: ', e)
         await appDebugLog('[python][python-install][error]', e.toString())
@@ -156,7 +156,7 @@ class Python extends Base {
         await writeFile(sh, content)
         process.chdir(global.Server.Cache!)
         try {
-          await powershellExecWithUnblock(sh)
+          await powershell.execFile(sh, [], { unblockFile: true })
         } catch (e: any) {
           await appDebugLog('[python][pip-install][error]', e.toString())
         }

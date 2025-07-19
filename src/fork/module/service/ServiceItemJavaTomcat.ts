@@ -13,7 +13,7 @@ import { ProcessPidsByPid } from '@shared/Process'
 import { isMacOS, isWindows } from '@shared/utils'
 import { ProcessPidListByPid } from '@shared/Process.win'
 import { EOL } from 'os'
-import { powershellCmd } from '../../util/Powershell'
+import powershell from '../../util/Powershell'
 
 export const makeTomcatServerXML = (cnfDir: string, serverContent: string, hostAll: AppHost[]) => {
   const parser = new XMLParser({
@@ -404,7 +404,7 @@ export class ServiceItemJavaTomcat extends ServiceItem {
           const res = await execPromiseWithEnv(`zsh "${sh}"`, { env })
           console.log('start res: ', res)
         } else if (isWindows()) {
-          const pidResult = await powershellCmd(
+          const pidResult = await powershell.execCommand(
             `(Start-Process -FilePath ./service-${this.id}.cmd -PassThru -WindowStyle Hidden).Id`
           )
           const pid = pidResult.trim()

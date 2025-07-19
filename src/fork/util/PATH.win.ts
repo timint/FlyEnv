@@ -3,7 +3,7 @@ import { existsSync } from 'fs'
 import { copyFile, readFile, remove, writeFile } from '@shared/fs-extra'
 import { ForkPromise } from '@shared/ForkPromise'
 import { appDebugLog } from '@shared/utils'
-import { powershellExecWithUnblock } from './Powershell'
+import powershell from './Powershell'
 
 export const fetchRawPATH = (): ForkPromise<string[]> => {
   return new ForkPromise(async (resolve, reject) => {
@@ -17,7 +17,7 @@ export const fetchRawPATH = (): ForkPromise<string[]> => {
     process.chdir(global.Server.Cache!)
     let res: any
     try {
-      res = await powershellExecWithUnblock(copySh)
+      res = await powershell.execFile(copySh, [], { unblockFile: true })
     } catch (e) {
       console.log('fetchRawPATH error: ', e)
       appDebugLog('[_fetchRawPATH][error]', `${e}`).catch()
@@ -93,7 +93,7 @@ export const writePath = async (path: string[], other: string = '') => {
   await writeFile(copySh, content, 'utf-8')
   process.chdir(global.Server.Cache!)
   try {
-    await powershellExecWithUnblock(copySh)
+    await powershell.execFile(copySh, [], { unblockFile: true })
   } catch (e) {
     console.log('writePath error: ', e)
     appDebugLog('[writePath][error]', `${e}`)

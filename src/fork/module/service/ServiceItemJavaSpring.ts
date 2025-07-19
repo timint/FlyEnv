@@ -10,7 +10,7 @@ import { ProcessPidsByPid } from '@shared/Process'
 import { isMacOS, isWindows } from '@shared/utils'
 import { EOL } from 'os'
 import { ProcessPidListByPid } from '@shared/Process.win'
-import { powershellCmd } from '../../util/Powershell'
+import powershell from '../../util/Powershell'
 
 export class ServiceItemJavaSpring extends ServiceItem {
   start(item: AppHost) {
@@ -93,7 +93,7 @@ export class ServiceItemJavaSpring extends ServiceItem {
         if (isMacOS()) {
           await execPromiseWithEnv(`zsh "${sh}"`, opt)
         } else if (isWindows()) {
-          const pidResult = await powershellCmd(
+          const pidResult = await powershell.execCommand(
             `(Start-Process -FilePath ./service-${this.id}.cmd -PassThru -WindowStyle Hidden).Id`
           )
           const pid = pidResult.trim()

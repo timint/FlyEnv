@@ -7,7 +7,7 @@ import chardet from 'chardet'
 import iconv from 'iconv-lite'
 import { ServiceStartParams } from './ServiceStart'
 import type { ModuleExecItem } from '@shared/app'
-import { powershellExecFile } from './Powershell'
+import powershell from './Powershell'
 
 export async function readFileAsUTF8(filePath: string): Promise<string> {
   try {
@@ -95,7 +95,7 @@ export async function serviceStartExec(
   process.chdir(baseDir)
   let res: any
   try {
-    res = await powershellExecFile(psPath, [], { cwd: baseDir })
+    res = await powershell.execFile(psPath, [], { cwd: baseDir })
   } catch (e) {
     on({
       'APP-On-Log': AppLog(
@@ -333,7 +333,7 @@ export async function customServiceStartExec(
   let res: any
   let error: any
   try {
-    res = await powershellExecFile(psPath, [], { cwd: baseDir })
+    result = await powershell.execFile(psPath, [], { cwd: baseDir })
   } catch (e) {
     error = e
     if (!isService || !version.pidPath) {
