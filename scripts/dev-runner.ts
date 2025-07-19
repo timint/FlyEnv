@@ -1,6 +1,5 @@
-import { createServer } from 'vite'
+import { createServer, build } from 'vite'
 import { spawn, ChildProcess } from 'child_process'
-import { build } from 'esbuild'
 import _fs from 'fs-extra'
 import _path from 'path'
 import _md5 from 'md5'
@@ -50,7 +49,7 @@ function buildMainProcess() {
     let promise: Promise<any> | undefined
     if (isMacOS() || isLinux()) {
       console.log('isMacOS || isLinux !!!')
-      const config = (await import('../configs/esbuild.config')).default
+      const config = viteConfig.vite.mac
       promise = Promise.all([
         build(config.dev),
         build(config.devFork),
@@ -59,7 +58,7 @@ function buildMainProcess() {
       ])
     } else if (isWindows()) {
       console.log('isWindows !!!')
-      const config = (await import('../configs/esbuild.config.win')).default
+      const config = viteConfig.vite.win
       promise = Promise.all([
         build(config.dev),
         build(config.devFork),
@@ -208,6 +207,12 @@ _fs.watch(
     if (filename) {
       if (fsWait) return
       const from = _path.join(staticPath, filename)
+
+      // Avoid error if the path doesn't exist or is not a file
+      if (!_fs.existsSync(from) || !_fs.statSync(from).isFile()) {
+        return
+      }
+
       const currentMd5 = _md5(_fs.readFileSync(from)) as string
       if (currentMd5 == preveMd5) {
         return
