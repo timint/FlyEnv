@@ -9,7 +9,6 @@
   "copyright": "Copyright © Pengfei Xu",
   "scripts": {
     "clean:dev": "npx rimraf dist",
-    "clean": "npx rimraf node_modules/node-pty/build",
     "fix-flyenv-helper": "sudo xattr -dr \"com.apple.quarantine\" ./build/bin/arm/flyenv-helper && sudo xattr -dr \"com.apple.quarantine\" ./build/bin/x86/flyenv-helper",
     "build-dev-runner": "npx esbuild --platform=node --bundle --packages=external --inject:scripts/shim-dynamic-require.mjs --format=esm scripts/dev-runner.ts --outfile=electron/dev-runner.mjs",
     "dev": "yarn run clean:dev && yarn run build-dev-runner && cross-env NODE_ENV=development node electron/dev-runner.mjs",
@@ -23,6 +22,7 @@
     "7zip-min-electron": "^1.4.4",
     "@ayonli/jsext": "^1.7.4",
     "@iarna/toml": "^2.2.5",
+    "@lydell/node-pty": "^1.1.0",
     "@mdit-vue/plugin-component": "^2.1.4",
     "@mdit-vue/plugin-frontmatter": "^2.1.4",
     "@mdit-vue/plugin-headers": "^2.1.4",
@@ -63,7 +63,6 @@
     "neoip": "^3.0.1",
     "node-forge": "^1.3.1",
     "node-machine-id": "^1.1.12",
-    "node-pty": "^1.1.0-beta34",
     "node-rsa": "^1.1.1",
     "normalize.css": "^8.0.1",
     "npm-check-updates": "^18.0.1",
