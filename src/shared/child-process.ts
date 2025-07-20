@@ -7,10 +7,12 @@ import { ForkPromise } from '@shared/ForkPromise'
 import { join } from 'path'
 import { remove, writeFile, existsSync } from './fs-extra'
 
-export const execPromise = promisify(function(...args){
-  console.info('Executing command:', args[0])
-  return exec(...args)
-})
+const promisifedExec = promisify(exec)
+
+export const execPromise = async (command: string, options?: any) => {
+  console.info('Executing command:', command)
+  return promisifedExec(command, options)
+}
 
 type ForkPromiseResType = ForkPromise<{
   stdout: string
