@@ -9,7 +9,7 @@ import { brewInfoJson, portSearch } from '../util/Brew'
 import { versionBinVersion, versionFilterSame, versionFixed, versionLocalFetch, versionSort } from '../util/Version'
 import { zipUnpack } from '../util/Zip'
 import { serviceStartExec } from '../util/ServiceStart'
-import { serviceStartExec as serviceStartExecWin } from '../util/ServiceStart.win'
+import { serviceStartExec as serviceStartExec } from '../util/ServiceStart'
 import { AppLog } from '../Fn'
 import { ForkPromise } from '@shared/ForkPromise'
 import TaskQueue from '../TaskQueue'
@@ -59,7 +59,7 @@ class Memcached extends Base {
         const execArgs = `-d -P \`"${this.pidPath}\`"`
 
         try {
-          const res = await serviceStartExecWin({
+          const res = await serviceStartExec({
             version,
             pidPath: this.pidPath,
             baseDir,

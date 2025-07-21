@@ -9,7 +9,6 @@ import { readFile, writeFile, mkdirp, chmod, remove } from '@shared/fs-extra'
 import { moveChildDirToParent } from '../util/Dir'
 import { zipUnpack } from '../util/Zip'
 import { serviceStartExec } from '../util/ServiceStart'
-import { serviceStartExecCMD } from '../util/ServiceStart.win'
 import { AppLog, downloadFile, waitTime } from '../Fn'
 import { ForkPromise } from '@shared/ForkPromise'
 import TaskQueue from '../TaskQueue'
@@ -167,7 +166,7 @@ class Manager extends Base {
         const execArgs = `--config "${m}" --logpath "${logPath}" --pidfilepath "${this.pidPath}"`
 
         try {
-          const res = await serviceStartExecCMD({
+          const res = await serviceStartExec({
             version,
             pidPath: this.pidPath,
             baseDir,

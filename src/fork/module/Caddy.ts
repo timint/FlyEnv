@@ -5,7 +5,6 @@ import type { AppHost, OnlineVersionItem, SoftInstalled } from '@shared/app'
 import { AppLog, hostAlias } from '../Fn'
 import { readFile, writeFile, mkdirp } from '@shared/fs-extra'
 import { serviceStartExec } from '../util/ServiceStart'
-import { serviceStartExec as serviceStartExecCMD } from '../util/ServiceStart.win'
 import { brewInfoJson, portSearch } from '../util/Brew'
 import { versionBinVersion, versionFilterSame, versionFixed, versionLocalFetch, versionSort } from '../util/Version'
 import { ForkPromise } from '@shared/ForkPromise'
@@ -149,7 +148,7 @@ class Caddy extends Base {
       if (isWindows()) {
         const execArgs = `start --config "${iniFile}" --pidfile "${this.pidPath}" --watch`
         try {
-          const res = await serviceStartExecCMD({
+          const res = await serviceStartExec({
             version,
             pidPath: this.pidPath,
             baseDir,

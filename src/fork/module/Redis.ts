@@ -7,7 +7,6 @@ import { AppLog } from '../Fn'
 import { execPromise } from '@shared/child-process'
 import { readFile, writeFile, mkdirp, chmod, copyFile } from '@shared/fs-extra'
 import { serviceStartExec } from '../util/ServiceStart'
-import { serviceStartExecCMD } from '../util/ServiceStart.win'
 import { versionBinVersion, versionFilterSame, versionFixed, versionLocalFetch, versionSort } from '../util/Version'
 import { brewInfoJson, brewSearch, portSearch } from '../util/Brew'
 import { ForkPromise } from '@shared/ForkPromise'
@@ -152,7 +151,7 @@ class Redis extends Base {
         const execArgs = `"${appConfName}"`
 
         try {
-          const res = await serviceStartExecCMD({
+          const res = await serviceStartExec({
             version,
             pidPath: this.pidPath,
             baseDir,

@@ -10,7 +10,6 @@ import { brewInfoJson, brewSearch } from '../util/Brew'
 import { versionBinVersion, versionFilterSame, versionFixed, versionLocalFetch, versionSort } from '../util/Version'
 import { zipUnpack } from '../util/Zip'
 import { serviceStartExec } from '../util/ServiceStart'
-import { serviceStartExecCMD } from '../util/ServiceStart.win'
 import { AppLog, waitTime } from '../Fn'
 import TaskQueue from '../TaskQueue'
 import { makeGlobalTomcatServerXML } from './service/ServiceItemJavaTomcat'
@@ -164,7 +163,7 @@ export CATALINA_PID="${this.pidPath}"`
       } else if (isWindows()) {
         const execEnv = `set "CATALINA_BASE=${baseDir}"`
         try {
-          await serviceStartExecCMD({
+          await serviceStartExec({
             version,
             pidPath: this.pidPath,
             baseDir: tomcatDir,

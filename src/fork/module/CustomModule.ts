@@ -1,6 +1,6 @@
 import { basename, join } from 'path'
 import { customServiceStartExec } from '../util/ServiceStart'
-import { customServiceStartExec as customServiceStartExecWin } from '../util/ServiceStart.win'
+import { customServiceStartExec as customServiceStartExec } from '../util/ServiceStart'
 import { execPromise } from '@shared/child-process'
 import { chmod, mkdirp, remove, writeFile } from '@shared/fs-extra'
 import { uuid, waitPidFile, waitTime } from '../Fn'
@@ -139,7 +139,7 @@ class CustomModule {
           const res = await customServiceStartExec(version, isService)
           resolve(res)
         } else if (isWindows()) {
-          const res = await customServiceStartExecWin(version, isService)
+          const res = await customServiceStartExec(version, isService)
           resolve(res)
         }
       } catch (e: any) {

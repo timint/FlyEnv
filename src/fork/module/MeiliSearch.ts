@@ -6,7 +6,7 @@ import { AppLog, waitTime } from '../Fn'
 import { spawnPromise, execPromise } from '@shared/child-process'
 import { mkdirp, readFile, remove, writeFile, copyFile, chmod } from '@shared/fs-extra'
 import { serviceStartExec } from '../util/ServiceStart'
-import { serviceStartExec as serviceStartExecWin } from '../util/ServiceStart.win'
+import { serviceStartExec as serviceStartExec } from '../util/ServiceStart'
 import { versionBinVersion, versionFilterSame, versionFixed, versionLocalFetch, versionSort } from '../util/Version'
 import { brewInfoJson } from '../util/Brew'
 import { ForkPromise } from '@shared/ForkPromise'
@@ -91,7 +91,7 @@ class MeiliSearch extends Base {
         const execEnv = ``
 
         try {
-          const res = await serviceStartExecWin({
+          const res = await serviceStartExec({
             version,
             pidPath: this.pidPath,
             baseDir,

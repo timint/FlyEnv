@@ -7,7 +7,7 @@ import { AppLog } from '../Fn'
 import { spawnPromise } from '@shared/child-process'
 import { chmod, copyFile, mkdirp, readFile, writeFile } from '@shared/fs-extra'
 import { serviceStartExec } from '../util/ServiceStart'
-import { serviceStartExec as serviceStartExecWin } from '../util/ServiceStart.win'
+import { serviceStartExec as serviceStartExec } from '../util/ServiceStart'
 import { versionBinVersion, versionFilterSame, versionLocalFetch, versionSort } from '../util/Version'
 import { brewInfoJson } from '../util/Brew'
 import TaskQueue from '../TaskQueue'
@@ -194,7 +194,7 @@ class Minio extends Base {
         }
 
         try {
-          const res = await serviceStartExecWin({
+          const res = await serviceStartExec({
             version,
             pidPath: this.pidPath,
             baseDir,

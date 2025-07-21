@@ -9,7 +9,6 @@ import { brewInfoJson, portSearch } from '../util/Brew'
 import { versionBinVersion, versionFilterSame, versionFixed, versionLocalFetch, versionSort } from '../util/Version'
 import { zipUnpack } from '../util/Zip'
 import { serviceStartExec } from '../util/ServiceStart'
-import { serviceStartExecCMD } from '../util/ServiceStart.win'
 import { AppLog, waitTime } from '../Fn'
 import { ForkPromise } from '@shared/ForkPromise'
 import { I18nT } from '@lang/index'
@@ -70,7 +69,7 @@ set "ES_PATH_CONF=${join(version.path, 'config')}"
         const execArgs = `-d -p "${this.pidPath}"`
 
         try {
-          const res = await serviceStartExecCMD({
+          const res = await serviceStartExec({
             version,
             pidPath: this.pidPath,
             baseDir,

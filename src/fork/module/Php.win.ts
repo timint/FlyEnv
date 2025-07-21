@@ -7,7 +7,7 @@ import { execPromise } from '@shared/child-process'
 import { copyFile, mkdirp, readdir, readFile, remove, writeFile } from '@shared/fs-extra'
 import { versionBinVersion, versionFilterSame, versionFixed, versionLocalFetch, versionSort } from '../util/Version'
 import { zipUnpack } from '../util/Zip'
-import { serviceStartExec as serviceStartExecWin } from '../util/ServiceStart.win'
+import { serviceStartExec as serviceStartExec } from '../util/ServiceStart'
 import { AppLog, downloadFile } from '../Fn'
 import { ForkPromise } from '@shared/ForkPromise'
 import TaskQueue from '../TaskQueue'
@@ -242,7 +242,7 @@ class Php extends Base {
       const execArgs = `\`"php-cgi.exe -c php.phpwebstudy.90${version.num}.ini\`" 90${version.num} 4`
 
       try {
-        const res = await serviceStartExecWin({
+        const res = await serviceStartExec({
           version,
           pidPath,
           baseDir: global.Server.PhpDir!,

@@ -6,7 +6,7 @@ import { AppLog, machineId } from '../Fn'
 import { execPromise } from '@shared/child-process'
 import { readFile, writeFile, mkdirp } from '@shared/fs-extra'
 import { serviceStartExec } from '../util/ServiceStart'
-import { serviceStartExec as serviceStartExecWin } from '../util/ServiceStart.win'
+import { serviceStartExec as serviceStartExec } from '../util/ServiceStart'
 import { versionBinVersion, versionFilterSame, versionFixed, versionLocalFetch, versionSort } from '../util/Version'
 import { brewInfoJson } from '../util/Brew'
 import { ForkPromise } from '@shared/ForkPromise'
@@ -126,7 +126,7 @@ class Ollama extends Base {
         envs.push('')
         const execEnv = envs.join(EOL)
         try {
-          const res = await serviceStartExecWin({
+          const res = await serviceStartExec({
             version,
             pidPath: this.pidPath,
             baseDir,

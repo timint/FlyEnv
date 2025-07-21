@@ -1,13 +1,14 @@
-import type { ModuleExecItem, SoftInstalled } from '@shared/app'
+import type { ModuleExecItem as customExecItem, SoftInstalled } from '@shared/app'
 import { dirname, join } from 'path'
 import { I18nT } from '@lang/index'
 import Helper from '../Helper'
-import { userInfo } from 'os'
-import { spawnPromiseWithEnv, execPromiseSudo } from '@shared/child-process'
+import { spawn } from 'child_process'
+import { execPromiseSudo } from '@shared/child-process'
 import { existsSync, remove, mkdirp, readFile, writeFile } from '@shared/fs-extra'
 import { AppLog, waitPidFile } from '../Fn'
+import { isWindows } from '@shared/utils'
 
-export type ServiceStartParams = {
+export type execItem = {
   version: SoftInstalled
   pidPath?: string
   baseDir: string
@@ -21,81 +22,93 @@ export type ServiceStartParams = {
   cwd?: string
 }
 
-export async function serviceStartExec(
-  param: ServiceStartParams
-): Promise<{ 'APP-Service-Start-PID': string }> {
-  const baseDir = param.baseDir
-  const version = param.version
-  const execEnv = param?.execEnv ?? ''
-  const cwd = param?.cwd ?? dirname(param.bin)
-  const bin = param.bin
-  const execArgs = param?.execArgs ?? ''
-  const on = param.on
-  const checkPidFile = param?.checkPidFile ?? true
-  const pidPath = param?.pidPath ?? ''
-  const maxTime = param?.maxTime ?? 20
-  const timeToWait = param?.timeToWait ?? 500
-
-  if (pidPath && existsSync(pidPath)) {
+export async function serviceStartExec(item: execItem): Promise<{
+  'APP-Service-Start-PID': string
+}> {
+  if (item.pidPath && existsSync(item.pidPath)) {
     try {
-      await remove(pidPath)
+      await remove(item.pidPath)
     } catch {}
   }
 
-  await mkdirp(baseDir)
+  await mkdirp(item.baseDir)
 
-  const typeFlag = version.typeFlag
-  const versionStr = version.version!.trim()
+  const errFile = join(item.baseDir, `${item.version.typeFlag}-${item.version.version!.trim()}-start-error.log`.replace(/ /g, ''))
 
-  const outFile = join(baseDir, `${typeFlag}-${versionStr}-start-out.log`.split(' ').join(''))
-  const errFile = join(baseDir, `${typeFlag}-${versionStr}-start-error.log`.split(' ').join(''))
-
-  let psScript = await readFile(join(global.Server.Static!, 'sh/flyenv-async-exec.sh'), 'utf8')
-
-  psScript = psScript
-    .replace('#ENV#', execEnv)
-    .replace('#CWD#', cwd)
-    .replace('#ARGS#', execArgs)
-    .replace('#OUTLOG#', outFile)
-    .replace('#ERRLOG#', errFile)
-    .replace('#BIN#', bin)
-
-  const psName = `start-${version.version!.trim()}.sh`.split(' ').join('')
-  const psPath = join(baseDir, psName)
-  await writeFile(psPath, psScript)
-
-  on({
-    'APP-On-Log': AppLog('info', I18nT('appLog.execStartCommand'))
+  // Use simple logging that doesn't depend on AppLog/I18nT
+  item.on({
+    'APP-On-Log': { level: 'info', message: 'Starting command execution' }
   })
 
-  process.chdir(baseDir)
-  let res: any
-  let error: any
-  try {
-    res = await spawnPromiseWithEnv('zsh', [psName], {
-      cwd: baseDir
-    })
-  } catch (e) {
-    error = e
+  // Parse environment variables
+  const envVars: Record<string, string> = { ...process.env }
+  if (item.execEnv) {
+    const envPairs = item.execEnv.split(';').filter(Boolean)
+    for (const pair of envPairs) {
+      const [key, value] = pair.split('=')
+      if (key && value !== undefined) {
+        envVars[key.trim()] = value.trim()
+      }
+    }
   }
 
-  on({
-    'APP-On-Log': AppLog('info', I18nT('appLog.execStartCommandSuccess'))
+  // Parse arguments
+  const execArgsArray = item.execArgs ? item.execArgs.match(/(?:[^\s"]+|"[^"]*")+/g)?.map(arg =>
+    arg.startsWith('"') && arg.endsWith('"') ? arg.slice(1, -1) : arg
+  ) || [] : []
+
+  process.chdir(item.baseDir)
+  let pid = ''
+
+  try {
+    // Spawn the process directly with detached mode
+    const child = spawn(item.bin, execArgsArray, {
+      detached: true, // Make process independent of parent
+      stdio: 'ignore',
+      cwd: item.cwd ?? dirname(item.bin),
+      env: envVars
+    })
+
+    // Handle spawn errors (e.g., binary not found)
+    await new Promise<void>((resolve, reject) => {
+      child.on('error', (error) => {
+        reject(error)
+      })
+
+      child.on('spawn', () => {
+        resolve()
+      })
+
+      // Fallback timeout in case neither event fires
+      setTimeout(() => {
+        resolve()
+      }, 100)
+    })
+
+    // Get the PID and decouple completely
+    pid = child.pid?.toString() || ''
+    child.unref()
+
+    // Write PID to file if needed
+    if (item.pidPath && pid) {
+      await writeFile(item.pidPath, pid)
+    }
+  } catch (e) {
+    const error = e as Error
+    await writeFile(errFile, error.toString())
+    throw error
+  }
+
+  // Use simple logging that doesn't depend on AppLog/I18nT
+  item.on({
+    'APP-On-Log': { level: 'info', message: 'Command execution successful' }
   })
-  on({
+  item.on({
     'APP-Service-Start-Success': true
   })
 
-  if (!checkPidFile) {
-    let pid = ''
-    const stdout = res.stdout.trim() + '\n' + res.stderr.trim()
-    const regex = /FlyEnv-Process-ID(.*?)FlyEnv-Process-ID/g
-    const match = regex.exec(stdout)
-    if (match) {
-      pid = match[1]
-    }
-    await writeFile(pidPath, pid)
-    on({
+  if (!(item.checkPidFile ?? true)) {
+    item.on({
       'APP-On-Log': AppLog('info', I18nT('appLog.startServiceSuccess', { pid: pid }))
     })
     return {
@@ -103,40 +116,40 @@ export async function serviceStartExec(
     }
   }
 
-  res = await waitPidFile(pidPath, 0, maxTime, timeToWait)
+  // Wait for PID file if checkPidFile is enabled
+  const res = await waitPidFile(item.pidPath ?? '', 0, item.maxTime ?? 20, item.timeToWait ?? 500)
   if (res) {
     if (res?.pid) {
-      await writeFile(pidPath, res.pid)
-      on({
+      await writeFile(item.pidPath ?? '', res.pid)
+      item.on({
         'APP-On-Log': AppLog('info', I18nT('appLog.startServiceSuccess', { pid: res.pid }))
       })
       return {
         'APP-Service-Start-PID': res.pid
       }
     }
-    on({
+    item.on({
       'APP-On-Log': AppLog(
         'error',
         I18nT('appLog.startServiceFail', {
           error: res?.error ?? 'Start Fail',
-          service: `${version.typeFlag}-${version.version}`
+          service: `${item.version.typeFlag}-${item.version.version}`
         })
       )
     })
     throw new Error(res?.error ?? 'Start Fail')
   }
+
   let msg = 'Start Fail'
   if (existsSync(errFile)) {
     msg = await readFile(errFile, 'utf-8')
-  } else if (error) {
-    msg = error && error?.toString ? error?.toString() : ''
   }
-  on({
+  item.on({
     'APP-On-Log': AppLog(
       'error',
       I18nT('appLog.startServiceFail', {
         error: msg,
-        service: `${version.typeFlag}-${version.version}`
+        service: `${item.version.typeFlag}-${item.version.version}`
       })
     )
   })
@@ -144,23 +157,23 @@ export async function serviceStartExec(
 }
 
 export async function customServiceStartExec(
-  version: ModuleExecItem,
+  item: customExecItem,
   isService: boolean
-): Promise<{ 'APP-Service-Start-PID': string }> {
-  console.log('customServiceStartExec: ', version, isService)
+): Promise<{
+  'APP-Service-Start-PID': string
+}> {
+  console.log('customServiceStartExec: ', item, isService)
 
-  const pidPath = version?.pidPath ?? ''
-  if (pidPath && existsSync(pidPath)) {
+  if (item?.pidPath && existsSync(item.pidPath)) {
     try {
-      await remove(pidPath)
+      await remove(item.pidPath)
     } catch {}
   }
 
-  const baseDir = join(global.Server.BaseDir!, 'module-custom')
-  await mkdirp(baseDir)
+  await mkdirp(join(global.Server.BaseDir!, 'module-custom'))
 
-  const outFile = join(baseDir, `${version.id}-out.log`)
-  const errFile = join(baseDir, `${version.id}-error.log`)
+  const outFile = join(global.Server.BaseDir!, 'module-custom', `${item.id}-out.log`)
+  const errFile = join(global.Server.BaseDir!, 'module-custom', `${item.id}-error.log`)
 
   try {
     await Helper.send('tools', 'rm', errFile)
@@ -169,65 +182,94 @@ export async function customServiceStartExec(
     await Helper.send('tools', 'rm', outFile)
   } catch {}
 
-  let psScript = await readFile(join(global.Server.Static!, 'sh/flyenv-async-exec.sh'), 'utf8')
+  let spawnBin = ''
+  let spawnArgs: string[] = []
+  let cwd = join(global.Server.BaseDir!, 'module-custom')
 
-  let bin = ''
-  if (version.commandType === 'file') {
-    bin = version.commandFile
-  } else {
-    bin = join(baseDir, `${version.id}.start.sh`)
-    await writeFile(bin, version.command)
-  }
-  const uinfo = userInfo()
-  const uid = uinfo.uid
-  const gid = uinfo.gid
+  if (item.commandType === 'file') {
+    // For file-based execution, use the file directly
+    cwd = dirname(item.commandFile)
 
-  try {
-    await Helper.send('tools', 'chmod', bin, '0777')
-  } catch {}
-
-  try {
-    await Helper.send('tools', 'startService', `chown -R ${uid}:${gid} "${bin}"`)
-  } catch {}
-
-  psScript = psScript
-    .replace('#ENV#', '')
-    .replace('#CWD#', dirname(bin))
-    .replace('#BIN#', bin)
-    .replace('#ARGS#', '')
-    .replace('#OUTLOG#', outFile)
-    .replace('#ERRLOG#', errFile)
-
-  const psName = `start-${version.id.trim()}.sh`.split(' ').join('')
-  const psPath = join(baseDir, psName)
-  await writeFile(psPath, psScript)
-
-  try {
-    await Helper.send('tools', 'chmod', psPath, '0777')
-  } catch {}
-
-  try {
-    await Helper.send('tools', 'startService', `chown -R ${uid}:${gid} "${psPath}"`)
-  } catch {}
-
-  process.chdir(baseDir)
-  let res: any
-  let error: any
-  try {
-    if (version.isSudo) {
-      const execRes = await execPromiseSudo(['zsh', psName], {
-        cwd: baseDir
-      })
-      res = (execRes.stdout + '\n' + execRes.stderr).trim()
+    if (isWindows()) {
+      if (item.commandFile.endsWith('.bat') || item.commandFile.endsWith('.cmd')) {
+        spawnBin = 'cmd.exe'
+        spawnArgs = ['/c', item.commandFile]
+      } else {
+        spawnBin = item.commandFile
+        spawnArgs = []
+      }
     } else {
-      res = await spawnPromiseWithEnv('zsh', [psName], {
-        cwd: baseDir,
-        shell: '/bin/zsh'
+      spawnBin = item.commandFile
+      spawnArgs = []
+    }
+  } else {
+    // For command-based execution, parse and execute directly
+    if (isWindows()) {
+      // On Windows, use cmd.exe to execute the command
+      spawnBin = 'cmd.exe'
+      spawnArgs = ['/c', item.command.trim()]
+    } else {
+      // On Unix-like systems, parse the command into binary and arguments
+      const commandParts = item.command.trim().match(/(?:[^\s"]+|"[^"]*")+/g) || []
+      if (commandParts.length > 0) {
+        spawnBin = commandParts[0].replace(/^"(.*)"$/, '$1') // Remove quotes if present
+        spawnArgs = commandParts.slice(1).map(arg => arg.replace(/^"(.*)"$/, '$1'))
+      } else {
+        throw new Error('Invalid command format')
+      }
+    }
+  }
+
+  process.chdir(join(global.Server.BaseDir!, 'module-custom'))
+  let pid = ''
+  let error: any
+
+  try {
+    if (item.isSudo) {
+      // For sudo commands, we still need to use the existing sudo mechanism
+      const fullCommand = item.commandType === 'file' ? `"${item.commandFile}"` : item.command
+
+      const execRes = await execPromiseSudo(['zsh', '-c', fullCommand], {
+        cwd: cwd
       })
+      // Extract PID from output if available
+      const output = (execRes.stdout + '\n' + execRes.stderr).trim()
+      const regex = /FlyEnv-Process-ID(.*?)FlyEnv-Process-ID/g
+      const match = regex.exec(output)
+      if (match) {
+        pid = match[1]
+      }
+    } else {
+      // Use direct spawn for non-sudo commands
+      const child = spawn(spawnBin, spawnArgs, {
+        detached: true,
+        stdio: 'ignore',
+        cwd: cwd,
+        env: process.env
+      })
+
+      // Handle spawn errors (e.g., binary not found)
+      await new Promise<void>((resolve, reject) => {
+        child.on('error', (error) => {
+          reject(error)
+        })
+
+        child.on('spawn', () => {
+          resolve()
+        })
+
+        // Fallback timeout in case neither event fires
+        setTimeout(() => {
+          resolve()
+        }, 100)
+      })
+
+      pid = child.pid?.toString() || ''
+      child.unref()
     }
   } catch (e) {
     error = e
-    if (!isService || !version.pidPath) {
+    if (!isService || !item.pidPath) {
       throw e
     }
   }
@@ -247,29 +289,33 @@ export async function customServiceStartExec(
     }
   }
 
-  if (!version.pidPath) {
-    let pid = ''
-    const stdout = res.stdout.trim() + '\n' + res.stderr.trim()
-    const regex = /FlyEnv-Process-ID(.*?)FlyEnv-Process-ID/g
-    const match = regex.exec(stdout)
-    if (match) {
-      pid = match[1]
-    }
+  if (!item.pidPath) {
     if (pid) {
       return {
         'APP-Service-Start-PID': pid
       }
     } else {
-      throw new Error(stdout)
+      throw new Error('Failed to get process ID')
     }
   }
 
-  res = await waitPidFile(pidPath, 0, 20, 500)
-  if (res) {
-    if (res?.pid) {
-      await writeFile(pidPath, res.pid)
-      return {
-        'APP-Service-Start-PID': res.pid
+  // If we have a pidPath and got a PID from direct spawn, write it and return
+  if (pid && !item.isSudo) {
+    await writeFile(item.pidPath, pid)
+    return {
+      'APP-Service-Start-PID': pid
+    }
+  }
+
+  // Only wait for PID file if using sudo (which might create its own PID file)
+  if (item.isSudo) {
+    const res = await waitPidFile(item.pidPath, 0, 20, 500)
+    if (res) {
+      if (res?.pid) {
+        await writeFile(item.pidPath, res.pid)
+        return {
+          'APP-Service-Start-PID': res.pid
+        }
       }
     }
   }

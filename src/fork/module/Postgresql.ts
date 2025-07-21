@@ -9,7 +9,6 @@ import { brewInfoJson, brewSearch, portSearch } from '../util/Brew'
 import { execPromise, execPromiseWithEnv } from '@shared/child-process'
 import { chmod, copyFile, readFile, unlink, writeFile, remove, mkdirp } from '@shared/fs-extra'
 import { serviceStartExec } from '../util/ServiceStart'
-import { serviceStartExecCMD } from '../util/ServiceStart.win'
 import { AppLog, waitTime } from '../Fn'
 import { ForkPromise } from '@shared/ForkPromise'
 import axios from 'axios'
@@ -127,7 +126,7 @@ export LANG="${global.Server.Local!}"
           const execArgs = `-D "${dbPath}" -l "${logFile}" start`
 
           try {
-            const res = await serviceStartExecCMD({
+            const res = await serviceStartExec({
               version,
               pidPath: pidFile,
               baseDir,

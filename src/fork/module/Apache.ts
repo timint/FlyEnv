@@ -10,7 +10,6 @@ import { execPromise } from '@shared/child-process'
 import { readFile, writeFile, mkdirp } from '@shared/fs-extra'
 import { getAllFileAsync } from '../util/Dir'
 import { serviceStartExec } from '../util/ServiceStart'
-import { serviceStartExecCMD } from '../util/ServiceStart.win'
 import { AppLog } from '../Fn'
 import { ForkPromise } from '@shared/ForkPromise'
 import TaskQueue from '../TaskQueue'
@@ -336,7 +335,7 @@ IncludeOptional "${vhost}*.conf"`
       if (isWindows()) {
         const execArgs = `-f "${conf}"`
         try {
-          const res = await serviceStartExecCMD({
+          const res = await serviceStartExec({
             version,
             pidPath: pidFile,
             baseDir: global.Server.ApacheDir!,

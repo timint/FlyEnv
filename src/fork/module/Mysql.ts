@@ -8,7 +8,6 @@ import { getSubDirAsync } from '../util/Dir'
 import { execPromise } from '@shared/child-process'
 import { mkdirp, writeFile, chmod, remove, readFile } from '@shared/fs-extra'
 import { serviceStartExec } from '../util/ServiceStart'
-import { serviceStartExec as serviceStartExecCMD } from '../util/ServiceStart.win'
 import { spawnPromise } from '@shared/child-process'
 import { versionLocalFetch, versionMacportsFetch, versionBinVersion, versionFixed, versionSort, versionFilterSame } from '../util/Version'
 import { brewSearch, brewInfoJson, portSearch } from '../util/Brew'
@@ -273,7 +272,7 @@ datadir=${pathFixedToUnix(dataDir)}`
             console.log('execArgs: ', execArgs)
 
             try {
-              const res = await serviceStartExecCMD({
+              const res = await serviceStartExec({
                 version,
                 pidPath: p,
                 baseDir,
@@ -484,89 +483,6 @@ sql-mode=NO_ENGINE_SUBSTITUTION`
       const doStart = () => {
         const execEnv = ''
         return new Promise(async (resolve, reject) => {
-          if (isMacOS()) {
-            const params = [
-              `--defaults-file=${m}`,
-              `--datadir=${dataDir}`,
-              `--port=${version.port}`,
-              `--pid-file=${p}`,
-              '--user=mysql',
-              `--slow-query-log-file=${s}`,
-              `--log-error=${e}`,
-              `--socket=${sock}`
-            ]
-            if (version?.version?.flag === 'macports') {
-              params.push(
-                `--lc-messages-dir=/opt/local/share/${basename(version.version.path!)}/english`
-              )
-            }
-
-            const execArgs = params.join(' ')
-
-            try {
-              const res = await serviceStartExec({
-                version: version.version as any,
-                pidPath: p,
-                baseDir,
-                bin,
-                execArgs,
-                execEnv,
-                on
-              })
-              resolve(res)
-            } catch (e: any) {
-              console.log('-k start err: ', e)
-              reject(e)
-              return
-            }
-          } else if (isWindows()) {
-            const params = [
-              `--defaults-file="${m}"`,
-              `--datadir="${dataDir}"`,
-              `--port="${version.port}"`,
-              `--pid-file="${p}"`,
-              '--user=mysql',
-              '--slow-query-log=ON',
-              `--slow-query-log-file="${s}"`,
-              `--log-error="${e}"`,
-              `--socket="${sock}"`,
-              '--standalone'
-            ]
-
-            const execArgs = params.join(' ')
-
-            try {
-              const res = await serviceStartExecCMD({
-                version: version.version as any,
-                pidPath: p,
-                baseDir,
-                bin,
-                execArgs,
-                execEnv,
-                on,
-                timeToWait: 1000
-              })
-              resolve(res)
-            } catch (e: any) {
-              console.log('-k start err: ', e)
-              reject(e)
-              return
-            }
-          }
-
-          if (existsSync(p)) {
-            try {
-              await remove(p)
-            } catch {}
-          }
-
-          const startLogFile = join(global.Server.MysqlDir!, `group/start.${id}.log`)
-          const startErrLogFile = join(global.Server.MysqlDir!, `start.error.${id}.log`)
-          if (existsSync(startErrLogFile)) {
-            try {
-              await remove(startErrLogFile)
-            } catch {}
-          }
           const params = [
             `--defaults-file="${m}"`,
             `--datadir="${dataDir}"`,
@@ -577,34 +493,40 @@ sql-mode=NO_ENGINE_SUBSTITUTION`
             `--slow-query-log-file="${s}"`,
             `--log-error="${e}"`,
             `--socket="${sock}"`,
-            '--standalone'
           ]
 
-          const commands: string[] = [
-            '@echo off',
-            'chcp 65001>nul',
-            `cd /d "${dirname(bin!)}"`,
-            `start /B ./${basename(bin!)} ${params.join(' ')} > "${startLogFile}" 2>"${startErrLogFile}"`
-          ]
+          if (isWindows()){
+            params.push('--standalone')
+          } else if (version?.version?.flag === 'macports') {
+            params.push(
+              `--lc-messages-dir=/opt/local/share/${basename(version.version.path!)}/english`
+            )
+          }
 
-          command = commands.join(EOL)
-          console.log('command: ', command)
-
-          const cmdName = `start-${id}.cmd`
-          const sh = join(global.Server.MysqlDir!, cmdName)
-          await writeFile(sh, command)
-
-          process.chdir(global.Server.MysqlDir!)
           try {
-            await spawnPromise(cmdName, [], {
-              shell: 'cmd.exe',
-              cwd: global.Server.MysqlDir!
+            const res = await serviceStartExec({
+              version: version.version as any,
+              pidPath: p,
+              baseDir,
+              bin,
+              execArgs: params.join(' '),
+              execEnv,
+              on,
+              timeToWait: 1000
             })
+            resolve(res)
           } catch (e: any) {
             console.log('-k start err: ', e)
             reject(e)
             return
           }
+
+          if (existsSync(p)) {
+            try {
+              await remove(p)
+            } catch {}
+          }
+
           const res = await this.waitPidFile(p)
           if (res) {
             if (res?.pid) {

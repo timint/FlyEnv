@@ -5,7 +5,7 @@ import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
 import { AppLog } from '../Fn'
 import { readFile, writeFile, mkdirp } from '@shared/fs-extra'
 import { serviceStartExec } from '../util/ServiceStart'
-import { serviceStartExec as serviceStartExecWin } from '../util/ServiceStart.win'
+import { serviceStartExec as serviceStartExec } from '../util/ServiceStart'
 import { versionBinVersion, versionFilterSame, versionFixed, versionLocalFetch, versionSort } from '../util/Version'
 import { brewInfoJson } from '../util/Brew'
 import { ForkPromise } from '@shared/ForkPromise'
@@ -147,7 +147,7 @@ class MailPit extends Base {
         const execArgs = ` `
 
         try {
-          const res = await serviceStartExecWin({
+          const res = await serviceStartExec({
             version,
             pidPath: this.pidPath,
             baseDir,

@@ -9,7 +9,6 @@ import { brewInfoJson, portSearch } from '../util/Brew'
 import { versionBinVersion, versionFilterSame, versionFixed, versionLocalFetch, versionSort } from '../util/Version'
 import { zipUnpack } from '../util/Zip'
 import { serviceStartExec } from '../util/ServiceStart'
-import { serviceStartExecCMD } from '../util/ServiceStart.win'
 import { AppLog, waitTime } from '../Fn'
 import TaskQueue from '../TaskQueue'
 import { fetchHostList } from './host/HostFile'
@@ -177,7 +176,7 @@ class Nginx extends Base {
         const execArgs = `-p "${p}"`
 
         try {
-          const res = await serviceStartExecCMD({
+          const res = await serviceStartExec({
             version,
             pidPath: pid,
             baseDir,

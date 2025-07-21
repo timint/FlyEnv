@@ -10,7 +10,6 @@ import { brewInfoJson, brewSearch, portSearch } from '../util/Brew'
 import { versionBinVersion, versionFilterSame, versionFixed, versionLocalFetch, versionSort } from '../util/Version'
 import { zipUnpack } from '../util/Zip'
 import { serviceStartExec } from '../util/ServiceStart'
-import { serviceStartExecCMD } from '../util/ServiceStart.win'
 import { AppLog, waitTime } from '../Fn'
 import { ForkPromise } from '@shared/ForkPromise'
 import TaskQueue from '../TaskQueue'
@@ -220,7 +219,7 @@ PLUGINS_DIR="${pathFixedToUnix(pluginsDir)}"`
       } else if (isWindows()) {
         const execEnv = `set "RABBITMQ_CONF_ENV_FILE=${confFile}"`
         try {
-          await serviceStartExecCMD({
+          await serviceStartExec({
             version,
             pidPath: this.pidPath,
             baseDir,

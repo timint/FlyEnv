@@ -9,7 +9,6 @@ import { versionLocalFetch, versionMacportsFetch, versionFixed, versionSort, ver
 import { getSubDirAsync } from '../util/Dir'
 import { brewInfoJson, brewSearch, portSearch } from '../util/Brew'
 import { serviceStartExec } from '../util/ServiceStart'
-import { serviceStartExecCMD } from '../util/ServiceStart.win'
 import { AppLog } from '../Fn'
 import { chmod, mkdirp, readFile, remove, writeFile } from '@shared/fs-extra'
 import { moveChildDirToParent } from '../util/Dir'
