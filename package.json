@@ -32,7 +32,7 @@
     "@shikijs/core": "^3.8.1",
     "@shikijs/transformers": "^3.8.1",
     "@shikijs/types": "^3.8.1",
-    "7zip-min-electron": "^1.4.4",
+    "7zip-min": "^2.1.0",
     "axios": "^1.10.0",
     "chardet": "^2.1.0",
     "compare-versions": "^6.1.1",
