@@ -8,7 +8,7 @@ import { mkdirp, readdir, remove } from '@shared/fs-extra'
 import { getAllFileAsync, moveChildDirToParent } from '../util/Dir'
 import { brewInfoJson, portSearch } from '../util/Brew'
 import { versionBinVersion, versionFilterSame, versionFixed, versionLocalFetch, versionMacportsFetch, versionSort } from '../util/Version'
-import { zipUnpack } from '../util/Zip'
+import { extractArchive } from '../util/Archive'
 import { waitTime } from '../Fn'
 import TaskQueue from '../TaskQueue'
 import { isMacOS, isWindows } from '@shared/utils'
@@ -108,7 +108,7 @@ class Perl extends Base {
     } else if (isWindows()) {
       await remove(row.appDir)
       await mkdirp(row.appDir)
-      await zipUnpack(row.zip, row.appDir)
+      await extractArchive(row.zip, row.appDir)
       await moveChildDirToParent(row.appDir)
     }
   }

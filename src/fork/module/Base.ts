@@ -4,7 +4,7 @@ import { dirname, join } from 'path'
 import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
 import { execPromise, execPromiseWithEnv } from '@shared/child-process'
 import { readFile, writeFile, remove, mkdirp } from '@shared/fs-extra'
-import { zipUnpack } from '../util/Zip'
+import { extractArchive } from '../util/Archive'
 import { AppLog, downloadFile, waitTime } from '../Fn'
 import { ForkPromise } from '@shared/ForkPromise'
 import { type PItem, ProcessSearch } from '@shared/Process'
@@ -317,11 +317,11 @@ export class Base {
 
   async _installSoftHandle(row: any) {
     if (isWindows()) {
-      await zipUnpack(row.zip, row.appDir)
+      await extractArchive(row.zip, row.appDir)
     } else if (isMacOS()) {
       const dir = row.appDir
       await mkdirp(dir)
-      await execPromise(`tar -xzf ${row.zip} -C ${dir}`)
+      await extractArchive(row.zip, dir)
     }
   }
 

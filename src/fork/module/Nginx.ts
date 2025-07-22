@@ -7,7 +7,7 @@ import { execPromise } from '@shared/child-process'
 import { mkdirp, readdir, readFile, remove, writeFile } from '@shared/fs-extra'
 import { brewInfoJson, portSearch } from '../util/Brew'
 import { versionBinVersion, versionFilterSame, versionFixed, versionLocalFetch, versionSort } from '../util/Version'
-import { zipUnpack } from '../util/Zip'
+import { extractArchive } from '../util/Archive'
 import { serviceStartExec } from '../util/ServiceStart'
 import { AppLog, waitTime } from '../Fn'
 import TaskQueue from '../TaskQueue'
@@ -90,7 +90,7 @@ class Nginx extends Base {
         on({
           'APP-On-Log': AppLog('info', I18nT('appLog.confInit'))
         })
-        zipUnpack(join(global.Server.Static!, 'zip/nginx.zip'), global.Server.NginxDir!)
+        extractArchive(join(global.Server.Static!, 'zip/nginx.zip'), global.Server.NginxDir!)
           .then(() => {
             return readFile(conf, 'utf-8')
           })

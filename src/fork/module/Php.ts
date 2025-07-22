@@ -4,6 +4,7 @@ import { Base } from './Base'
 import { I18nT } from '@lang/index'
 import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
 import { execPromise } from '@shared/child-process'
+import { extractArchive } from '../util/Archive'
 import { getAllFileAsync } from '../util/Dir'
 import { writeFile, readFile, copyFile, mkdirp, remove } from '@shared/fs-extra'
 import { serviceStartExec } from '../util/ServiceStart'
@@ -360,11 +361,11 @@ xdebug.output_dir = "${output_dir}"
         try {
           let bin = join(row.appDir, 'bin')
           await mkdirp(bin)
-          await execPromise(`tar -xzf ${cliZIP} -C ${bin}`)
+          await extractArchive(cliZIP, bin)
 
           bin = join(row.appDir, 'sbin')
           await mkdirp(bin)
-          await execPromise(`tar -xzf ${row.zip} -C ${bin}`)
+          await extractArchive(row.zip, bin)
 
           success = true
         } catch {}
@@ -387,7 +388,7 @@ xdebug.output_dir = "${output_dir}"
               if (existsSync(row.zip)) {
                 const sbin = join(row.appDir, 'sbin')
                 await mkdirp(sbin)
-                await execPromise(`tar -xzf ${row.zip} -C ${sbin}`)
+                await extractArchive(row.zip, sbin)
               }
             } catch {}
             return true
@@ -410,7 +411,7 @@ xdebug.output_dir = "${output_dir}"
               if (existsSync(cliZIP)) {
                 const bin = join(row.appDir, 'bin')
                 await mkdirp(bin)
-                await execPromise(`tar -xzf ${cliZIP} -C ${bin}`)
+                await extractArchive(cliZIP, bin)
               }
             } catch {}
             return true

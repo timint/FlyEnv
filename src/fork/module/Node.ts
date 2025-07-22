@@ -3,6 +3,7 @@ import { downloadFile, fetchPathByBin, readFileByRoot, writeFileByRoot } from '.
 import { execPromise } from '@shared/child-process'
 import { chmod, copyFile, unlink, readdir, writeFile, realpath, remove, mkdirp } from '@shared/fs-extra'
 import { versionBinVersion, versionFilterSame, versionFixed, versionLocalFetch, versionSort } from '../util/Version'
+import { extractArchive } from '../util/Archive'
 import { ForkPromise } from '@shared/ForkPromise'
 import { basename, dirname, join } from 'path'
 import { compareVersions } from 'compare-versions'
@@ -246,7 +247,7 @@ class Manager extends Base {
 
           const unpack = async () => {
             try {
-              await execPromise(`tar -xzf ${zip} -C ${destDir}`)
+              await extractArchive(zip, destDir)
               const subDirs = await readdir(destDir)
               const subDir = subDirs.pop()
               if (subDir) {

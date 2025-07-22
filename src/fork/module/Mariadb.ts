@@ -12,7 +12,7 @@ import { serviceStartExec } from '../util/ServiceStart'
 import { AppLog } from '../Fn'
 import { chmod, mkdirp, readFile, remove, writeFile } from '@shared/fs-extra'
 import { moveChildDirToParent } from '../util/Dir'
-import { zipUnpack } from '../util/Zip'
+import { extractArchive } from '../util/Archive'
 import { ForkPromise } from '@shared/ForkPromise'
 import TaskQueue from '../TaskQueue'
 import Helper from '../Helper'
@@ -437,7 +437,7 @@ datadir=${dataDir}`
     if (isWindows()) {
       await remove(row.appDir)
       await mkdirp(row.appDir)
-      await zipUnpack(row.zip, row.appDir)
+      await extractArchive(row.zip, row.appDir)
       await moveChildDirToParent(row.appDir)
     }
   }

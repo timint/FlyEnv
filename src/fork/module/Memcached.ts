@@ -7,7 +7,7 @@ import { copyFile, mkdirp, remove } from '@shared/fs-extra'
 import { getAllFileAsync } from '../util/Dir'
 import { brewInfoJson, portSearch } from '../util/Brew'
 import { versionBinVersion, versionFilterSame, versionFixed, versionLocalFetch, versionSort } from '../util/Version'
-import { zipUnpack } from '../util/Zip'
+import { extractArchive } from '../util/Archive'
 import { serviceStartExec } from '../util/ServiceStart'
 import { serviceStartExec as serviceStartExec } from '../util/ServiceStart'
 import { AppLog } from '../Fn'
@@ -147,7 +147,7 @@ class Memcached extends Base {
       if (existsSync(tmpDir)) {
         await remove(tmpDir)
       }
-      await zipUnpack(row.zip, tmpDir)
+      await extractArchive(row.zip, tmpDir)
       let dir = join(tmpDir, `memcached-${row.version}`, 'libevent-2.1', 'x64')
       if (!existsSync(dir)) {
         dir = join(tmpDir, `memcached-${row.version}`, 'cygwin', 'x64')

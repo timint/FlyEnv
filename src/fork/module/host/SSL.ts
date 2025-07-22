@@ -2,7 +2,7 @@ import { ForkPromise } from '@shared/ForkPromise'
 import { execPromise } from '@shared/child-process'
 import { copyFile, mkdirp, remove, writeFile } from '@shared/fs-extra'
 import { hostAlias } from '../../Fn'
-import { zipUnpack } from '../../util/Zip'
+import { extractArchive } from '../../util/Archive'
 import { dirname, join } from 'path'
 import { existsSync } from 'fs'
 import { EOL } from 'os'
@@ -32,7 +32,7 @@ export const makeAutoSSL = (host: AppHost): ForkPromise<{ crt: string; key: stri
       if (isWindows()) {
         const openssl = join(global.Server.AppDir!, 'openssl/bin/openssl.exe')
         if (!existsSync(openssl)) {
-          await zipUnpack(join(global.Server.Static!, `zip/openssl.7z`), global.Server.AppDir!)
+          await extractArchive(join(global.Server.Static!, `zip/openssl.7z`), global.Server.AppDir!)
         }
         const opensslCnf = join(global.Server.AppDir!, 'openssl/openssl.cnf')
         if (!existsSync(opensslCnf)) {

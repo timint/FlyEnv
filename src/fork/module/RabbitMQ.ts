@@ -8,7 +8,7 @@ import { mkdirp, readdir, readFile, remove, unlink, writeFile } from '@shared/fs
 import { moveChildDirToParent } from '../util/Dir'
 import { brewInfoJson, brewSearch, portSearch } from '../util/Brew'
 import { versionBinVersion, versionFilterSame, versionFixed, versionLocalFetch, versionSort } from '../util/Version'
-import { zipUnpack } from '../util/Zip'
+import { extractArchive } from '../util/Archive'
 import { serviceStartExec } from '../util/ServiceStart'
 import { AppLog, waitTime } from '../Fn'
 import { ForkPromise } from '@shared/ForkPromise'
@@ -352,7 +352,7 @@ PLUGINS_DIR="${pathFixedToUnix(pluginsDir)}"`
     if (isWindows()) {
       await remove(row.appDir)
       await mkdirp(row.appDir)
-      await zipUnpack(row.zip, row.appDir)
+      await extractArchive(row.zip, row.appDir)
       await moveChildDirToParent(row.appDir)
     }
   }

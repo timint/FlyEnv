@@ -7,7 +7,7 @@ import { mkdirp, remove } from '@shared/fs-extra'
 import { moveChildDirToParent } from '../util/Dir'
 import { brewInfoJson, brewSearch, portSearch } from '../util/Brew'
 import { versionBinVersion, versionFilterSame, versionFixed, versionLocalFetch, versionSort } from '../util/Version'
-import { zipUnpack } from '../util/Zip'
+import { extractArchive } from '../util/Archive'
 import TaskQueue from '../TaskQueue'
 import { isMacOS, isWindows } from '@shared/utils'
 
@@ -88,7 +88,7 @@ class Ruby extends Base {
     } else if (isWindows()) {
       await remove(row.appDir)
       await mkdirp(row.appDir)
-      await zipUnpack(row.zip, row.appDir)
+      await extractArchive(row.zip, row.appDir)
       await moveChildDirToParent(row.appDir)
     }
   }

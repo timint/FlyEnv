@@ -6,7 +6,7 @@ import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
 import { execPromise } from '@shared/child-process'
 import { copyFile, mkdirp, readdir, readFile, remove, writeFile } from '@shared/fs-extra'
 import { versionBinVersion, versionFilterSame, versionFixed, versionLocalFetch, versionSort } from '../util/Version'
-import { zipUnpack } from '../util/Zip'
+import { extractArchive } from '../util/Archive'
 import { serviceStartExec as serviceStartExec } from '../util/ServiceStart'
 import { AppLog, downloadFile } from '../Fn'
 import { ForkPromise } from '@shared/ForkPromise'
@@ -168,7 +168,7 @@ class Php extends Base {
     return new Promise((resolve) => {
       const fpm = join(global.Server.PhpDir!, 'php-cgi-spawner.exe')
       if (!existsSync(fpm)) {
-        zipUnpack(join(global.Server.Static!, `zip/php_cgi_spawner.7z`), global.Server.PhpDir!)
+        extractArchive(join(global.Server.Static!, `zip/php_cgi_spawner.7z`), global.Server.PhpDir!)
           .then(resolve)
           .catch(resolve)
         return
@@ -268,7 +268,7 @@ class Php extends Base {
         const obfuscatorDir = join(cacheDir, 'php-obfuscator')
         await remove(obfuscatorDir)
         const zipFile = join(global.Server.Static!, 'zip/php-obfuscator.zip')
-        await zipUnpack(zipFile, obfuscatorDir)
+        await extractArchive(zipFile, obfuscatorDir)
         const bin = join(obfuscatorDir, 'yakpro-po.php')
         let command = ''
         if (params.config) {
@@ -536,7 +536,7 @@ xdebug.output_dir = "${output_dir}"
         const dll = join(cacheDir, `${name}.dll`)
 
         if (existsSync(zipFile)) {
-          try { await zipUnpack(zipFile, cacheDir) } catch {}
+          try { await extractArchive(zipFile, cacheDir) } catch {}
           if (existsSync(dll)) {
             await copyFile(dll, file)
             await handleImagick(cacheDir)
@@ -561,7 +561,7 @@ xdebug.output_dir = "${output_dir}"
         })
 
         if (existsSync(zipFile)) {
-          await zipUnpack(zipFile, cacheDir)
+          await extractArchive(zipFile, cacheDir)
         }
 
         if (existsSync(dll)) {

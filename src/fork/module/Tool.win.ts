@@ -4,7 +4,7 @@ import { execPromise, execPromiseWithEnv } from '@shared/child-process'
 import { copyFile, existsSync, mkdirp, readdir, readFile, remove, writeFile, stat } from '@shared/fs-extra'
 import { addPath, fetchRawPATH, handleWinPathArr, writePath } from '../util/PATH.win'
 import { getAllFileAsync } from '../util/Dir'
-import { zipUnpack } from '../util/Zip'
+import { extractArchive } from '../util/Archive'
 import { isNTFS, setDir777ToCurrentUser, uuid } from '../Fn'
 import { ForkPromise } from '@shared/ForkPromise'
 import { TaskQueue, TaskQueueProgress } from '@shared/TaskQueue'
@@ -61,7 +61,7 @@ class Manager extends Base {
     return new ForkPromise(async (resolve, reject) => {
       const openssl = join(global.Server.AppDir!, 'openssl/bin/openssl.exe')
       if (!existsSync(openssl)) {
-        await zipUnpack(join(global.Server.Static!, `zip/openssl.7z`), global.Server.AppDir!)
+        await extractArchive(join(global.Server.Static!, `zip/openssl.7z`), global.Server.AppDir!)
       }
       const opensslCnf = join(global.Server.AppDir!, 'openssl/openssl.cnf')
       if (!existsSync(opensslCnf)) {

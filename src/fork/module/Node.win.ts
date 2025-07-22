@@ -4,7 +4,7 @@ import { versionBinVersion, versionFilterSame, versionFixed, versionSort, versio
 import { mkdirp, readdir, remove, realpath } from '@shared/fs-extra'
 import { execPromise, execPromiseWithEnv } from '@shared/child-process'
 import { moveChildDirToParent } from '../util/Dir'
-import { zipUnpack } from '../util/Zip'
+import { extractArchive } from '../util/Archive'
 import { downloadFile, fetchPathByBin } from '../Fn'
 import { ForkPromise } from '@shared/ForkPromise'
 import { dirname, join } from 'path'
@@ -310,7 +310,7 @@ class Manager extends Base {
 
           const unpack = async () => {
             try {
-              await zipUnpack(zip, destDir)
+              await extractArchive(zip, destDir)
               await moveChildDirToParent(destDir)
             } catch (e) {
               return e

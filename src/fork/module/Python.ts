@@ -7,7 +7,7 @@ import { execPromise } from '@shared/child-process'
 import { readFile, remove, writeFile } from '@shared/fs-extra'
 import { brewInfoJson, brewSearch, portSearch } from '../util/Brew'
 import { versionBinVersion, versionFilterSame, versionFixed, versionLocalFetch, versionSort } from '../util/Version'
-import { zipUnpack } from '../util/Zip'
+import { extractArchive } from '../util/Archive'
 import { uuid, waitTime } from '../Fn'
 import TaskQueue from '../TaskQueue'
 import { appDebugLog, isMacOS, isWindows } from '@shared/utils'
@@ -103,7 +103,7 @@ class Python extends Base {
       const darkDir = join(global.Server.Cache!, 'dark')
       if (!existsSync(dark)) {
         const darkZip = join(global.Server.Static!, 'zip/dark.zip')
-        await zipUnpack(darkZip, dirname(dark))
+        await extractArchive(darkZip, dirname(dark))
       }
       const pythonSH = join(global.Server.Static!, 'sh/python.ps1')
       let content = await readFile(pythonSH, 'utf-8')

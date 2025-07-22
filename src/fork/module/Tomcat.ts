@@ -8,7 +8,7 @@ import { chmod, copyFile, mkdirp, readFile, readdir, remove, writeFile } from '@
 import { moveChildDirToParent } from '../util/Dir'
 import { brewInfoJson, brewSearch } from '../util/Brew'
 import { versionBinVersion, versionFilterSame, versionFixed, versionLocalFetch, versionSort } from '../util/Version'
-import { zipUnpack } from '../util/Zip'
+import { extractArchive } from '../util/Archive'
 import { serviceStartExec } from '../util/ServiceStart'
 import { AppLog, waitTime } from '../Fn'
 import TaskQueue from '../TaskQueue'
@@ -299,7 +299,7 @@ export CATALINA_PID="${this.pidPath}"`
     } else if (isWindows()) {
       await remove(row.appDir)
       await mkdirp(row.appDir)
-      await zipUnpack(row.zip, row.appDir)
+      await extractArchive(row.zip, row.appDir)
       await moveChildDirToParent(row.appDir)
     }
   }

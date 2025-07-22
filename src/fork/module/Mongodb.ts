@@ -7,7 +7,7 @@ import { brewInfoJson, brewSearch, portSearch } from '../util/Brew'
 import { versionBinVersion, versionFilterSame, versionFixed, versionLocalFetch, versionMacportsFetch, versionSort } from '../util/Version'
 import { readFile, writeFile, mkdirp, chmod, remove } from '@shared/fs-extra'
 import { moveChildDirToParent } from '../util/Dir'
-import { zipUnpack } from '../util/Zip'
+import { extractArchive } from '../util/Archive'
 import { serviceStartExec } from '../util/ServiceStart'
 import { AppLog, downloadFile, waitTime } from '../Fn'
 import { ForkPromise } from '@shared/ForkPromise'
@@ -42,7 +42,7 @@ class Manager extends Base {
           try {
             await remove(appDir)
             await mkdirp(appDir)
-            await zipUnpack(zip, appDir)
+            await extractArchive(zip, appDir)
             await moveChildDirToParent(appDir)
             return existsSync(mongosh)
           } catch {
@@ -263,7 +263,7 @@ class Manager extends Base {
     if (isWindows()) {
       await remove(row.appDir)
       await mkdirp(row.appDir)
-      await zipUnpack(row.zip, row.appDir)
+      await extractArchive(row.zip, row.appDir)
       await moveChildDirToParent(row.appDir)
       await waitTime(1000)
       await this.initMongosh()
