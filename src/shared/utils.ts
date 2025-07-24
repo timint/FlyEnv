@@ -73,7 +73,7 @@ export function execAsync(
       env
     }
     const opt = merge(optdefault, options)
-    if (global.Server.isAppleSilicon) {
+    if (global.Server.isArmArch) {
       arg.unshift('-arm64', command)
       command = 'arch'
     }
@@ -100,6 +100,14 @@ export function execAsync(
   })
 }
 
+export function waitTime(time: number) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(true)
+    }, time)
+  })
+}
+
 export function uuid(length = 32) {
   const num = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
   let str = ''
@@ -118,7 +126,7 @@ export function formatBytes(bytes: number, decimals = 2) {
   return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i]
 }
 
-export function isAppleSilicon() {
+export function isArmArch() {
   const cpuCore = cpus()
   return cpuCore[0].model.includes('Apple')
 }
@@ -129,10 +137,12 @@ export function md5(str: string) {
 }
 
 export function pathFixedToUnix(path: string) {
-  return path
+  const needAdd = path.endsWith('\\')
+  const p = path
     .split('\\')
     .filter((s) => !!s.trim())
     .join('/')
+  return needAdd ? `${p}/` : p
 }
 
 const os = platform()
@@ -147,4 +157,14 @@ export function isMacOS() {
 
 export function isLinux() {
   return os === 'linux'
+}
+
+export function defaultShell() {
+  if (isMacOS()) {
+    return '#!/bin/zsh'
+  }
+  if (isLinux()) {
+    return '#!/bin/bash'
+  }
+  return ''
 }

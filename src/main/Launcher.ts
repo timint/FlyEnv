@@ -53,7 +53,7 @@ export default class Launcher extends EventEmitter {
       global.application = new Application()
       global.application.start('index')
       global.application.on('ready', () => {})
-      if (isWindows()) {
+      if (isWindows() || isLinux()) {
         Menu.setApplicationMenu(null)
       }
     })

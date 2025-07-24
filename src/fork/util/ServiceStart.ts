@@ -7,6 +7,7 @@ import { execPromiseSudo } from '@shared/child-process'
 import { existsSync, remove, mkdirp, readFile, writeFile } from '@shared/fs-extra'
 import { AppLog, waitPidFile } from '../Fn'
 import { isWindows } from '@shared/utils'
+import { isMacOS, isWindows } from '@shared/utils'
 
 export type execItem = {
   version: SoftInstalled
@@ -20,6 +21,7 @@ export type execItem = {
   timeToWait?: number
   checkPidFile?: boolean
   cwd?: string
+  root?: boolean
 }
 
 export async function serviceStartExec(item: execItem): Promise<{
@@ -69,10 +71,20 @@ export async function serviceStartExec(item: execItem): Promise<{
       env: envVars
     })
 
-    // Handle spawn errors (e.g., binary not found)
-    await new Promise<void>((resolve, reject) => {
-      child.on('error', (error) => {
-        reject(error)
+  process.chdir(baseDir)
+  let res: any
+  let error: any
+  const shell = isMacOS() ? 'zsh' : 'bash'
+  if (param?.root) {
+    try {
+      res = await Helper.send('apache', 'startService', `${shell} "${psPath}"`)
+    } catch (e) {
+      error = e
+    }
+  } else {
+    try {
+      res = await spawnPromiseWithEnv(shell, [psName], {
+        cwd: baseDir
       })
 
       child.on('spawn', () => {
@@ -98,6 +110,7 @@ export async function serviceStartExec(item: execItem): Promise<{
     await writeFile(errFile, error.toString())
     throw error
   }
+  }
 
   // Use simple logging that doesn't depend on AppLog/I18nT
   item.on({
@@ -120,8 +133,16 @@ export async function serviceStartExec(item: execItem): Promise<{
   const res = await waitPidFile(item.pidPath ?? '', 0, item.maxTime ?? 20, item.timeToWait ?? 500)
   if (res) {
     if (res?.pid) {
-      await writeFile(item.pidPath ?? '', res.pid)
-      item.on({
+      try {
+        await writeFile(pidPath, res.pid)
+      } catch {
+        if (!isWindows()) {
+          try {
+            await Helper.send('tools', 'writeFileByRoot', pidPath, res.pid)
+          } catch {}
+        }
+      }
+      on({
         'APP-On-Log': AppLog('info', I18nT('appLog.startServiceSuccess', { pid: res.pid }))
       })
       return {
@@ -264,8 +285,22 @@ export async function customServiceStartExec(
         }, 100)
       })
 
-      pid = child.pid?.toString() || ''
-      child.unref()
+  const shell = isMacOS() ? 'zsh' : 'bash'
+
+  process.chdir(baseDir)
+  let res: any
+  let error: any
+  try {
+    if (version.isSudo) {
+      const execRes = await execPromiseSudo([shell, psName], {
+        cwd: baseDir
+      })
+      res = (execRes.stdout + '\n' + execRes.stderr).trim()
+    } else {
+      res = await spawnPromiseWithEnv(shell, [psName], {
+        cwd: baseDir,
+        shell: `/bin/${shell}`
+      })
     }
   } catch (e) {
     error = e

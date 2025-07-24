@@ -8,7 +8,7 @@ import { hostname, userInfo } from 'os'
 import _node_machine_id from 'node-machine-id'
 import { appendFile, mkdirp, readFile } from '@shared/fs-extra'
 import { spawnPromise, execPromise } from '@shared/child-process'
-import { isWindows } from '@shared/utils'
+import { isWindows, waitTime } from '@shared/utils'
 import { httpStreamDownload } from './util/Http'
 
 const { machineId } = _node_machine_id
@@ -43,14 +43,6 @@ export function uuid(length = 32) {
     str += num.charAt(Math.floor(Math.random() * num.length))
   }
   return str
-}
-
-export function waitTime(time: number) {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(true)
-    }, time)
-  })
 }
 
 export async function setDir777ToCurrentUser(folderPath: string) {
@@ -184,7 +176,21 @@ export async function waitPidFile(
       }
     | false = false
   if (existsSync(pidFile)) {
-    const pid = (await readFile(pidFile, 'utf-8')).trim()
+    let pid = ''
+    let error = false
+    try {
+      pid = (await readFile(pidFile, 'utf-8')).trim()
+    } catch {
+      error = true
+    }
+    if (error && !isWindows()) {
+      try {
+        pid = ((await Helper.send('tools', 'readFileByRoot', pidFile)) as string).trim()
+      } catch {}
+    }
+    if (!pid) {
+      return false
+    }
     return {
       pid
     }

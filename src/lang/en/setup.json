@@ -45,5 +45,10 @@
     "licenseHint": "You don't have a license for enabling more than 3 modules.",
     "outputLog": "Output Log",
     "errorLog": "Error Log"
-  }
+  },
+
+  "flyenvHelper": "Fix FlyEnv Helper",
+  "flyenvHelperBtn": "Fix",
+  "flyenvHelperFixSuccess": "FlyEnv Helper Fixed Successfully",
+  "flyenvHelperFixFail": "FlyEnv Helper Fixed Failed"
 }

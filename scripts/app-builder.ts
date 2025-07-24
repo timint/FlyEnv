@@ -3,12 +3,12 @@ import { build as electronBuild, Platform } from 'electron-builder'
 
 import viteConfig from '../configs/vite.config'
 import { DoFix } from './fix'
-import { isMacOS, isWindows } from '../src/shared/utils'
+import { isLinux, isMacOS, isWindows } from '../src/shared/utils'
 
 async function packMain() {
   try {
     await DoFix()
-    if (isMacOS()) {
+    if (isMacOS() || isLinux()) {
       const config = viteConfig.vite.mac
       await viteBuild(config.dist)
       await viteBuild(config.distFork)
@@ -44,10 +44,16 @@ Promise.all([packMain(), packRenderer()])
       targets: Platform.current().createTarget()
     }
     if (isMacOS()) {
+      console.log('electron-builder isMacOS !!!')
       const config = (await import('../configs/electron-builder')).default
       options.config = config as any
     } else if (isWindows()) {
+      console.log('electron-builder isWindows !!!')
       const config = (await import('../configs/electron-builder.win')).default
+      options.config = config as any
+    } else if (isLinux()) {
+      console.log('electron-builder isLinux !!!')
+      const config = (await import('../configs/electron-builder.linux')).default
       options.config = config as any
     }
 

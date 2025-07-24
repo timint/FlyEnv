@@ -5,9 +5,10 @@ import { compareVersions } from 'compare-versions'
 import type { SoftInstalled } from '@shared/app'
 import { execPromise } from '@shared/child-process'
 import { existsSync } from '@shared/fs-extra'
-import { isMacOS, isWindows } from '@shared/utils'
+import { isLinux, isWindows } from '@shared/utils'
 import { getSubDirAsync } from './Dir'
 import { fetchPathByBin } from '../Fn'
+import { userInfo } from 'node:os'
 
 export function versionFixed(version?: string | null) {
   return (
@@ -115,12 +116,23 @@ export const versionLocalFetch = async (
   const installed: Set<string> = new Set()
   let searchDepth1Dir: string[] = []
   let searchDepth2Dir: string[] = []
-  if (isMacOS()) {
+  if (isWindows()) {
+    searchDepth1Dir = [...customDirs]
+    searchDepth2Dir = [global.Server.AppDir!]
+  } else {
     searchDepth1Dir = ['/', '/opt', '/usr', ...customDirs]
     searchDepth2Dir = [global.Server.AppDir!]
     if (searchName) {
       const base = ['/usr/local/Cellar', '/opt/homebrew/Cellar']
+      if (isLinux()) {
+        base.push('/home/linuxbrew/.linuxbrew/Cellar')
+        const uinfo = userInfo()
+        base.push(join(uinfo.homedir, '.linuxbrew/bin/brew'))
+      }
       for (const b of base) {
+        if (!existsSync(b)) {
+          continue
+        }
         const subDir = versionDirCache?.[b] ?? (await getSubDirAsync(b))
         if (!versionDirCache?.[b]) {
           versionDirCache[b] = subDir
@@ -139,9 +151,6 @@ export const versionLocalFetch = async (
         }
       }
     }
-  } else if (isWindows()) {
-    searchDepth1Dir = [...customDirs]
-    searchDepth2Dir = [global.Server.AppDir!]
   }
 
   const checkedDir: Set<string> = new Set()

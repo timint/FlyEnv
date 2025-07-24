@@ -1,19 +1,30 @@
 import { createConnection } from 'net'
-import Sudo from '@shared/Sudo'
+import { exec as Sudo } from '@shared/Sudo'
 import { dirname, join, resolve as PathResolve } from 'path'
-import logger from './Logger'
 import is from 'electron-is'
+import { isLinux, isMacOS } from '@shared/utils'
+import { writeFile, stat } from '@shared/fs-extra'
 import Helper from '../../fork/Helper'
-import { userInfo } from 'os'
+import { ExecCommand } from '@shared/Exec'
 
 const SOCKET_PATH = '/tmp/flyenv-helper.sock'
+const Role_Path = '/tmp/flyenv.role'
+const Role_Path_Back = '/usr/local/share/FlyEnv/flyenv.role'
+
+let HadOpenInTerminal = false
 
 class AppHelper {
   state: 'normal' | 'installing' | 'installed' = 'normal'
-  version = 5
+  version = 7
   check() {
     console.time('AppHelper check')
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
+      const stats = await stat(process.execPath)
+      const role = `${stats.uid}:${stats.gid}`
+      await writeFile(Role_Path, role)
+      try {
+        Helper.send('tools', 'writeFileByRoot', Role_Path_Back, role).catch()
+      } catch {}
       const client = createConnection(SOCKET_PATH)
       client.on('connect', () => {
         console.log('Connected to the server')
@@ -53,28 +64,6 @@ class AppHelper {
         }
         this.check()
           .then(() => {
-            const vhostLogs = join(global.Server.BaseDir!, 'vhost/logs')
-            const nginxLogs = join(global.Server.NginxDir!, 'common/logs')
-            const apacheLogs = join(global.Server.ApacheDir!, 'common/logs')
-            const uinfo = userInfo()
-            const uid = uinfo.uid
-            const gid = uinfo.gid
-            try {
-              Helper.send('tools', 'startService', `chown -R ${uid}:${gid} "${vhostLogs}"`)
-                .then()
-                .catch()
-            } catch {}
-            try {
-              Helper.send('tools', 'startService', `chown -R ${uid}:${gid} "${nginxLogs}"`)
-                .then()
-                .catch()
-            } catch {}
-            try {
-              Helper.send('tools', 'startService', `chown -R ${uid}:${gid} "${apacheLogs}"`)
-                .then()
-                .catch()
-            } catch {}
-            logger.info('[FlyEnv][initHelper][doChech] time: ', time)
             this.state = 'normal'
             resolve(true)
           })
@@ -89,22 +78,32 @@ class AppHelper {
       let command = ''
       let icns = ``
       if (is.production()) {
-        const binDir = PathResolve(global.Server.Static!, '../../../../')
-        const plist = join(binDir, 'plist/com.flyenv.helper.plist')
-        const bin = join(binDir, 'helper/flyenv-helper')
-        command = `cd "${join(binDir, 'helper')}" && sudo ./postinstall.sh "${plist}" "${bin}"`
-        icns = join(binDir, 'icon.icns')
+        if (isMacOS()) {
+          const binDir = PathResolve(global.Server.Static!, '../../../../')
+          const plist = join(binDir, 'plist/com.flyenv.helper.plist')
+          const bin = join(binDir, 'helper/flyenv-helper')
+          command = `cd "${join(binDir, 'helper')}" && sudo chmod 777 ./flyenv-helper-init.sh && sudo ./flyenv-helper-init.sh "${plist}" "${bin}"`
+          icns = join(binDir, 'icon.icns')
+        } else if (isLinux()) {
+          const binDir = PathResolve(global.Server.Static!, '../../../../')
+          const bin = join(binDir, 'helper/flyenv-helper')
+          command = `cd "${join(binDir, 'helper')}" && sudo chmod 777 ./flyenv-helper-init.sh && sudo ./flyenv-helper-init.sh "${bin}"`
+          icns = join(binDir, 'Icon@256x256.icns')
+        }
       } else {
-        const binDir = PathResolve(global.Server.Static!, '../../../build/')
-        const plist = join(binDir, 'plist/com.flyenv.helper.plist')
-        const bin = join(
-          binDir,
-          'bin',
-          global.Server.isAppleSilicon ? 'arm' : 'x86',
-          'flyenv-helper'
-        )
-        command = `cd "${dirname(bin)}" && sudo ./postinstall.sh "${plist}" "${bin}"`
-        icns = join(binDir, 'icon.icns')
+        if (isMacOS()) {
+          const binDir = PathResolve(global.Server.Static!, '../../../build/')
+          const plist = join(binDir, 'plist/com.flyenv.helper.plist')
+          const bin = join(binDir, 'bin', global.Server.isArmArch ? 'arm' : 'x86', 'flyenv-helper')
+          command = `cd "${dirname(bin)}" && sudo chmod 777 ./flyenv-helper-init.sh && sudo ./flyenv-helper-init.sh "${plist}" "${bin}"`
+          icns = join(binDir, 'icon.icns')
+        } else if (isLinux()) {
+          const binDir = PathResolve(global.Server.Static!, '../../../build/')
+          const bin = join(binDir, 'bin', global.Server.isArmArch ? 'arm' : 'x86', 'flyenv-helper')
+          const shDir = join(global.Server.Static!, 'sh')
+          command = `cd '${shDir}' && sudo chmod 777 ./flyenv-helper-init.sh && sudo ./flyenv-helper-init.sh '${bin}'`
+          icns = join(binDir, 'Icon@256x256.icns')
+        }
       }
 
       Sudo(command, {
@@ -119,6 +118,69 @@ class AppHelper {
         })
         .catch((e) => {
           console.log('initHelper err: ', e)
+          if (!HadOpenInTerminal) {
+            HadOpenInTerminal = true
+            // ExecCommand.runInTerminal(`"${command}"`).catch()
+          }
+          this.state = 'normal'
+          reject(e)
+        })
+    })
+  }
+
+  initHelperByTerminal() {
+    return new Promise((resolve, reject) => {
+      const doChech = (time = 0) => {
+        if (time > 1) {
+          this.state = 'normal'
+          reject(new Error('Install helper failed'))
+          return
+        }
+        this.check()
+          .then(() => {
+            this.state = 'normal'
+            resolve(true)
+          })
+          .catch(() => {
+            setTimeout(() => {
+              doChech(time + 1)
+            }, 1000)
+          })
+      }
+
+      this.state = 'installing'
+      let command = ''
+      if (is.production()) {
+        if (isMacOS()) {
+          const binDir = PathResolve(global.Server.Static!, '../../../../')
+          const plist = join(binDir, 'plist/com.flyenv.helper.plist')
+          const bin = join(binDir, 'helper/flyenv-helper')
+          command = `cd "${join(binDir, 'helper')}" && sudo chmod 777 ./flyenv-helper-init.sh && sudo ./flyenv-helper-init.sh "${plist}" "${bin}"`
+        } else if (isLinux()) {
+          const binDir = PathResolve(global.Server.Static!, '../../../../')
+          const bin = join(binDir, 'helper/flyenv-helper')
+          command = `cd "${join(binDir, 'helper')}" && sudo chmod 777 ./flyenv-helper-init.sh && sudo ./flyenv-helper-init.sh "${bin}"`
+        }
+      } else {
+        if (isMacOS()) {
+          const binDir = PathResolve(global.Server.Static!, '../../../build/')
+          const plist = join(binDir, 'plist/com.flyenv.helper.plist')
+          const bin = join(binDir, 'bin', global.Server.isArmArch ? 'arm' : 'x86', 'flyenv-helper')
+          command = `cd "${dirname(bin)}" && sudo chmod 777 ./flyenv-helper-init.sh && sudo ./flyenv-helper-init.sh "${plist}" "${bin}"`
+        } else if (isLinux()) {
+          const binDir = PathResolve(global.Server.Static!, '../../../build/')
+          const bin = join(binDir, 'bin', global.Server.isArmArch ? 'arm' : 'x86', 'flyenv-helper')
+          const shDir = join(global.Server.Static!, 'sh')
+          command = `cd '${shDir}' && sudo chmod 777 ./flyenv-helper-init.sh && sudo ./flyenv-helper-init.sh '${bin}'`
+        }
+      }
+
+      ExecCommand.runInTerminal(command)
+        .then(() => {
+          doChech()
+        })
+        .catch((e) => {
+          console.log('initHelperByTerminal err: ', e)
           this.state = 'normal'
           reject(e)
         })

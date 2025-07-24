@@ -1,4 +1,4 @@
-import { createServer, build as viteBuild } from 'vite'
+import { createServer, build } from 'vite'
 import { spawn, ChildProcess } from 'child_process'
 import _fs from 'fs-extra'
 import _path from 'path'
@@ -10,7 +10,7 @@ import { fileURLToPath } from 'node:url'
 import { dirname } from 'node:path'
 import { createRequire } from 'node:module'
 import { ElectronKill, ElectronKillWin } from './electron-process-kill'
-import { isMacOS, isWindows } from '../src/shared/utils'
+import { isLinux, isMacOS, isWindows } from '../src/shared/utils'
 
 const require = createRequire(import.meta.url)
 
@@ -47,19 +47,24 @@ function buildMainProcess() {
     building = true
     await DoFix()
     let promise: Promise<any> | undefined
-    if (isMacOS()) {
-      console.log('isMacOS !!!')
+    if (isMacOS() || isLinux()) {
+      console.log('isMacOS || isLinux !!!')
       const config = viteConfig.vite.mac
       promise = Promise.all([
-        viteBuild(config.dev),
-        viteBuild(config.devFork),
-        viteBuild(config.devHelper),
+        build(config.dev),
+        build(config.devFork),
+        build(config.devHelper),
         ElectronKill(electronProcess)
       ])
     } else if (isWindows()) {
       console.log('isWindows !!!')
       const config = viteConfig.vite.win
-      promise = Promise.all([viteBuild(config.dev), viteBuild(config.devFork), ElectronKillWin()])
+      promise = Promise.all([
+        build(config.dev),
+        build(config.devFork),
+        build(config.devHelper),
+        ElectronKillWin()
+      ])
     }
     if (!promise) {
       building = false

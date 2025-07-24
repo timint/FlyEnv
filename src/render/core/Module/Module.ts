@@ -29,6 +29,8 @@ export class Module {
   port: ModuleMacportsItem[] = []
   static: ModuleStaticItem[] = []
 
+  staticDowing: ModuleStaticItem[] = []
+
   brewFetching: boolean = false
   portFetching: boolean = false
   staticFetching: boolean = false
@@ -100,7 +102,10 @@ export class Module {
                   (o) => o.path === item.path && o.version === item.version
                 )
                 if (find) {
-                  Object.assign(find, item)
+                  const copy: any = { ...item }
+                  delete copy?.run
+                  delete copy?.running
+                  Object.assign(find, copy)
                   return find
                 } else {
                   const installItem = reactive(new ModuleInstalledItem(item))
@@ -219,12 +224,19 @@ export class Module {
             (d) => d.url === item.url && d.version === item.version && d.bin === item.bin
           )
           if (!find) {
-            const obj = reactive(new ModuleStaticItem(item))
-            obj.typeFlag = this.typeFlag
-            obj.fetchCommand = obj.fetchCommand.bind(obj)
-            obj.copyCommand = obj.copyCommand.bind(obj)
-            obj.runCommand = obj.runCommand.bind(obj)
-            this.static.push(obj)
+            const findDowing = this.staticDowing.find(
+              (d) => d.url === item.url && d.version === item.version && d.bin === item.bin
+            )
+            if (findDowing) {
+              this.static.push(findDowing)
+            } else {
+              const obj = reactive(new ModuleStaticItem(item))
+              obj.typeFlag = this.typeFlag
+              obj.fetchCommand = obj.fetchCommand.bind(obj)
+              obj.copyCommand = obj.copyCommand.bind(obj)
+              obj.runCommand = obj.runCommand.bind(obj)
+              this.static.push(obj)
+            }
           } else {
             console.log('find: ', find, item)
             const downing = find?.downing ?? false

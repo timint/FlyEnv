@@ -54,6 +54,8 @@
     configpath = HostsFileMacOS
   } else if (window.Server.isWindows) {
     configpath = HostsFileWindows
+  } else {
+    configpath = HostsFileLinux
   }
   const input = ref<HTMLElement | null>(null)
   let monacoInstance: editor.IStandaloneCodeEditor | undefined
