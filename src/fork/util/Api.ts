@@ -11,11 +11,11 @@ import { httpRequest } from './Http'
  */
 export const apiRequest = async (method: string, path: string, data: any = {}, options: any = {}): Promise<any> => {
   // Ensure path starts with a slash
-  if (!path.startsWith('/')) {
-    path = `/${path}`
+  if (path.startsWith('/')) {
+    path = path.substring(1)
   }
 
-  const url = `https://api.one-env.com/api${path}`
+  const url = `https://api.one-env.com/api/${path}`
 
   return new ForkPromise(async (resolve, reject) => {
     try {
@@ -26,18 +26,19 @@ export const apiRequest = async (method: string, path: string, data: any = {}, o
         },
         ...options
       })
+      let result: any = []
       if (response) {
         const contentType = response.headers?.['content-type'] ?? ''
         // Try to parse JSON if needed
         if (typeof response.data === 'string' && contentType.includes('application/json')) {
           const parsed = JSON.parse(response.data)
-          resolve(parsed?.data ?? parsed ?? [])
+          result = parsed?.data ?? parsed ?? []
         } else {
-          resolve(response.data?.data ?? response.data ?? response ?? [])
+          result = response.data?.data ?? response.data ?? response ?? []
         }
-      } else {
-        resolve([])
       }
+      console.log('[apiRequest] Response: ', result)
+      resolve(result)
     } catch (err: any) {
       reject(err)
     }

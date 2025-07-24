@@ -12,7 +12,7 @@ import { AppLog, downloadFile } from '../Fn'
 import { ForkPromise } from '@shared/ForkPromise'
 import TaskQueue from '../TaskQueue'
 import { ProcessListSearch } from '@shared/Process.win'
-import { apiRequest } from '../util/WebApi'
+import { apiRequest } from '../util/Api'
 
 class Php extends Base {
   constructor() {

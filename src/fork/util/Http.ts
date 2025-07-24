@@ -83,7 +83,7 @@ function getProxyFromGlobal(): any {
       }
     }
   } catch (err) {
-    console.warn('[WebAPI] Invalid proxy config:', err)
+    console.warn('[getProxyFromGlobal] Invalid proxy config:', err)
   }
   return undefined
 }

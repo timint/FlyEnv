@@ -11,8 +11,7 @@ import { type PItem, ProcessSearch } from '@shared/Process'
 import Helper from '../Helper'
 import { isMacOS, isWindows } from '@shared/utils'
 import { ProcessPidList } from '@shared/Process.win'
-import { apiRequest } from '../util/WebApi'
-
+import { apiRequest } from '../util/Api'
 
 export class Base {
   type: string
