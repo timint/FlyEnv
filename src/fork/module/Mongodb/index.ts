@@ -23,7 +23,6 @@ import {
   remove,
   zipUnpack,
   moveChildDirToParent,
-  createWriteStream,
   serviceStartExecCMD,
   waitTime
 } from '../../Fn'

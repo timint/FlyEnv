@@ -1,10 +1,10 @@
-import request from '@shared/request'
 import Config from './Config'
 import { checkIsExcludeUrl } from './Fn'
 import { Store } from './Store'
 import { wait, existsSync, mkdirp, createWriteStream, unlinkSync, stat } from '../../utils'
 import { dirname } from 'path'
 import type { LinkItem } from './LinkItem'
+import { httpStreamDownload } from 'src/fork/util/Http'
 
 class LinkTaskItem {
   isDestroy?: boolean
@@ -100,11 +100,8 @@ class LinkTaskItem {
           onError()
         }
         timer = setTimeout(taskFail, Config.timeout)
-        request({
-          url: link.url,
+        httpStreamDownload(link.url, {
           timeout: Config.timeout,
-          method: 'get',
-          responseType: 'stream',
           headers: {
             cookie: Store.cookie
           },

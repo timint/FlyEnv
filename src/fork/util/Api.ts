@@ -15,6 +15,7 @@ export const apiRequest = async (method: string, path: string, data: any = {}, o
     path = path.substring(1)
   }
 
+  // Base URL
   const url = `https://api.one-env.com/api/${path}`
 
   return new ForkPromise(async (resolve, reject) => {

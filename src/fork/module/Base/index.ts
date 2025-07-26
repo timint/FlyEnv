@@ -19,7 +19,7 @@ import { type PItem, ProcessSearch } from '@shared/Process'
 import Helper from '../../Helper'
 import { isLinux, isMacOS, isWindows } from '@shared/utils'
 import { ProcessPidList } from '@shared/Process.win'
-import { apiRequest } from '../util/Api'
+import { apiRequest } from '../../util/Api'
 import { unpack } from '../../util/Zip'
 
 export class Base {
@@ -276,26 +276,6 @@ export class Base {
     }
     console.log('waitPid: ', time, res)
     return res
-  }
-
-  getAxiosProxy() {
-    const proxyUrl =
-      Object.values(global?.Server?.Proxy ?? {})?.find((s: string) => s.includes('://')) ?? ''
-    let proxy: any = {}
-    if (proxyUrl) {
-      try {
-        const u = new URL(proxyUrl)
-        proxy.protocol = u.protocol.replace(':', '')
-        proxy.host = u.hostname
-        proxy.port = u.port
-      } catch {
-        proxy = undefined
-      }
-    } else {
-      proxy = undefined
-    }
-    console.log('getAxiosProxy: ', proxy)
-    return proxy
   }
 
   async _fetchOnlineVersion(app: string): Promise<OnlineVersionItem[]> {
