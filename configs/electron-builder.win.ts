@@ -17,6 +17,10 @@ const conf: Configuration = {
     '!**/node_modules/.bin',
     '!**/node_modules/node-pty/build/node_gyp_bins'
   ],
+  electronLanguages: [
+    'en-US',
+    'zh-CN'
+  ],
   artifactName: 'FlyEnv Setup ${version}.${ext}',
   win: {
     artifactName: 'FlyEnv Setup ${version}.${ext}',
