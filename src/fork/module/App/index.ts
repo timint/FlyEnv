@@ -3,7 +3,7 @@ import { machineId } from '../../Fn'
 import { ForkPromise } from '@shared/ForkPromise'
 import { arch } from 'os'
 import { publicDecrypt } from 'crypto'
-import { apiRequest } from '../util/Api'
+import { apiRequest } from '../../util/Api'
 
 class App extends Base {
   constructor() {
