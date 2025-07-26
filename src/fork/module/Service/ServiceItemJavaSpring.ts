@@ -93,12 +93,14 @@ export class ServiceItemJavaSpring extends ServiceItem {
 
       process.chdir(global.Server.Cache!)
       try {
-        if (isWindows()) {
+        if (isMacOS()) {
+          await execPromiseWithEnv(`zsh "${sh}"`, opt)
+        } else if (isWindows()) {
           const pidResult = await powershell.execCommand(
             `(Start-Process -FilePath ./service-${this.id}.cmd -PassThru -WindowStyle Hidden).Id`
           )
-        } else {
-          await execPromiseWithEnv(`${shell} "${sh}"`, opt)
+          const pid = pidResult.trim()
+          await writeFile(pid, pidResult)
         }
         const resPid = await this.checkPid()
         this.daemon()
