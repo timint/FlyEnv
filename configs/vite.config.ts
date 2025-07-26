@@ -81,6 +81,9 @@ const serveConfig: UserConfig = {
 
 const buildConfig: UserConfig = {
   mode: 'production',
+  esbuild: {
+    drop: ['console', 'debugger']
+  },
   build: {
     outDir: '../../dist/render',
     assetsDir: 'static',
@@ -99,7 +102,6 @@ const buildConfig: UserConfig = {
         chunkFileNames: 'static/js/[name].[hash].js',
         assetFileNames: 'static/[ext]/[name].[hash].[ext]',
         manualChunks(id) {
-          console.log('id: ', id)
           if (id.includes('node_modules')) {
             return id.toString().split('node_modules/')[1].split('/')[0].toString()
           }
@@ -107,13 +109,7 @@ const buildConfig: UserConfig = {
         }
       }
     },
-    minify: 'terser',
-    terserOptions: {
-      compress: {
-        drop_console: true,
-        drop_debugger: true
-      }
-    }
+    minify: 'esbuild'
   },
   ...config
 }

@@ -1,0 +1,95 @@
+name: Build FlyEnv Linux Packages
+on:
+  push:
+    paths:
+      - 'build/linux.build.yml'
+
+jobs:
+  build-packages:
+    name: Build Packages (${{ matrix.arch }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 60
+    strategy:
+      matrix:
+        include:
+          - arch: x64
+            os: ubuntu-22.04
+            target: x64
+          - arch: arm64
+            os: ubuntu-22.04-arm
+            target: arm64
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Electron build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            g++ \
+            make \
+            python3 \
+            python3-pip \
+            pkg-config \
+            fakeroot \
+            rpm
+
+      - name: Setup Latest Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'latest'
+
+      - name: Setup Latest Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: 'stable'
+
+      - name: Cache node_modules and node-gyp
+        uses: actions/cache@v4
+        with:
+          path: |
+            node_modules
+            **/node_modules
+            .yarn/cache
+            ~/.cache/node-gyp
+          key: ${{ runner.os }}-electron-${{ hashFiles('**/yarn.lock') }}
+
+      - name: Install Yarn and build tools
+        run: |
+          npm install -g yarn node-gyp
+          python3 -m pip install --upgrade pip
+
+      - name: Install dependencies with Yarn
+        run: |
+          yarn install
+
+      - name: Init notarize.ts File
+        run: |
+          mkdir -p build
+          cat > build/notarize.ts << 'EOF'
+          export default async function notarizing() {
+            return;
+          }
+          EOF
+
+      - name: Build Go helper
+        run: |
+          cd "$GITHUB_WORKSPACE/src/helper-go"
+          chmod +x ./build-os.sh
+          bash ./build-os.sh
+
+      - name: Build Electron packages with electron-builder
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cd "$GITHUB_WORKSPACE"
+          yarn build
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: packages-${{ matrix.arch }}
+          path: |
+            release/*.deb
+            release/*.rpm
+            release/*.yml
