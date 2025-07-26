@@ -2,8 +2,6 @@ import { createWriteStream, realpathSync } from 'node:fs'
 import type { FSWatcher } from 'node:fs'
 import { dirname, join, normalize, parse } from 'path'
 import { ForkPromise } from '@shared/ForkPromise'
-import crypto from 'crypto'
-import axios from 'axios'
 import type { AppHost } from '@shared/app'
 import Helper from './Helper'
 import { format } from 'date-fns'
@@ -58,6 +56,7 @@ import {
 } from '@shared/fs-extra'
 import { addPath, fetchRawPATH, handleWinPathArr, writePath } from './util/PATH.win'
 import { isWindows, waitTime } from '@shared/utils'
+import { httpStreamDownload } from './util/Http'
 
 export { waitTime, addPath, fetchRawPATH, handleWinPathArr, writePath }
 
@@ -201,40 +200,15 @@ export async function setDir777ToCurrentUser(folderPath: string) {
   }
 }
 
+
 export function md5(str: string) {
   const md5 = crypto.createHash('md5')
   return md5.update(str).digest('hex')
 }
 
-export function downloadFile(url: string, savepath: string) {
-  return new ForkPromise((resolve, reject, on) => {
-    const proxyUrl =
-      Object.values(global?.Server?.Proxy ?? {})?.find((s: string) => s.includes('://')) ?? ''
-    let proxy: any = {}
-    if (proxyUrl) {
-      try {
-        const u = new URL(proxyUrl)
-        proxy.protocol = u.protocol.replace(':', '')
-        proxy.host = u.hostname
-        proxy.port = u.port
-      } catch {
-        proxy = undefined
-      }
-    } else {
-      proxy = undefined
-    }
-    axios({
-      method: 'get',
-      url: url,
-      responseType: 'stream',
-      proxy: proxy,
-      onDownloadProgress: (progress) => {
-        if (progress.total) {
-          const percent = Math.round((progress.loaded * 100.0) / progress.total)
-          on(percent)
-        }
-      }
-    })
+export function downloadFile(url: string, savepath: string, on?: (progress: any) => void) {
+  return new ForkPromise((resolve, reject, _on) => {
+    httpStreamDownload(url, {}, on || _on)
       .then(async (response) => {
         const base = dirname(savepath)
         await mkdirp(base)

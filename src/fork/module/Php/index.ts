@@ -1,9 +1,10 @@
 import { join, dirname } from 'path'
-import { createWriteStream, existsSync, statSync, unlinkSync } from 'fs'
+import { existsSync, statSync, unlinkSync } from 'fs'
 import { Base } from '../Base'
 import { I18nT } from '@lang/index'
 import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
 import {
+  downloadFile,
   execPromise,
   getAllFileAsync,
   versionLocalFetch,
@@ -25,7 +26,6 @@ import {
 } from '../../Fn'
 import { ForkPromise } from '@shared/ForkPromise'
 import compressing from 'compressing'
-import axios from 'axios'
 import TaskQueue from '../../TaskQueue'
 import { ProcessPidsByPid } from '@shared/Process'
 import Helper from '../../Helper'
@@ -396,33 +396,8 @@ xdebug.output_dir = "${output_dir}"
       let p0 = 0
       let p1 = 0
       const downFPM = (): Promise<boolean> => {
-        return new Promise((resolve) => {
-          axios({
-            method: 'get',
-            url: row.url,
-            proxy,
-            responseType: 'stream',
-            onDownloadProgress: (progress) => {
-              if (progress.total) {
-                p0 = (progress.loaded * 100.0) / progress.total
-                row.progress = Math.round(((p0 + p1) / 200.0) * 100.0)
-                on(row)
-              }
-            }
-          })
-            .then(function (response) {
-              const stream = createWriteStream(row.zip)
-              response.data.pipe(stream)
-              stream.on('error', (err: any) => {
-                console.log('stream error: ', err)
-                try {
-                  if (existsSync(row.zip)) {
-                    unlinkSync(row.zip)
-                  }
-                } catch {}
-                resolve(false)
-              })
-              stream.on('finish', async () => {
+        return downloadFile(row.url, row.zip)
+          .then(async () => {
                 try {
                   if (existsSync(row.zip)) {
                     const sbin = join(row.appDir, 'sbin')
@@ -430,9 +405,8 @@ xdebug.output_dir = "${output_dir}"
                     await unpack(row.zip, sbin)
                   }
                 } catch {}
-                resolve(true)
+            return true
               })
-            })
             .catch((err) => {
               console.log('down error: ', err)
               try {
@@ -440,39 +414,13 @@ xdebug.output_dir = "${output_dir}"
                   unlinkSync(row.zip)
                 }
               } catch {}
-              resolve(false)
+            return false
             })
-        })
       }
       const downCLI = (): Promise<boolean> => {
-        return new Promise((resolve) => {
           const url = row.url.replace('-fpm-', '-cli-')
-          axios({
-            method: 'get',
-            url,
-            proxy,
-            responseType: 'stream',
-            onDownloadProgress: (progress) => {
-              if (progress.total) {
-                p1 = (progress.loaded * 100.0) / progress.total
-                row.progress = Math.round(((p0 + p1) / 200.0) * 100.0)
-                on(row)
-              }
-            }
-          })
-            .then(function (response) {
-              const stream = createWriteStream(cliZIP)
-              response.data.pipe(stream)
-              stream.on('error', (err: any) => {
-                console.log('stream error: ', err)
-                try {
-                  if (existsSync(cliZIP)) {
-                    unlinkSync(cliZIP)
-                  }
-                } catch {}
-                resolve(false)
-              })
-              stream.on('finish', async () => {
+        return downloadFile(url, cliZIP)
+          .then(async () => {
                 try {
                   if (existsSync(cliZIP)) {
                     const bin = join(row.appDir, 'bin')
@@ -480,9 +428,8 @@ xdebug.output_dir = "${output_dir}"
                     await unpack(cliZIP, bin)
                   }
                 } catch {}
-                resolve(true)
+            return true
               })
-            })
             .catch((err) => {
               console.log('down error: ', err)
               try {
@@ -490,9 +437,8 @@ xdebug.output_dir = "${output_dir}"
                   unlinkSync(cliZIP)
                 }
               } catch {}
-              resolve(false)
+            return false
             })
-        })
       }
 
       Promise.all([downFPM(), downCLI()]).then(async ([res0, res1]: [boolean, boolean]) => {

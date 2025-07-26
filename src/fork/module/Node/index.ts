@@ -1,5 +1,6 @@
 import { Base } from '../Base'
 import {
+  downloadFile,
   execPromise,
   readFileByRoot,
   versionBinVersion,
@@ -22,8 +23,8 @@ import {
 import { ForkPromise } from '@shared/ForkPromise'
 import { basename, dirname, join } from 'path'
 import { compareVersions } from 'compare-versions'
-import { createWriteStream, existsSync } from 'fs'
-import axios from 'axios'
+import { existsSync } from 'fs'
+import { httpRequest } from '../util/Http'
 import type { SoftInstalled } from '@shared/app'
 import TaskQueue from '../../TaskQueue'
 import ncu from 'npm-check-updates'
@@ -36,15 +37,12 @@ class Manager extends Base {
   }
 
   allVersion() {
-    return new ForkPromise(async (resolve) => {
+    return new ForkPromise(async (resolve, reject) => {
       const url = 'https://nodejs.org/dist/'
-      const res = await axios({
-        method: 'get',
-        url: url,
-        proxy: this.getAxiosProxy()
-      })
-      const html = res.data
-      const regex = /href="v([\d.]+?)\/"/g
+      try {
+        const res = await httpRequest('GET', url)
+        const html = typeof res === 'string' ? res : res?.data || ''
+        const regex = /href="v([\d.]+?)\//g
       let result
       let links = []
       while ((result = regex.exec(html)) != null) {
@@ -60,6 +58,9 @@ class Manager extends Base {
       resolve({
         all: links
       })
+      } catch (e) {
+        reject(e)
+      }
     })
   }
 
@@ -304,36 +305,14 @@ class Manager extends Base {
             } catch {}
           }
 
-          axios({
-            method: 'get',
-            url: url,
-            proxy: this.getAxiosProxy(),
-            responseType: 'stream',
-            onDownloadProgress: (progress) => {
-              if (progress.total) {
-                const num = Math.round((progress.loaded * 100.0) / progress.total)
-                on({
-                  progress: num
-                })
-              }
-            }
-          })
-            .then(function (response) {
-              const stream = createWriteStream(zip)
-              response.data.pipe(stream)
-              stream.on('error', async (err: any) => {
-                console.log('stream error: ', err)
-                await fail()
-                reject(err)
-              })
-              stream.on('finish', async () => {
+          downloadFile(url, zip)
+            .then(async () => {
                 const res = await end()
                 if (res === true) {
                   return
                 }
                 reject(res)
               })
-            })
             .catch(async (err) => {
               console.log('down error: ', err)
               await fail()

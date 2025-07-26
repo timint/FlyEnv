@@ -8,6 +8,7 @@ import {
   brewInfoJson,
   brewSearch,
   portSearch,
+  downloadFile,
   serviceStartExec,
   versionBinVersion,
   versionFilterSame,
@@ -28,7 +29,6 @@ import {
 } from '../../Fn'
 import { ForkPromise } from '@shared/ForkPromise'
 import TaskQueue from '../../TaskQueue'
-import axios from 'axios'
 import { isWindows, pathFixedToUnix } from '@shared/utils'
 import { spawnPromise } from '@shared/child-process'
 
@@ -75,24 +75,12 @@ class Manager extends Base {
       }
 
       try {
-        const response = await axios({
-          method: 'get',
-          url: url,
-          responseType: 'stream'
-        })
-
-        const writer = createWriteStream(zip)
-        response.data.pipe(writer)
-        writer.on('finish', async () => {
+        await downloadFile(url, zip)
           const installRes = await doInstall()
           if (installRes) {
             return resolve(true)
           }
           return resolve(false)
-        })
-        writer.on('error', () => {
-          resolve(false)
-        })
       } catch {
         resolve(false)
       }
