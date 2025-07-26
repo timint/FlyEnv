@@ -9,13 +9,13 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 const execPromise = promisify(exec)
 
 async function ElectronKillWin() {
-  const sh = resolve(__dirname, '../scripts/electron-kill.ps1')
-  const scriptDir = dirname(sh)
-  console.log('sh: ', sh, scriptDir)
-
   let res: any = null
   try {
-    res = await powershell.execFile(sh, [], { cwd: scriptDir, unblockFile: true })
+    res = await powershell.execCommand([
+      "Get-CimInstance Win32_Process -Filter 'Name like electron.exe'",
+      "Select-Object CommandLine,ProcessId,ParentProcessId",
+      "ConvertTo-Json"
+    ].join(' | '))
   } catch (e) {
     console.log('killAllElectron err: ', e)
   }
