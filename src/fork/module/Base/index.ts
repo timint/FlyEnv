@@ -15,13 +15,11 @@ import {
   zipUnpack
 } from '../../Fn'
 import { ForkPromise } from '@shared/ForkPromise'
-import axios from 'axios'
-import * as http from 'http'
-import * as https from 'https'
 import { type PItem, ProcessSearch } from '@shared/Process'
 import Helper from '../../Helper'
 import { isLinux, isMacOS, isWindows } from '@shared/utils'
 import { ProcessPidList } from '@shared/Process.win'
+import { apiRequest } from '../util/Api'
 import { unpack } from '../../util/Zip'
 
 export class Base {
@@ -322,18 +320,8 @@ export class Base {
           os: 'linux',
           arch: global.Server.Arch === 'x86_64' ? 'x86' : 'arm'
         }
-      }
-      const res = await axios({
-        url: 'https://api.one-env.com/api/version/fetch',
-        method: 'post',
-        data,
-        timeout: 30000,
-        withCredentials: false,
-        httpAgent: new http.Agent({ keepAlive: false }),
-        httpsAgent: new https.Agent({ keepAlive: false }),
-        proxy: this.getAxiosProxy()
-      })
-      list = res?.data?.data ?? []
+      const res = await apiRequest('POST', '/version/fetch', data)
+      list = res ?? []
     } catch (e) {
       console.log('_fetchOnlineVersion: err', e)
     }

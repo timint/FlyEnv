@@ -2,8 +2,8 @@ import { Base } from '../Base'
 import { machineId } from '../../Fn'
 import { ForkPromise } from '@shared/ForkPromise'
 import { arch } from 'os'
-import axios from 'axios'
 import { publicDecrypt } from 'crypto'
+import { apiRequest } from '../util/WebApi'
 import { isMacOS, isWindows } from '@shared/utils'
 
 class App extends Base {
@@ -34,8 +34,6 @@ class App extends Base {
 
   start(version: string) {
     return new ForkPromise(async (resolve) => {
-      const uuid_new = await machineId()
-      const uuid = '#########'
 
       let os = ''
       if (isWindows()) {
@@ -46,24 +44,15 @@ class App extends Base {
         os = `Linux ${arch()}`
       }
 
-      const data = {
-        uuid,
-        uuid_new,
-        os,
-        version
-      }
-
-      console.log('data: ', data)
-
-      const res = await axios({
-        url: 'https://api.one-env.com/api/app/start',
-        method: 'post',
-        data,
-        proxy: this.getAxiosProxy()
+      const res = await apiRequest('POST', '/app/start', {
+        uuid: '#########',
+        uuid_new: await machineId(),
+        os: os,
+        version: version
       })
 
-      if (res?.data?.data?.license) {
-        const license = res?.data?.data?.license
+      if (res?.data?.license) {
+        const license = res?.data?.license
         resolve({
           'APP-Licenses-Code': license
         })
@@ -85,12 +74,7 @@ class App extends Base {
 
       console.log('data: ', data)
 
-      axios({
-        url: 'https://api.one-env.com/api/app/feedback_app',
-        method: 'post',
-        data,
-        proxy: this.getAxiosProxy()
-      })
+      apiRequest('POST', '/app/feedback_app', data)
         .then(() => {
           resolve(true)
         })
@@ -137,14 +121,7 @@ class App extends Base {
         activeCode: '',
         isActive: false
       }
-      axios({
-        url: 'https://api.one-env.com/api/app/active_code_info',
-        method: 'post',
-        data: {
-          uuid
-        },
-        proxy: this.getAxiosProxy()
-      })
+      apiRequest('POST', '/app/active_code_info', { uuid })
         .then((res) => {
           const data = res?.data?.data ?? {}
           obj.activeCode = data?.code ?? ''
@@ -172,14 +149,9 @@ class App extends Base {
   licensesRequest(message: string) {
     return new ForkPromise(async (resolve, reject) => {
       const uuid = await machineId()
-      axios({
-        url: 'https://api.one-env.com/api/app/active_code_request',
-        method: 'post',
-        data: {
+      apiRequest('POST', '/app/active_code_request', {
           uuid,
           message
-        },
-        proxy: this.getAxiosProxy()
       })
         .then(() => {
           resolve(true)
