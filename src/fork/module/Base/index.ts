@@ -4,14 +4,15 @@ import { dirname, join } from 'path'
 import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
 import { execPromise, execPromiseWithEnv } from '@shared/child-process'
 import { readFile, writeFile, remove, mkdirp } from '@shared/fs-extra'
-import { extractArchive } from '../util/Archive'
-import { AppLog, downloadFile, waitTime } from '../Fn'
+import { extractArchive } from '../../util/Archive'
+import { AppLog, downloadFile } from '../../Fn'
+import { waitTime } from '@shared/utils'
 import { ForkPromise } from '@shared/ForkPromise'
 import { type PItem, ProcessSearch } from '@shared/Process'
 import Helper from '../../Helper'
 import { isLinux, isMacOS, isWindows } from '@shared/utils'
 import { ProcessPidList } from '@shared/Process.win'
-import { apiRequest } from '../util/Api'
+import { apiRequest } from '../../util/Api'
 
 export class Base {
   type: string
@@ -270,6 +271,7 @@ export class Base {
   }
 
   async _fetchOnlineVersion(app: string): Promise<OnlineVersionItem[]> {
+    return new ForkPromise(async (resolve, reject) => {
     let list: OnlineVersionItem[] = []
     try {
       let data: any = {}
@@ -290,13 +292,15 @@ export class Base {
           app,
           os: 'linux',
           arch: global.Server.Arch === 'x86_64' ? 'x86' : 'arm'
+        }
       }
       const res = await apiRequest('POST', '/version/fetch', data)
       list = res ?? []
     } catch (e) {
-      console.log('_fetchOnlineVersion: err', e)
+      reject(new Error(I18nT('fork.failedFetchingVersion')))
     }
-    return list
+      resolve(list)
+    })
   }
 
   async _installSoftHandle(row: any) {
@@ -311,6 +315,12 @@ export class Base {
 
   installSoft(row: any) {
     return new ForkPromise(async (resolve, reject, on) => {
+      // Validate input
+      if (!row || typeof row !== 'object') {
+        reject(new Error('Invalid input object'))
+        return
+      }
+
       on({
         'APP-On-Log': AppLog('info', I18nT('appLog.startInstall', { service: row?.name ?? '' }))
       })

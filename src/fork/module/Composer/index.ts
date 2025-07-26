@@ -4,10 +4,10 @@ import { Base } from '../Base'
 import { ForkPromise } from '@shared/ForkPromise'
 import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
 import { chmod, copyFile, mkdirp, readFile, writeFile } from '@shared/fs-extra'
-import { brewInfoJson } from '../util/Brew'
-import { versionFilterSame, versionFixed, versionLocalFetch, versionSort } from '../util/Version'
-import TaskQueue from '../TaskQueue'
-import { isMacOS, isWindows } from '@shared/utils'
+import { brewInfoJson } from '../../util/Brew'
+import { versionFilterSame, versionFixed, versionLocalFetch, versionSort } from '../../util/Version'
+import TaskQueue from '../../TaskQueue'
+import { isWindows } from '@shared/utils'
 
 class Composer extends Base {
   constructor() {

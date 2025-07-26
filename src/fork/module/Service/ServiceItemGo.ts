@@ -94,15 +94,11 @@ export class ServiceItemGo extends ServiceItem {
           const pidResult = await powershell.execCommand(
             `(Start-Process -FilePath ./service-${this.id}.cmd -PassThru -WindowStyle Hidden).Id`
           )
+          const pidTrimmed = pidResult.trim()
+          await writeFile(pid, pidTrimmed)
         } else {
           const res = await execPromiseWithEnv(`${shell} "${sh}"`, opt)
           console.log('start res: ', res)
-        } else if (isWindows()) {
-          const pidResult = await powershell.execCommand(
-            `(Start-Process -FilePath ./service-${this.id}.cmd -PassThru -WindowStyle Hidden).Id`
-          )
-          const pid = pidResult.trim()
-          await writeFile(pid, pidResult)
         }
 
         const resPid = await this.checkPid()

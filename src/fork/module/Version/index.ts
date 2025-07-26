@@ -1,7 +1,7 @@
 import { Base } from '../Base'
 import type { SoftInstalled } from '@shared/app'
 import { ForkPromise } from '@shared/ForkPromise'
-import { versionDirCache } from '../util/Version'
+import { versionDirCache } from '../../util/Version'
 import { isMacOS, isWindows } from '@shared/utils'
 
 class Manager extends Base {

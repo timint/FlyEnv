@@ -1,19 +1,18 @@
 import { Base } from '../Base'
-import { downloadFile, fetchPathByBin, readFileByRoot, writeFileByRoot } from '../Fn'
+import { downloadFile, fetchPathByBin, readFileByRoot, writeFileByRoot } from '../../Fn'
 import { execPromise } from '@shared/child-process'
 import { chmod, copyFile, unlink, readdir, writeFile, realpath, remove, mkdirp } from '@shared/fs-extra'
-import { versionBinVersion, versionFilterSame, versionFixed, versionLocalFetch, versionSort } from '../util/Version'
-import { extractArchive } from '../util/Archive'
+import { versionBinVersion, versionFilterSame, versionFixed, versionLocalFetch, versionSort } from '../../util/Version'
+import { extractArchive } from '../../util/Archive'
 import { ForkPromise } from '@shared/ForkPromise'
 import { basename, dirname, join } from 'path'
 import { compareVersions } from 'compare-versions'
 import { existsSync } from 'fs'
-import { httpRequest } from '../util/Http'
+import { httpRequest } from '../../util/Http'
 import type { SoftInstalled } from '@shared/app'
 import TaskQueue from '../../TaskQueue'
 import ncu from 'npm-check-updates'
 import { isMacOS } from '@shared/utils'
-import { unpack as unpackZip } from '../../util/Zip'
 
 class Manager extends Base {
   constructor() {

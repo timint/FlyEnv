@@ -1,6 +1,6 @@
 import { Base } from '../Base'
 import { ForkPromise } from '@shared/ForkPromise'
-import { apiRequest } from '../util/Api'
+import { apiRequest } from '../../util/Api'
 
 class Ai extends Base {
   constructor() {

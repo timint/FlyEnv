@@ -3,15 +3,13 @@ import { existsSync } from 'fs'
 import { Base } from '../Base'
 import { ForkPromise } from '@shared/ForkPromise'
 import type { OnlineVersionItem, SoftInstalled } from '@shared/app'
-import { execPromise } from '@shared/child-process'
-import { mkdirp, readdir, remove } from '@shared/fs-extra'
-import { moveChildDirToParent } from '../util/Dir'
-import { versionBinVersion, versionFilterSame, versionFixed, versionLocalFetch, versionSort } from '../util/Version'
-import { extractArchive } from '../util/Archive'
-import { waitTime } from '../Fn'
-import TaskQueue from '../TaskQueue'
-import { isMacOS, isWindows } from '@shared/utils'
-import Helper from '../Helper'
+import { mkdirp, remove } from '@shared/fs-extra'
+import { moveChildDirToParent } from '../../util/Dir'
+import { versionBinVersion, versionFilterSame, versionFixed, versionLocalFetch, versionSort } from '../../util/Version'
+import { extractArchive } from '../../util/Archive'
+import TaskQueue from '../../TaskQueue'
+import { isWindows } from '@shared/utils'
+import Helper from '../../Helper'
 
 class Bun extends Base {
   constructor() {
@@ -92,20 +90,19 @@ class Bun extends Base {
     if (isWindows()) {
       await remove(row.appDir)
       await mkdirp(row.appDir)
-      await zipUnpack(row.zip, row.appDir)
+      await extractArchive(row.zip, row.appDir)
       await moveChildDirToParent(row.appDir)
     } else {
       const dir = row.appDir
       await super._installSoftHandle(row)
       await moveChildDirToParent(dir)
       try {
-      await Helper.send('mailpit', 'binFixed', row.bin)
-    } else if (isWindows()) {
-      await remove(row.appDir)
-      await mkdirp(row.appDir)
-      await extractArchive(row.zip, row.appDir)
-      await moveChildDirToParent(row.appDir)
+        await Helper.send('mailpit', 'binFixed', row.bin)
+      } catch (error) {
+        // Handle error if needed
+      }
     }
   }
 }
+
 export default new Bun()

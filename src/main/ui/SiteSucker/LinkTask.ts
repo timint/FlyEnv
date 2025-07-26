@@ -4,7 +4,7 @@ import { Store } from './Store'
 import { wait, existsSync, mkdirp, createWriteStream, unlinkSync, stat } from '../../utils'
 import { dirname } from 'path'
 import type { LinkItem } from './LinkItem'
-import { httpStreamDownload } from 'src/fork/util/Http'
+import { httpStreamDownload } from '../../../fork/util/Http'
 
 class LinkTaskItem {
   isDestroy?: boolean
