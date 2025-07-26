@@ -11,7 +11,7 @@ import { chmod, copyFile, readFile, unlink, writeFile, remove, mkdirp } from '@s
 import { serviceStartExec } from '../util/ServiceStart'
 import { AppLog, waitTime } from '../Fn'
 import { ForkPromise } from '@shared/ForkPromise'
-import axios from 'axios'
+import { httpRequest } from 'src/fork/util/Http'
 import TaskQueue from '../../TaskQueue'
 import { isWindows } from '@shared/utils'
 import { spawnPromise } from '@shared/child-process'
@@ -236,11 +236,7 @@ export LANG="${global.Server.Local!}"
     return new ForkPromise(async (resolve) => {
       try {
         const url = 'https://api.github.com/repos/pgvector/pgvector/tags?page=1&per_page=1'
-        const res = await axios({
-          url,
-          method: 'get',
-          proxy: this.getAxiosProxy()
-        })
+        const res = await httpRequest('GET', url)
         const html = res.data
         let arr: any
         try {

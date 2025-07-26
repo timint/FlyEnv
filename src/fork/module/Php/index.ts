@@ -379,9 +379,6 @@ xdebug.output_dir = "${output_dir}"
           return
         }
       }
-      const proxy = this.getAxiosProxy()
-      let p0 = 0
-      let p1 = 0
       const downFPM = (): Promise<boolean> => {
         return downloadFile(row.url, row.zip)
           .then(async () => {
